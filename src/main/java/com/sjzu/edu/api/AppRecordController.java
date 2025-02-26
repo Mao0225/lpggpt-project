@@ -75,95 +75,229 @@ public class AppRecordController extends Controller {
             renderJson(json);
         }
     }
-    public void getdaijiandata() {
-        // 获取待检气瓶信息
-        String org_code = getPara("org_code");
-        int pageNumber = getParaToInt("pageNumber", 1); // 默认第一页
-        int pageSize = getParaToInt("pageSize", 10); // 默认每页显示10条记录
+//    public void getdaijiandata() {
+//        // 获取待检气瓶信息
+//        String org_code = getPara("org_code");
+//        int pageNumber = getParaToInt("pageNumber", 1); // 默认第一页
+//        int pageSize = getParaToInt("pageSize", 10); // 默认每页显示10条记录
+//
+//        // 打印前端传递的数据
+//        System.out.println("org_code: " + org_code);
+//        System.out.println("pageNumber: " + pageNumber);
+//        System.out.println("pageSize: " + pageSize);
+//
+//        // 计算偏移量
+//        int offset = (pageNumber - 1) * pageSize;
+//
+//        // 查询待检气瓶数据 (使用 jiaqi 数据源)
+//        String sql = "SELECT * FROM auto_gas_filling_wait_record WHERE org_code = ? ORDER BY id DESC LIMIT ? OFFSET ?";
+//        List<Record> data = Db.use("jiaqi").find(sql, org_code, pageSize, offset);
+//        System.out.println("待检测气罐数据data: " + data);
+//
+//        // 获取所有气瓶的编号（gas_bottle_no），并去除前导零
+//        List<String> gasBottleNos = data.stream()
+//                .map(record -> record.getStr("gas_bottle_no").replaceFirst("^0+(?!$)", "")) // 去除前导零
+//                .collect(Collectors.toList());
+//
+//        // 查询与这些气瓶编号关联的 gas_file 数据 (使用 ruoyi_lpg 数据源)
+//        List<Record> gasFileData = new ArrayList<>();
+//        if (!gasBottleNos.isEmpty()) {
+//            // 将 gasBottleNos 转换成 SQL 参数格式
+//            StringBuilder placeholders = new StringBuilder();
+//            for (int i = 0; i < gasBottleNos.size(); i++) {
+//                placeholders.append("?");
+//                if (i < gasBottleNos.size() - 1) {
+//                    placeholders.append(",");
+//                }
+//            }
+//
+//            // 更新查询语句，支持多个气瓶编号，并去除 gas_number 的前导零
+//            String gasFileSql = "SELECT * FROM gas_file WHERE TRIM(LEADING '0' FROM gas_number) IN (" + placeholders.toString() + ")";
+//            gasFileData = Db.find(gasFileSql, gasBottleNos.toArray());
+//            System.out.println("关联的gas_file数据: " + gasFileData);
+//        }
+//
+//        // 将gas_file的部分字段合并到每条auto_gas_filling_wait_record数据中
+//        List<Map<String, Object>> combinedResults = new ArrayList<>();
+//        for (Record record : data) {
+//            Map<String, Object> combined = new HashMap<>();
+//            // 将 auto_gas_filling_wait_record 的所有数据放入合并结果
+//            combined.putAll(record.getColumns());
+//
+//            // 根据 gas_bottle_no 匹配 gas_file 数据，并只添加需要的字段
+//            String gasBottleNo = record.getStr("gas_bottle_no").replaceFirst("^0+(?!$)", ""); // 去除前导零
+//            gasFileData.stream()
+//                    .filter(gfRecord -> gfRecord.getStr("gas_number").replaceFirst("^0+(?!$)", "").equals(gasBottleNo))
+//                    .findFirst()
+//                    .ifPresent(gfRecord -> {
+//                        // 只添加需要的字段
+//                        combined.put("terminate_use_date", gfRecord.get("terminate_use_date"));
+//                        combined.put("filling_medium", gfRecord.get("filling_medium"));
+//                        combined.put("gas_suttle", gfRecord.get("gas_suttle"));
+//                        // 你可以根据需要添加其他字段
+//                    });
+//
+//            combinedResults.add(combined);
+//        }
+//
+//        // 查询总记录数 (使用 jiaqi 数据源)
+//        String countSql = "SELECT COUNT(*) AS total FROM auto_gas_filling_wait_record WHERE org_code = ?";
+//        Record countRecord = Db.use("jiaqi").findFirst(countSql, org_code);
+//        int total = countRecord != null ? countRecord.getInt("total") : 0;
+//
+//        // 构造响应数据
+//        JSONObject json = new JSONObject();
+//        if (combinedResults != null && !combinedResults.isEmpty()) {
+//            System.out.println("combinedResults: " + combinedResults);
+//            json.put("flag", "200");
+//            json.put("data", combinedResults);
+//            json.put("total", total);
+//        } else {
+//            System.out.println("combinedResults == null || combinedResults.isEmpty()");
+//            json.put("flag", "300");
+//            json.put("data", new ArrayList<>()); // 返回空列表
+//            json.put("total", 0);
+//        }
+//
+//        renderJson(json);
+//    }
+public void getdaijiandata() {
+    // 获取前端传递的参数
+    String org_code = getPara("org_code"); // 站点编号
+    int pageNumber = getParaToInt("pageNumber", 1); // 当前页码，默认为1
+    int pageSize = getParaToInt("pageSize", 10); // 每页记录数，默认为10
+    String gas_bottle_no = getPara("gas_bottle_no"); // 气瓶号
+    String gun_no = getPara("gun_no"); // 枪号
+    String start_time = getPara("start_time"); // 开始时间
+    String end_time = getPara("end_time"); // 结束时间
 
-        // 打印前端传递的数据
-        System.out.println("org_code: " + org_code);
-        System.out.println("pageNumber: " + pageNumber);
-        System.out.println("pageSize: " + pageSize);
+    // 打印前端传递的数据
+    System.out.println("org_code: " + org_code);
+    System.out.println("pageNumber: " + pageNumber);
+    System.out.println("pageSize: " + pageSize);
+    System.out.println("gas_bottle_no: " + gas_bottle_no);
+    System.out.println("gun_no: " + gun_no);
+    System.out.println("start_time: " + start_time);
+    System.out.println("end_time: " + end_time);
 
-        // 计算偏移量
-        int offset = (pageNumber - 1) * pageSize;
+    // 计算偏移量
+    int offset = (pageNumber - 1) * pageSize;
 
-        // 查询待检气瓶数据 (使用 jiaqi 数据源)
-        String sql = "SELECT * FROM auto_gas_filling_wait_record WHERE org_code = ? ORDER BY id DESC LIMIT ? OFFSET ?";
-        List<Record> data = Db.use("jiaqi").find(sql, org_code, pageSize, offset);
-        System.out.println("待检测气罐数据data: " + data);
+    // 构建基础 SQL 查询语句
+    StringBuilder sqlBuilder = new StringBuilder("SELECT SQL_CALC_FOUND_ROWS * FROM auto_gas_filling_wait_record WHERE org_code = ?");
+    List<Object> params = new ArrayList<>();
+    params.add(org_code);
 
-        // 获取所有气瓶的编号（gas_bottle_no），并去除前导零
-        List<String> gasBottleNos = data.stream()
-                .map(record -> record.getStr("gas_bottle_no").replaceFirst("^0+(?!$)", "")) // 去除前导零
-                .collect(Collectors.toList());
-
-        // 查询与这些气瓶编号关联的 gas_file 数据 (使用 ruoyi_lpg 数据源)
-        List<Record> gasFileData = new ArrayList<>();
-        if (!gasBottleNos.isEmpty()) {
-            // 将 gasBottleNos 转换成 SQL 参数格式
-            StringBuilder placeholders = new StringBuilder();
-            for (int i = 0; i < gasBottleNos.size(); i++) {
-                placeholders.append("?");
-                if (i < gasBottleNos.size() - 1) {
-                    placeholders.append(",");
-                }
-            }
-
-            // 更新查询语句，支持多个气瓶编号，并去除 gas_number 的前导零
-            String gasFileSql = "SELECT * FROM gas_file WHERE TRIM(LEADING '0' FROM gas_number) IN (" + placeholders.toString() + ")";
-            gasFileData = Db.find(gasFileSql, gasBottleNos.toArray());
-            System.out.println("关联的gas_file数据: " + gasFileData);
-        }
-
-        // 将gas_file的部分字段合并到每条auto_gas_filling_wait_record数据中
-        List<Map<String, Object>> combinedResults = new ArrayList<>();
-        for (Record record : data) {
-            Map<String, Object> combined = new HashMap<>();
-            // 将 auto_gas_filling_wait_record 的所有数据放入合并结果
-            combined.putAll(record.getColumns());
-
-            // 根据 gas_bottle_no 匹配 gas_file 数据，并只添加需要的字段
-            String gasBottleNo = record.getStr("gas_bottle_no").replaceFirst("^0+(?!$)", ""); // 去除前导零
-            gasFileData.stream()
-                    .filter(gfRecord -> gfRecord.getStr("gas_number").replaceFirst("^0+(?!$)", "").equals(gasBottleNo))
-                    .findFirst()
-                    .ifPresent(gfRecord -> {
-                        // 只添加需要的字段
-                        combined.put("terminate_use_date", gfRecord.get("terminate_use_date"));
-                        combined.put("filling_medium", gfRecord.get("filling_medium"));
-                        combined.put("gas_suttle", gfRecord.get("gas_suttle"));
-                        // 你可以根据需要添加其他字段
-                    });
-
-            combinedResults.add(combined);
-        }
-
-        // 查询总记录数 (使用 jiaqi 数据源)
-        String countSql = "SELECT COUNT(*) AS total FROM auto_gas_filling_wait_record WHERE org_code = ?";
-        Record countRecord = Db.use("jiaqi").findFirst(countSql, org_code);
-        int total = countRecord != null ? countRecord.getInt("total") : 0;
-
-        // 构造响应数据
-        JSONObject json = new JSONObject();
-        if (combinedResults != null && !combinedResults.isEmpty()) {
-            System.out.println("combinedResults: " + combinedResults);
-            json.put("flag", "200");
-            json.put("data", combinedResults);
-            json.put("total", total);
-        } else {
-            System.out.println("combinedResults == null || combinedResults.isEmpty()");
-            json.put("flag", "300");
-            json.put("data", new ArrayList<>()); // 返回空列表
-            json.put("total", 0);
-        }
-
-        renderJson(json);
+    // 添加气瓶号查询条件
+    if (gas_bottle_no != null && !gas_bottle_no.isEmpty()) {
+        sqlBuilder.append(" AND gas_bottle_no LIKE ?");
+        params.add("%" + gas_bottle_no + "%");
     }
 
+    // 添加枪号查询条件
+    if (gun_no != null && !gun_no.isEmpty()) {
+        sqlBuilder.append(" AND gun_no = ?");
+        params.add(gun_no);
+    }
 
-    public void gasgunlist() {
+    // 添加时间范围查询条件
+    if (start_time != null && !start_time.isEmpty() && end_time != null && !end_time.isEmpty()) {
+        // 如果有时间范围参数，则使用参数查询
+        sqlBuilder.append(" AND real_time BETWEEN ? AND ?");
+        params.add(start_time);
+        params.add(end_time);
+    } else {
+        // 如果没有时间范围参数，则默认查询当天的数据
+        String today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        sqlBuilder.append(" AND real_time BETWEEN ? AND ?");
+        params.add(today + " 00:00:00");
+        params.add(today + " 23:59:59");
+    }
+
+    // 添加排序和分页
+    sqlBuilder.append(" ORDER BY id DESC LIMIT ? OFFSET ?");
+    params.add(pageSize);
+    params.add(offset);
+
+    // 查询待检气瓶数据 (使用 jiaqi 数据源)
+    String sql = sqlBuilder.toString();
+    List<Record> data = Db.use("jiaqi").find(sql, params.toArray());
+    System.out.println("待检测气罐数据data: " + data);
+
+    // 获取总记录数
+    Record countRecord = Db.use("jiaqi").findFirst("SELECT FOUND_ROWS() AS total");
+    int total = countRecord != null ? countRecord.getInt("total") : 0;
+
+    // 获取所有气瓶的编号（gas_bottle_no），并去除前导零
+    List<String> gasBottleNos = data.stream()
+            .map(record -> record.getStr("gas_bottle_no").replaceFirst("^0+(?!$)", "")) // 去除前导零
+            .collect(Collectors.toList());
+
+    // 查询与这些气瓶编号关联的 gas_file 数据 (使用 ruoyi_lpg 数据源)
+    List<Record> gasFileData = new ArrayList<>();
+    if (!gasBottleNos.isEmpty()) {
+        // 将 gasBottleNos 转换成 SQL 参数格式
+        StringBuilder placeholders = new StringBuilder();
+        for (int i = 0; i < gasBottleNos.size(); i++) {
+            placeholders.append("?");
+            if (i < gasBottleNos.size() - 1) {
+                placeholders.append(",");
+            }
+        }
+
+        // 更新查询语句，支持多个气瓶编号，并去除 gas_number 的前导零
+        String gasFileSql = "SELECT * FROM gas_file WHERE TRIM(LEADING '0' FROM gas_number) IN (" + placeholders.toString() + ")";
+        gasFileData = Db.find(gasFileSql, gasBottleNos.toArray());
+        System.out.println("关联的gas_file数据: " + gasFileData);
+    }
+
+    // 将gas_file的部分字段合并到每条auto_gas_filling_wait_record数据中
+    List<Map<String, Object>> combinedResults = new ArrayList<>();
+    for (Record record : data) {
+        Map<String, Object> combined = new HashMap<>();
+        // 将 auto_gas_filling_wait_record 的所有数据放入合并结果
+        combined.putAll(record.getColumns());
+
+        // 根据 gas_bottle_no 匹配 gas_file 数据，并只添加需要的字段
+        String gasBottleNo = record.getStr("gas_bottle_no").replaceFirst("^0+(?!$)", ""); // 去除前导零
+        gasFileData.stream()
+                .filter(gfRecord -> gfRecord.getStr("gas_number").replaceFirst("^0+(?!$)", "").equals(gasBottleNo))
+                .findFirst()
+                .ifPresent(gfRecord -> {
+                    // 只添加需要的字段
+                    combined.put("terminate_use_date", gfRecord.get("terminate_use_date"));
+                    combined.put("filling_medium", gfRecord.get("filling_medium"));
+                    combined.put("gas_suttle", gfRecord.get("gas_suttle"));
+                    // 你可以根据需要添加其他字段
+                });
+
+        combinedResults.add(combined);
+    }
+
+    // 计算总页数
+    int totalPage = (int) Math.ceil((double) total / pageSize);
+
+    // 构造响应数据
+    JSONObject json = new JSONObject();
+    if (combinedResults != null && !combinedResults.isEmpty()) {
+        System.out.println("combinedResults: " + combinedResults);
+        json.put("flag", "200");
+        json.put("record", combinedResults);
+        json.put("page", pageNumber); // 当前页码
+        json.put("totalPage", totalPage); // 总页数
+        json.put("totalRow", total); // 总记录数
+    } else {
+        System.out.println("combinedResults == null || combinedResults.isEmpty()");
+        json.put("flag", "300");
+        json.put("data", new ArrayList<>()); // 返回空列表
+        json.put("page", pageNumber); // 当前页码
+        json.put("totalPage", 0); // 总页数
+        json.put("totalRow", 0); // 总记录数
+    }
+
+    renderJson(json);
+}
+public void gasgunlist() {
         // 从请求中获取 stationid 参数
         String stationid = getPara("stationid");  // 获取加气枪所属的加气站ID
         System.out.println("Received stationid: " + stationid);  // 输出接收到的 stationid
@@ -276,8 +410,9 @@ public void records() {
     JSONObject json = new JSONObject();
     if (recordPage != null && !recordPage.getList().isEmpty()) {
         json.put("flag", "200");
-        json.put("page", pageNum);
         json.put("record", recordPage.getList()); // 返回查询结果
+        json.put("page", pageNum);
+
         json.put("totalPage", recordPage.getTotalPage()); // 总页数
         json.put("totalRow", recordPage.getTotalRow());   // 总记录数
         System.out.println("Total Pages: " + recordPage.getTotalPage());
@@ -290,39 +425,7 @@ public void records() {
     }
     renderJson(json);
 }
-//    public void recordsd() {
-//        String org_code = getPara("org_code");
-//        LocalDate currentDate = LocalDate.now();
-//
-//// 定义日期格式（用于日志输出）
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-//        String formattedDate = currentDate.format(formatter);
-//
-//// SQL 查询
-//        String sql = "SELECT * FROM fill_record_check1 " +
-//                "WHERE memo LIKE ? " +
-//                "  AND gasstation = ? " +
-//                "  AND fill_time LIKE ?" +
-//                "ORDER BY id DESC";
-//
-//        System.out.println("SQL: " + sql);
-//        System.out.println("Parameters: " + Arrays.asList("%不合格%", org_code, formattedDate));
-//
-//// 使用参数绑定查询数据
-//        List<FillRecordCheck1> recordCheck1s = dao.find(sql, "%不合格%", org_code, "%"+currentDate+"%");
-//
-//// 构造返回结果
-//        JSONObject json = new JSONObject();
-//        if (recordCheck1s != null && !recordCheck1s.isEmpty()) {
-//            json.put("flag", "200");
-//            json.put("record", recordCheck1s);
-//        } else {
-//            json.put("flag", "300");
-//            json.put("record", new ArrayList<>()); // 返回空数组
-//        }
-//        renderJson(json);
-//
-//    }
+
 public void recordsd() {
     // 获取前端传递的分页参数
     int pageNum = getParaToInt("page", 1); // 默认第一页
