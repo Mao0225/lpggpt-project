@@ -202,57 +202,10 @@ public class AppRecordController extends Controller {
         renderJson(json);
     }
 
-//public void records() {
-//    // 获取前端传递的分页参数
-//    int pageNum = getParaToInt("page", 1); // 默认第一页
-//    int pageSize = getParaToInt("pageSize", 10); // 默认每页10条
-//
-//    // 获取组织代码参数
-//    String org_code = getPara("org_code");
-//
-//    // 获取当前日期
-//    String currentDate = String.valueOf(LocalDate.now());
-//
-//    // SQL 查询语句
-//    String select = "SELECT frc.*, gf.*"; // 选择所有字段
-//    String sqlExceptSelect = "FROM fill_record_check1 frc " +
-//            "LEFT JOIN gas_file gf ON frc.gas_number = gf.gas_number " +
-//            "WHERE frc.memo = ? " +
-//            "AND frc.gasstation = ? " +
-//            "AND frc.fill_time LIKE ? " +
-//            "AND frc.now_gas IS NOT NULL" +
-//            "ORDER BY frc.id DESC";
-//
-//    // 分页查询
-//    Page<FillRecordCheck1> recordPage = dao.paginate(
-//            pageNum,
-//            pageSize,
-//            select,
-//            sqlExceptSelect,
-//            "充装后检查合格", // 对应 frc.memo = ?
-//            org_code,       // 对应 frc.gasstation = ?
-//            '%'+currentDate+'%'    // 对应 frc.fill_time = ?
-//    );
-//    System.out.println("Parameters: " + Arrays.asList("充装后检查合格", org_code, currentDate));
-//
-//
-//    // 构造响应数据
-//    JSONObject json = new JSONObject();
-//    if (recordPage != null && !recordPage.getList().isEmpty()) {
-//        json.put("flag", "200");
-//        json.put("record", recordPage.getList()); // 直接返回查询结果
-//        json.put("totalPage", recordPage.getTotalPage());
-//        json.put("totalRow", recordPage.getTotalRow());
-//    } else {
-//        json.put("flag", "300");
-//        json.put("record", new ArrayList<>()); // 返回空数组
-//    }
-//    renderJson(json);
-//}
 public void records() {
     // 获取前端传递的分页参数
     int pageNum = getParaToInt("page", 1); // 默认第一页
-    int pageSize = getParaToInt("pageSize", 30); // 默认每页10条
+    int pageSize = getParaToInt("pageSize", 30); // 默认每页30条
 
     // 获取组织代码参数
     String org_code = getPara("org_code");
@@ -277,18 +230,34 @@ public void records() {
     params.add("充装后检查合格"); // 对应 frc.memo = ?
     params.add(org_code);       // 对应 frc.gasstation = ?
 
-    if (gasNumber != null && !gasNumber.isEmpty()) {
-        sqlExceptSelect.append("AND frc.gas_number LIKE ? ");
-        params.add("%" + gasNumber + "%");
-    }
-    if (startTime != null && endTime != null) {
+    // 判断是否有搜索参数
+    boolean hasSearchParams = gasNumber != null || startTime != null || endTime != null || gunNo != null;
+
+    // 如果没有搜索参数，默认查询当天记录
+    if (!hasSearchParams) {
+        // 获取当天日期范围
+        LocalDate today = LocalDate.now();
+        String todayStart = today.atStartOfDay().toString(); // 当天开始时间（00:00:00）
+        String todayEnd = today.atTime(23, 59, 59).toString(); // 当天结束时间（23:59:59）
+
         sqlExceptSelect.append("AND frc.fill_time BETWEEN ? AND ? ");
-        params.add(startTime);
-        params.add(endTime);
-    }
-    if (gunNo != null && !gunNo.isEmpty()) {
-        sqlExceptSelect.append("AND frc.gun_no LIKE ? ");
-        params.add("%" + gunNo + "%");
+        params.add(todayStart);
+        params.add(todayEnd);
+    } else {
+        // 如果有搜索参数，根据参数动态添加条件
+        if (gasNumber != null && !gasNumber.isEmpty()) {
+            sqlExceptSelect.append("AND frc.gas_number LIKE ? ");
+            params.add("%" + gasNumber + "%");
+        }
+        if (startTime != null && endTime != null) {
+            sqlExceptSelect.append("AND frc.fill_time BETWEEN ? AND ? ");
+            params.add(startTime);
+            params.add(endTime);
+        }
+        if (gunNo != null && !gunNo.isEmpty()) {
+            sqlExceptSelect.append("AND frc.gun_no LIKE ? ");
+            params.add("%" + gunNo + "%");
+        }
     }
 
     // 排序
@@ -307,7 +276,7 @@ public void records() {
     JSONObject json = new JSONObject();
     if (recordPage != null && !recordPage.getList().isEmpty()) {
         json.put("flag", "200");
-        json.put("page",pageNum);
+        json.put("page", pageNum);
         json.put("record", recordPage.getList()); // 返回查询结果
         json.put("totalPage", recordPage.getTotalPage()); // 总页数
         json.put("totalRow", recordPage.getTotalRow());   // 总记录数
@@ -321,39 +290,129 @@ public void records() {
     }
     renderJson(json);
 }
-    public void recordsd() {
-        String org_code = getPara("org_code");
-        LocalDate currentDate = LocalDate.now();
+//    public void recordsd() {
+//        String org_code = getPara("org_code");
+//        LocalDate currentDate = LocalDate.now();
+//
+//// 定义日期格式（用于日志输出）
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//        String formattedDate = currentDate.format(formatter);
+//
+//// SQL 查询
+//        String sql = "SELECT * FROM fill_record_check1 " +
+//                "WHERE memo LIKE ? " +
+//                "  AND gasstation = ? " +
+//                "  AND fill_time LIKE ?" +
+//                "ORDER BY id DESC";
+//
+//        System.out.println("SQL: " + sql);
+//        System.out.println("Parameters: " + Arrays.asList("%不合格%", org_code, formattedDate));
+//
+//// 使用参数绑定查询数据
+//        List<FillRecordCheck1> recordCheck1s = dao.find(sql, "%不合格%", org_code, "%"+currentDate+"%");
+//
+//// 构造返回结果
+//        JSONObject json = new JSONObject();
+//        if (recordCheck1s != null && !recordCheck1s.isEmpty()) {
+//            json.put("flag", "200");
+//            json.put("record", recordCheck1s);
+//        } else {
+//            json.put("flag", "300");
+//            json.put("record", new ArrayList<>()); // 返回空数组
+//        }
+//        renderJson(json);
+//
+//    }
+public void recordsd() {
+    // 获取前端传递的分页参数
+    int pageNum = getParaToInt("page", 1); // 默认第一页
+    int pageSize = getParaToInt("pageSize", 30); // 默认每页30条
 
-// 定义日期格式（用于日志输出）
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        String formattedDate = currentDate.format(formatter);
+    // 获取组织代码参数
+    String org_code = getPara("org_code");
 
-// SQL 查询
-        String sql = "SELECT * FROM fill_record_check1 " +
-                "WHERE memo LIKE ? " +
-                "  AND gasstation = ? " +
-                "  AND fill_time LIKE ?" +
-                "ORDER BY id DESC";
+    // 获取查询条件参数
+    String gasNumber = getPara("gas_number"); // 气瓶号
+    String startTime = getPara("start_time"); // 开始时间
+    String endTime = getPara("end_time");     // 结束时间
+    String gunNo = getPara("gun_no");        // 枪号
 
-        System.out.println("SQL: " + sql);
-        System.out.println("Parameters: " + Arrays.asList("%不合格%", org_code, formattedDate));
+    // 动态构建 SQL 查询条件
+    StringBuilder sqlExceptSelect = new StringBuilder(
+            "FROM fill_record_check1 frc " +
+                    "LEFT JOIN gas_file gf ON frc.gas_number = gf.gas_number " +
+                    "WHERE frc.memo like ? " +
+                    "AND frc.gasstation = ? "
+    );
 
-// 使用参数绑定查询数据
-        List<FillRecordCheck1> recordCheck1s = dao.find(sql, "%不合格%", org_code, "%"+currentDate+"%");
+    // 动态添加查询条件
+    List<Object> params = new ArrayList<>();
+    params.add("%不合格%"); // 对应 frc.memo = ?
+    params.add(org_code);       // 对应 frc.gasstation = ?
 
-// 构造返回结果
-        JSONObject json = new JSONObject();
-        if (recordCheck1s != null && !recordCheck1s.isEmpty()) {
-            json.put("flag", "200");
-            json.put("record", recordCheck1s);
-        } else {
-            json.put("flag", "300");
-            json.put("record", new ArrayList<>()); // 返回空数组
+    // 判断是否有搜索参数
+    boolean hasSearchParams = gasNumber != null || startTime != null || endTime != null || gunNo != null;
+
+    // 如果没有搜索参数，默认查询当天记录
+    if (!hasSearchParams) {
+        // 获取当天日期范围
+        LocalDate today = LocalDate.now();
+        String todayStart = today.atStartOfDay().toString(); // 当天开始时间（00:00:00）
+        String todayEnd = today.atTime(23, 59, 59).toString(); // 当天结束时间（23:59:59）
+
+        sqlExceptSelect.append("AND frc.fill_time BETWEEN ? AND ? ");
+        params.add(todayStart);
+        params.add(todayEnd);
+        System.out.println("SQL111: " + sqlExceptSelect.toString());
+    } else {
+        // 如果有搜索参数，根据参数动态添加条件
+        if (gasNumber != null && !gasNumber.isEmpty()) {
+            sqlExceptSelect.append("AND frc.gas_number LIKE ? ");
+            params.add("%" + gasNumber + "%");
         }
-        renderJson(json);
+        if (startTime != null && endTime != null) {
+            sqlExceptSelect.append("AND frc.fill_time BETWEEN ? AND ? ");
+            params.add(startTime);
+            params.add(endTime);
+        }
+        if (gunNo != null && !gunNo.isEmpty()) {
+            sqlExceptSelect.append("AND frc.gun_no LIKE ? ");
+            params.add("%" + gunNo + "%");
+        }
+        System.out.println("SQL2222: " + sqlExceptSelect.toString());
 
     }
+
+    // 排序
+    sqlExceptSelect.append("ORDER BY frc.id DESC");
+
+    // 分页查询
+    Page<FillRecordCheck1> recordPage = dao.paginate(
+            pageNum,
+            pageSize,
+            "SELECT frc.*, gf.*", // 选择所有字段
+            sqlExceptSelect.toString(),
+            params.toArray() // 动态参数
+    );
+
+    // 构造响应数据
+    JSONObject json = new JSONObject();
+    if (recordPage != null && !recordPage.getList().isEmpty()) {
+        json.put("flag", "200");
+        json.put("page", pageNum);
+        json.put("record", recordPage.getList()); // 返回查询结果
+        json.put("totalPage", recordPage.getTotalPage()); // 总页数
+        json.put("totalRow", recordPage.getTotalRow());   // 总记录数
+        System.out.println("Total Pages: " + recordPage.getTotalPage());
+        System.out.println("Total Rows: " + recordPage.getTotalRow());
+    } else {
+        json.put("flag", "300");
+        json.put("record", new ArrayList<>()); // 返回空数组
+        json.put("totalPage", 0);
+        json.put("totalRow", 0);
+    }
+    renderJson(json);
+}
 
 
     public void addRecords(int flag) {
