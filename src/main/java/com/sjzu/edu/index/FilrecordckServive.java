@@ -42,9 +42,14 @@ public class FilrecordckServive {
         List<Object> params = new ArrayList<>();
         boolean hasCondition = false;
 
+        // 添加 now_gas IS NOT NULL 条件
+        baseSql.append("WHERE now_gas IS NOT NULL ");
+        hasCondition = true;
+
         // 处理日期条件
         if (finditem != null) {
-            baseSql.append("WHERE f.fill_time >= ? AND f.fill_time < ? ");
+            appendCondition(baseSql, hasCondition);
+            baseSql.append("f.fill_time >= ? AND f.fill_time < ? ");
             params.add(finditem);
             params.add(new Timestamp(finditem.getTime() + 86400000));
             hasCondition = true;
@@ -76,7 +81,7 @@ public class FilrecordckServive {
         return dao.paginate(pageNumber, pageSize, selectSql, baseSql.toString(), params.toArray());
     }
 
-    // 辅助方法：动态添加AND/WHERE
+    // 辅助方法：添加 AND 或 WHERE 条件
     private void appendCondition(StringBuilder sql, boolean hasCondition) {
         if (hasCondition) {
             sql.append("AND ");
