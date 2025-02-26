@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<title>Content</title>
+<body>
+<h1>
+</h1>
+<div class="form_box">
+    <script>
+        function uploadFile(event, inputElementId) {
+            event.preventDefault(); // 阻止默认的表单提交行为
+            var fileInput = document.getElementById(inputElementId);
+            var file = fileInput.files[0];
+            var formData = new FormData();
+            formData.append('file', file);
+
+            // 显示选定的图片
+            var preview = document.getElementById(inputElementId + 'Preview');
+            preview.src = URL.createObjectURL(file);
+
+            fetch('/bangdingren/localUpload', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('File uploaded successfully. Local URL is', data.url);
+                    var urlInput = document.getElementById(inputElementId + 'Url');
+                    urlInput.value = data.url;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+    </script>
+    <form action="/bangdingren/update" method="post" id="myForm">
+        <input type="hidden" name="bangdingren.id" value="#(bangdingren.id??)" />
+        <div>
+            <label>培训证照片</label>
+            <div class="image-upload">
+                <label for="trainImageInput">
+                    <img id="trainImageInputPreview" src="#(bangdingren.train_certificate_image_url)" alt="点击添加图片" title="点击添加图片" style="width: 100px; height: 100px" />
+                </label>
+                <input type="file" id="trainImageInput" name="train_certificate_image_url" onchange="uploadFile(event, 'trainImageInput')" accept="image/jpeg, image/png" style="display: none;" />
+            </div>
+            <input type="hidden" id="trainImageInputUrl" name="bangdingren.train_certificate_image_url" value="#(bangdingren.train_certificate_image_url)" />
+        </div>
+        <div>
+            <label>绑定人姓名</label>
+            <input type="text" name="bangdingren.name" value="#(bangdingren.name)" />
+        </div>
+        <div>
+            <label>账号密码</label>
+            <input type="text" name="bangdingren.psw" value="#(bangdingren.psw)" />
+        </div>
+        <div>
+            <label>联系方式</label>
+            <input type="text" name="bangdingren.telphone" value="#(bangdingren.telphone)" />
+        </div>
+        <div>
+            <label>出生日期</label>
+            <input type="text" name="bangdingren.chushengriqi" value="#(bangdingren.chushengriqi)" />
+        </div>
+        <div>
+            <label>身份证号</label>
+            <input type="text" name="bangdingren.identity_card_no" value="#(bangdingren.identity_card_no)" />
+        </div>
+        <div>
+            <label>培训证号</label>
+            <input type="text" name="bangdingren.train_certificate_no" value="#(bangdingren.train_certificate_no)" />
+        </div>
+        <div>
+            <label>培训证有效期</label>
+            <input type="text" name="bangdingren.train_certificate_indate" value="#(bangdingren.train_certificate_indate)" />
+        </div>
+
+        <div>
+            <label>操作标识</label>
+            <input type="text" name="bangdingren.update_sign" value="#(bangdingren.update_sign)" />
+        </div>
+
+    </form>
+</div>
+</body>
+</html>

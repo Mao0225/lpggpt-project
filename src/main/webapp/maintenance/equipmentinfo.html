@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" width="device-width, initial-scale=1.0">
+    <title>Edit Equipment</title>
+    <style>
+    </style>
+</head>
+
+<body>
+<div class="form_box">
+    <!-- 移除表单的action和method属性，使其不再具备提交数据到后端的功能 -->
+    <form id="myForm">
+        <div>
+            <label>设备站点</label>
+            <!-- 添加readonly属性，将输入框设置为只读，无法更改内容 -->
+            <input type="text" name="equipment.station_name" value="#(equipmentInfo.station_name)" readonly />
+        </div>
+        <div>
+            <label>设备种类</label>
+            <input type="text" name="equipment.kind" value="#(equipmentInfo.kind)" readonly />
+        </div>
+        <div>
+            <label>生产厂商</label>
+            <input type="text" name="equipment.factory" value="#(equipmentInfo.factory)" readonly />
+        </div>
+        <div>
+            <label>型号规格</label>
+            <input type="text" name="equipment.model" value="#(equipmentInfo.model)" readonly />
+        </div>
+        <div>
+            <label>设备名称</label>
+            <input type="text" name="equipment.name" value="#(equipmentInfo.name)" readonly />
+        </div>
+        <div>
+            <label>放置位置</label>
+            <input type="text" name="equipment.location" value="#(equipmentInfo.location)" readonly />
+        </div>
+        <div>
+            <label>购买人员</label>
+            <input type="text" name="equipment.buyer" value="#(equipmentInfo.buyer)" readonly />
+        </div>
+        <div class="text-input-div">
+            <label>购买价格</label>
+            <input type="text" name="equipment.price" value="#(equipmentInfo.price)" readonly />
+        </div>
+        <div class="text-input-div">
+            <label>生产日期</label>
+            <input type="text" name="equipment.producedate" value="#(equipmentInfo.producedate)" readonly />
+        </div>
+        <div class="text-input-div">
+            <label>购买日期</label>
+            <input type="text" name="equipment.buyday" value="#(equipmentInfo.buyday)" readonly />
+        </div>
+        <div class="text-input-div">
+            <label>上次检修期</label>
+            <input type="text" name="equipment.lastcheckdate" value="#(equipmentInfo.lastcheckdate)" readonly />
+        </div>
+        <div class="text-input-div">
+            <label>失效日期</label>
+            <input type="text" name="equipment.expiredate" value="#(equipmentInfo.expiredate)" readonly />
+        </div>
+        <div class="text-input-div">
+            <label>备注信息</label>
+            <input type="text" name="equipment.remark" value="#(equipmentInfo.remark)" readonly />
+        </div>
+        <!-- 设备图片上传部分 -->
+        <div>
+            <label>设备图片</label>
+            <div id="equipmentImageUrlInputContainer" class="image-upload">
+<!--                <input type="file" id="equipmentImageInput" name="equipment_picture_file" onchange="uploadFile('equipmentImageInput')" accept="image/jpeg, image/png" style="display: none;" />-->
+            </div>
+            <input type="hidden" id="equipmentImageInputUrl" name="equipmentinfo.picture" value="#(equipmentInfo.picture)" />
+        </div>
+    </form>
+</div>
+<script>
+    $(document).ready(function () {
+        // 获取存储设备图片URL的隐藏输入框的值，并分割成数组（假设多个URL用逗号分隔）
+        var equipmentImageUrls = document.getElementById('equipmentImageInputUrl').value.split(',');
+        console.log("equipmentImageUrls: " + equipmentImageUrls);
+        var container = document.getElementById('equipmentImageUrlInputContainer');
+        console.log("container: " + container);
+        equipmentImageUrls.forEach(function (url, urlIndex) {
+            console.log("okkkk");
+            // 如果 URL 为空，就跳过这个 URL
+            if (!url || url === '') {
+                return;
+            }
+            var div = document.createElement('div');
+            console.log("div: " + div);
+            div.style.position = 'relative';
+            div.style.width = "100px";
+            div.style.height = "100px";
+
+            var img = document.createElement('img');
+            img.src = url;
+            console.log("img.sec: " + img.src);
+            img.style.width = "100%";
+            img.style.height = "100%";
+            div.appendChild(img);
+
+            // 为图片添加点击事件，点击时调用showImage函数并传入图片链接
+            img.onclick = function () {
+                showImage(this.src);
+            };
+
+            container.appendChild(div);
+        });
+    });
+
+    function showImage(imageUrl) {
+        if (imageUrl == null) {
+            return;
+        }
+        var img = new Image();
+        img.src = imageUrl;
+        var mask = document.createElement('div');
+        mask.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); z-index: 9999;';
+        document.body.appendChild(mask);
+        var imgContainer = document.createElement('div');
+        imgContainer.style.cssText = 'position: fixed; top: 50%; left: 50%; width: auto; height: auto; transform: translate(-50%, -50%); z-index: 10000;';
+        imgContainer.appendChild(img);
+        document.body.appendChild(imgContainer);
+
+        img.onload = function () {
+            var maxWidth = window.innerWidth * 0.8; // Adjust max width as needed
+            var maxHeight = window.innerHeight * 0.8; // Adjust max height as needed
+            var imgWidth = img.naturalWidth;
+            var imgHeight = img.naturalHeight;
+            var scaleFactor = Math.min(maxWidth / imgWidth, maxHeight / imgHeight);
+            img.style.width = (imgWidth * scaleFactor) + "px";
+            img.style.height = (imgHeight * scaleFactor) + "px";
+        }
+
+        mask.addEventListener('click', function () {
+            mask.parentNode.removeChild(mask);
+            imgContainer.parentNode.removeChild(imgContainer);
+        });
+    }
+</script>
+</body>
+
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="../css/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css">
+    <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/css/lpg.css">
+    <style>
+        #searchForm select,
+        #searchForm input[type="date"] {
+            border-radius: 10px;
+            background-color: #fbf0c5;
+            width: 160px;
+            height: 30px;
+        }
+    </style>
+</head>
+<body>
+<div id="pagediv">
+    <form id="searchForm" action="/setrans/transportlist" method="post">
+        <label>加气站名称</label>
+        <input type="text" name="stationname" value="#(stationname)">
+        <label>入库时间</label>
+        <input type="date" name="uptime" value="#(uptime)">
+        <label>出库时间</label>
+        <input type="date" name="downtime" value="#(downtime)">
+        <label>&nbsp;</label>
+        <input value="搜索" type="submit">
+        <input type="button" value="重置" name="refresh" id="resetButton" />
+        <table class="list">
+            <tbody>
+            <tr>
+                <th>序号</th>
+                <th>气瓶入库状态</th>
+                <th>员工姓名</th>
+                <th>气瓶编码</th>
+                <th>入库自有顾客</th>
+                <th>入库时间</th>
+                <th>入库地址</th>
+                <th>气瓶出库状态</th>
+                <th>出库自有顾客</th>
+                <th>出库时间</th>
+                <th>出库地址</th>
+                <th>操作</th>
+            </tr>
+            #set(startIndex = (Transportlist.pageNumber - 1) * Transportlist.pageSize + 1)
+            #for(x : Transportlist.getList())
+            <tr>
+                <td>#(startIndex++)</td>
+                <td>#(x.tstationname)</td>
+                <td>#(x.staff)</td>
+                <td>#(x.bottleid)</td>
+                <td>#(x.tcustomer)</td>
+                <td>#(x.uptime)</td>
+                <td>#(x.taddress)</td>
+                <td>#(x.dstationname)</td>
+                <td>#(x.dcustomer)</td>
+                <td>#(x.downtime)</td>
+                <td>#(x.daddress)</td>
+                <td style="text-align:left">
+                    <a href="#" class="btn btn-danger" onclick="deleteRecord('#(x.id)')">删除</a>
+                </td>
+            </tr>
+            #end
+            </tbody>
+        </table>
+        <div class="pagination" style="color:#DDDDDD; font-size: 12px">
+            #@paginate(Transportlist.pageNumber, Transportlist.totalPage, "/setrans/transportlist?stationname=" + (stationname!=null ? stationname:"")+"&uptime=" + (uptime!=null ? uptime:"")+"&downtime=" + (downtime!=null ? downtime:"")+"&page=")
+        </div>
+    </form>
+</div>
+<script>
+    document.getElementById("resetButton").addEventListener("click", function(e) {
+        // 阻止默认行为
+        e.preventDefault();
+        // 清空所有输入框和下拉框的值
+        document.getElementById("searchForm").reset();
+        // 手动设置表单字段为空值
+        document.querySelector('input[name="stationname"]').value = '';
+        document.querySelector('input[name="uptime"]').value = '';
+        document.querySelector('input[name="downtime"]').value = '';
+        // 提交表单以刷新页面
+        document.getElementById("searchForm").submit();
+    });
+
+    function deleteRecord(id) {
+        // 确认是否删除
+        if (confirm("确定要删除吗？")) {
+            // 创建一个隐藏的表单字段用于存储ID
+            var deleteForm = document.createElement('form');
+            deleteForm.method = 'post';
+            deleteForm.action = '/setrans/delete';
+
+            var idInput = document.createElement('input');
+            idInput.type = 'hidden';
+            idInput.name = 'id';
+            idInput.value = id;
+
+            deleteForm.appendChild(idInput);
+            document.body.appendChild(deleteForm);
+            deleteForm.submit();
+        }
+    }
+</script>
+</body>
+</html>

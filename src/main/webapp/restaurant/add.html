@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<title>Content</title>
+<style>
+    ::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+        color: #8A8A8A;
+        font-size: 12px;
+    }
+    ::-moz-placeholder { /* Firefox 19+ */
+        color: #8A8A8A;
+        font-size: 12px;
+    }
+    :-ms-input-placeholder { /* IE 10+ */
+        color: #8A8A8A;
+        font-size: 12px;
+    }
+    :-moz-placeholder { /* Firefox 18- */
+        color:#8A8A8A;
+        font-size: 12px;
+    }
+</style>
+
+<body>
+<h1>
+</h1>
+<div class="form_box">
+    <form action="/restaurant/save" method="post" id="myForm">
+        <div>
+            <label>饭店编号</label>
+            <input type="text" name="restaurant.restaurantno" value="" />
+        </div>
+        <div>
+            <label>饭店名称</label>
+            <input type="text" name="restaurant.name" value="" />
+        </div>
+        <div>
+            <label>饭店店长</label>
+            <input type="text" name="restaurant.leader" value="" />
+        </div>
+        <div>
+            <label>饭店地址</label>
+            <input type="text" name="restaurant.address" value="" />
+        </div>
+        <div>
+            <label>联系电话</label>
+            <input type="text" name="restaurant.telephone" value="" />
+        </div>
+        <div>
+            <label>密码</label>
+            <input type="text" name="restaurant.pwd" value="" />
+        </div>
+        <div>
+            <label>小盒子</label>
+            <input type="text" name="restaurant.xiaohezi" value="" />
+        </div>
+        <div>
+            <label>报警人</label>
+            <input type="text" name="restaurant.baojingren" value="" />
+        </div>
+        <div>
+            <label>备注</label>
+            <input type="text" name="restaurant.memo" value="" />
+        </div>
+
+
+
+        <div id="deviceTypeDiv">
+            <label>设备类型</label>
+            <select id="deviceType" name="restaurant.biaoji" onchange="displayInput(this.value)">
+                <option value="">请选择设备类型</option>
+                <option value="1">电子秤</option>
+                <option value="2">燃气表</option>
+            </select>
+        </div>
+        <div id="codeDiv">
+            <label id="codeLabel">称/表编码</label>
+            <input type="text" name="restaurant.chengno" value="" />
+        </div>
+
+
+    </form>
+</div>
+<script>
+    // 控制输入框显示隐藏的函数
+    function displayInput(value) {
+        var codeLabel = document.getElementById('codeLabel');
+
+        if (value == "1") {
+            codeLabel.innerText = '称编码';
+        } else if (value == "2") {
+            codeLabel.innerText = '表编码';
+        } else {
+            codeLabel.innerText = '称/表编码';
+        }
+    }
+
+    // 初始化时不需要隐藏输入框
+    // window.onload = function() {
+    //    displayInput('0');
+    // };
+</script>
+</body>
+</html>

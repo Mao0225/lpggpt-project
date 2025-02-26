@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content</title>
+</head>
+<body>
+<h1></h1>
+<div class="form_box">
+    <form action="/custromer/updates" method="post" id="myForm">
+        <input type="hidden" name="custromer.id" value="#(custromer.id)">
+
+        <div>
+            <label>加气站</label>
+            <input type="hidden" id="cstation" name="custromer.station" value="#(custromer.station)" readonly/>
+            <input type="hidden" id="stationid" name="custromer.stationid" value="#(custromer.stationid)" readonly/>
+            <select id="selectName" name="custromer.station_select" onchange="chooseName()" style="border-radius: 5px;background-color: white; width: 200px;height:30px;text-align: center;">
+                #for ( x: stations)
+                <option value="#(x.id)" #(x.id == custromer.stationid ? "selected" : "")>#(x.station_name)</option>
+                #end
+            </select>
+        </div>
+
+        <div>
+            <label>加气站地址</label>
+            <input type="text" name="custromer.saddress" value="#(custromer.saddress)">
+        </div>
+        <div>
+            <label>客户</label>
+            <input type="text" name="custromer.customer" value="#(custromer.customer)">
+        </div>
+        <div>
+            <label>客户电话</label>
+            <input type="text" name="custromer.telephone" value="#(custromer.telephone)">
+        </div>
+        <div>
+            <label>客户地址</label>
+            <input type="text" name="custromer.caddress" value="#(custromer.caddress)">
+        </div>
+    </form>
+</div>
+<script>
+    var stations = [
+        #for ( x: stations)
+    { id: "#(x.id)", station_name: "#(x.station_name)" },
+    #end
+    ];
+
+    function chooseName() {
+        var selectId = document.getElementById("selectName").value;
+
+        if (selectId == "-1") {
+            document.getElementById("cstation").value = "";
+            document.getElementById("stationid").value = "";
+            console.log("选择了无效选项，cstation:", document.getElementById("cstation").value, "stationid:", document.getElementById("stationid").value);
+            return;
+        }
+
+        // 查找选中的加气站对象
+        var selectedStation = stations.find(function(station) {
+            return station.id == selectId; // 确保这里的属性名正确
+        });
+
+        if (selectedStation) {
+            document.getElementById("cstation").value = selectedStation.station_name;
+            document.getElementById("stationid").value = selectedStation.id;
+            console.log("选中加气站，cstation:", document.getElementById("cstation").value, "stationid:", document.getElementById("stationid").value);
+        } else {
+            document.getElementById("stationid").value = "";
+            alert('找不到对应的加气站！');
+        }
+    }
+
+    // 添加监听器
+    document.getElementById("selectName").addEventListener("change", chooseName);
+</script>
+
+</body>
+</html>

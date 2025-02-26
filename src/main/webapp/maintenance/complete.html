@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Equipment</title>
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color:#0b333f; /* 老师常用色 */
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* 表单样式 */
+        form {
+            background-color: #ffdf7e;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            width: 200%;
+            max-width: 1000px; /* 将表单最大宽度增大到800px，可根据实际需求再调整数值 */
+            margin: 0 auto; /* 添加这行代码，实现水平居中 */
+            transform: translateX(-15%); /* 通过向左平移一定比例，可根据实际效果调整具体数值 */
+        }
+
+        /* 表单标题样式 */
+        .form-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        /* 标签通用样式 */
+        label {
+            color: #555;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        /* 输入框和选择框通用样式 */
+        input[type="text"],
+        input[type="date"],
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            transition: border-color 0.3s ease;
+            font-size: 16px;
+            background-color: #fbf0c5; /* 黄色背景满足视觉效果需求 */
+            color: #333; /* 文字颜色在黄色背景上更清晰易读 */
+        }
+
+        input[type="text"]:focus,
+        input[type="date"]:focus,
+        select:focus {
+            border-color: #ba8b00;
+            outline: none;
+        }
+
+        /* 按钮通用样式 */
+        button[type="button"],
+        button[type="submit"] {
+            padding: 12px 25px;
+            background-color: #ba8b00;
+            color: black;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            font-size: 16px;
+            margin-top: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        button[type="button"]:hover,
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        /* 特定按钮样式（这里的.diaozhatian可考虑更语义化的命名，暂按原代码优化样式） */
+        .diaozhatian {
+            display: inline-block;
+            padding: 12px 30px;
+            background-color: #f0f0f0; /* 浅灰色背景 */
+            color: #333; /* 深色文字 */
+            font-size: 16px;
+            font-weight: 500;
+            border-radius: 25px;
+            text-align: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 轻微阴影 */
+        }
+
+        .diaozhatian:hover {
+            background-color: #e0e0e0; /* 鼠标悬停时的浅色变化 */
+            color: #007bff; /* 鼠标悬停时文字颜色变化 */
+            transform: translateY(-2px); /* 鼠标悬停时按钮稍微上浮 */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* 增加阴影，营造立体效果 */
+        }
+
+        .diaozhatian:active {
+            transform: translateY(0); /* 按钮点击时恢复正常 */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 恢复点击状态下的阴影 */
+        }
+
+        /* 备件耗材部分样式 */
+        #sparePartsContainer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #ccc;
+        }
+
+        .spare-parts-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .spare-parts-item input {
+            flex: 1;
+            margin-right: 20px;
+        }
+
+        #sparePartsContainer a {
+            color: #007bff;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        #sparePartsContainer a:hover {
+            color: #0056b3;
+        }
+
+        /* 取消与保存按钮的容器样式 */
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+        }
+
+        .form-actions button[type="button"],
+        .form-actions button[type="submit"] {
+            margin-left: 0; /* 重置向左的偏移量，可根据实际布局微调 */
+        }
+
+        /*!* 响应式设计，针对小屏幕设备进行样式调整 *!*/
+        @media (max-width: 768px) {
+            form {
+                padding: 20px;
+            }
+
+            button[type="button"],
+            button[type="submit"] {
+                width: 100%;
+                font-size: 14px;
+            }
+
+            .spare-parts-item input {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+
+            .form-title {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="form_box">
+    <form action="/maintenance/save" method="post" id="myForm">
+        <input type="hidden" id="companyid" name="bseMaintenance.id" value="#(maintenanceId)">
+        <input type="hidden" id="step" name="bseMaintenance.step" value="完成">
+        <div class="form-title">基本信息</div>
+        <div>
+            <label>记录名称</label>
+            <input type="text" name="name" value="#(maintenceRecordInfo.name)" readonly />
+        </div>
+        <div>
+            <label>设备名称</label>
+            <input type="text" name="bseMaintenance.name" value="#(maintenceRecordInfo.equipment_name)" readonly />
+        </div>
+        <div>
+            <label>放置位置</label>
+            <input type="text" name="factory" value="#(maintenceRecordInfo.location)" readonly />
+        </div>
+        <div>
+            <label>型号规格</label>
+            <input type="text" name="model" value="#(maintenceRecordInfo.model)" readonly />
+        </div>
+        <div>
+            <label>生产厂家</label>
+            <input type="text" name="factory" value="#(maintenceRecordInfo.factory)" readonly />
+        </div>
+        <div>
+            <label>主要内容</label>
+            <input type="text" name="content" value="#(maintenceRecordInfo.content)" readonly />
+        </div>
+
+        <div class="form-title">维修详情</div>
+        <div id="sparePartsContainer">
+            <div class="form-title">备件耗材</div>
+            <div class="spare-parts-item">
+                <a href="/maintenance/add?key=#(key)&equipmentid=#(equipmentRecordInfo.equipmentid)" class="diaozhatian">添加更多备件耗材</a>
+            </div>
+        </div>
+        <div>
+            <label>维修人员</label>
+            <input type="text" name="bseMaintenance.repairer" value="" />
+        </div>
+        <div>
+            <label>联系电话</label>
+            <input type="text" name="bseMaintenance.phone" value="" />
+        </div>
+        <div>
+            <label>处置过程</label>
+            <input type="text" name="bseMaintenance.process" value="" />
+        </div>
+
+
+        <div>
+            <label>备注建议</label>
+            <input type="text" name="bseMaintenance.remark" value="" />
+        </div>
+        <div>
+            <label>完成时间</label>
+            <input type="date" name="bseMaintenance.repairday" value="" />
+        </div>
+
+        <div class="form-actions">
+            <button type="button">取消</button>
+            <button type="submit">保存</button>
+        </div>
+    </form>
+</div>
+<script>
+    // 获取取消按钮元素
+    const cancelButton = document.querySelector('button[type="button"]');
+    // 为取消按钮添加点击事件监听器
+    cancelButton.addEventListener('click', function () {
+        // 调用浏览器历史记录的返回方法，返回到上一个界面
+        history.back();
+    });
+</script>
+</body>

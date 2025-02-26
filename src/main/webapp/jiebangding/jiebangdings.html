@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>解绑定管理</title>
+  <!-- Add your custom stylesheets and scripts here -->
+  <script src="../css/jquery-3.3.1.min.js"></script>
+  <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css" >
+  <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="../css/lpg.css">
+
+</head>
+<body>
+  <div id="pagediv">
+    <form id="searchForm" action="/jiebangding/jielist" method="post">
+        <label >气瓶编码：</label>
+        <input type="text" name="qipingbianma" value="#(qipingbianma)" />
+
+        <label >解绑人：</label>
+        <input type="text" name="unbinder" value="#(unbinder)" />
+
+        <label>称编码：</label>
+        <input type="text" name="chengbianma" value="#(chengbianma)" />
+
+        <label >开始日期：</label>
+        <input type="text" name="startDate" value="#(startDate)" />
+
+        <label>结束日期：</label>
+        <input type="text" name="endDate" value="#(endDate)" />
+
+      <label>&nbsp;</label>
+        <input value="提交" type="submit">
+      <input type="submit" value="重置" name="refresh"/>
+      <script>
+        var buttons = document.getElementsByName("refresh");
+        for (var i = 0; i < buttons.length; i++) {
+          buttons[i].addEventListener('click', function() {
+            // 获取所有的输入框并设置为空
+            var inputs = document.querySelectorAll('#searchForm input[type=text]');
+            for (var j = 0; j < inputs.length; j++) {
+              inputs[j].value = "";
+            }
+
+            // 提交表单以重新查询并刷新页面
+            document.getElementById('searchForm').submit();
+          });
+        }
+      </script>
+    </form>
+  </div>
+
+
+
+  <table class="list">
+    <tbody>
+    <tr>
+      <th>id</th>
+      <th>气瓶编码</th>
+      <th>称编码</th>
+      <th>绑定时间</th>
+      <th>解绑时间</th>
+      <th>绑定人电话</th>
+      <th>解绑人</th>
+      <th>操作</th>
+
+    </tr>
+    #set(startIndex = (jielist.pageNumber - 1) * jielist.pageSize + 1)
+
+    #for(x : jielist.getList())
+    <tr>
+      <td>#(startIndex++)</td> <!-- 显示序号并递增 -->
+      <td>#(x.qipingbianma)</td>
+      <td>#(x.chengbianma)</td>
+      <td>#(x.bangdingshijian)</td>
+      <td>#(x.jiebangdingshijian)</td>
+      <td>#(x.bangdingrendianhua)</td>
+      <td>#(x.jiebangren)</td>
+
+
+      <td style="text-align:left">
+          &nbsp;&nbsp;<a href="#" onclick="confirmDelete('#(x.id)')">删除</a>
+<!--        <a href="/jiebangding/add/#(x.id)">添加图片</a>-->
+      </td>
+    </tr>
+    #end
+    </tbody>
+  </table>
+  <div class="pagination" style="color:#DDDDDD;">
+    #@paginate(jielist.pageNumber, jielist.totalPage, "/jiebangding/jielist?qipingbianma=" +
+    (qipingbianma != null ? qipingbianma : "") +
+    "&unbinder=" + (unbinder != null ? unbinder : "") +
+    "&chengbianma=" + (chengbianma != null ? chengbianma : "") +
+    "&pageNum=")
+  </div>
+  <script>
+      function confirmDelete(id) {
+          var result = confirm("确定要删除吗？");
+          if (result) {
+              // 如果用户点击了确定，则执行删除操作
+              window.location.href = "/jiebangding/delete/" + id;
+          } else {
+              // 如果用户点击了取消，则不执行任何操作
+              return false;
+          }
+      }
+  </script>
+  <script>
+    $('.openModal').click(function(e) {
+      console.log("askl;jdilasjdiowjdiojaiwdjiowa");
+      e.preventDefault();
+      var editUrl = $(this).data('edit-url');
+      var that = this; // 保存正确的上下文
+      $.get(editUrl, function(data) {
+        var title = $(that).data('title');
+        $('#myModalLabel').text(title); // 修改模态窗口标题
+
+        // 清除旧内容
+        $('#modalBody').html(data); // 加载编辑内容到模态窗口
+        $('#myModal').modal('show'); // 显示模态窗口
+      });
+    });
+
+  </script>
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="myModalLabel">模态窗口标题</h4>
+        </div>
+        <div class="modal-body" id="modalBody">
+          <!-- 这里将会加载你的表单内容 -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+          <button type="button" class="btn btn-primary"  id="saveButton" >保存</button>
+          <script>
+            document.getElementById('saveButton').addEventListener('click', function() {
+              document.getElementById('myForm').submit();
+            });
+          </script>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+</body>
+</html>

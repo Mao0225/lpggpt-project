@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>LPG运营平台</title>
+	<!-- Include head.html -->
+	<link rel="stylesheet" href="head.html">
+	<!-- Add your custom stylesheets here -->
+	<link href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css" rel="stylesheet">
+	<link href="../css/font-awesome.css" rel="stylesheet">
+	<script src="../css/jquery-3.3.1.min.js"></script>
+	<script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+    <link href="../css/index.css" rel="stylesheet">
+
+
+	<script>
+		$(document).ready(function() {
+			$('.menu > li').click(function(event) {
+				event.stopPropagation(); // 阻止事件冒泡
+				// $('.submenu').not($(this).children('.submenu')).slideUp(); // 隐藏其他打开的子菜单
+				$(this).children('.submenu').slideToggle(); // 切换当前子菜单的显示和隐藏
+
+				// 切换图标
+				var icon = $(this).find('.fa1'); // 获取<i>标签
+				icon.toggleClass('fa-angle-down fa-angle-up');
+			});
+
+			$('.submenu li a').click(function(event) {
+				event.stopPropagation(); // 阻止事件冒泡
+				$('.submenu li a').removeClass('active'); // 移除所有子菜单项的激活状态
+				$(this).addClass('active'); // 添加激活状态到当前点击的子菜单项
+				loadPage($(this).attr('href')); // 加载页面
+			});
+		});
+	</script>
+
+</head>
+<body>
+<div id="container">
+	<header id="header">
+		<!-- Include head.html content here -->
+		<iframe src="head.html" frameborder="1" width="100%" height="100"></iframe>
+	</header>
+	<div id="main">
+		<div id="left" class="menu-container">
+			<ul class="menu">
+				#for(x : parentFunctions)
+				#if(x.getChildFunctions().size() == 0)
+				<li class="menu-item">
+					<a href="javascript:void(0);" onclick="loadPage('#(x.fun_url)')">
+						<span>#(x.fun_name)</span>
+					</a>
+				</li>
+				#else
+				<li class="menu-item">
+					<a href="javascript:void(0);" onclick="">
+						<i class="fa #(x.fun_logo) fa2" aria-hidden="true" ></i>
+						<span>#(x.fun_name)</span>
+						<i class="fa fa-angle-down fa1" aria-hidden="true" ></i>
+					</a>
+					<ul class="submenu">
+						#for(y : x.getChildFunctions())
+						<li class="menu-item">
+							<a href="javascript:void(0);" onclick="loadPage('#(y.fun_url)')">
+								<span>#(y.fun_name)</span>
+							</a>
+						</li>
+						#end
+					</ul>
+				</li>
+				#end
+				#end
+			</ul>
+		</div>
+		<div id="content">
+			<!-- 右侧内容展示区域 -->
+			<iframe id="contentFrame" src="content.html" frameborder="0" width="100%" height="100%"></iframe>
+		</div>
+	</div>
+	<footer id="footer">
+		<!-- Include foot.html content here -->
+		<iframe src="foot.html" frameborder="1" width="100%" height="50"></iframe>
+	</footer>
+</div>
+
+<script>
+	// JavaScript function to load content in iframe
+	function loadPage(url) {
+		document.getElementById('contentFrame').src = url;
+	}
+</script>
+
+</body>
+</html>

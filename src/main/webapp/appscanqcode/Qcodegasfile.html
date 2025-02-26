@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>气瓶详细信息</title>
+    <script src="../css/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css">
+    <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .info-card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .info-card h2 {
+            color: #2c3e50;
+            font-size: 20px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f2f5;
+            position: relative;
+            font-weight: 600;
+        }
+
+        .info-card h2::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -2px;
+            width: 50px;
+            height: 2px;
+            background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .info-item {
+            display: flex;
+            padding: 12px 0;
+            border-bottom: 1px solid #f5f5f5;
+            transition: background-color 0.2s ease;
+        }
+
+        .info-item:hover {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 12px 10px;
+        }
+
+        .info-label {
+            width: 130px;
+            color: #7f8c8d;
+            flex-shrink: 0;
+            font-weight: 500;
+        }
+
+        .info-value {
+            color: #2c3e50;
+            flex-grow: 1;
+            word-break: break-all;
+        }
+
+        .info-value:empty::after {
+            content: '暂无数据';
+            color: #bdc3c7;
+            font-style: italic;
+        }
+
+        .header-card {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(79,172,254,0.2);
+        }
+
+        .header-card .gas-number {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .header-card .gas-station {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            background: rgba(255,255,255,0.2);
+            margin-left: 10px;
+        }
+
+        @media screen and (max-width: 480px) {
+            .info-item {
+                flex-direction: column;
+            }
+
+            .info-label {
+                width: 100%;
+                margin-bottom: 4px;
+                color: #95a5a6;
+            }
+
+            .info-value {
+                padding-left: 0;
+            }
+
+            .header-card .gas-number {
+                font-size: 20px;
+            }
+            .fengtianno{
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header-card">
+        <div class="gas-number">
+            气瓶编号：#(gas_file.gas_number)
+        </div>
+        <div class="fengtianno">
+            奉天编码：#(gas_file.fengtiangasno)
+        </div>
+    </div>
+
+    <div class="info-card">
+        <h2>基本信息</h2>
+        <div class="info-item">
+            <span class="info-label">制造单位</span>
+            <span class="info-value">#(gas_file.manufacture_unit)</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">充气站</span>
+            <span class="info-value">#(gas_file.filing_gas_station)</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">阀体编码</span>
+            <span class="info-value">#(gas_file.valve_body_code)</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">使用登记证</span>
+            <span class="info-value">#(gas_file.qpsydjzbh)</span>
+        </div>
+    </div>
+
+    <div class="info-card">
+        <h2>日期信息</h2>
+        <div class="info-item">
+            <span class="info-label">制造日期</span>
+            <span class="info-value">#(gas_file.manufacture_date)</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">检验日期</span>
+            <span class="info-value">#(gas_file.inspect_date)</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">定检日期</span>
+            <span class="info-value">#(gas_file.regular_check_date)</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">终止使用日期</span>
+            <span class="info-value">#(gas_file.terminate_use_date)</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">建档时间</span>
+            <span class="info-value">#(gas_file.jiandangshijian)</span>
+        </div>
+    </div>
+
+    <div class="info-card">
+        <h2>技术参数</h2>
+        <div class="info-item">
+            <span class="info-label">设备品种</span>
+            <span class="info-value">#(gas_file.monitoring_station)</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">充装规格</span>
+            <span class="info-value">#(gas_file.filling_specification)</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">气瓶规格</span>
+            <span class="info-value">#(gas_file.gas_specification)</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">充装介质</span>
+            <span class="info-value">#(gas_file.filling_medium)</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">气瓶自重(KG)</span>
+            <span class="info-value">#(gas_file.gas_suttle)</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">许可证号</span>
+            <span class="info-value">#(gas_file.xukezhenghao)</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">公称压力</span>
+            <span class="info-value">#(gas_file.gongchengyali)</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">水试验压</span>
+            <span class="info-value">#(gas_file.shuishiyanya)</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">容积</span>
+            <span class="info-value">#(gas_file.rongji)</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">壁厚</span>
+            <span class="info-value">#(gas_file.bihou)</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">是否专用</span>
+            <span class="info-value">#(gas_file.shifouzhuanyong)</span>
+        </div>
+    </div>
+
+    <div class="info-card">
+        <h2>使用信息</h2>
+        <div class="info-item">
+            <span class="info-label">使用者名称</span>
+            <span class="info-value">#(gas_file.shiyongzhemingcheng)</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">使用者地址</span>
+            <span class="info-value">#(gas_file.shiyongzhedizhi)</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">联系电话</span>
+            <span class="info-value">#(gas_file.shiyongzhedianhua)</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">经度</span>
+            <span class="info-value">#(gas_file.shiyongzhejingdu)</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">纬度</span>
+            <span class="info-value">#(gas_file.shiyongzheweidu)</span>
+        </div>
+    </div>
+</div>
+</body>
+</html>

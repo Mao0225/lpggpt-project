@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content</title>
+    <!-- Add your custom stylesheets and scripts here -->
+    <link rel="stylesheet" type="text/css" href="/css/lpg.css">
+    <script src="../css/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css" >
+    <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/lpg.css">
+    <style>
+        /*form {*/
+        /*    font-family: Arial, sans - serif;*/
+        /*    padding: 20px;*/
+        /*    display: flex;*/
+        /*    flex-wrap: wrap;*/
+        /*    align-items: center;*/
+        /*}*/
+
+        /*label {*/
+        /*    margin-right: 10px;*/
+        /*    color: white; !* 将label文字颜色设置为白色 *!*/
+        /*}*/
+
+        /*input[type="text"] {*/
+        /*    width: 150px;*/
+        /*    padding: 5px;*/
+        /*    border: 1px solid #ccc;*/
+        /*    border-radius: 3px;*/
+        /*}*/
+
+        /*button[type="submit"] {*/
+        /*    padding: 8px 15px;*/
+        /*    background-color: yellow; !* 将提交按钮背景色设置为黄色 *!*/
+        /*    color: black;*/
+        /*    border: none;*/
+        /*    border-radius: 3px;*/
+        /*    cursor: pointer;*/
+        /*}*/
+    </style>
+</head>
+<body>
+<div id="pagediv">
+    <!--a href="add" style="color: #DDDDDD"><b> + </b>新建用户</a-->
+    <form id="searchForm" action="/gasbottle/gasbottlelist" method="post">
+        <label for="bottleid">气瓶编号：</label>
+        <input type="text" id="bottleid" name="bottleid" placeholder="气瓶编号" value="#(bottleid)"/>
+
+        &nbsp;&nbsp;<label for="transstate">运输状态：</label>
+        <input type="text" id="transstate" name="transstate" placeholder="运输状态" value="#(transstate)"/>
+
+        &nbsp;&nbsp;<label for="carid">车牌号：</label>
+        <input type="text" id="carid" name="carid" placeholder="车牌号" value="#(carid)"/>
+
+        &nbsp;&nbsp;<label for="starttime">运输开始时间：</label>
+        <input type="text" id="starttime" name="starttime" placeholder="运输开始时间" value="#(starttime)"/>
+
+        &nbsp;&nbsp;<label for="endtime">运输结束时间：</label>
+        <input type="text" id="endtime" name="endtime" placeholder="运输结束时间" value="#(endtime)"/>
+
+        &nbsp;&nbsp;<label for="tel">司机电话：</label>
+        <input type="text" id="tel" name="tel" placeholder="司机电话" value="#(tel)"/>
+
+        &nbsp;&nbsp;<button type="submit">查询</button>
+    </form>
+
+</div>
+<table class="list">
+    <tbody>
+    <tr>
+        <th>序号</th>
+        <th>气瓶编号</th>
+        <th>气瓶名字</th>
+        <th>运输人姓名</th>
+        <th>接收人姓名</th>
+        <th>运输卸载</th>
+        <th>运输状态</th>
+        <th>开始时间</th>
+        <th>结束时间</th>
+        <th>车牌号</th>
+        <th>司机电话</th>
+        <th>GPS经度</th>
+        <th>GPS纬度</th>
+        <th>地点</th>
+        <th>结束经度</th>
+        <th>结束纬度</th>
+        <th>结束地点</th>
+    </tr>
+    #set(startIndex = (gasbottlelist.pageNumber - 1) * gasbottlelist.pageSize + 1)
+    #for(x : gasbottlelist.getList())
+    <tr>
+        <td>#(startIndex++)</td> <!-- 显示序号并递增 -->
+        <td>#(x.bottle_id)</td>
+        <td>#(x.gas_name)</td>
+        <td>#(x.trans_staff)</td>
+        <td>#(x.trans_receiver)</td>
+        <td>#(x.trans_uninstall)</td>
+        <td>#(x.trans_state)</td>
+        <td>#(x.start_time)</td>
+        <td>#(x.end_time)</td>
+        <td>#(x.car_id)</td>
+        <td>#(x.tel)</td>
+        <td>#(x.jingDu)</td>
+        <td>#(x.weiDu)</td>
+        <td>#(x.address)</td>
+        <td>#(x.jieshujingdu)</td>
+        <td>#(x.jieshuweidu)</td>
+        <td>#(x.jieshuaddress)</td>
+
+    </tr>
+    #end
+    </tbody>
+</table>
+<div class="pagination" style="color:#f0f0f0; font-size: 15px">
+    #@paginate(gasbottlelist.pageNumber, gasbottlelist.totalPage,"/gasbottle/gasbottlelist?bottleid=" + (bottleid != null ? bottleid : "") + "&carid=" + (carid != null ? carid : "") + "&transstate=" +(transstate != null ? transstate : "") +"&starttime=" +(starttime != null ? starttime : "") +"&endtime=" +(endtime != null ? endtime : "") +"&tel=" +(tel != null ? tel : "") +"&page=")
+</div>
+
+</body>
+</html>

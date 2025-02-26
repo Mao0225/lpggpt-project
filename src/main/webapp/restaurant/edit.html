@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<title>Content</title>
+<body>
+<h1>
+</h1>
+<div class="form_box">
+    <form action="/restaurant/update" method="post" id="myForm">
+        <input type="hidden" name="restaurant.id" value="#(restaurant.id)">
+
+        <div>
+            <label>饭店编号</label>
+            <input type="text" name="restaurant.restaurantno" value="#(restaurant.restaurantno)">
+        </div>
+        <div>
+            <label>饭店名称</label>
+            <input type="text" name="restaurant.name" value="#(restaurant.name)">
+        </div>
+        <div>
+            <label>饭店店长</label>
+            <input type="text" name="restaurant.leader" value="#(restaurant.leader)">
+        </div>
+        <div>
+            <label>饭店地址</label>
+            <input type="text" name="restaurant.address" value="#(restaurant.address)">
+        </div>
+        <div>
+            <label>联系电话</label>
+            <input type="text" name="restaurant.telephone" value="#(restaurant.telephone)">
+        </div>
+        <div>
+            <label>联系电话</label>
+            <input type="text" name="restaurant.pwd" value="#(restaurant.pwd)">
+        </div>
+        <div>
+            <label>小盒子</label>
+            <input type="text" name="restaurant.xiaohezi" value="#(restaurant.xiaohezi)">
+        </div>
+        <div>
+            <label>报警人</label>
+            <input type="text" name="restaurant.baojingren" value="#(restaurant.baojingren)">
+        </div>
+        <div>
+            <label>备注</label>
+            <input type="text" name="restaurant.memo" value="#(restaurant.memo)">
+        </div>
+
+        <div>
+            <label>设备类型</label>
+            <select id="deviceType" name="restaurant.biaoji">
+                <option value="1">电子秤</option>
+                <option value="2">燃气表</option>
+            </select>
+        </div>
+
+        <div id="codeDiv">
+            <label id="codeLabel">称/表编码</label>
+            <input type="text" name="restaurant.chengno" value="#(restaurant.chengno)" />
+        </div>
+
+
+    </form>
+</div>
+<script>
+    $(document).ready(function() {
+        var biaoji = #(restaurant.biaoji);  //在这里设定初始的biaoji值
+
+        //设定初始化的设备类型
+        $("#deviceType").val(biaoji);
+
+        $('#deviceType').change(function() {
+            if ($(this).val() == "1") {
+                $('#codeLabel').text('称编码');
+            } else if ($(this).val() == "2") {
+                $('#codeLabel').text('表编码');
+            } else {
+                $('#codeLabel').text('称编码/表编码');
+            }
+        });
+
+        //一开始就触发这个事件去设定编码标签
+        $('#deviceType').trigger('change');
+    });
+</script>
+
+</body>
+</html>

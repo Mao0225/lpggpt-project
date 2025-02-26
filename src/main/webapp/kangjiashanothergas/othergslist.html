@@ -1,0 +1,134 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Content</title>
+	<!-- Add your custom stylesheets and scripts here -->
+	<script src="../css/jquery-3.3.1.min.js"></script>
+	<link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css" >
+	<script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="../css/lpg.css">
+	<script src="../css/jquery-3.3.1.min.js"></script>
+	<link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css" >
+	<script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="../css/lpg.css">
+
+	<style>
+		/*form {*/
+		/*	font-family: Arial, sans - serif;*/
+		/*	padding: 20px;*/
+		/*	display: flex;*/
+		/*	flex-wrap: wrap;*/
+		/*	align-items: center;*/
+		/*}*/
+
+		/*label {*/
+		/*	margin-right: 10px;*/
+		/*	color: white; !* 将label文字颜色设置为白色 *!*/
+		/*}*/
+
+		/*input[type="text"] {*/
+		/*	width: 150px;*/
+		/*	padding: 5px;*/
+		/*	border: 1px solid #ccc;*/
+		/*	border-radius: 3px;*/
+		/*}*/
+
+		/*button[type="submit"] {*/
+		/*	padding: 8px 15px;*/
+		/*	background-color: yellow; !* 将提交按钮背景色设置为黄色 *!*/
+		/*	color: black;*/
+		/*	border: none;*/
+		/*	border-radius: 3px;*/
+		/*	cursor: pointer;*/
+		/*}*/
+	</style>
+</head>
+<body>
+ 	<div id="pagediv">
+		<form id="searchForm" action="/kangjiashanothergas/othergslist" method="post">
+			<label for="stationcode">请输入单位编码：</label>
+			<input type="text" id="stationcode" name="stationcode" placeholder="请输入单位编码" value="#(stationcode)"/>
+			&nbsp;&nbsp;<button type="submit">查询</button>
+		</form>
+<!--		<a href="#" class="add openModal" data-title="新建加气记录" data-edit-url="add"><b> + </b>新建加气机加气记录</a>-->
+	</div>
+	<table class="list">
+		<tbody>
+		<tr>
+			<th>序号</th>
+			<th>交易日期（tradetime）</th>
+			<th>枪号</th>
+			<th>流水号</th>
+			<th>灌装量（KG）</th>
+
+			<th>目标量（KG）</th>
+			<th>灌装用时</th>
+			<th>单位编码</th>
+			<th>创建日期（createdate）</th>
+		</tr>
+		#set(startIndex = (othergslist.pageNumber - 1) * othergslist.pageSize + 1)
+
+		#for(x : othergslist.getList())
+		<tr>
+			<td>#(startIndex++)</td> <!-- 显示序号并递增 -->
+			<td>#(x.TradeDate)</td>
+			<td>#(x.GunNo)</td>
+			<td>#(x.TradeNo)</td>
+			<td>#(x.NowGas)</td>
+			<td>#(x.beginpressure)</td>
+			
+ 			<td>#(x.addgaslong)</td>
+			<td>#(x.stationCode)</td>
+			<td>#(x.create_time)</td>
+
+		</tr>
+		#end
+		</tbody>
+	</table>
+	<div class="pagination" style="color:#f0f0f0; font-size: 15px">
+		#@paginate(othergslist.pageNumber, othergslist.totalPage, "/kangjiashanothergas/othergslist?stationcode=" + (stationcode != null ? stationcode : "")  + "&page=")
+	</div>
+	<script>
+		$('.openModal').click(function(e) {
+			e.preventDefault();
+			var editUrl = $(this).data('edit-url');
+			var that = this; // 保存正确的上下文
+
+			$.get(editUrl, function(data) {
+				var title = $(that).data('title');
+				$('#myModalLabel').text(title); // 修改模态窗口标题
+
+				// 清除旧内容
+				$('#modalBody').html(data); // 加载编辑内容到模态窗口
+				$('#myModal').modal('show'); // 显示模态窗口
+			});
+		});
+
+	</script>
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="myModalLabel">模态窗口标题</h4>
+				</div>
+				<div class="modal-body" id="modalBody">
+					<!-- 这里将会加载你的表单内容 -->
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					<button type="button" class="btn btn-primary"  id="saveButton" >保存</button>
+					<script>
+						document.getElementById('saveButton').addEventListener('click', function() {
+							document.getElementById('myForm').submit();
+						});
+					</script>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+</body>
+</html>

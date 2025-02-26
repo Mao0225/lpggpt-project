@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<title>Content</title>
+<style>
+    /* 以下是保留你原来的样式部分 */
+    ::-webkit-input-placeholder {
+        /* Chrome/Opera/Safari */
+        color: #8A8A8A;
+        font-size: 12px;
+    }
+
+    ::-moz-placeholder {
+        /* Firefox 19+ */
+        color: #8A8A8A;
+        font-size: 12px;
+    }
+
+    :-ms-input-placeholder {
+        /* IE 10+ */
+        color: #8A8A8A;
+        font-size: 12px;
+    }
+
+    :-moz-placeholder {
+        /* Firefox 18- */
+        color: #8A8A8A;
+        font-size: 12px;
+    }
+</style>
+
+<body>
+<h1>
+</h1>
+<div class="form_box">
+    <form action="/Fequipment/osave" method="post" id="myForm">
+        <div>
+            <label>加气站</label>
+            <input type="hidden" id="cstation" name="bseFittOperate.stationid" value="#(stationid)"/>
+            <input type="hidden" id="stationid" name="bseFittOperate.staff" value="#(writer)"/>
+            <input type="hidden"  name="number" value="#(fequipment.number)"/>
+            <input type="hidden"  name="key" value="#(fequipment.id)"/>
+        </div>
+        <div>
+
+            <label>使用物资名称</label>
+            <input type="text" name="bseFittOperate.name" value="#(fequipment.name)" readonly/>
+        </div>
+        <div>
+            <label>使用物资数量</label>
+            <input type="number"
+                   name="bseFittOperate.count"
+                   value=""
+                   min="0"
+                   max="#(fequipment.number)" required/>
+        </div>
+
+        <div>
+            <label>使用设备</label>
+            <input type="text" name="bseFittOperate.equipment" value="" />
+        </div>
+        <div>
+            <label>简要描述</label>
+            <input type="text" name="bseFittOperate.content" value="" />
+        </div>
+
+<!--        <input type="submit" value="提交" />-->
+<!--        <button onclick="goBack()">返回</button>-->
+    </form>
+</div>
+<!-- 添加一个返回按钮 -->
+
+
+
+</body>
+
+</html>

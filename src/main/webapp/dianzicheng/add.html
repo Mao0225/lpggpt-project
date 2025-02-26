@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        input{
+            border-radius:5px ; background-color:#fbf0c5;
+            width: 400px; /* 调整这个宽度值以适应你的需求 */
+
+        }
+    </style>
+</head>
+<title>Content</title>
+<body>
+<h1>
+</h1>
+<div class="form_box">
+    <form id="myForm" action="/dianzicheng/save" method="post">
+
+        <div>
+            <label >秤编号</label>
+            <input type="text" name="dianzicheng.bianma" value=""/>
+        </div>
+
+        <div>
+            <label >阿里用户名</label>
+            <input type="text" name="dianzicheng.alichengmingzi" value=""/>
+        </div>
+
+        <div>
+            <label >生产厂家</label>
+            <input type="text" name="dianzicheng.shengchangchangjia" value=""/>
+        </div>
+
+        <div>
+            <label >生产日期</label>
+            <input type="text" name="dianzicheng.shengchanriqi" value=""/>
+        </div>
+
+        <div>
+            <label >注册日期</label>
+            <input type="text" name="dianzicheng.zhuceriqi" value=""/>
+        </div>
+
+        <div>
+            <label >饭店名称</label>
+            <input type="hidden" id="dianzicheng_shiyongfandianmingzi" name="dianzicheng.shiyongfandianmingzi" readonly>
+            <select id="selectName" name="dianzicheng.shiyongfandianmingzi" onchange="chooseName()" style="border-radius: 5px;background-color: white; width: 200px;height:30px;text-align: center;">
+                <option value="-1" selected>请选择饭店名字</option>
+                #for ( x: restaurants)
+                <option value="#(x.id)">#(x.name)</option>
+                #end
+            </select>
+        </div>
+
+        <div>
+            <label >饭店联系电话</label>
+            <input type="text" id="dianzicheng_shiyongfangphone" name="dianzicheng.shiyongfangphone" value="" readonly />
+        </div>
+        <div>
+            <label >是否打开阀门</label>
+            <input type="text" name="dianzicheng.dakaifamen" value="" />
+        </div>
+        <div>
+            <label >是否关闭阀门</label>
+            <input type="text" name="dianzicheng.guanbifamen" value="" />
+        </div>
+        <div>
+            <label >获取秤的全部状态</label>
+            <input type="text" name="dianzicheng.huoquchengxinxi" value="" />
+        </div>
+        <div>
+            <label >获取警报</label>
+            <input type="text" name="dianzicheng.huoqujingbao" value="" />
+        </div>
+        <div>
+            <label >打开警报</label>
+            <input type="text" name="dianzicheng.dakaijingbao" value="" />
+        </div>
+        <div>
+            <label >关闭警报</label>
+            <input type="text" name="dianzicheng.guanbijingbao" value="" />
+        </div>
+
+        <div>
+            <label >状态</label>
+            <input type="text" name="dianzicheng.status" value="" />
+        </div>
+
+        <div>
+            <label >预留1</label>
+            <input type="text" name="dianzicheng.yuliu1" value="" />
+        </div>
+        <div>
+            <label >预留2</label>
+            <input type="text" name="dianzicheng.yuliu2" value="" />
+        </div>
+        <div>
+            <label >预留3</label>
+            <input type="text" name="dianzicheng.yuliu3" value="" />
+        </div>
+        <div>
+            <label >备注（预留命令位置）</label>
+            <input type="text" name="dianzicheng.memo" value="" />
+        </div>
+        <div>
+            <label >绑定接口</label>
+            <input type="text" name="dianzicheng.bangdingjiekou" value="" />
+        </div>
+
+        <div>
+            <label >解绑接口</label>
+            <input type="text" name="dianzicheng.jiebangdingjiekou" value="" />
+        </div>
+        <div>
+            <label ></label>
+            <input hidden id="telephoneid" type="hidden" name="dianzicheng.shiyongfangphoneid" value="" />
+        </div>
+    </form>
+</div>
+</body>
+<script>
+    // 假设这是服务器端渲染到页面中的JSON数据
+    var jsonData = '#(com.alibaba.fastjson.JSONArray::toJSON(restaurants))';
+    // 解析JSON数据
+    var context = JSON.parse(jsonData.replace(/#/g, ""));
+
+    function chooseName() {
+        var selectId = document.getElementById("selectName").value;
+
+        if (selectId == "-1") {
+            // document.getElementById("dianzicheng_shiyongfandianmingzi").value = "";
+            // document.getElementById("dianzicheng_shiyongfangphone").value = "";
+            return;
+        }
+
+        // 查找选中的饭店对象
+        var selectedRestaurant = context.find(function(restaurant) {
+            return restaurant.id == selectId;
+        });
+
+        if (selectedRestaurant) {
+            document.getElementById("dianzicheng_shiyongfandianmingzi").value = selectedRestaurant.name;
+            document.getElementById("dianzicheng_shiyongfangphone").value = selectedRestaurant.telephone;
+
+        } else {
+            document.getElementById("dianzicheng_shiyongfandianmingzi").value = "";
+            document.getElementById("dianzicheng_shiyongfangphone").value = "";
+            alert('找不到对应的饭店！');
+        }
+
+    }
+    document.getElementById("selectName").addEventListener("change", chooseName);
+</script>
+</html>

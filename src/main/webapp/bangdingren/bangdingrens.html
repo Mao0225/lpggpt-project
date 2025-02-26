@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Content</title>
+<script src="../css/jquery-3.3.1.min.js"></script>
+<link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css" >
+<script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+<link rel="stylesheet" type="text/css" href="../css/lpg.css">
+<!-- Add your custom stylesheets and scripts here -->
+<script>
+    document.getElementById('showFormButton').addEventListener('click', function() {
+        var form = document.getElementById('searchForm');
+        if (form.style.display === 'none') {
+            form.style.display = 'block'; // 显示表单
+        } else {
+            form.style.display = 'none'; // 再次点击按钮隐藏表单
+        }
+    });
+</script>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- 这里是头部信息 -->
+</head>
+<body>
+<div id="pagediv">
+    <form id="searchForm" action="/bangdingren/bangdingrenlist" method="post">
+        <a href="#" class="add openModal" data-title="新建绑定人" data-edit-url="/bangdingren/add"><b> + </b>新建绑定人</a>
+        <label> 姓名：</label>
+        <input type="text"  name="name" placeholder="姓名" value="#(name)">
+
+        <label> 联系电话：</label>
+        <input type="text"  name="telephone" placeholder="联系电话" value="#(telephone)">
+
+        <input value="搜索" type="submit">
+        <input type="submit" value="重置" name="refresh">
+
+    </form>
+
+</div>
+
+<!-- 这里是您的脚本 -->
+<script>
+    document.getElementById('fresh').addEventListener('click', function() {
+        // 提交表单以重新查询并刷新页面
+        document.getElementById('searchForm').submit();
+    });
+
+    document.getElementById('showFormButton').addEventListener('click', function() {
+        var form = document.getElementById('searchForm');
+        if (form.style.display === 'none') {
+            form.style.display = 'block'; // 显示表单
+        } else {
+            form.style.display = 'none'; // 再次点击按钮隐藏表单
+        }
+    });
+</script>
+</body>
+</html>
+<table class="list">
+    <tbody>
+    <tr>
+        <th>id</th>
+        <th>绑定人姓名</th>
+        <th>账号密码</th>
+        <th>联系方式</th>
+        <th>出生日期</th>
+        <th>身份证号</th>
+        <th>培训证号</th>
+        <th>培训证有效期</th>
+        <th>培训证照片</th>
+        <th>操作标识</th>
+        <th>操作</th>
+    </tr>
+
+    #for(x : bangdingrens.getList())
+    <tr>
+        <td>#(x.id)</td>
+        <td>#(x.name)</td>
+        <td>#(x.psw)</td>
+        <td>#(x.telphone)</td>
+        <td>#(x.chushengriqi)</td>
+        <td>#(x.identity_card_no)</td>
+        <td>#(x.train_certificate_no)</td>
+        <td>#(x.train_certificate_indate)</td>
+
+        <td>
+            #if(x.train_certificate_image_url)
+            <img src="#(x.train_certificate_image_url)" alt="Car picture" style="width:100px;height:100px;"  onclick="showImage(this.src)">
+            #else
+            <img src="/img/+++++.png" alt="车辆图像" style="display: none;">
+            #end
+        </td>
+
+        <td>#(x.update_sign)</td>
+        <td style="text-align:left">
+            &nbsp;&nbsp;<a href="#" onclick="confirmDelete('#(x.id)')">删除</a>
+            <a href="#" class="edit openModal" data-title="编辑用户" data-edit-url="/bangdingren/edit/#(x.id)">修改</a>
+        </td>
+    </tr>
+    #end
+    </tbody>
+</table>
+<div class="pagination" style="color:#DDDDDD;">
+    #@paginate(bangdingrens.pageNumber, bangdingrens.totalPage, "/bangdingren/bangdingrenlist?name="+(name != null ? name : "")+"&telephone="+( telephone != null ? telephone : "")+"&page=")
+</div>
+<script>
+    function confirmDelete(id) {
+        var result = confirm("确定要删除吗？");
+        if (result) {
+            // 如果用户点击了确定，则执行删除操作
+            window.location.href = "/bangdingren/delete/" + id;
+        } else {
+            // 如果用户点击了取消，则不执行任何操作
+            return false;
+        }
+    }
+</script>
+
+<script>
+    var buttons = document.getElementsByName("refresh");
+    for (var i = 0; i < buttons.length; i++) {
+        buttons[i].addEventListener('click', function() {
+            // 获取所有的输入框并设置为空
+            var inputs = document.querySelectorAll('#searchForm input[type=text]');
+            for (var j = 0; j < inputs.length; j++) {
+                inputs[j].value = "";
+            }
+
+            // 提交表单以重新查询并刷新页面
+            document.getElementById('searchForm').submit();
+        });
+    }
+</script>
+
+<script>
+    $('.openModal').click(function(e) {
+        e.preventDefault();
+        var editUrl = $(this).data('edit-url');
+        var that = this; // 保存正确的上下文
+
+        $.get(editUrl, function(data) {
+            var title = $(that).data('title');
+            $('#myModalLabel').text(title); // 修改模态窗口标题
+
+            // 清除旧内容
+            $('#modalBody').html(data); // 加载编辑内容到模态窗口
+            $('#myModal').modal('show'); // 显示模态窗口
+
+        });
+    });
+
+</script>
+<script>
+    function showImage(imageUrl) {
+        if(imageUrl == null){
+
+        }
+        var img = new Image();
+        img.src = imageUrl;
+        var mask = document.createElement('div');
+        mask.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); z-index: 9999;';
+        document.body.appendChild(mask);
+        var imgContainer = document.createElement('div');
+        imgContainer.style.cssText = 'position: fixed; top: 50%; left: 50%; width: auto; height: auto; transform: translate(-50%, -50%); z-index: 10000;';
+        imgContainer.appendChild(img);
+        document.body.appendChild(imgContainer);
+
+        img.onload = function() {
+            var maxWidth = window.innerWidth * 0.8; // Adjust max width as needed
+            var maxHeight = window.innerHeight * 0.8; // Adjust max height as needed
+            var imgWidth = img.naturalWidth;
+            var imgHeight = img.naturalHeight;
+            var scaleFactor = Math.min(maxWidth / imgWidth, maxHeight / imgHeight);
+            img.style.width = (imgWidth * scaleFactor) + "px";
+            img.style.height = (imgHeight * scaleFactor) + "px";
+        }
+
+        mask.addEventListener('click', function() {
+            mask.parentNode.removeChild(mask);
+            imgContainer.parentNode.removeChild(imgContainer);
+        });
+    }
+
+</script>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" >
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">模态窗口标题</h4>
+            </div>
+            <div class="modal-body" id="modalBody" >
+
+                <!-- 这里将会加载你的表单内容 -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary"  id="saveButton" >保存</button>
+                <script>
+                    function validateForm() {
+                        // 正确的日期格式 yyyy-mm-dd
+                        const dateFormat = /^\d{4}-\d{2}-\d{2}$/;
+
+                        // 获取所有需要验证的日期输入框
+                        const dateInputs = document.querySelectorAll('input[type="text"][name^="bangdingren."][name*="indate"], input[type="text"][name^="bangdingren."][name*="chushengriqi"]');
+
+                        for (let i = 0; i < dateInputs.length; i++) {
+                            // 如果日期输入框不为空，检查日期格式
+                            if (dateInputs[i].value.trim() !== "" && !dateFormat.test(dateInputs[i].value)) {
+                                alert('日期格式不正确，无法保存,正确日期格式应为xxxx-xx-xx');
+                                return false; // 如果有任何一个日期格式不正确，直接返回false
+                            }
+                        }
+
+                        return true; // 如果所有字段验证通过，返回true
+                    }
+                    document.getElementById('saveButton').addEventListener('click', function() {
+                        // 验证表单数据
+                        if (validateForm()) {
+                            // 如果验证通过，则提交表单
+                            document.getElementById('myForm').submit();
+                        }
+                        // 如果验证失败，不提交表单（validateForm内部已经显示了错误消息）
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+</body>
+</html>

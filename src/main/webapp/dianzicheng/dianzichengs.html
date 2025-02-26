@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="../css/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css">
+    <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/lpg.css">
+
+    <title>Content</title>
+    <!-- Add your custom stylesheets and scripts here -->
+</head>
+<body>
+
+
+    <div id="pagediv">
+        <a href="#" class="add openModal" data-title="新建电子秤" data-edit-url="add" ><b> + </b>新建电子秤</a>
+    </div>
+    <table class="list">
+        <tbody>
+        <thead>
+        <tr>
+            <th>序号</th>
+            <th>秤编号</th>
+            <th>阿里用户名</th>
+            <th>生产厂家</th>
+            <th>生产日期</th>
+            <th>注册日期</th>
+            <th>饭店名称</th>
+            <th>饭店联系电话</th>
+            <th>是否打开阀门</th>
+            <th>是否关闭阀门</th>
+            <th>获取秤的全部状态</th>
+            <th>获取警报</th>
+            <th>打开警报</th>
+            <th>关闭警报</th>
+            <th>状态</th>
+            <th>预留1</th>
+            <th>预留2</th>
+            <th>预留3</th>
+            <th>备注（预留命令位置）</th>
+            <th>绑定接口</th>
+            <th>解绑接口</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        #set(startIndex = (dianzichengs.pageNumber - 1) * dianzichengs.pageSize + 1)
+
+        #for(x : dianzichengs.getList())
+        <tr>
+            <td>#(startIndex++)</td> <!-- 显示序号并递增 -->
+            <td>#(x.bianma)</td>
+            <td>#(x.alichengmingzi)</td>
+            <td>#(x.shengchangchangjia)</td>
+            <td>#(x.shengchanriqi)</td>
+            <td>#(x.zhuceriqi)</td>
+            <td>#(x.shiyongfandianmingzi)</td>
+            <td>#(x.shiyongfangphone)</td>
+            <td>#(x.dakaifamen)</td>
+            <td>#(x.guanbifamen)</td>
+            <td>#(x.huoquchengxinxi)</td>
+            <td>#(x.huoqujingbao)</td>
+            <td>#(x.dakaijingbao)</td>
+            <td>#(x.guanbijingbao)</td>
+            <td>#(x.status)</td>
+            <td>#(x.yuliu1)</td>
+            <td>#(x.yuliu2)</td>
+            <td>#(x.yuliu3)</td>
+            <td>#(x.memo)</td>
+            <td>#(x.bangdingjiekou)</td>
+            <td>#(x.jiebangdingjiekou)</td>
+
+            <td style="text-align:left">
+                &nbsp;&nbsp;<a href="#" onclick="confirmDelete('#(x.id)')">删除</a>
+                &nbsp;&nbsp; <a href="#" class="edit openModal" data-title="编辑电子秤" data-edit-url="/dianzicheng/edit/#(x.id)">修改</a>
+            </td>
+        </tr>
+        #end
+        </tbody>
+    </table>
+    <div class="pagination" style="color:#DDDDDD; font-size: 24px">
+        #@paginate(dianzichengs.pageNumber, dianzichengs.totalPage, "/dianzicheng/dianzichenglist?page=")
+    </div>
+
+    <script>
+        function confirmDelete(id) {
+            var result = confirm("确定要删除吗？");
+            if (result) {
+                // 如果用户点击了确定，则执行删除操作
+                window.location.href = "/dianzicheng/delete/" + id;
+            } else {
+                // 如果用户点击了取消，则不执行任何操作
+                return false;
+            }
+        }
+    </script>
+
+<script>
+    $('.openModal').click(function(e) {
+        e.preventDefault();
+        var editUrl = $(this).data('edit-url');
+        var that = this; // 保存正确的上下文
+
+        $.get(editUrl, function(data) {
+            var title = $(that).data('title');
+            $('#myModalLabel').text(title); // 修改模态窗口标题
+
+            // 清除旧内容
+            $('#modalBody').html(data); // 加载编辑内容到模态窗口
+            $('#myModal').modal('show'); // 显示模态窗口
+        });
+    });
+
+</script>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">模态窗口标题</h4>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- 这里将会加载你的表单内容 -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary"  id="saveButton" >保存</button>
+
+                <script>
+                    function validateForm() {
+                        // 正确的日期格式 yyyy-mm-dd
+                        const dateFormat = /^\d{4}-\d{2}-\d{2}$/;
+
+                        // 获取所有需要验证的日期输入框
+                        const dateInputs = document.querySelectorAll('input[type="text"][name^="dianzicheng."][name*="zhuceriqi"], input[type="text"][name^="dianzicheng."][name*="shengchanriqi"]');
+                        var statusInput = document.querySelector('input[name="dianzicheng.status"]');
+                        for (let i = 0; i < dateInputs.length; i++) {
+                            if (statusInput.value === '') {
+                                alert('状态不能为空');
+                                return false
+                            }
+                            // 如果日期输入框不为空，检查日期格式
+                            if (dateInputs[i].value.trim() !== "" && !dateFormat.test(dateInputs[i].value)) {
+                                alert('日期格式不正确，无法保存,正确日期格式应为xxxx-xx-xx');
+                                return false; // 如果有任何一个日期格式不正确，直接返回false
+                            }
+                        }
+                        return true;
+                    }
+
+
+                    document.getElementById('saveButton').addEventListener('click', function() {
+                        // 验证表单数据
+                        if (validateForm()) {
+                            // 如果验证通过，则提交表单
+                            document.getElementById('myForm').submit();
+                        }
+                        // 如果验证失败，不提交表单（validateForm内部已经显示了错误消息）
+                    });
+                </script>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

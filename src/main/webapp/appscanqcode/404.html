@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>查询失败</title>
+    <script src="../css/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css">
+    <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .error-container {
+            width: 90%;
+            max-width: 400px;
+            background: white;
+            border-radius: 20px;
+            padding: 40px 25px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .error-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 25px;
+            background: #fff0f0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: #ff4d4f;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 77, 79, 0.4);
+            }
+            70% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 10px rgba(255, 77, 79, 0);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 77, 79, 0);
+            }
+        }
+
+        .error-title {
+            font-size: 24px;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .error-message {
+            font-size: 16px;
+            color: #7f8c8d;
+            line-height: 1.8;
+            margin-bottom: 25px;
+        }
+
+        .gas-number {
+            background: linear-gradient(145deg, #f8f9fa, #ffffff);
+            padding: 15px;
+            border-radius: 12px;
+            margin: 20px auto;
+            max-width: 280px;
+            word-break: break-all;
+            color: #ff4d4f;
+            font-size: 18px;
+            font-weight: 500;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+            border: 1px solid #f0f0f0;
+        }
+
+        .divider {
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, #ff4d4f, #ff7875);
+            margin: 20px auto;
+            border-radius: 2px;
+        }
+
+        .error-subtitle {
+            color: #95a5a6;
+            font-size: 14px;
+            margin-top: 20px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <div class="error-icon">❌</div>
+            <h1 class="error-title">未找到气瓶信息</h1>
+            <div class="divider"></div>
+            <div class="error-message">
+                <div>抱歉，未能找到以下编号的气瓶，该气瓶尚未在气瓶库中：</div>
+                <div class="gas-number">#(fengtiangasno)</div>
+            </div>
+    </div>
+</body>
+</html> 

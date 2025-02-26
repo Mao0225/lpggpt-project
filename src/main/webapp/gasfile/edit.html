@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<title>Content</title>
+<body>
+<div class="form_box">
+    <form id="myForm" action="/gasFile/update" method="post">
+        <input type="hidden" name="gas_file.id" value="#(gas_file.id??)" />
+        <div>
+            <label for="gas_file.gas_number">气瓶编号</label>
+            <input type="text" id="gas_file.gas_number" name="gas_file.gas_number"  value="#(gas_file.gas_number)" />
+        </div>
+        <div>
+            <label >奉天编码</label>
+            <input type="text" id="gas_file.fengtiangasno" name="gas_file.fengtiangasno"  value="#(gas_file.fengtiangasno)" />
+        </div>
+
+        <div>
+            <label >镂空码</label>
+            <input type="text" id="gas_file.loukongno" name="gas_file.loukongno"  value="#(gas_file.loukongno)" />
+        </div>
+
+        <div>
+<!--            <label >气站id</label>-->
+            <input type="hidden" id="gas_file.gasstationid" name="gas_file.gasstationid"  value="#(gas_file.gasstationid)" readonly/>
+        </div>
+        <div>
+            <label >加气站名字</label>
+            <input type="hidden" id="gas_file.filing_gas_station" name="gas_file.filing_gas_station" readonly>
+
+            <select id="selectName" name="gas_file.filing_gas_station" onchange="chooseName()" style="border-radius: 5px;background-color: white; width: 200px;height:30px;text-align: center;">
+                <option value="-#(gas_file.gasstationid)" selected>#(gas_file.filing_gas_station)</option>
+                #for ( x: gasstations)
+                <option value="#(x.id)">#(x.station_name)</option>
+                #end
+            </select>
+        </div>
+
+        <div>
+            <label>制造单位</label>
+            <input type="text" name="gas_file.manufacture_unit"  value="#(gas_file.manufacture_unit)" />
+        </div>
+
+        <div>
+            <label>阀体编码</label>
+            <input type="text" name="gas_file.valve_body_code" value="#(gas_file.valve_body_code)" />
+        </div>
+
+        <div>
+            <label>气瓶使用登记证编号</label>
+            <input type="text" name="gas_file.qpsydjzbh"  value="#(gas_file.qpsydjzbh)" />
+        </div>
+
+        <div>
+            <label>制造日期</label>
+            <input type="text" name="gas_file.manufacture_date"   value="#(gas_file.manufacture_date)" />
+        </div>
+
+        <div>
+            <label>检验日期</label>
+            <input type="text" name="gas_file.inspect_date"  value="#(gas_file.inspect_date)" />
+        </div>
+
+        <div>
+            <label>定检日期</label>
+            <input type="text" name="gas_file.regular_check_date"  value="#(gas_file.regular_check_date)" />
+        </div>
+        <div>
+            <label>终止使用日期</label>
+            <input type="text" name="gas_file.terminate_use_date" value="#(gas_file.terminate_use_date)" />
+        </div>
+        <div>
+            <label>建档时间</label>
+            <input type="text" name="gas_file.jiandangshijian" value="#(gas_file.jiandangshijian)" />
+        </div>
+        <div>
+            <label>设备品种</label>
+            <input type="text" name="gas_file.monitoring_station"  value="#(gas_file.monitoring_station)" />
+        </div>
+        <div>
+            <label>充装规格</label>
+            <input type="text" name="gas_file.filling_specification"  value="#(gas_file.filling_specification)" />
+        </div>
+        <div>
+            <label>气瓶规格</label>
+            <input type="text" name="gas_file.gas_specification" value="#(gas_file.gas_specification)" />
+        </div>
+        <div>
+            <label>充装介质</label>
+            <input type="text" name="gas_file.filling_medium" value="#(gas_file.filling_medium)" />
+        </div>
+
+
+        <div>
+            <label>许可证号</label>
+            <input type="text" name="gas_file.xukezhenghao"  value="#(gas_file.xukezhenghao)" />
+        </div>
+        <div>
+            <label>公称压力</label>
+            <input type="text" name="gas_file.gongchengyali"   value="#(gas_file.gongchengyali)" />
+        </div>
+        <div>
+            <label>水试验压</label>
+                <input type="text" name="gas_file.shuishiyanya"   value="#(gas_file.shuishiyanya)" />
+        </div>
+        <div>
+            <label>容积</label>
+                <input type="text" name="gas_file.rongji"   value="#(gas_file.rongji)" />
+        </div>
+        <div>
+            <label>壁厚</label>
+            <input type="text" name="gas_file.bihou"   value="#(gas_file.bihou)" />
+        </div>
+        <div>
+            <label>气瓶自重</label>
+            <input type="text" name="gas_file.gas_suttle"   value="#(gas_file.gas_suttle)" />
+        </div>
+        <div>
+            <label>是否专用</label>
+            <input type="text" name="gas_file.shifouzhuanyong"  value="#(gas_file.shifouzhuanyong)" />
+        </div>
+
+
+        <div>
+            <label>使用者名称</label>
+            <input type="text" name="gas_file.shiyongzhemingcheng"  value="#(gas_file.shiyongzhemingcheng)" />
+        </div>
+        <div>
+            <label>使用者地址</label>
+            <input type="text" name="gas_file.shiyongzhedizhi"  value="#(gas_file.shiyongzhedizhi)" />
+        </div>
+        <div>
+            <label>电话</label>
+            <input type="text" name="gas_file.shiyongzhedianhua"  value="#(gas_file.shiyongzhedianhua)" />
+        </div>
+        <div>
+            <label>经度</label>
+            <input type="text" name="gas_file.shiyongzhejingdu"  value="#(gas_file.shiyongzhejingdu)" />
+        </div>
+        <div>
+            <label>纬度</label>
+            <input type="text" name="gas_file.shiyongzheweidu"  value="#(gas_file.shiyongzheweidu)" />
+        </div>
+    </form>
+</div>
+</body>
+<script>
+
+
+    // 假设这是服务器端渲染到页面中的JSON数据
+    var jsonData = '#(com.alibaba.fastjson.JSONArray::toJSON(gasstations))';
+    // 解析JSON数据
+    var context = JSON.parse(jsonData.replace(/#/g, ""));
+
+    function chooseName() {
+        var selectId = document.getElementById("selectName").value;
+   // alert("test");
+        if (selectId == "-1") {
+            // document.getElementById("dianzicheng_shiyongfandianmingzi").value = "";
+            // document.getElementById("dianzicheng_shiyongfangphone").value = "";
+            return;
+        }
+
+        // 查找选中的饭店对象
+        var selectedGasStation = context.find(function(gasstation) {
+          //  alert("selectId"+selectId);
+            return gasstation.id == selectId;
+        });
+
+        if (selectedGasStation) {
+            //alert(JSON.stringify(selectedGasStation));
+            document.getElementById("gas_file.gasstationid").value = selectedGasStation.id;
+            document.getElementById("gas_file.filing_gas_station").value = selectedGasStation.stationName;
+
+        } else {
+            document.getElementById("dianzicheng_shiyongfandianmingzi").value = "";
+            document.getElementById("gas_file.filing_gas_station").value = "";
+            alert('找不到对应的加气站！');
+        }
+
+    }
+    document.getElementById("selectName").addEventListener("change", chooseName);
+    </script>
+</html>

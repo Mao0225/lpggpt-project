@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content</title>
+    <script src="../css/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css" >
+    <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/lpg.css"></head>
+<body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div id="pagediv">
+    <form id="searchForm" action="/basshexiangtouinfo/shexiangtoulist" method="get">
+
+        <a href="#" class="add openModal" data-title="新建摄像头" data-edit-url="/basshexiangtouinfo/add"><b> + </b>新建摄像头</a>
+
+        <label>摄像头编号</label>
+        <input type="text" name="shexiangtoubianhao" value="#(shexiangtoubianhao)"/>
+        <label>&nbsp;</label>
+        <input value="搜索" type="submit">
+        <input type="submit" value="重置" name="refresh"/>
+        <script>
+            var buttons = document.getElementsByName("refresh");
+            for (var i = 0; i < buttons.length; i++) {
+                buttons[i].addEventListener('click', function() {
+                    // 获取所有的输入框并设置为空
+                    var inputs = document.querySelectorAll('#searchForm input[type=text]');
+                    for (var j = 0; j < inputs.length; j++) {
+                        inputs[j].value = "";
+                    }
+
+                    // 提交表单以重新查询并刷新页面
+                    document.getElementById('searchForm').submit();
+                });
+            }
+        </script>
+    </form>
+</div>
+
+<table class="list">
+    <tbody>
+    <tr>
+        <th >id</th>
+        <th >摄像头编号</th>
+        <th >生产厂家</th>
+        <th >厂家电话</th>
+        <th >生产时间</th>
+        <th >饭店编号</th>
+        <th >饭店名字</th>
+        <th >饭店电话</th>
+        <th >饭店地址</th>
+        <th >操作</th>
+
+    </tr>
+    #set(startIndex = (basshexiangtou.pageNumber - 1) * basshexiangtou.pageSize + 1)
+    #for(x : basshexiangtou.getList())
+    <tr>
+        <td style="text-align:center">#(startIndex++)</td> <!-- 显示序号并递增 -->
+        <td style="text-align:center">#(x.shexiangtoubianhao)</td>
+        <td style="text-align:center">#(x.shengchanchangjia)</td>
+        <td style="text-align:center">#(x.changjiadianhua)</td>
+        <td style="text-align:center">#(x.shengchanshijian)</td>
+        <td style="text-align:center">#(x.restaurantid)</td>
+        <td style="text-align:center">#(x.restaurantname)</td>
+        <td style="text-align:center">#(x.restaurantphone)</td>
+        <td style="text-align:center">#(x.restaurantaddress)</td>
+
+        <td style="text-align:center">
+            &nbsp;&nbsp;<a href="#" onclick="confirmDelete('#(x.id)')">删除</a>
+            <a href="#" class="edit openModal" data-title="编辑摄像头信息" data-edit-url="/basshexiangtouinfo/edit/#(x.id)">修改</a>
+        </td>
+    </tr>
+    #end
+    </tbody>
+</table>
+<div class="pagination" style="color:#000000;">
+    #@paginate(basshexiangtou.pageNumber, basshexiangtou.totalPage, "/basshexiangtouinfo/shexiangtoulist?shexiangtoubianhao="+(shexiangtoubianhao !=null ? shexiangtoubianhao : "")+"&page=")
+</div>
+<script>
+    function confirmDelete(id) {
+        var result = confirm("确定要删除吗？");
+        if (result) {
+            // 如果用户点击了确定，则执行删除操作
+            window.location.href = "/basshexiangtouinfo/delete/" + id;
+        } else {
+            // 如果用户点击了取消，则不执行任何操作
+            return false;
+        }
+    }
+</script>
+<script>
+    $('.openModal').click(function(e) {
+        e.preventDefault();
+        var editUrl = $(this).data('edit-url');
+        var that = this; // 保存正确的上下文
+
+        $.get(editUrl, function(data) {
+            var title = $(that).data('title');
+            $('#myModalLabel').text(title); // 修改模态窗口标题
+            // 清除旧内容
+            $('#modalBody').html(data); // 加载编辑内容到模态窗口
+            $('#myModal').modal('show'); // 显示模态窗口
+        });
+    });
+
+</script>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">模态窗口标题</h4>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- 这里将会加载你的表单内容 -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary"  id="saveButton" >保存</button>
+                <script>
+                    function validateForm() {
+                        // 正确的日期格式 yyyy-mm-dd
+                        const dateFormat = /^\d{4}-\d{2}-\d{2}$/;
+
+                        // 获取所有需要验证的日期输入框
+                        const dateInputs = document.querySelectorAll('input[type="text"][name^="shexiangtou."][name*="shengchanshijian"]');
+                        for (let i = 0; i < dateInputs.length; i++) {
+                            // 如果日期输入框不为空，检查日期格式
+                            if (dateInputs[i].value.trim() !== "" && !dateFormat.test(dateInputs[i].value)) {
+                                alert('日期格式不正确，无法保存,正确日期格式应为xxxx-xx-xx');
+                                return false; // 如果有任何一个日期格式不正确，直接返回false
+                            }
+                        }
+                        return true;
+                    }
+
+                    document.getElementById('saveButton').addEventListener('click', function() {
+                        // 验证表单数据
+                        if (validateForm()) {
+                            // 如果验证通过，则提交表单
+                            document.getElementById('myForm').submit();
+                        }
+                        // 如果验证失败，不提交表单（validateForm内部已经显示了错误消息）
+                    });
+
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

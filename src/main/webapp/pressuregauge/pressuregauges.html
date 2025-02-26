@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content</title>
+    <script src="../css/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css" >
+    <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/lpg.css"></head>
+<body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div id="pagediv">
+    <form id="searchForm" action="/pressuregauge/pressuregaugelist" method="get">
+        <a href="#" class="add openModal" data-title="新建燃气表" data-edit-url="/pressuregauge/add"><b> + </b>新建燃气表</a>
+        <label>饭店名称</label>
+        <input type="text" name="name" value="#(name)"/>
+        <label>&nbsp;</label>
+        <input value="搜索" type="submit">
+        <input type="submit" value="重置" name="refresh"/>
+        <script>
+            var buttons = document.getElementsByName("refresh");
+            for (var i = 0; i < buttons.length; i++) {
+                buttons[i].addEventListener('click', function() {
+                    // 获取所有的输入框并设置为空
+                    var inputs = document.querySelectorAll('#searchForm input[type=text]');
+                    for (var j = 0; j < inputs.length; j++) {
+                        inputs[j].value = "";
+                    }
+
+                    // 提交表单以重新查询并刷新页面
+                    document.getElementById('searchForm').submit();
+                });
+            }
+        </script>
+    </form>
+</div>
+
+<table class="list">
+    <tbody>
+    <tr>
+        <th>序号</th>
+<!--        <th>名称</th>-->
+<!--        <th>饭店ID</th>-->
+        <th>饭店名字</th>
+        <th>饭店地址</th>
+        <th>饭店电话</th>
+<!--        <th>气瓶ID</th>-->
+        <th>燃气表编号</th>
+        <th>状态</th>
+        <th>创建者</th>
+        <th>创建时间</th>
+<!--        <th>更新者ID</th>-->
+<!--        <th>更新时间</th>-->
+<!--        <th>删除时间</th>-->
+        <th>打开阀门</th>
+        <th>关闭阀门</th>
+        <th>停用时间</th>
+        <th>备注</th>
+        <th>操作</th>
+    </tr>
+
+    #set(startIndex = (pressuregauge.pageNumber - 1) * pressuregauge.pageSize + 1)
+    #for(x : pressuregauge.getList())
+    <tr>
+        <td style="text-align:center">#(startIndex++)</td> <!-- 显示序号并递增 -->
+<!--        <td style="text-align:center">#(x.name)</td>-->
+<!--        <td style="text-align:center">#(x.affiliation_user_id)</td>-->
+        <td style="text-align:center">#(x.restaurantname)</td>
+        <td style="text-align:center">#(x.address)</td>
+        <td style="text-align:center">#(x.telephone)</td>
+<!--        <td style="text-align:center">#(x.gas_cylinder_id)</td>-->
+        <td style="text-align:center">#(x.controller_id)</td>
+        <td style="text-align:center">
+            #if(x.get("status") == null)
+            #else if(x.get("status") == 0)
+            在用
+            #else if(x.get("status") == 1)
+            停用
+            #end</td>
+        <td style="text-align:center">#(x.created)</td>
+        <td style="text-align:center">#(x.created_time)</td>
+<!--        <td style="text-align:center">#(x.updated_id)</td>-->
+<!--        <td style="text-align:center">#(x.updated_time)</td>-->
+<!--        <td style="text-align:center">#(x.deleted_time)</td>-->
+        <td style="text-align:center">#(x.dakaifamen)</td>
+        <td style="text-align:center">#(x.guanbifamen)</td>
+        <td style="text-align:center">#(x.stop_time)</td>
+        <td style="text-align:center">#(x.remark1)</td>
+        <td style="text-align:center">
+            &nbsp;&nbsp;<a href="#" onclick="confirmDelete('#(x.id)')">删除</a>
+            <a href="#" class="edit openModal" data-title="编辑燃气表信息" data-edit-url="/pressuregauge/edit/#(x.id)">修改</a>
+        </td>
+    </tr>
+    #end
+    </tbody>
+</table>
+
+<div class="pagination" style="color:#000000;">
+    #@paginate(pressuregauge.pageNumber, pressuregauge.totalPage, "/pressuregauge/pressuregaugelist?name="+(name !=null ? name : "")+"&page=")
+</div>
+<script>
+    function confirmDelete(id) {
+        var result = confirm("确定要删除吗？");
+        if (result) {
+            // 如果用户点击了确定，则执行删除操作
+            window.location.href = "/pressuregauge/delete/" + id;
+        } else {
+            // 如果用户点击了取消，则不执行任何操作
+            return false;
+        }
+    }
+</script>
+<script>
+    $('.openModal').click(function(e) {
+        e.preventDefault();
+        var editUrl = $(this).data('edit-url');
+        var that = this; // 保存正确的上下文
+
+        $.get(editUrl, function(data) {
+            var title = $(that).data('title');
+            $('#myModalLabel').text(title); // 修改模态窗口标题
+            // 清除旧内容
+            $('#modalBody').html(data); // 加载编辑内容到模态窗口
+            $('#myModal').modal('show'); // 显示模态窗口
+        });
+    });
+
+</script>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">模态窗口标题</h4>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- 这里将会加载你的表单内容 -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="saveButton">保存</button>
+                <script>
+                    function validateForm() {
+                        var datetimeRegex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/;
+                        var inputs = document.getElementById('myForm').elements;
+                        for (var i = 0; i < inputs.length; i++) {
+                            if (inputs[i].name === "pressuregauge.name" || inputs[i].name === "pressuregauge.gas_cylinder_id") {
+                                continue;
+                            }
+                            if (inputs[i].name !== "pressuregauge.deleted_time" && inputs[i].value === "") {
+                                var label = document.querySelector("label[for='" + inputs[i].id + "']");
+                                alert(label.innerText + "不能为空");
+                                return false;
+                            }
+                            if (inputs[i].name === "pressuregauge.created_time" || inputs[i].name === "pressuregauge.updated_time" || (inputs[i].name === "pressuregauge.deleted_time" && inputs[i].value !== "")) {
+                                if (!datetimeRegex.test(inputs[i].value)) {
+                                    var label = document.querySelector("label[for='" + inputs[i].id + "']");
+                                    alert(label.innerText + "的日期格式必须为YYYY-MM-DD HH:MM:SS");
+                                    return false;
+                                }
+                            }
+                        }
+                        return true;
+                    }
+
+                    document.getElementById('saveButton').addEventListener('click', function() {
+                        if (validateForm()) {
+                            document.getElementById('myForm').submit();
+                        }
+                    });
+
+
+                </script>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" width="device-width, initial-scale=1.0">
+    <title>Equipment List</title>
+    <script src="../css/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css">
+    <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/css/lpg.css">
+    <style>
+        form {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        label {
+            margin-right: 10px;
+            color: white;
+        }
+
+        input[type="text"],
+        select {
+            width: 150px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        button[type="submit"] {
+            padding: 8px 15px;
+            background-color: yellow;
+            color: black;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        /* 添加的选择框样式规则 */
+        #searchForm select {
+            border-radius: 10px;
+            background-color: #fbf0c5;
+            width: 160px;
+            height: 30px;
+        }
+
+    </style>
+</head>
+
+<body>
+<div id="pagediv">
+    <!-- 新增“添加设备”按钮 -->
+    <!-- 新增“添加设备”按钮，已修改为和drivercar.html中新建司机按钮类似结构 -->
+
+
+    <!-- 搜索表单 -->
+    <form id="searchForm" action="/equipment/equipmentList" method="post">
+        <a href="#" class="add openModal" data-title="添加设备" data-edit-url="/equipment/add"><b> + </b>添加设备</a>
+        <label for="equipmentName">设备名称：</label>
+        <input type="text" id="equipmentName" name="equipmentName" placeholder="请输入设备名称" value="#(equipmentName)" />
+
+        &nbsp;&nbsp;
+        <label for="equipmentKind">设备种类：</label>
+        <select id="equipmentKind" name="equipmentKind">
+            <option value="">所有种类</option>
+            <option value="特种设备">特种设备</option>
+            <option value="易损件">易损件</option>
+            <option value="消防器材">消防器材</option>
+        </select>
+
+        &nbsp;&nbsp;
+        <button type="button" type="submit" value="查询" id="searchButton">查询</button>
+        <button type="button" type="submit" value="重置" id="resetButton">重置</button>
+    </form>
+</div>
+
+<table class="list">
+    <tbody>
+    <tr>
+        <th width="8%">序号</th>
+        <th width="10">生产厂商</th>
+        <th width="10">设备型号</th>
+        <th width="10">设备名称</th>
+        <th width="10">设备种类</th>
+        <th width="10">生产日期</th>
+        <th width="10">上次检修日期</th>
+        <th width="10">失效日期</th>
+        <th width="10">操作</th> <!-- 添加操作列标题 -->
+    </tr>
+    #set(startIndex = (equipmentlist.pageNumber - 1) * equipmentlist.pageSize + 1)
+    #for(x : equipmentlist.getList())
+    <tr>
+        <td>#(startIndex++)</td> <!-- 显示序号并递增 -->
+        <td>#(x.factory)</td>
+        <td>#(x.model)</td>
+        <td>#(x.name)</td>
+        <td>#(x.kind)</td>
+        <td>#(x.producedate)</td>
+        <td>#(x.lastcheckdate)</td>
+        <td>#(x.expiredate)</td>
+        <td>
+            <!-- 修改按钮添加点击事件，弹出编辑模态框，结构和功能与参考代码中编辑按钮类似 -->
+            <a href="#" class="edit openModal" data-title="编辑设备" data-edit-url="/equipment/edit?id=#(x.id)">修改</a>
+            <!-- 将删除按钮修改为a标签形式 -->
+            <a href="#" class="delete" onclick="confirmDelete('#(x.id)')">删除</a>
+            <!-- 为“设备维修”按钮添加点击事件，弹出对应的模态框 -->
+            <a href="#" class="repair openModal" data-title="设备维修" data-edit-url="/equipment/repairedit?id=#(x.id)">维修</a>
+        </td>
+    </tr>
+    #end
+    </tbody>
+</table>
+
+<div class="pagination" style="color:#DDDDDD;">
+    #@paginate(equipmentlist.pageNumber, equipmentlist.totalPage, "/equipment/equipmentList?equipmentName=" + (equipmentName!= null? equipmentName : "") + "&equipmentKind=" + (equipmentKind!= null? equipmentKind : "") + "&page=")
+</div>
+
+<script>
+    // 确认删除的函数，向后端delete函数发送删除请求，同样假设后端接收设备id作为参数
+    function confirmDelete(id) {
+        console.log("进入到了删除函数");
+        console.log("id: " + id);
+        if (confirm("确定要删除该设备记录吗？")) {
+            window.location.href = "/equipment/delete?id=" + id;
+        }
+    }
+
+    // 为搜索按钮添加点击事件，防止默认提交行为被阻止，手动触发表单提交
+    $('#searchButton').click(function (e) {
+        e.preventDefault();
+        $('#searchForm').submit();
+    });
+
+    // 为重置按钮添加点击事件处理函数，用于清空搜索栏并提交表单，功能与参考代码类似
+    $('#resetButton').click(function (e) {
+        e.preventDefault();
+        // 获取所有的输入框并设置为空
+        $('#searchForm input[type=text]').val('');
+        // 将下拉选择框设置为默认值（here is the first option, i.e., all kinds）
+        $('#searchForm select').prop('selectedIndex', 0);
+        // 提交表单以重新查询并刷新页面
+        $('#searchForm').submit();
+    });
+
+    // 为新增设备按钮弹出的模态框中的保存按钮添加点击事件处理逻辑，添加表单验证功能，类似参考代码
+
+    $(document).ready(function () {
+        $('.openModal').click(function (e) {
+            e.preventDefault();
+            var editUrl = $(this).data('edit-url');
+            var that = this;
+
+            $.get(editUrl, function (data) {
+                var title = $(that).data('title');
+                $('#myModalLabel').text(title);
+
+                // Clear old content
+                $('#modalBody').html(data);
+                $('#myModal').modal('show');
+            });
+        });
+
+        // 为“设备维修”按钮弹出的模态框中的保存按钮添加点击事件处理逻辑（here is a simple example first, which can be perfected according to actual needs）
+        $('#saveButton').click(function () {
+            console.log("来到了维修函数");
+            var repairFormData = $('#modalBody form').serialize();
+            $.post('/equipment/repair', repairFormData, function (response) {
+                if (response.success) {
+                    alert('设备维修信息保存成功');
+                    $('#myModal').modal('hide');
+                    // You can add refreshing the list and other operations as needed.
+                    $('#searchForm').submit();
+                }
+            }).fail(function () {
+                alert('请求保存设备维修信息出错，请稍后再试');
+            });
+        });
+    });
+</script>
+<script>
+    document.getElementById('saveButton').addEventListener('click', function () {
+        console.log("josqb`1");
+        // 如果验证通过，则提交表单
+        document.getElementById('myForm').submit();
+        // 如果验证失败，不提交表单（validateForm内部已经显示了错误消息）
+    });
+</script>
+<!-- 模态框结构 -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">模态窗口标题</h4>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- 这里将会加载你的表单内容，此处暂时为空，后续可以根据从后端获取的数据来填充 -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="saveButton">保存</button>
+                <script>
+                    document.getElementById('saveButton').addEventListener('click', function () {
+                        console.log("josqb`1");
+                        // 如果验证通过，则提交表单
+                        document.getElementById('myForm').submit();
+                        // 如果验证失败，不提交表单（validateForm内部已经显示了错误消息）
+                    });
+                </script>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+</body>
+
+</html>
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" width="device - width, initial - scale=1.0">-->
+<!--    <title>Equipment List</title>-->
+<!--    <script src="../css/jquery - 3.3.1.min.js"></script>-->
+<!--    <link rel="stylesheet" href="../css/bootstrap - 4.3.1 - dist/css/bootstrap.min.css">-->
+<!--    <script src="../css/bootstrap - 4.3.1 - dist/js/bootstrap.min.js"></script>-->
+<!--    <link rel="stylesheet" type="text/css" href="/css/lpg.css">-->
+<!--    <style>-->
+<!--        form {-->
+<!--            font - family: Arial, sans - serif;-->
+<!--            padding: 20px;-->
+<!--            display: flex;-->
+<!--            flex - wrap: wrap;-->
+<!--            align - items: center;-->
+<!--        }-->
+
+<!--        label {-->
+<!--            margin - right: 10px;-->
+<!--            color: white;-->
+<!--        }-->
+
+<!--        input[type="text"],-->
+<!--        select {-->
+<!--            width: 150px;-->
+<!--            padding: 5px;-->
+<!--            border: 1px solid #ccc;-->
+<!--            border - radius: 3px;-->
+<!--        }-->
+
+<!--        button[type="submit"] {-->
+<!--            padding: 8px 15px;-->
+<!--            background - color: yellow;-->
+<!--            color: black;-->
+<!--            border: none;-->
+<!--            border - radius: 3px;-->
+<!--            cursor: pointer;-->
+<!--        }-->
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
+<!--<div id="pagediv">-->
+<!--    &lt;!&ndash; 搜索表单 &ndash;&gt;-->
+<!--    <form id="searchForm" action="/equipment/equipmentList" method="post">-->
+<!--        &lt;!&ndash; 新增“添加设备”按钮，移动到此处 &ndash;&gt;-->
+<!--        <a href="#" class="add openModal" data - title="添加设备" data - edit - url="/equipment/add"><b> + </b>添加设备</a>-->
+<!--        <label for="equipmentName">设备名称：</label>-->
+<!--        <input type="text" id="equipmentName" name="equipmentName" placeholder="请输入设备名称" value="#(equipmentName)" />-->
+
+<!--        &nbsp;&nbsp;-->
+<!--        <label for="equipmentKind">设备种类：</label>-->
+<!--        <select id="equipmentKind" name="equipmentKind">-->
+<!--            <option value="">所有种类</option>-->
+<!--            <option value="特种设备">特种设备</option>-->
+<!--            <option value="易损件">易损件</option>-->
+<!--            <option value="消防器材">消防器材</option>-->
+<!--        </select>-->
+
+<!--        &nbsp;&nbsp;-->
+<!--        <button type="button" type="submit" value="查询" id="searchButton">查询</button>-->
+<!--        <button type="button" type="submit" value="重置" id="resetButton">重置</button>-->
+<!--    </form>-->
+<!--</div>-->
+
+<!--<table class="list">-->
+<!--    <tbody>-->
+<!--    <tr>-->
+<!--        <th>序号</th>-->
+<!--        <th>工厂</th>-->
+<!--        <th>型号</th>-->
+<!--        <th>设备名称</th>-->
+<!--        <th>设备种类</th>-->
+<!--        <th>生产日期</th>-->
+<!--        <th>有效期</th>-->
+<!--        <th>操作</th>-->
+<!--    </tr>-->
+<!--    #set(startIndex = (equipmentlist.pageNumber - 1) * equipmentlist.pageSize + 1)-->
+<!--    #for(x : equipmentlist.getList())-->
+<!--    <tr>-->
+<!--        <td>#(startIndex++)</td>-->
+<!--        <td>#(x.factory)</td>-->
+<!--        <td>#(x.model)</td>-->
+<!--        <td>#(x.name)</td>-->
+<!--        <td>#(x.kind)</td>-->
+<!--        <td>#(x.producedate)</td>-->
+<!--        <td>#(x.expiredate)</td>-->
+<!--        <td>-->
+<!--            <a href="#" class="edit openModal" data - title="编辑设备" data - edit - url="/equipment/edit?id=#(x.id)">修改</a>-->
+<!--            <a href="#" class="delete" onclick="confirmDelete('#(x.id)')">删除</a>-->
+<!--            <a href="#" class="repair openModal" data - title="设备维修" data - edit - url="/equipment/repairedit?id=#(x.id)">维修</a>-->
+<!--        </td>-->
+<!--    </tr>-->
+<!--    #end-->
+<!--    </tbody>-->
+<!--</table>-->
+
+<!--<div class="pagination" style="color:#DDDDDD;">-->
+<!--    #@paginate(equipmentlist.pageNumber, equipmentlist.totalPage, "/equipment/equipmentList?equipmentName=" + (equipmentName!= null? equipmentName : "") + "&equipmentKind=" + (equipmentKind!= null? equipmentKind : "") + "&page=")-->
+<!--</div>-->
+
+<!--<script>-->
+<!--    // 确认删除的函数-->
+<!--    function confirmDelete(id) {-->
+<!--        console.log("进入到了删除函数");-->
+<!--        console.log("id: " + id);-->
+<!--        if (confirm("确定要删除该设备记录吗？")) {-->
+<!--            window.location.href = "/equipment/delete?id=" + id;-->
+<!--        }-->
+<!--    }-->
+
+<!--    // 为搜索按钮添加点击事件-->
+<!--    $('#searchButton').click(function (e) {-->
+<!--        e.preventDefault();-->
+<!--        $('#searchForm').submit();-->
+<!--    });-->
+
+<!--    // 为重置按钮添加点击事件处理函数-->
+<!--    $('#resetButton').click(function (e) {-->
+<!--        e.preventDefault();-->
+<!--        $('#searchForm input[type=text]').val('');-->
+<!--        $('#searchForm select').prop('selectedIndex', 0);-->
+<!--        $('#searchForm').submit();-->
+<!--    });-->
+
+<!--    $(document).ready(function () {-->
+<!--        $('.openModal').click(function (e) {-->
+<!--            e.preventDefault();-->
+<!--            var editUrl = $(this).data('edit - url');-->
+<!--            var that = this;-->
+
+<!--            $.get(editUrl, function (data) {-->
+<!--                var title = $(that).data('title');-->
+<!--                $('#myModalLabel').text(title);-->
+<!--                $('#modalBody').html(data);-->
+<!--                $('#myModal').modal('show');-->
+<!--            });-->
+<!--        });-->
+
+<!--        // 为“设备维修”按钮弹出的模态框中的保存按钮添加点击事件处理逻辑-->
+<!--        $('#saveButton').click(function () {-->
+<!--            console.log("来到了维修函数");-->
+<!--            var repairFormData = $('#modalBody form').serialize();-->
+<!--            $.post('/equipment/repair', repairFormData, function (response) {-->
+<!--                if (response.success) {-->
+<!--                    alert('设备维修信息保存成功');-->
+<!--                    $('#myModal').modal('hide');-->
+<!--                    $('#searchForm').submit();-->
+<!--                } else {-->
+<!--                    alert('设备维修信息保存失败：' + response.message);-->
+<!--                }-->
+<!--            }).fail(function () {-->
+<!--                alert('请求保存设备维修信息出错，请稍后再试');-->
+<!--            });-->
+<!--        });-->
+<!--    });-->
+<!--</script>-->
+<!--<script>-->
+<!--    document.getElementById('saveButton').addEventListener('click', function () {-->
+<!--        console.log("josqb`1");-->
+<!--        document.getElementById('myForm').submit();-->
+<!--    });-->
+<!--</script>-->
+<!--&lt;!&ndash; 模态框结构 &ndash;&gt;-->
+<!--<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria - labelledby="myModalLabel" aria - hidden="true">-->
+<!--    <div class="modal - dialog">-->
+<!--        <div class="modal - content">-->
+<!--            <div class="modal - header">-->
+<!--                <h4 class="modal - title" id="myModalLabel">模态窗口标题</h4>-->
+<!--            </div>-->
+<!--            <div class="modal - body" id="modalBody">-->
+<!--            </div>-->
+<!--            <div class="modal - footer">-->
+<!--                <button type="button" class="btn btn - default" data - dismiss="modal">关闭</button>-->
+<!--                <button type="button" class="btn btn - primary" id="saveButton">保存</button>-->
+<!--                <script>-->
+<!--                    document.getElementById('saveButton').addEventListener('click', function () {-->
+<!--                        console.log("josqb`1");-->
+<!--                        document.getElementById('myForm').submit();-->
+<!--                    });-->
+<!--                </script>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+<!--</body>-->
+<!--</html>-->

@@ -1,0 +1,83 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<title>Content</title>
+<body>
+<h1>
+</h1>
+<div class="form_box">
+    <form action="/user/save" method="post" id="myForm">
+
+        <div>
+            <label >姓名</label>
+            <input type="text" id="user_name" name="user.username" value=""/>
+        </div>
+        <div>
+            <label >电话</label>
+            <input type="text" id="user_telephone" name="user.telephone" value=""/>
+        </div>
+        <div>
+            <label >密码</label>
+            <input type="text" name="user.password" value="" />
+        </div>
+        <div>
+            <label >公司</label>
+            <input type="hidden" id="user_company" name="user.company" readonly>
+            <select id="selectCompany" name="user.stationid" onchange="chooseCompany()" style="border-radius: 5px;background-color: white; width: 200px;height:30px;text-align: center;">
+                <option value="-1" selected>请选择公司</option>
+                #for ( x: gasstations)
+                <option value="#(x.id)">#(x.station_name)</option>
+                #end
+            </select>
+        </div>
+        <div>
+            <label >出生日期</label>
+            <input type="text" name="user.birthday" value="" />
+        </div>
+        <div>
+            <label >性别</label>
+            <input type="text" name="user.sex" value="" />
+        </div>
+        <div>
+            <label >公司id</label>
+            <input type="text" id="user_companyid" name="user.companyid" value="" readonly/>
+        </div>
+    </form>
+</div>
+</body>
+<script>
+    // 假设这是服务器端渲染到页面中的JSON数据
+    var jsonData = '#(com.alibaba.fastjson.JSONArray::toJSON(gasstations))';
+    // 解析JSON数据
+    var context = JSON.parse(jsonData.replace(/#/g, ""));
+
+    function chooseCompany() {
+        var selectId = document.getElementById("selectCompany").value;
+
+        if (selectId == "-1") {
+            return;
+        }
+
+        // 查找选中的饭店对象
+        var selectedgasstation = context.find(function(gasstation) {
+            return gasstation.id == selectId;
+        });
+
+        if (selectedgasstation) {
+            document.getElementById("user_company").value = selectedgasstation.stationName;
+            document.getElementById("user_companyid").value = selectedgasstation.stationId;
+
+        } else {
+            document.getElementById("user_company").value = "";
+            document.getElementById("user_companyid").value = "";
+            alert('找不到！');
+        }
+
+    }
+    document.getElementById("selectCompany").addEventListener("change", chooseCompany);
+</script>
+</html>

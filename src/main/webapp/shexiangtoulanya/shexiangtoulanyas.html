@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content</title>
+    <link rel="stylesheet" type="text/css" href="../css/lpg.css">
+</head>
+<body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div id="pagediv">
+</div>
+
+<table class="list">
+    <tbody>
+    <tr>
+        <th width="10%">id</th>
+        <th width="12%">摄像头编号</th>
+        <th width="12%">蓝牙信息</th>
+        <th width="12%">发生时间</th>
+        <th width="12%">饭店名称</th>
+        <th width="12%">饭店电话</th>
+        <th width="12%">饭店地址</th>
+        <th width="12%">ip地址</th>
+    </tr>
+    #set(startIndex = (shexiangtoulanya.pageNumber - 1) * shexiangtoulanya.pageSize + 1)
+    #for(x : shexiangtoulanya.getList())
+    <tr>
+        <td style="text-align:center">#(startIndex++)</td> <!-- 显示序号并递增 -->
+        <td style="text-align:center">#(x.shexiangtouno)</td>
+        <td style="text-align:center">#(x.lanyamessage)</td>
+        <td style="text-align:center">#(x.happendtime)</td>
+        <td style="text-align:center">#(x.restaurantname)</td>
+        <td style="text-align:center">#(x.restaurantphone)</td>
+        <td style="text-align:center">#(x.restaurantaddress)</td>
+        <td style="text-align:center">#(x.memo)</td>
+    </tr>
+    #end
+    </tbody>
+</table>
+
+
+<div class="pagination" style="color:#000000;">
+    #@paginate(shexiangtoulanya.pageNumber, shexiangtoulanya.totalPage, "/shexiangtoulanya/shexiangtoulanyalist?&page=")
+</div>
+</body>
+</html>

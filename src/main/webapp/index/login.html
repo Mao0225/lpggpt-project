@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff; /* 浅蓝色背景 */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .login-container {
+            background-color: #fff; /* 白色背景 */
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 蓝色阴影 */
+        }
+
+        .login-container h2 {
+            margin-bottom: 20px;
+            color: #333; /* 黑色标题 */
+            text-align: center;
+        }
+
+        .login-form input[type="text"],
+        .login-form input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc; /* 灰色边框 */
+            border-radius: 3px;
+            box-sizing: border-box;
+        }
+
+        .login-form input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff; /* 蓝色按钮 */
+            color: #fff; /* 白色文字 */
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .login-form input[type="submit"]:hover {
+            background-color: #0056b3; /* 深蓝色按钮 */
+        }
+        .image-container {
+            margin-bottom: 20px; /* 添加一些底部间距 */
+        }
+
+        .login-container {
+            width: 400px; /* 设置登录框宽度以匹配图像和页面的整体布局 */
+            margin: auto; /* 水平居中显示 */
+        }
+
+        body {
+            display: flex;
+            flex-direction: column; /* 改为列布局，图像在上，登录框在下 */
+            align-items: center; /* 中心对齐所有内容 */
+            justify-content: center;
+        }
+
+    </style>
+</head>
+<body>
+<!--div class="image-container">
+    <img src="../img/img_1.png" alt="Login Image" style="width:100%; height: 100%; vertical-align: middle; display: block;">
+</div-->
+
+
+<div class="login-container">
+    <h2>Login</h2>
+    <form class="login-form" action="/index" method="post" >
+        <input type="text" name="username" placeholder="Username" value="" required>
+        <input type="password" name="password" placeholder="Password" value="" required>
+        <input type="submit" value="Login">
+    </form>
+</div>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Left Menu</title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<script>
+		$(document).ready(function() {
+			// 发起Ajax请求获取菜单数据
+			$.ajax({
+				url: '/menu/getMenuList', // 这里填写获取菜单列表的接口路径
+				type: 'GET',
+				dataType: 'json',
+				success: function(data) {
+					// 成功获取到菜单数据后，将菜单渲染到页面上
+					renderMenu(data);
+				},
+				error: function(xhr, status, error) {
+					console.error('Failed to retrieve menu data:', error);
+				}
+			});
+
+			// 渲染菜单到页面上
+			function renderMenu(menuList) {
+				var menuHtml = '';
+				for (var i = 0; i < menuList.length; i++) {
+					menuHtml += '<div class="menu-item"><a href="' + menuList[i].url + '">' + menuList[i].name + '</a></div>';
+				}
+				$('#menu').html(menuHtml);
+			}
+		});
+	</script>
+	<style>
+		
+	</style>
+</head>
+<body>
+<div id="menu">
+	<!-- 菜单将在页面加载时通过JavaScript渲染到这里 -->
+</div>
+</body>
+</html>

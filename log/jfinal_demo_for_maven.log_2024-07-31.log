@@ -1,0 +1,174 @@
+
+2024-07-31 00:09:43
+[ERROR]-[Thread: main]-[com.alibaba.druid.pool.DruidDataSource.handleConnectionException()]: discard connection
+com.mysql.jdbc.exceptions.jdbc4.CommunicationsException: Communications link failure
+
+The last packet successfully received from the server was 3,597 milliseconds ago.  The last packet sent successfully to the server was 3,580 milliseconds ago.
+	at java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:67)
+	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:500)
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:484)
+	at com.mysql.jdbc.Util.handleNewInstance(Util.java:403)
+	at com.mysql.jdbc.SQLError.createCommunicationsException(SQLError.java:990)
+	at com.mysql.jdbc.MysqlIO.reuseAndReadPacket(MysqlIO.java:3517)
+	at com.mysql.jdbc.MysqlIO.reuseAndReadPacket(MysqlIO.java:3417)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3860)
+	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:2524)
+	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2675)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2465)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2439)
+	at com.mysql.jdbc.StatementImpl.executeQuery(StatementImpl.java:1365)
+	at com.alibaba.druid.pool.DruidPooledStatement.executeQuery(DruidPooledStatement.java:140)
+	at com.jfinal.plugin.activerecord.TableBuilder.doBuild(TableBuilder.java:79)
+	at com.jfinal.plugin.activerecord.TableBuilder.build(TableBuilder.java:55)
+	at com.jfinal.plugin.activerecord.ActiveRecordPlugin.start(ActiveRecordPlugin.java:228)
+	at com.jfinal.core.Config.startPlugins(Config.java:128)
+	at com.jfinal.core.Config.configPluginWithOrder(Config.java:71)
+	at com.jfinal.core.Config.configJFinal(Config.java:59)
+	at com.jfinal.core.JFinal.init(JFinal.java:61)
+	at com.jfinal.core.JFinalFilter.init(JFinalFilter.java:64)
+	at io.undertow.servlet.core.LifecyleInterceptorInvocation.proceed(LifecyleInterceptorInvocation.java:111)
+	at io.undertow.servlet.core.ManagedFilter.createFilter(ManagedFilter.java:80)
+	at io.undertow.servlet.core.DeploymentManagerImpl$2.call(DeploymentManagerImpl.java:594)
+	at io.undertow.servlet.core.DeploymentManagerImpl$2.call(DeploymentManagerImpl.java:559)
+	at io.undertow.servlet.core.ServletRequestContextThreadSetupAction$1.call(ServletRequestContextThreadSetupAction.java:42)
+	at io.undertow.servlet.core.ContextClassLoaderSetupAction$1.call(ContextClassLoaderSetupAction.java:43)
+	at io.undertow.servlet.core.DeploymentManagerImpl.start(DeploymentManagerImpl.java:601)
+	at com.jfinal.server.undertow.UndertowServer.configHttp(UndertowServer.java:287)
+	at com.jfinal.server.undertow.UndertowServer.doStart(UndertowServer.java:265)
+	at com.jfinal.server.undertow.UndertowServer.start(UndertowServer.java:158)
+	at com.jfinal.server.undertow.UndertowServer.start(UndertowServer.java:83)
+	at com.sjzu.edu.common.DemoConfig.main(DemoConfig.java:30)
+Caused by: java.io.EOFException: Can not read response from server. Expected to read 4 bytes, read 0 bytes before connection was unexpectedly lost.
+	at com.mysql.jdbc.MysqlIO.readFully(MysqlIO.java:2969)
+	at com.mysql.jdbc.MysqlIO.reuseAndReadPacket(MysqlIO.java:3427)
+	... 28 more
+
+2024-07-31 00:09:43
+[ERROR]-[Thread: Druid-ConnectionPool-Create-1440621772]-[com.alibaba.druid.pool.DruidDataSource$CreateConnectionThread.run()]: create connection error, url: jdbc:mysql://114.115.156.201/ruoyi_lpg?characterEncoding=utf8&useSSL=false&zeroDateTimeBehavior=convertToNull, errorCode 0, state 08S01
+com.mysql.jdbc.exceptions.jdbc4.CommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:67)
+	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:500)
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:484)
+	at com.mysql.jdbc.Util.handleNewInstance(Util.java:403)
+	at com.mysql.jdbc.SQLError.createCommunicationsException(SQLError.java:990)
+	at com.mysql.jdbc.MysqlIO.<init>(MysqlIO.java:335)
+	at com.mysql.jdbc.ConnectionImpl.coreConnect(ConnectionImpl.java:2187)
+	at com.mysql.jdbc.ConnectionImpl.connectOneTryOnly(ConnectionImpl.java:2220)
+	at com.mysql.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:2015)
+	at com.mysql.jdbc.ConnectionImpl.<init>(ConnectionImpl.java:768)
+	at com.mysql.jdbc.JDBC4Connection.<init>(JDBC4Connection.java:47)
+	at java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:67)
+	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:500)
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:484)
+	at com.mysql.jdbc.Util.handleNewInstance(Util.java:403)
+	at com.mysql.jdbc.ConnectionImpl.getInstance(ConnectionImpl.java:385)
+	at com.mysql.jdbc.NonRegisteringDriver.connect(NonRegisteringDriver.java:323)
+	at com.alibaba.druid.pool.DruidAbstractDataSource.createPhysicalConnection(DruidAbstractDataSource.java:1461)
+	at com.alibaba.druid.pool.DruidAbstractDataSource.createPhysicalConnection(DruidAbstractDataSource.java:1525)
+	at com.alibaba.druid.pool.DruidDataSource$CreateConnectionThread.run(DruidDataSource.java:2100)
+Caused by: java.net.SocketException: Can't connect to SOCKS proxy:Connection refused
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:359)
+	at java.base/java.net.Socket.connect(Socket.java:666)
+	at com.mysql.jdbc.StandardSocketFactory.connect(StandardSocketFactory.java:211)
+	at com.mysql.jdbc.MysqlIO.<init>(MysqlIO.java:299)
+	... 14 more
+
+2024-07-31 00:09:43
+[ERROR]-[Thread: main]-[com.jfinal.core.Config.startPlugins()]: Plugin start error: com.jfinal.plugin.activerecord.ActiveRecordPlugin. 
+com.mysql.jdbc.exceptions.jdbc4.CommunicationsException: Communications link failure
+
+The last packet successfully received from the server was 3,597 milliseconds ago.  The last packet sent successfully to the server was 3,580 milliseconds ago.
+com.jfinal.plugin.activerecord.ActiveRecordException: com.mysql.jdbc.exceptions.jdbc4.CommunicationsException: Communications link failure
+
+The last packet successfully received from the server was 3,597 milliseconds ago.  The last packet sent successfully to the server was 3,580 milliseconds ago.
+	at com.jfinal.plugin.activerecord.TableBuilder.build(TableBuilder.java:63)
+	at com.jfinal.plugin.activerecord.ActiveRecordPlugin.start(ActiveRecordPlugin.java:228)
+	at com.jfinal.core.Config.startPlugins(Config.java:128)
+	at com.jfinal.core.Config.configPluginWithOrder(Config.java:71)
+	at com.jfinal.core.Config.configJFinal(Config.java:59)
+	at com.jfinal.core.JFinal.init(JFinal.java:61)
+	at com.jfinal.core.JFinalFilter.init(JFinalFilter.java:64)
+	at io.undertow.servlet.core.LifecyleInterceptorInvocation.proceed(LifecyleInterceptorInvocation.java:111)
+	at io.undertow.servlet.core.ManagedFilter.createFilter(ManagedFilter.java:80)
+	at io.undertow.servlet.core.DeploymentManagerImpl$2.call(DeploymentManagerImpl.java:594)
+	at io.undertow.servlet.core.DeploymentManagerImpl$2.call(DeploymentManagerImpl.java:559)
+	at io.undertow.servlet.core.ServletRequestContextThreadSetupAction$1.call(ServletRequestContextThreadSetupAction.java:42)
+	at io.undertow.servlet.core.ContextClassLoaderSetupAction$1.call(ContextClassLoaderSetupAction.java:43)
+	at io.undertow.servlet.core.DeploymentManagerImpl.start(DeploymentManagerImpl.java:601)
+	at com.jfinal.server.undertow.UndertowServer.configHttp(UndertowServer.java:287)
+	at com.jfinal.server.undertow.UndertowServer.doStart(UndertowServer.java:265)
+	at com.jfinal.server.undertow.UndertowServer.start(UndertowServer.java:158)
+	at com.jfinal.server.undertow.UndertowServer.start(UndertowServer.java:83)
+	at com.sjzu.edu.common.DemoConfig.main(DemoConfig.java:30)
+Caused by: com.mysql.jdbc.exceptions.jdbc4.CommunicationsException: Communications link failure
+
+The last packet successfully received from the server was 3,597 milliseconds ago.  The last packet sent successfully to the server was 3,580 milliseconds ago.
+	at java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:67)
+	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:500)
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:484)
+	at com.mysql.jdbc.Util.handleNewInstance(Util.java:403)
+	at com.mysql.jdbc.SQLError.createCommunicationsException(SQLError.java:990)
+	at com.mysql.jdbc.MysqlIO.reuseAndReadPacket(MysqlIO.java:3517)
+	at com.mysql.jdbc.MysqlIO.reuseAndReadPacket(MysqlIO.java:3417)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3860)
+	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:2524)
+	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2675)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2465)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2439)
+	at com.mysql.jdbc.StatementImpl.executeQuery(StatementImpl.java:1365)
+	at com.alibaba.druid.pool.DruidPooledStatement.executeQuery(DruidPooledStatement.java:140)
+	at com.jfinal.plugin.activerecord.TableBuilder.doBuild(TableBuilder.java:79)
+	at com.jfinal.plugin.activerecord.TableBuilder.build(TableBuilder.java:55)
+	... 18 more
+Caused by: java.io.EOFException: Can not read response from server. Expected to read 4 bytes, read 0 bytes before connection was unexpectedly lost.
+	at com.mysql.jdbc.MysqlIO.readFully(MysqlIO.java:2969)
+	at com.mysql.jdbc.MysqlIO.reuseAndReadPacket(MysqlIO.java:3427)
+	... 28 more
+
+2024-07-31 00:10:00
+[ERROR]-[Thread: XNIO-1 task-1]-[com.jfinal.core.ActionHandler.handle()]: com.sjzu.edu.api.AppTransportController.searchList() : /apptransport/searchList
+java.lang.NullPointerException: Cannot invoke "java.lang.Integer.intValue()" because the return value of "com.sjzu.edu.api.AppTransportController.getParaToInt(String)" is null
+	at com.sjzu.edu.api.AppTransportController.searchList(AppTransportController.java:73)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:578)
+	at com.jfinal.aop.Invocation.invoke(Invocation.java:97)
+	at com.jfinal.core.ActionHandler.handle(ActionHandler.java:88)
+	at com.jfinal.core.JFinalFilter.doFilter(JFinalFilter.java:90)
+	at io.undertow.servlet.core.ManagedFilter.doFilter(ManagedFilter.java:61)
+	at io.undertow.servlet.handlers.FilterHandler$FilterChainImpl.doFilter(FilterHandler.java:131)
+	at io.undertow.servlet.handlers.FilterHandler.handleRequest(FilterHandler.java:84)
+	at io.undertow.servlet.handlers.security.ServletSecurityRoleHandler.handleRequest(ServletSecurityRoleHandler.java:62)
+	at io.undertow.servlet.handlers.ServletChain$1.handleRequest(ServletChain.java:68)
+	at io.undertow.servlet.handlers.ServletDispatchingHandler.handleRequest(ServletDispatchingHandler.java:36)
+	at io.undertow.servlet.handlers.RedirectDirHandler.handleRequest(RedirectDirHandler.java:68)
+	at io.undertow.servlet.handlers.security.SSLInformationAssociationHandler.handleRequest(SSLInformationAssociationHandler.java:117)
+	at io.undertow.servlet.handlers.security.ServletAuthenticationCallHandler.handleRequest(ServletAuthenticationCallHandler.java:57)
+	at io.undertow.server.handlers.PredicateHandler.handleRequest(PredicateHandler.java:43)
+	at io.undertow.security.handlers.AbstractConfidentialityHandler.handleRequest(AbstractConfidentialityHandler.java:46)
+	at io.undertow.servlet.handlers.security.ServletConfidentialityConstraintHandler.handleRequest(ServletConfidentialityConstraintHandler.java:64)
+	at io.undertow.security.handlers.AuthenticationMechanismsHandler.handleRequest(AuthenticationMechanismsHandler.java:60)
+	at io.undertow.servlet.handlers.security.CachedAuthenticatedSessionHandler.handleRequest(CachedAuthenticatedSessionHandler.java:77)
+	at io.undertow.security.handlers.AbstractSecurityContextAssociationHandler.handleRequest(AbstractSecurityContextAssociationHandler.java:43)
+	at io.undertow.server.handlers.PredicateHandler.handleRequest(PredicateHandler.java:43)
+	at io.undertow.servlet.handlers.SendErrorPageHandler.handleRequest(SendErrorPageHandler.java:52)
+	at io.undertow.server.handlers.PredicateHandler.handleRequest(PredicateHandler.java:43)
+	at io.undertow.servlet.handlers.SessionRestoringHandler.handleRequest(SessionRestoringHandler.java:119)
+	at io.undertow.servlet.handlers.ServletInitialHandler.handleFirstRequest(ServletInitialHandler.java:275)
+	at io.undertow.servlet.handlers.ServletInitialHandler.access$100(ServletInitialHandler.java:79)
+	at io.undertow.servlet.handlers.ServletInitialHandler$2.call(ServletInitialHandler.java:134)
+	at io.undertow.servlet.handlers.ServletInitialHandler$2.call(ServletInitialHandler.java:131)
+	at io.undertow.servlet.core.ServletRequestContextThreadSetupAction$1.call(ServletRequestContextThreadSetupAction.java:48)
+	at io.undertow.servlet.core.ContextClassLoaderSetupAction$1.call(ContextClassLoaderSetupAction.java:43)
+	at io.undertow.servlet.handlers.ServletInitialHandler.dispatchRequest(ServletInitialHandler.java:255)
+	at io.undertow.servlet.handlers.ServletInitialHandler.access$000(ServletInitialHandler.java:79)
+	at io.undertow.servlet.handlers.ServletInitialHandler$1.handleRequest(ServletInitialHandler.java:100)
+	at io.undertow.server.Connectors.executeRootHandler(Connectors.java:387)
+	at io.undertow.server.HttpServerExchange$1.run(HttpServerExchange.java:852)
+	at org.jboss.threads.ContextClassLoaderSavingRunnable.run(ContextClassLoaderSavingRunnable.java:35)
+	at org.jboss.threads.EnhancedQueueExecutor.safeRun(EnhancedQueueExecutor.java:2019)
+	at org.jboss.threads.EnhancedQueueExecutor$ThreadBody.doRunTask(EnhancedQueueExecutor.java:1558)
+	at org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1423)
+	at org.xnio.XnioWorker$WorkerThreadFactory$1$1.run(XnioWorker.java:1280)
+	at java.base/java.lang.Thread.run(Thread.java:1623)

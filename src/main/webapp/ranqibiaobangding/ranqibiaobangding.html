@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content</title>
+    <script src="../css/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css" >
+    <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/lpg.css">
+
+    <!-- Add your custom stylesheets and scripts here -->
+    <script>
+        document.getElementById('showFormButton').addEventListener('click', function() {
+            var form = document.getElementById('searchForm');
+            if (form.style.display === 'none') {
+                form.style.display = 'block'; // 显示表单
+            } else {
+                form.style.display = 'none'; // 再次点击按钮隐藏表单
+            }
+        });
+    </script>
+</head>
+<body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div id="pagediv">
+    <form id="searchForm" action="/ranqibiaobangding/ranqibiaobangdinglist" method="post">
+        <a href="#" class="add openModal" data-title="新建用户" data-edit-url="add"><b> + </b>新建燃气表绑定</a>
+
+        <label>燃气表编号:</label>
+        <input type="text" name="ranqibiaono" value="#(ranqibiaono)">
+
+        <label>气瓶编号:</label>
+        <input type="text" name="qipingno" value="#(qipingno)">
+
+        <label>扫描时间:</label>
+        <input type="text" name="saomiaoshijian" value="#(saomiaoshijian)">
+
+        <label>扫描人:</label>
+        <input type="text" name="saomiaoren" value="#(saomiaoren)">
+
+        <label>表读数:</label>
+        <input type="text" name="biaodushu" value="#(biaodushu)">
+
+        <label>表读数日期:</label>
+        <input type="text" name="biaodushuriqi" value="#(biaodushuriqi)">
+
+        <label>经度:</label>
+        <input type="text" name="jingdu" value="#(jingdu)">
+
+        <label>纬度:</label>
+        <input type="text" name="weidu" value="#(weidu)">
+
+        <label>地址:</label>
+        <input type="text" name="address" value="#(address)">
+
+        <label>&nbsp;</label>
+        <input value="搜索" type="submit">
+        <input type="submit" value="重置" name="refresh">
+    </form>
+
+
+</div>
+
+<table class="list">
+    <div>
+        <button id="showFormButton" style="width: 30px; height: 30px; border: 2px solid transparent; border-radius: 50%; background-color: transparent; position: relative; float: right;">
+            <img src="/img/find.png" alt="搜索" style="width: 30px; height: 30px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+        </button>
+
+        <button id="fresh" name = "refresh" style="width: 30px; height: 30px; border: 2px solid transparent; border-radius: 50%; background-color: transparent; position: relative;  margin-right: 10px;float: right;">
+            <img src="/img/refresh2.png" alt="刷新" style="width: 25px; height: 25px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+        </button>
+
+        <script>
+            var buttons = document.getElementsByName("refresh");
+            for (var i = 0; i < buttons.length; i++) {
+                buttons[i].addEventListener('click', function() {
+                    // 获取所有的输入框并设置为空
+                    var inputs = document.querySelectorAll('#searchForm input[type=text]');
+                    for (var j = 0; j < inputs.length; j++) {
+                        inputs[j].value = "";
+                    }
+
+                    // 提交表单以重新查询并刷新页面
+                    document.getElementById('searchForm').submit();
+                });
+            }
+        </script>
+        <script>
+            document.getElementById('showFormButton').addEventListener('click', function() {
+                var form = document.getElementById('searchForm');
+                if (form.style.display === 'none') {
+                    form.style.display = 'block'; // 显示表单
+                } else {
+                    form.style.display = 'none'; // 再次点击按钮隐藏表单
+                }
+            });
+        </script>
+    </div>
+
+
+    <tbody>
+    <tr>
+        <th width="10%">Id</th>
+        <th width="12%">燃气表编号</th>
+        <th width="12%">气瓶编号</th>
+        <th width="5%">扫描时间</th>
+        <th width="12%">扫描人</th>
+        <th width="5%">表读数</th>
+        <th width="12%">表读数日期</th>
+        <th width="5%">经度</th>
+        <th width="5%">纬度</th>
+        <th width="5%">地址</th>
+        <th width="12%">操作</th>
+
+
+    </tr>
+    #set(startIndex = (ranqibiaobangding.pageNumber - 1) *ranqibiaobangding.pageSize + 1)
+    #for(x : ranqibiaobangding.getList())
+    <tr>
+        <td style="text-align:center">#(startIndex++)</td> <!-- 显示序号并递增 -->
+        <td style="text-align:center">#(x.ranqibiaono)</td>
+        <td style="text-align:center">#(x.qipingno)</td>
+        <td style="text-align:center">#(x.saomiaoshijian)</td>
+        <td style="text-align:center">#(x.saomiaoren)</td>
+        <td style="text-align:center">#(x.biaodushu)</td>
+        <td style="text-align:center">#(x.biaodushuriqi)</td>
+        <td style="text-align:center">#(x.jingdu)</td>
+        <td style="text-align:center">#(x.weidu)</td>
+        <td style="text-align:center">#(x.address)</td>
+
+
+        <td style="text-align:left">
+            <!--        -->
+            &nbsp;&nbsp;<a href="#" onclick="confirmDelete('#(x.id)')">删除</a>
+            <a href="#" class="edit openModal" data-title="编辑用户" data-edit-url="/ranqibiaobangding/edit/#(x.id)">修改</a>
+        </td>
+    </tr>
+    #end
+    </tbody>
+</table>
+<div class="pagination" style="color:#000000;">
+    #@paginate(ranqibiaobangding.pageNumber, ranqibiaobangding.totalPage, "/ranqibiaobangding/ranqibiaobangdinglist?ranqibiaono=" + (ranqibiaono != null ? ranqibiaono : "") + "&qipingno=" + (qipingno != null ? qipingno : "") + "&saomiaoshijian=" + (saomiaoshijian != null ? saomiaoshijian : "") + "&saomiaoren=" + (saomiaoren != null ? saomiaoren : "") + "&biaodushu=" + (biaodushu != null ? biaodushu : "") + "&biaodushuriqi=" + (biaodushuriqi != null ? biaodushuriqi : "") + "&jingdu=" + (jingdu != null ? jingdu : "") + "&weidu=" + (weidu != null ? weidu : "") + "&address=" + (address != null ? address : "") + "&page=")
+</div>
+<script>
+    function confirmDelete(id) {
+        var result = confirm("确定要删除吗？");
+        if (result) {
+            // 如果用户点击了确定，则执行删除操作
+            window.location.href = "/ranqibiaobangding/delete/" + id;
+        } else {
+            // 如果用户点击了取消，则不执行任何操作
+            return false;
+        }
+    }
+</script>
+<script>
+    $('.openModal').click(function(e) {
+        e.preventDefault();
+        var editUrl = $(this).data('edit-url');
+        var that = this; // 保存正确的上下文
+
+        $.get(editUrl, function(data) {
+            var title = $(that).data('title');
+            $('#myModalLabel').text(title); // 修改模态窗口标题
+
+            // 清除旧内容
+            $('#modalBody').html(data); // 加载编辑内容到模态窗口
+            $('#myModal').modal('show'); // 显示模态窗口
+        });
+    });
+
+</script>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">模态窗口标题</h4>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- 这里将会加载你的表单内容 -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary"  id="saveButton" >保存</button>
+                <script>
+                    document.getElementById('saveButton').addEventListener('click', function() {
+                        document.getElementById('myForm').submit();
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

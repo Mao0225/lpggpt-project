@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content</title>
+    <script src="../css/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css" >
+    <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/lpg.css">
+
+    <!-- Add your custom stylesheets and scripts here -->
+    <script>
+        document.getElementById('showFormButton').addEventListener('click', function() {
+            var form = document.getElementById('searchForm');
+            if (form.style.display === 'none') {
+                form.style.display = 'block'; // 显示表单
+            } else {
+                form.style.display = 'none'; // 再次点击按钮隐藏表单
+            }
+        });
+    </script>
+    <style>
+        table {
+            /* 边框合并，使表格看起来更简洁 */
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th,
+        td {
+            /* 添加边框 */
+            border: 1px solid #ccc;
+            /* 内边距，使内容与边框有一定距离 */
+            padding: 8px;
+        }
+
+        th {
+            /* 文本居中 */
+            text-align: center;
+            /* 背景颜色，可根据需要修改 */
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+<div id="pagediv">
+    <form id="searchForm" action="/Fequipment/oFElist" method="post">
+        <label>物资名称:</label>
+        <input type="text" name="name" value="#(name)">
+        <label>开始时间:</label>
+        <input type="date" name="starttime" value="#(starttime)">
+        <label>结束时间:</label>
+        <input type="date" name="endtime" value="#(endtime)">
+        <input type="submit" value="提交">
+    </form>
+        <button onclick="window.history.back()">返回</button>
+
+</div>
+
+<table class="list">
+    <div>
+        <button id="showFormButton" style="width: 30px; height: 30px; border: 2px solid transparent; border-radius: 50%; background-color: transparent; position: relative; float: right;">
+            <img src="/img/find.png" alt="搜索" style="width: 30px; height: 30px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+        </button>
+
+        <button id="fresh" name = "refresh" style="width: 30px; height: 30px; border: 2px solid transparent; border-radius: 50%; background-color: transparent; position: relative;  margin-right: 10px;float: right;">
+            <img src="/img/refresh2.png" alt="刷新" style="width: 25px; height: 25px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+        </button>
+
+        <script>
+            var buttons = document.getElementsByName("refresh");
+            for (var i = 0; i < buttons.length; i++) {
+                buttons[i].addEventListener('click', function() {
+                    // 获取所有的输入框并设置为空
+                    var inputs = document.querySelectorAll('#searchForm input[type=text]');
+                    for (var j = 0; j < inputs.length; j++) {
+                        inputs[j].value = "";
+                    }
+
+                    // 提交表单以重新查询并刷新页面
+                    document.getElementById('searchForm').submit();
+                });
+            }
+        </script>
+        <script>
+            document.getElementById('showFormButton').addEventListener('click', function() {
+                var form = document.getElementById('searchForm');
+                if (form.style.display === 'none') {
+                    form.style.display = 'block'; // 显示表单
+                } else {
+                    form.style.display = 'none'; // 再次点击按钮隐藏表单
+                }
+            });
+        </script>
+    </div>
+
+
+    <tbody>
+    <tr>
+        <th width="10%">序号</th>
+
+        <th width="12%">物资名称</th>
+        <th width="5%">使用数量</th>
+        <th width="12%">使用设备</th>
+        <th width="12%">使用日期</th>
+        <th width="12%">简要描述</th>
+        <th width="12%">使用人</th>
+    </tr>
+    #set(startIndex = (ofequipment.pageNumber - 1) * ofequipment.pageSize + 1)
+    #for(x : ofequipment.getList())
+    <tr>
+        <td style="text-align:center">#(startIndex++)</td> <!-- 显示序号并递增 -->
+
+        <td style="text-align:center">#(x.name)</td>
+        <td style="text-align:center">#(x.count)</td>
+        <td style="text-align:center">#(x.equipment)</td>
+        <td style="text-align:center">#(x.creattime)</td>
+        <td style="text-align:center">#(x.content)</td>
+        <td style="text-align:center">#(x.staff)</td>
+
+    </tr>
+    #end
+    </tbody>
+</table>
+<div class="pagination" style="color:#000000;">
+    #@paginate(ofequipment.pageNumber, ofequipment.totalPage, "/Fequipment/oFElist?name=" + (name != null ? name : "") + "&starttime=" + (starttime != null ? starttime : "")+ "&endtime=" + (endtime != null ? endtime : "") + "&page=")
+</div>
+<script>
+    function confirmDelete(id) {
+        var result = confirm("确定要删除吗？");
+        if (result) {
+            // 如果用户点击了确定，则执行删除操作
+            window.location.href = "/Fequipment/delete/" + id;
+        } else {
+            // 如果用户点击了取消，则不执行任何操作
+            return false;
+        }
+    }
+</script>
+<script>
+    $('.openModal').click(function(e) {
+        e.preventDefault();
+        var editUrl = $(this).data('edit-url');
+        var that = this; // 保存正确的上下文
+
+        $.get(editUrl, function(data) {
+            var title = $(that).data('title');
+            $('#myModalLabel').text(title); // 修改模态窗口标题
+
+            // 清除旧内容
+            $('#modalBody').html(data); // 加载编辑内容到模态窗口
+            $('#myModal').modal('show'); // 显示模态窗口
+        });
+    });
+
+</script>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">模态窗口标题</h4>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- 这里将会加载你的表单内容 -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary"  id="saveButton" >保存</button>
+                <script>
+                    document.getElementById('saveButton').addEventListener('click', function() {
+                        document.getElementById('myForm').submit();
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

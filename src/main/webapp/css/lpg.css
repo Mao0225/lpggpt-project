@@ -1,0 +1,138 @@
+.modal-dialog {
+    max-width: 40%;
+    max-height: 100%;
+
+}
+.modal-content  {
+    background-color: #ffdf7e; /* 改变背景颜色 */
+    font-size: 18px; /* 改变字体大小 */
+    border-radius:20px; /* 添加圆角 */
+}
+.modal-body {
+    background-color: #c5fbd6; /* 改变背景颜色 */
+
+    max-height: calc(100vh - 210px);
+    overflow-y: auto;
+}
+body {
+    margin: 1px;
+    padding: 1px;
+    width: 100%;
+    font-family: Arial, sans-serif;
+    background-image: url(../img/top-bg1.jpg);
+}
+a {
+    text-decoration: none;
+    color: #000000;
+    font-size: 15px;
+}
+#pagediv {
+    text-align: left;
+    border: 2px solid orange;
+    width: 100%;
+    padding: 10px 10px;
+    border-radius: 5px 15px;
+}
+#pagediv b {
+    font-size: 23px;
+}
+#content {
+    padding: 20px;
+    text-align: center;
+    font-size: 24px;
+}
+.list {
+    border-collapse: collapse;
+    width: 100%;
+    table-layout: fixed; /* 控制表格的布局算法为固定布局 */
+}
+.list th {
+    background-color: #f0bf00;
+    color: #fff;
+    font-weight: bold;
+    padding: 8px;
+
+}
+.list td {
+    padding: 6px;
+    border: 1px solid #000;
+    font-size: 15px;
+    word-wrap: break-word; /* 在长单词或URL内部进行断行 */
+    word-break: break-all; /* 允许在单词内部断行 */
+    max-width: 150px; /* 限制单元格的最大宽度 */
+}
+.list tr:nth-child(even) {
+    background-color: #fbf0c5;
+}
+.list tr:nth-child(odd) {
+    background-color: #faf6e5;
+}
+.list tr:hover {
+    background-color: #ffcc00; /* Hover background color */
+}
+.pagination a, .pagination .current-page {
+    color: #FFFFFF; /* 设置链接和当前页文本为白色 */
+    text-decoration: none; /* 移除下划线 */
+}
+.pagination a:hover {
+    color: #DDDDDD; /* 鼠标悬停时的颜色变化 */
+    text-decoration: underline; /* 悬停时添加下划线 */
+}
+.pagination {
+    color: #f0f0f0;
+    font-size: 15px
+}
+#pagediv {
+    min-height: 30px; /* 您希望的高度 */
+}
+img {
+    width: 80px;
+    height: auto;
+}
+
+.add {
+    color: white;
+    font-size: 15px;
+}
+#searchForm {
+    display: block;
+}
+#searchForm label {
+    padding-left: 20px;
+    color: #FFFFFF;
+    font-size: 15px;
+}
+
+#searchForm input[type="text"] {
+    border-radius: 10px;
+    background-color: #fbf0c5;
+    width: 160px;
+    height: 30px;
+}
+#searchForm input[type="submit"] {
+    margin-left: 20px;
+}
+.image-upload > label > img {
+    width: 100px;  /* 调整为你需要的大小 */
+    height: 100px; /* 调整为你需要的大小 */
+    cursor: pointer;
+}
+.form_box form div {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.form_box form div label {
+    color: #000000;
+    font-size: 18px;
+    width: 120px;
+}
+
+.form_box form div input[type="text"]{
+    border-radius: 5px;
+    background-color: white;
+    width: 200px;
+    height:25px;
+}
+

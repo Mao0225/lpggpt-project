@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content</title>
+    <script src="../css/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css" >
+    <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/lpg.css">
+
+    <!-- Add your custom stylesheets and scripts here -->
+    <script>
+        document.getElementById('showFormButton').addEventListener('click', function() {
+            var form = document.getElementById('searchForm');
+            if (form.style.display === 'none') {
+                form.style.display = 'block'; // 显示表单
+            } else {
+                form.style.display = 'none'; // 再次点击按钮隐藏表单
+            }
+        });
+    </script>
+    <style>
+        table {
+            /* 边框合并，使表格看起来更简洁 */
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th,
+        td {
+            /* 添加边框 */
+            border: 1px solid #ccc;
+            /* 内边距，使内容与边框有一定距离 */
+            padding: 8px;
+        }
+
+        th {
+            /* 文本居中 */
+            text-align: center;
+            /* 背景颜色，可根据需要修改 */
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div id="pagediv">
+    <form id="searchForm" action="/restaurant/reslist" method="post">
+        <a href="#" class="add openModal" data-title="新建用户" data-edit-url="add"><b> + </b>新建饭店</a>
+
+<!--        <label>饭店编号:</label>-->
+<!--        <input type="text" name="restaurantno" value="#(restaurantno)">-->
+
+        <label>饭店名称:</label>
+        <input type="text" name="name" value="#(name)">
+
+        <label>饭店店长:</label>
+        <input type="text" name="leader" value="#(leader)">
+
+        <label>饭店地址:</label>
+        <input type="text" name="address" value="#(address)">
+
+        <label>联系电话:</label>
+        <input type="text" name="telephone" value="#(telephone)">
+
+        <label>称/流量表编码:</label>
+        <input type="text" name="chengno" value="#(chengno)">
+
+        <label>&nbsp;</label>
+        <input value="搜索" type="submit">
+        <input type="submit" value="重置" name="refresh">
+    </form>
+
+
+</div>
+
+<table class="list">
+    <div>
+        <button id="showFormButton" style="width: 30px; height: 30px; border: 2px solid transparent; border-radius: 50%; background-color: transparent; position: relative; float: right;">
+            <img src="/img/find.png" alt="搜索" style="width: 30px; height: 30px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+        </button>
+
+        <button id="fresh" name = "refresh" style="width: 30px; height: 30px; border: 2px solid transparent; border-radius: 50%; background-color: transparent; position: relative;  margin-right: 10px;float: right;">
+            <img src="/img/refresh2.png" alt="刷新" style="width: 25px; height: 25px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+        </button>
+
+        <script>
+            var buttons = document.getElementsByName("refresh");
+            for (var i = 0; i < buttons.length; i++) {
+                buttons[i].addEventListener('click', function() {
+                    // 获取所有的输入框并设置为空
+                    var inputs = document.querySelectorAll('#searchForm input[type=text]');
+                    for (var j = 0; j < inputs.length; j++) {
+                        inputs[j].value = "";
+                    }
+
+                    // 提交表单以重新查询并刷新页面
+                    document.getElementById('searchForm').submit();
+                });
+            }
+        </script>
+        <script>
+            document.getElementById('showFormButton').addEventListener('click', function() {
+                var form = document.getElementById('searchForm');
+                if (form.style.display === 'none') {
+                    form.style.display = 'block'; // 显示表单
+                } else {
+                    form.style.display = 'none'; // 再次点击按钮隐藏表单
+                }
+            });
+        </script>
+    </div>
+
+
+    <tbody>
+    <tr>
+        <th width="10%">序号</th>
+<!--        <th width="12%">饭店编号</th>-->
+        <th width="12%">饭店名称</th>
+        <th width="5%">饭店店长</th>
+        <th width="12%">饭店地址</th>
+        <th width="5%">联系电话</th>
+        <th width="12%">密码</th>
+        <th width="5%">备注</th>
+        <th width="5%">小盒子</th>
+        <th width="5%">报警信息接收人</th>
+        <!--            <th width="5%">标记</th>-->
+        <th width="12%">称/表编码</th>
+        <th width="12%">操作</th>
+    </tr>
+    #set(startIndex = (restaurant.pageNumber - 1) * restaurant.pageSize + 1)
+    #for(x : restaurant.getList())
+    <tr>
+        <td style="text-align:center">#(startIndex++)</td> <!-- 显示序号并递增 -->
+<!--        <td style="text-align:center">#(x.restaurantno)</td>-->
+        <td style="text-align:center">#(x.name)</td>
+        <td style="text-align:center">#(x.leader)</td>
+        <td style="text-align:center">#(x.address)</td>
+        <td style="text-align:center">#(x.telephone)</td>
+        <td style="text-align:center">#(x.pwd)</td>
+        <td style="text-align:center">#(x.memo)</td>
+        <td style="text-align:center">#(x.xiaohezi)</td>
+        <td style="text-align:center">#(x.baojingren)</td>
+        <!--            <td style="text-align:center">#(x.biaoji)</td>-->
+        <td style="text-align:center">#(x.chengno)</td>
+
+        <td style="text-align:left">
+            <!--        -->
+            &nbsp;&nbsp;<a href="#" onclick="confirmDelete('#(x.id)')">删除</a>
+            <a href="#" class="edit openModal" data-title="编辑用户" data-edit-url="/restaurant/edit/#(x.id)">修改</a>
+        </td>
+    </tr>
+    #end
+    </tbody>
+</table>
+<div class="pagination" style="color:#000000;">
+    #@paginate(restaurant.pageNumber, restaurant.totalPage, "/restaurant/reslist?restaurantno=" + (restaurantno != null ? restaurantno : "") + "&name=" + (name != null ? name : "") + "&address=" + (address != null ? address : "") + "&leader=" + (leader != null ? leader : "") + "&telephone=" + (telephone != null ? telephone : "") + "&chengno=" + (chengno != null ? chengno : "") + "&page=")
+</div>
+<script>
+    function confirmDelete(id) {
+        var result = confirm("确定要删除吗？");
+        if (result) {
+            // 如果用户点击了确定，则执行删除操作
+            window.location.href = "/restaurant/delete/" + id;
+        } else {
+            // 如果用户点击了取消，则不执行任何操作
+            return false;
+        }
+    }
+</script>
+<script>
+    $('.openModal').click(function(e) {
+        e.preventDefault();
+        var editUrl = $(this).data('edit-url');
+        var that = this; // 保存正确的上下文
+
+        $.get(editUrl, function(data) {
+            var title = $(that).data('title');
+            $('#myModalLabel').text(title); // 修改模态窗口标题
+
+            // 清除旧内容
+            $('#modalBody').html(data); // 加载编辑内容到模态窗口
+            $('#myModal').modal('show'); // 显示模态窗口
+        });
+    });
+
+</script>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">模态窗口标题</h4>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- 这里将会加载你的表单内容 -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary"  id="saveButton" >保存</button>
+                <script>
+                    document.getElementById('saveButton').addEventListener('click', function() {
+                        document.getElementById('myForm').submit();
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

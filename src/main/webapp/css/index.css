@@ -1,0 +1,95 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+#container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* Make the container fill the entire viewport height */
+}
+#header {
+    /* Include your header styles from head.html */
+    height: 100px;
+}
+#main {
+    display: flex;
+    flex: 1; /* Make the main area fill the remaining space */
+}
+#left {
+    width: 17%;
+    border-right: 1px solid #f0bf00; /* Add a right border */
+    background-color: #0b333f;
+
+    /* Include your left sidebar styles from left.html */
+}
+#content {
+    width: 100%;
+    /* Include your content area styles from content.html */
+}
+#footer {
+    /* Include your footer styles from foot.html */
+}
+/* Add your custom styles here */
+#left {
+    /* 左侧菜单栏样式 */
+    border-left: 2px solid #f0bf00; /* 添加右边框 */
+}
+.menu {
+    list-style: none; /*移除列表项的默认标记（如圆点或数字）*/
+    padding: 0;/*移除菜单内边距*/
+    margin: 0;/*移除菜单外边距。*/
+    position: relative; /*设置菜单的定位上下文，使其子元素可以相对于它进行绝对定位。*/
+    transform-style: preserve-3d;/*指定菜单的子元素应位于3D空间中，而不是在2D平面内。*/
+}
+.menu > li {
+    position: relative;/*设置列表项的定位上下文，使其子元素可以相对于它进行定位。*/
+    transition: transform 0.5s; /*当列表项的transform属性发生变化时，这些变化应在0.5秒内平滑过渡。*/
+}
+.menu > li > a {
+    display: flex; /*将锚元素设置为块级元素，使其占据整个父元素的宽度。*/
+    padding: 10px;/*给锚元素添加内边距*/
+    background: rgb(11, 51, 63); /* 设置锚元素的背景颜色为藏青色。*/
+    color: #fff;/*设置锚元素的文本颜色。*/
+    text-decoration: none;/* 移除锚点文本的下划线。*/
+    border-bottom: 1px solid #222;/*在锚元素下方添加一个底部边框。*/
+}
+.menu > li > .submenu {
+
+    list-style: disc; /* 使用圆点作为列表项的标记 */
+    margin-left: 20px; /* 调整圆点与文本之间的间距 */
+    position: relative; /*子菜单的定位上下文是相对定位，*/
+    padding: 10px 10px; /* 设置每个选项的上下间隙为5px，左右间隙为10px */
+    margin-bottom: 10px; /* 设置每个子菜单项之间的下方间隙为5px */
+    left: 10%;/*将子菜单定位在其父菜单项的右侧的20%。*/
+    top: 0;/*将子菜单定位在其父菜单项的顶侧。*/
+    display: none; /* 默认不显示子菜单 */
+    color: white; /* 添加白色颜色 */
+}
+.submenu li a {
+    color: #fff;/*文本颜色*/
+    text-decoration: none;/*移除文本装饰*/
+    /*background: #444; !* 子菜单项的背景颜色 *!*/
+}
+
+.submenu li a:hover, .submenu li a.active {
+    background: rgba(255, 255, 255, 0.33); /* 鼠标悬停或激活时的背景颜色 */
+}
+
+#content {
+    /* 内容区域样式 */
+    border-right: 2px solid #f0bf00; /* 添加左边框 */
+}
+.menu-item > a > .fa1{
+    /* 调整图标的大小 */
+    font-size: 20px; /* 您可以根据需要调整大小 */
+    /* 调整图标与文字之间的距离 */
+    margin-left: auto; /* 调整边距 */
+}
+.menu-item > a > .fa2 {
+    /* 调整图标的大小 */
+    font-size: 20px; /* 您可以根据需要调整大小 */
+    /* 调整图标与文字之间的距离 */
+    margin-right: 20px; /* 调整边距 */
+    /* 设置图标与文本一样高 */
+    line-height: 1.5em; /* 假设文本的行高为 1.5em，您可以根据实际行高调整 */
+}

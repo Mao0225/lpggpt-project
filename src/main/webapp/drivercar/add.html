@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content</title>
+</head>
+<body>
+<script>
+    var imageCount = 0;
+
+    function uploadFile(inputElementId) {
+        var fileInput = document.getElementById(inputElementId);
+        var file = fileInput.files[0];
+
+        // 如果没有选择文件，直接返回
+        if (!file) {
+            return;
+        }
+
+        var formData = new FormData();
+        formData.append('file', file);
+
+        fetch('/drivercar/localUpload', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('File uploaded successfully. Local URL is', data.url);
+                var urlInput = document.getElementById(inputElementId + 'Url');
+                // 保留原有的 URL，将新的 URL 添加到列表中
+                if (urlInput.value) {
+                    urlInput.value += ',' + data.url;
+                } else {
+                    urlInput.value = data.url;
+                }
+                // 在图片预览容器中添加新的图片元素
+                var container = document.getElementById(inputElementId + 'Container');
+                var div = document.createElement('div');
+                div.style.position = 'relative';
+                div.style.width = "100px";  // 设置图片大小
+                div.style.height = "100px";
+
+                var img = document.createElement('img');
+                img.src = data.url;
+                img.style.width = "100%";  // 设置图片大小
+                img.style.height = "100%";
+                div.appendChild(img);
+
+                var button = document.createElement('button');
+                button.innerText = '×';
+                button.style.position = 'absolute';
+                button.style.top = '0';
+                button.style.right = '0';
+                button.style.background = 'rgba(255, 255, 255, 0.7)';
+                button.style.border = 'none';
+                button.style.fontSize = '1em';
+                button.style.cursor = 'pointer';
+                button.onclick = function() {
+                    // 从 DOM 中移除图片元素
+                    div.parentNode.removeChild(div);
+
+                    // 从 URL 列表中删除对应的 URL
+                    var urls = urlInput.value.split(',');
+                    var urlIndex = urls.indexOf(data.url);
+                    if (urlIndex > -1) {
+                        urls.splice(urlIndex, 1);
+                    }
+                    urlInput.value = urls.join(',');
+                };
+                div.appendChild(button);
+
+                container.appendChild(div);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+
+
+
+
+
+    function deleteImage(inputElementId, imageElement, urlIndex) {
+        // 从 DOM 中移除图片元素
+        imageElement.parentNode.removeChild(imageElement);
+
+        // 从 URL 列表中删除对应的 URL
+        var urlInput = document.getElementById(inputElementId + 'Url');
+        var urls = urlInput.value.split(',');
+        urls.splice(urlIndex, 1);
+        urlInput.value = urls.join(',');
+    }
+
+
+
+</script>
+<div class="form_box">
+    <form id="myForm" action="/drivercar/save" method="post">
+
+        <div>
+            <label>危货证件照片</label>
+            <div id="riskCargoLicenseImageUrlInputContainer" class="image-upload">
+                <!-- 图片元素将在这里动态创建 -->
+                <label for="riskCargoLicenseImageUrlInput">
+                    <img id="riskCargoLicenseImageUrlInputPreview"  src="/img/+++++.png" alt="点击添加图片" title="点击添加图片" />
+                </label>
+                <input type="file" id="riskCargoLicenseImageUrlInput" name="risk_cargo_license_image_file" onchange="uploadFile('riskCargoLicenseImageUrlInput')"  style="display: none;" />
+            </div>
+            <input type="hidden" id="riskCargoLicenseImageUrlInputUrl" name="drivercar.risk_cargo_license_image_url" value="" />
+            <input type="file">
+        </div>
+
+        <div>
+            <label>车辆照片</label>
+            <div id="carImageInputContainer" class="image-upload">
+                <!-- 图片元素将在这里动态创建 -->
+                <label for="carImageInput">
+                    <img id="carImageInputPreview" src="/img/+++++.png"  alt="点击添加图片" title="点击添加图片" />
+                </label>
+                <input type="file" id="carImageInput" name="car_image_file" onchange="uploadFile('carImageInput')" accept="image/jpeg, image/png" style="display: none;" />
+            </div>
+            <input type="hidden" id="carImageInputUrl" name="drivercar.car_image_url" value="" />
+        </div>
+
+        <div>
+            <label>驾驶证照片</label>
+            <div id="driverLicenseImageInputContainer" class="image-upload">
+                <!-- 图片元素将在这里动态创建 -->
+                <label for="driverLicenseImageInput">
+                    <img id="driverLicenseImageInputPreview" src="/img/+++++.png"  alt="点击添加图片" title="点击添加图片" />
+                </label>
+                <input type="file" id="driverLicenseImageInput" name="driver_license_image_file" onchange="uploadFile('driverLicenseImageInput')" style="display: none;" />
+            </div>
+            <input type="hidden" id="driverLicenseImageInputUrl" name="drivercar.driver_license_image_url" value="" />
+        </div>
+
+
+
+        <div>
+            <label>身份证号</label>
+            <input type="text" name="drivercar.identity_card_no" value="" />
+        </div>
+        <div>
+            <label>危货证件号</label>
+            <input type="text" name="drivercar.risk_cargo_license_no" value="" />
+        </div>
+        <div>
+            <label>危货证件有效期</label>
+            <input type="text" name="drivercar.risk_cargo_license_indate" value="" />
+        </div>
+        <div>
+            <label>司机姓名</label>
+            <input type="text" name="drivercar.drivername" value="" />
+        </div>
+        <div>
+            <label>联系方式</label>
+            <input type="text" name="drivercar.driverphone" value="" />
+        </div>
+        <div>
+            <label>出生日期</label>
+            <input type="text" name="drivercar.driverbirthday" value="" />
+        </div>
+        <div>
+            <label>性别</label>
+            <input type="text" name="drivercar.driversex" value="" />
+        </div>
+        <div>
+            <label>车牌号</label>
+            <input type="text" name="drivercar.drivercarno" value="" />
+        </div>
+        <div>
+            <label>车辆名称</label>
+            <input type="text" name="drivercar.carname" value="" />
+        </div>
+        <div>
+            <label>车辆生产日期</label>
+            <input type="text" name="drivercar.carshengchanriqi" value="" />
+        </div>
+        <div>
+            <label>车辆颜色</label>
+            <input type="text" name="drivercar.carcolor" value="" />
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

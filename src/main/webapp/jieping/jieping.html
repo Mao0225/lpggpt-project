@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content</title>
+    <link rel="stylesheet" type="text/css" href="../css/lpg.css">
+</head>
+<body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+</head>
+
+<style>
+    /* 弹窗背景 */
+    .popup-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.5);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+    /* 弹窗内容样式 */
+    .popup-content {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        position: relative;
+    }
+    /* 关闭按钮样式 */
+    .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        cursor: pointer;
+        font-size: 20px;
+    }
+</style>
+<body>
+<div class="popup-overlay" id="popup">
+    <div class="popup-content">
+        <span class="close-btn" id="close-btn">&times;</span>
+        <img src="" id="popup-img" style="width: 800px; height: 600px;">
+    </div>
+</div>
+<div id="pagediv">
+</div>
+
+<table class="list">
+    <tbody>
+    <tr>
+        <th width="10%">id</th>
+        <th width="12%">摄像头编号</th>
+        <th width="12%">截屏</th>
+    </tr>
+    #set(startIndex = (jiepinglist.pageNumber - 1) * jiepinglist.pageSize + 1)
+    #for(x : jiepinglist.getList())
+    <tr>
+        <td style="text-align:center">#(startIndex++)</td> <!-- 显示序号并递增 -->
+        <td style="text-align:center">#(x.shexiangtouno)</td>
+        <td style="text-align:center">#(x.happendtime)</td>
+        <td style="text-align:center"><img src="http://114.115.156.201:8099/upload/temp/jieping/#(x.photo)"></td>
+
+    </tr>
+    #end
+    </tbody>
+</table>
+
+
+<div class="pagination" style="color:#000000;">
+    #@paginate(jiepinglist.pageNumber, jiepinglist.totalPage, "/jieping/jiepinglist?&page=")
+</div>
+</body>
+<script>
+    // 弹窗显示函数
+    function showPopup(imgSrc) {
+        var popup = document.getElementById('popup');
+        var popupImg = document.getElementById('popup-img');
+        popupImg.src = imgSrc; // 设置图片源
+        popup.style.display = 'flex'; // 显示弹窗
+    }
+
+    // 绑定图片点击事件
+    document.querySelectorAll('td img').forEach(img => {
+        img.addEventListener('click', () => showPopup(img.src));
+    });
+
+    // 关闭按钮事件
+    document.getElementById('close-btn').addEventListener('click', () => {
+        document.getElementById('popup').style.display = 'none';
+    });
+</script>
+</html>

@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content</title>
+    <script src="../css/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css" >
+    <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/lpg.css">
+    <!-- Add your custom stylesheets and scripts here -->
+</head>
+<body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div id="pagediv">
+    <form id="searchForm" action="/drivercar/drivercarlist" method="get">
+
+        <a href="#" class="add openModal" data-title="新建司机" data-edit-url="/drivercar/add"><b> + </b>新建司机</a>
+
+        <label>司机姓名:</label>
+        <input type="text" name="drivername" value="#(drivername)"/>
+
+        <label>联系电话:</label>
+        <input type="text" name="driverphone" value="#(driverphone)"/>
+
+        <label>车牌号:</label>
+        <input type="text" name="drivercarno" value="#(drivercarno)"/>
+
+        <label>车辆名称:</label>
+        <input type="text" name="carname" value="#(carname)"/>
+
+        <label>车辆生产日期:</label>
+        <input type="text" name="carshengchanriqi" value="#(carshengchanriqi)"/>
+
+        <label>&nbsp;</label>
+        <input value="搜索" type="submit">
+        <input type="submit" value="重置" name="refresh"/>
+    </form>
+
+</div>
+<table class="list">
+    <div>
+
+        <button id="showFormButton" style="width: 30px; height: 30px; border: 2px solid transparent; border-radius: 50%; background-color: transparent; position: relative; float: right;">
+            <img src="/img/find.png" alt="搜索" style="width: 30px; height: 30px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+        </button>
+
+        <button id="fresh" name = "refresh" style="width: 30px; height: 30px; border: 2px solid transparent; border-radius: 50%; background-color: transparent; position: relative;  margin-right: 10px;float: right;">
+            <img src="/img/refresh2.png" alt="刷新" style="width: 30px; height: 30px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+        </button>
+
+
+        <script>
+            var buttons = document.getElementsByName("refresh");
+            for (var i = 0; i < buttons.length; i++) {
+                buttons[i].addEventListener('click', function() {
+                    // 获取所有的输入框并设置为空
+                    var inputs = document.querySelectorAll('#searchForm input[type=text]');
+                    for (var j = 0; j < inputs.length; j++) {
+                        inputs[j].value = "";
+                    }
+
+                    // 提交表单以重新查询并刷新页面
+                    document.getElementById('searchForm').submit();
+                });
+            }
+        </script>
+
+
+        <script>
+            document.getElementById('showFormButton').addEventListener('click', function() {
+                var form = document.getElementById('searchForm');
+                if (form.style.display === 'none') {
+                    form.style.display = 'block'; // 显示表单
+                } else {
+                    form.style.display = 'none'; // 再次点击按钮隐藏表单
+                }
+            });
+        </script>
+    </div>
+
+
+    <tbody>
+    <tr>
+        <th width="2%">Id</th>
+        <th width="2%">司机姓名</th>
+        <th width="2%">联系方式</th>
+        <th width="2%">出生日期</th>
+        <th width="2%">性别</th>
+        <th width="2%">车牌号</th>
+        <th width="2%">车辆名称</th>
+        <th width="2%">车辆颜色</th>
+        <th width="2%">车辆生产日期</th>
+
+        <th width="2%">驾驶证照片</th>
+        <th width="2%">车辆照片</th>
+        <th width="2%">身份证号</th>
+        <th width="2%">危货证件号</th>
+        <th width="2%">危货证件有效期</th>
+        <th width="2%">危货证件照片</th>
+        <th width="2%">操作标识</th>
+        <th width="2%">操作</th>
+    </tr>
+    #set(startIndex = (drivercar.pageNumber - 1) * drivercar.pageSize + 1)
+
+    #for(x : drivercar.getList())
+    <tr>
+        <td style="text-align:center">#(startIndex++)</td> <!-- 显示序号并递增 -->
+        <td style="text-align:center">#(x.drivername)</td>
+        <td style="text-align:center">#(x.driverphone)</td>
+        <td style="text-align:center">#(x.driverbirthday)</td>
+        <td style="text-align:center">#(x.driversex)</td>
+        <td style="text-align:center">#(x.drivercarno)</td>
+        <td style="text-align:center">#(x.carname)</td>
+        <td style="text-align:center">#(x.carcolor)</td>
+        <td style="text-align:center">#(x.carshengchanriqi)</td>
+
+        <td style="text-align:center">
+            #if(x.driver_license_image_url)
+            <button id="prevButtonDriverLicense#(x.id)" onclick="prevImage('driver_license_image#(x.id)')" style="width: 50px;height: 20px;font-size: 10px">上一张</button>
+            <img id="driver_license_image#(x.id)" src="#(x.driver_license_image_url.split(',')[0])" alt="驾驶执照图像" onclick="showImage(this.src)" data-urls="#(x.driver_license_image_url)">
+            <button id="nextButtonDriverLicense#(x.id)" onclick="nextImage('driver_license_image#(x.id)')" style="width: 50px;height: 20px;font-size: 10px">下一张</button>
+            #else
+            <img src="/img/+++++.png" alt="驾驶执照图像" style="display: none;">
+            #end
+        </td>
+
+        <td style="text-align:center">
+            #if(x.car_image_url)
+            <button id="prevButtonCar#(x.id)" onclick="prevImage('car_image#(x.id)')" style="width: 50px;height: 20px;font-size: 10px">上一张</button>
+            <img id="car_image#(x.id)" src="#(x.car_image_url.split(',')[0])" alt="车辆图像" onclick="showImage(this.src)" data-urls="#(x.car_image_url)">
+            <button id="nextButtonCar#(x.id)" onclick="nextImage('car_image#(x.id)')" style="width: 50px;height: 20px;font-size: 10px">下一张</button>
+            #else
+            <img src="/img/+++++.png" alt="车辆图像" style="display: none;">
+            #end
+        </td>
+
+        <td style="text-align:center">#(x.identity_card_no)</td>
+        <td style="text-align:center">#(x.risk_cargo_license_no)</td>
+        <td style="text-align:center">#(x.risk_cargo_license_indate)</td>
+        <td style="text-align:center">
+            #if(x.risk_cargo_license_image_url)
+            <button id="prevButtonRiskCargo#(x.id)" onclick="prevImage('risk_cargo_license_image#(x.id)')" style="width: 50px;height: 20px;font-size: 10px">上一张</button>
+            <img id="risk_cargo_license_image#(x.id)" src="#(x.risk_cargo_license_image_url.split(',')[0])" alt="危货证件照片" onclick="showImage(this.src)" data-urls="#(x.risk_cargo_license_image_url)">
+            <button id="nextButtonRiskCargo#(x.id)" onclick="nextImage('risk_cargo_license_image#(x.id)')" style="width: 50px;height: 20px;font-size: 10px">下一张</button>
+            #else
+            <img src="/img/+++++.png" alt="危货证件照片" style="display: none;">
+            #end
+        </td>
+
+        <td style="text-align:center">
+            #if(x.update_sign == 1)
+            电脑端
+            #elseif(x.update_sign == 2)
+            APP端
+            #else
+            未知设备
+            #end
+        </td>
+
+        <td style="text-align:center">
+            &nbsp;&nbsp;<a href="#" onclick="confirmDelete('#(x.id)')">删除</a>
+            <a href="#" class="edit openModal" data-title="编辑用户" data-edit-url="/drivercar/edit/#(x.id)">修改</a>
+        </td>
+    </tr>
+    #end
+
+
+
+    <script>
+        var imageIndices = {};
+        function changeImage(imageId, direction) {
+            var imageElement = document.getElementById(imageId);
+            var imageUrls = imageElement.dataset.urls.split(',');
+            var index = imageIndices[imageId] || 0;
+            index = (index + direction + imageUrls.length) % imageUrls.length;
+            imageIndices[imageId] = index;
+            var imageUrl = imageUrls[index];
+            // if (!imageUrl.includes('http')) {
+            //     imageUrl = '/upload/drivercar/' + imageUrl;
+            // }
+            imageElement.src = imageUrl;
+        }
+        function prevImage(imageId) {
+            changeImage(imageId, -1);
+        }
+        function nextImage(imageId) {
+            changeImage(imageId, 1);
+        }
+    </script>
+    </tbody>
+    <script>
+        function showImage(imageUrl) {
+            if(imageUrl == null){
+
+            }
+            var img = new Image();
+            img.src = imageUrl;
+            var mask = document.createElement('div');
+            mask.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); z-index: 9999;';
+            document.body.appendChild(mask);
+            var imgContainer = document.createElement('div');
+            imgContainer.style.cssText = 'position: fixed; top: 50%; left: 50%; width: auto; height: auto; transform: translate(-50%, -50%); z-index: 10000;';
+            imgContainer.appendChild(img);
+            document.body.appendChild(imgContainer);
+
+            img.onload = function() {
+                var maxWidth = window.innerWidth * 0.8; // Adjust max width as needed
+                var maxHeight = window.innerHeight * 0.8; // Adjust max height as needed
+                var imgWidth = img.naturalWidth;
+                var imgHeight = img.naturalHeight;
+                var scaleFactor = Math.min(maxWidth / imgWidth, maxHeight / imgHeight);
+                img.style.width = (imgWidth * scaleFactor) + "px";
+                img.style.height = (imgHeight * scaleFactor) + "px";
+            }
+
+            mask.addEventListener('click', function() {
+                mask.parentNode.removeChild(mask);
+                imgContainer.parentNode.removeChild(imgContainer);
+            });
+        }
+
+    </script>
+</table>
+
+
+<div class="pagination" style="color:#000000;">
+    #@paginate(drivercar.pageNumber, drivercar.totalPage, "/drivercar/drivercarlist?drivername=" +
+    (drivername != null ? drivername : "") + "&driverphone=" + (driverphone != null ? driverphone : "") +
+    "&drivercarno=" + (drivercarno != null ? drivercarno : "") + "&carname=" + (carname != null ? carname : "") +
+    "&shengchanriqi=" + (carshengchanriqi != null ? carshengchanriqi : "") + "&page=")")
+</div>
+
+
+
+<script>
+    function confirmDelete(id) {
+        var result = confirm("确定要删除吗？");
+        if (result) {
+            // 如果用户点击了确定，则执行删除操作
+            window.location.href = "/drivercar/delete/" + id;
+        } else {
+            // 如果用户点击了取消，则不执行任何操作
+            return false;
+        }
+    }
+</script>
+<script>
+    $('.openModal').click(function(e) {
+        e.preventDefault();
+        var editUrl = $(this).data('edit-url');
+        var that = this; // 保存正确的上下文
+
+        $.get(editUrl, function(data) {
+            var title = $(that).data('title');
+            $('#myModalLabel').text(title); // 修改模态窗口标题
+
+            // 清除旧内容
+            $('#modalBody').html(data); // 加载编辑内容到模态窗口
+            $('#myModal').modal('show'); // 显示模态窗口
+
+        });
+    });
+
+</script>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" >
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">模态窗口标题</h4>
+            </div>
+            <div class="modal-body" id="modalBody" >
+
+                <!-- 这里将会加载你的表单内容 -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary"  id="saveButton" >保存</button>
+                <script>
+                    function validateForm() {
+                        // 正确的日期格式 yyyy-mm-dd
+                        const dateFormat = /^\d{4}-\d{2}-\d{2}$/;
+
+                        // 获取所有需要验证的日期输入框
+                        const dateInputs = document.querySelectorAll('input[type="text"][name^="drivercar."][name*="indate"], input[type="text"][name^="drivercar."][name*="birthday"], input[type="text"][name^="drivercar."][name*="shengchanriqi"]');
+
+                        for (let i = 0; i < dateInputs.length; i++) {
+                            // 如果日期输入框不为空，检查日期格式
+                            if (dateInputs[i].value.trim() !== "" && !dateFormat.test(dateInputs[i].value)) {
+                                alert('日期格式不正确，无法保存,正确日期格式应为xxxx-xx-xx');
+                                return false; // 如果有任何一个日期格式不正确，直接返回false
+                            }
+                        }
+
+                        return true; // 如果所有字段验证通过，返回true
+                    }
+
+
+                    document.getElementById('saveButton').addEventListener('click', function() {
+                        // 验证表单数据
+                        if (validateForm()) {
+                            // 如果验证通过，则提交表单
+                            document.getElementById('myForm').submit();
+                        }
+                        // 如果验证失败，不提交表单（validateForm内部已经显示了错误消息）
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Equipment Repair</title>
+    <style>
+    </style>
+</head>
+
+<body>
+<div class="form_box">
+    <form id="myForm" >
+<!--        <input type="hidden" name="equipment.id" value="#(equipment.id??)" />-->
+        <!-- 添加隐藏的input元素来传递companyid -->
+        <input type="hidden" name="maintenance.companyid" value="#(maintenanceInfo.companyid)" />
+        <!-- 添加隐藏的input元素来传递equipmentid -->
+        <input type="hidden" name="maintenance.equipmentid" value="#(maintenanceInfo.id)" />
+        <!-- 将maintenance.step的值固定设置为字符串“完成” -->
+        <input type="hidden" name="maintenance.step" value="提交" />
+        <!-- 添加隐藏的input元素来传递weiter -->
+        <input type="hidden" name="maintenance.writer" value="#(maintenanceInfo.writer)" />
+        <!-- 添加隐藏的input元素来传递writetime -->
+        <input type="hidden" name="maintenance.writetime" value="#(maintenanceInfo.writetime)" />
+        <!-- 添加隐藏的input元素来传递delete_time -->
+        <input type="hidden" name="maintenance.delete_time" value="#(maintenanceInfo.delete_time)" />
+        <div>
+            <label>设备名称</label>
+            <input type="text" name="maintenance.name"  value="#(maintenanceInfo.name)" readonly />
+        </div>
+        <div>
+            <label>记录类型</label>
+            <select name="maintenance.kind">
+                <option value="维护">维护</option>
+                <option value="维修">维修</option>
+            </select>
+        </div>
+        <div class="text-input-div">
+            <label>报修日期</label>
+            <input type="date" name="maintenance.reportday" />
+        </div>
+        <div>
+            <label>报修人员</label>
+            <input type="text" name="maintenance.reporter" value="" />
+        </div>
+        <div>
+            <label>主要内容</label>
+            <textarea name="maintenance.content"></textarea>
+        </div>
+    </form>
+</div>
+</body>
+
+</html>

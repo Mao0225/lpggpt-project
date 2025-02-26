@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content</title>
+    <style>
+        input{
+            border-radius:5px ; background-color:#fbf0c5;
+        }
+    </style>
+    <script>
+
+        function uploadFile(inputElementId) {
+            console.log('daskdoaskdojasiojdiasiodjoiasjdiojasijdioasjoidas');
+            var fileInput = document.getElementById(inputElementId);
+            var file = fileInput.files[0];
+            var formData = new FormData();
+            formData.append('file', file);
+
+            // 显示选定的图片
+            var preview = document.getElementById(inputElementId + 'Preview');
+            preview.src = URL.createObjectURL(file);
+
+            fetch('/driver/upload', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('File uploaded successfully. Local URL is', data.url);
+                    var urlInput = document.getElementById(inputElementId + 'Url');
+                    urlInput.value = data.url;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+    </script>
+
+</head>
+<body style="background-color: #0b333f; color:#FFFFFF">
+<div class="form_box">
+    <form action="/driver/save" method="post">
+        <div>
+            <label style="display: inline-block; width: 115px;">司机姓名</label>
+            <input type="text" name="driver.drivername" value="" style="border-radius: 5px;background-color: #fbf0c5"/>
+        </div>
+        <div>
+            <label style="display: inline-block; width: 115px;">性别</label>
+            <input type="text" name="driver.driversex" value="" style="border-radius: 5px;background-color: #fbf0c5"/>
+        </div>
+        <div>
+            <label style="display: inline-block; width: 115px;">出生日期</label>
+            <input type="date" name="driver.driverbirthday" value=""  style="border-radius: 5px;background-color: #fbf0c5"/>
+        </div>
+        <div>
+            <label style="display: inline-block; width: 115px;">联系方式</label>
+            <input type="text" name="driver.driverphone" value=""  style="border-radius: 5px;background-color: #fbf0c5"/>
+        </div>
+        <div>
+            <label style="display: inline-block; width: 115px;">身份证号</label>
+            <input type="text" name="driver.identity_card_no" value=""  style="border-radius: 5px;background-color: #fbf0c5"/>
+        </div>
+        <div>
+            <label style="display: inline-block; width: 115px;">车牌号</label>
+            <input type="text" name="driver.drivercarno" value=""  style="border-radius: 5px;background-color: #fbf0c5"/>
+        </div>
+        <div>
+            <label style="display: inline-block; width: 115px;">车型</label>
+            <input type="text" name="driver.carname" value=""  style="border-radius: 5px;background-color: #fbf0c5"/>
+        </div>
+        <div>
+            <label style="display: inline-block; width: 115px;">车辆颜色</label>
+            <input type="text" name="driver.carcolor" value=""  style="border-radius: 5px;background-color: #fbf0c5"/>
+        </div>
+        <div>
+            <label style="display: inline-block; width: 115px;">车辆生产日期</label>
+            <input type="date" name="driver.carshengchanriqi" value=""  style="border-radius: 5px;background-color: #fbf0c5"/>
+        </div>
+        <div>
+            <label style="display: inline-block; width: 115px;">车辆照片</label>
+            <div class="image-upload">
+                <label for="carImageInput">
+                    <img id="carImageInputPreview" src="/upload/+.png" alt="点击添加图片" title="点击添加图片" />
+                </label>
+                <input type="file" id="carImageInput" name="car_image_file" onchange="uploadFile('carImageInput')" accept="image/jpeg, image/png" style="display: none;" />
+            </div>
+            <input type="hidden" id="carImageInputUrl" name="driver.car_image_url" />
+        </div>
+        <div>
+            <label style="display: inline-block; width: 115px;">驾驶证照片</label>
+            <div class="image-upload">
+                <label for="driverLicenseImageInput">
+                    <img id="driverLicenseImageInputPreview" src="/upload/+.png" alt="点击添加图片" title="点击添加图片" />
+                </label>
+                <input type="file" id="driverLicenseImageInput" name="driver_license_image_file" onchange="uploadFile('driverLicenseImageInput')" accept="image/jpeg, image/png" style="display: none;" />
+            </div>
+            <input type="hidden" id="driverLicenseImageInputUrl" name="driver.driver_license_image_url" />
+        </div>
+        <div>
+            <label style="display: inline-block; width: 115px;">危货证件号</label>
+            <input type="text" name="driver.risk_cargo_license_no" value=""  style="border-radius: 5px;background-color: #fbf0c5"/>
+        </div>
+        <div>
+            <label style="display: inline-block; width: 115px;">危货证件有效期</label>
+            <input type="date" name="driver.risk_cargo_license_indate" value=""  style="border-radius: 5px;background-color: #fbf0c5"/>
+        </div>
+        <div>
+            <label style="display: inline-block; width: 115px;">危货证件照片</label>
+            <div class="image-upload">
+                <label for="riskCargoLicenseImageUrlInput">
+                    <img id="riskCargoLicenseImageUrlInputPreview" src="/upload/+.png" alt="点击添加图片" title="点击添加图片" />
+                </label>
+                <input type="file" id="riskCargoLicenseImageUrlInput" name="risk_cargo_license_image_file" onchange="uploadFile('riskCargoLicenseImageUrlInput')" accept="image/jpeg, image/png" style="display: none;" />
+            </div>
+            <input type="hidden" id="riskCargoLicenseImageUrlInputUrl" name="driver.risk_cargo_license_image_url" />
+        </div>
+        <div>
+            <label>&nbsp;</label>
+            <input value="提交" type="submit">
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

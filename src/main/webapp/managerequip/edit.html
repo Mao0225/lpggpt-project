@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" width="device-width, initial-scale=1.0">
+    <title>Edit Equipment</title>
+    <style>
+    </style>
+</head>
+
+<body>
+<div class="form_box">
+    <form id="myForm"action="/managerequip/update" method="post">
+        <input type="hidden" name="equipment.id" value="#(equipment.id)" />
+        <div>
+            <label>设备种类</label>
+            <select name="equipment.kind">
+                <option value="特种设备">特种设备</option>
+                <option value="易损件">易损件</option>
+                <option value="消防器材">消防器材</option>
+            </select>
+        </div>
+        <div>
+            <label>生产厂商</label>
+            <input type="text" name="equipment.factory" value="#(equipment.factory)" />
+        </div>
+        <div>
+            <label>型号规格</label>
+            <input type="text" name="equipment.model" value="#(equipment.model)" />
+        </div>
+        <div>
+            <label>设备名称</label>
+            <input type="text" name="equipment.name" value="#(equipment.name)" />
+        </div>
+        <div>
+            <label>放置位置</label>
+            <input type="text" name="equipment.location" value="#(equipment.location)" />
+        </div>
+        <div>
+            <label>购买人员</label>
+            <input type="text" name="equipment.buyer" value="#(equipment.buyer)" />
+        </div>
+        <div>
+            <label>购买价格</label>
+            <input type="text" name="equipment.price" value="#(equipment.price)" />
+        </div>
+        <div class="text-input-div">
+            <label>购买日期</label>
+            <input type="text" name="equipment.buyday" value="#(equipment.buyday)" />
+        </div>
+        <div class="text-input-div">
+            <label>生产日期</label>
+            <input type="text" name="equipment.producedate" value="#(equipment.producedate)" />
+        </div>
+        <div class="text-input-div">
+            <label>上次检修期</label>
+            <input type="text" name="equipment.lastcheckdate" value="#(equipment.lastcheckdate)" />
+        </div>
+        <div class="text-input-div">
+            <label>失效日期</label>
+            <input type="text" name="equipment.expiredate" value="#(equipment.expiredate)" />
+        </div>
+        <div>
+            <label>备注信息</label>
+            <textarea name="equipment.remark"></textarea>
+        </div>
+        <!-- 设备图片上传部分 -->
+        <div>
+            <label>设备图片</label>
+            <div id="equipmentImageUrlInputContainer" class="image-upload">
+                <label for="equipmentImageInput">
+                    <img id="equipmentImageInputPreview" src="/upload/img_2.png" alt="点击添加图片" title="点击添加图片" />
+                </label>
+                <input type="file" id="equipmentImageInput" name="equipment_picture_file" onchange="uploadFile('equipmentImageInput')" accept="image/jpeg, image/png" style="display: none;" />
+            </div>
+            <input type="hidden" id="equipmentImageInputUrl" name="equipment.picture" value="#(equipment.picture)" />
+        </div>
+    </form>
+</div>
+
+<script>
+    var imageCount = 0;
+
+    function uploadFile(inputElementId) {
+        var fileInput = document.getElementById(inputElementId);
+        var file = fileInput.files[0];
+
+        // 如果没有选择文件，直接返回
+        if (!file) {
+            return;
+        }
+
+        var formData = new FormData();
+        formData.append('file', file);
+
+        fetch('/managerequip/equipmentImageUpload', { // 这里的URL需根据实际后端接口调整，假设和设备相关的上传接口是这个
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('File uploaded successfully. Local URL is', data.url);
+                var urlInput = document.getElementById(inputElementId + 'Url');
+                // 保留原有的 URL，将新的 URL 添加到列表中
+                if (urlInput.value) {
+                    urlInput.value += ',' + data.url;
+                } else {
+                    urlInput.value = data.url;
+                }
+                // 在图片预览容器中添加新的图片元素
+                var container = document.getElementById(inputElementId + 'Container');
+                var div = document.createElement('div');
+                div.style.position = 'relative';
+                div.style.width = "100px";
+                div.style.height = "100px";
+
+                var img = document.createElement('img');
+                img.src = data.url;
+                img.style.width = "100%";
+                img.style.height = "100%";
+                div.appendChild(img);
+
+                var button = document.createElement('button');
+                button.innerText = '×';
+                button.style.position = 'absolute';
+                button.style.top = '0';
+                button.style.right = '0';
+                button.style.background = 'rgba(255, 255, 255, 0.7)';
+                button.style.border = 'none';
+                button.style.fontSize = '1em';
+                button.style.cursor = 'pointer';
+                button.onclick = function () {
+                    // 从 DOM 中移除图片元素
+                    div.parentNode.removeChild(div);
+
+                    // 从 URL 列表中删除对应的 URL
+                    var urls = urlInput.value.split(',');
+                    var urlIndex = urls.indexOf(data.url);
+                    if (urlIndex > -1) {
+                        urls.splice(urlIndex, 1);
+                    }
+                    urlInput.value = urls.join(',');
+                };
+                div.appendChild(button);
+
+                container.appendChild(div);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+
+    function deleteImage(inputElementId, imageElement, urlIndex) {
+        // 从 DOM 中移除图片元素
+        imageElement.parentNode.removeChild(imageElement);
+
+        // 从 URL 列表中删除对应的 URL
+        var urlInput = document.getElementById(inputElementId + 'Url');
+        var urls = urlInput.value.split(',');
+        urls.splice(urlIndex, 1);
+        urlInput.value = urls.join(',');
+    }
+
+    $(document).ready(function () {
+        // 获取存储设备图片URL的隐藏输入框的值，并分割成数组（假设多个URL用逗号分隔）
+        var equipmentImageUrls = document.getElementById('equipmentImageInputUrl').value.split(',');
+        console.log("equipmentImageUrls: " + equipmentImageUrls);
+        var container = document.getElementById('equipmentImageUrlInputContainer');
+        console.log("container: " + container);
+        equipmentImageUrls.forEach(function (url, urlIndex) {
+            console.log("okkkk");
+            // 如果 URL 为空，就跳过这个 URL
+            if (!url || url === '') {
+                return;
+            }
+            var div = document.createElement('div');
+            console.log("div: " + div);
+            div.style.position = 'relative';
+            div.style.width = "100px";
+            div.style.height = "100px";
+
+            var img = document.createElement('img');
+            img.src = url;
+            console.log("img.sec: " + img.src);
+            img.style.width = "100%";
+            img.style.height = "100%";
+            div.appendChild(img);
+
+            var button = document.createElement('button');
+            button.innerText = '×';
+            button.style.position = 'absolute';
+            button.style.top = '0';
+            button.style.right = '0';
+            button.style.background = 'rgba(255, 255, 255, 0.7)';
+            button.style.border = 'none';
+            button.style.fontSize = '1em';
+            button.style.cursor = 'pointer';
+            button.onclick = function () {
+                deleteImage('equipmentImageInput', div, urlIndex);
+            };
+            div.appendChild(button);
+
+            container.appendChild(div);
+        });
+    });
+</script>
+</body>
+
+</html>

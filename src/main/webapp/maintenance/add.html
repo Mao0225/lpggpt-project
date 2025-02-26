@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Equipment List</title>
+    <script src="../css/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css">
+    <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/css/lpg.css">
+    <style>
+        /* 整体页面背景色及布局 */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f4f4f4; /* 柔和的背景色 */
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
+
+        /* 表单样式 */
+        form {
+            font-family: Arial, sans-serif;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* 让内部元素居中对齐 */
+            background-color: #ffdf7e;
+            border-radius: 10px; /* 更圆润的边框 */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.15); /* 增强阴影效果 */
+            margin-bottom: 30px;
+            width: 100%;
+            max-width: 600px;
+            position: relative; /* 为添加伪元素做准备 */
+        }
+
+        form::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, #ffd700, #008000); /* 顶部添加彩色线条装饰 */
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+
+        label {
+            margin-bottom: 10px;
+            color: #555555; /* 稍深一点的灰色 */
+            font-weight: 500;
+            font-size: 16px; /* 适当增大字体大小 */
+            width: 100%; /* 占满一行 */
+            text-align: left; /* 左对齐文字 */
+        }
+
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            background-image: linear-gradient(to bottom, #ffffcc 50%, #f9f9f9 50%); /* 更柔和的黄白渐变 */
+            background-size: 100% 200%;
+            background-position: 0 0;
+            transition: background-position 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 添加输入框阴影 */
+            font-size: 14px; /* 调整字体大小 */
+        }
+
+        input[type="text"]:hover,
+        select:hover {
+            background-position: 0 100%;
+        }
+
+        input[type="text"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2); /* 聚焦时阴影变化 */
+        }
+
+        /* 保存按钮样式 */
+        button[type="submit"] {
+            padding: 12px 30px;
+            background-color: #008000; /* 绿色按钮，更符合常规风格 */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease; /* 增加缩放效果过渡 */
+            font-size: 16px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2); /* 按钮阴影 */
+            margin-right: 15px; /* 增加按钮间距 */
+        }
+
+        button[type="submit"]:hover {
+            background-color: #006400; /* 按钮悬停加深颜色 */
+            transform: scale(1.05); /* 鼠标悬停时稍微放大 */
+        }
+
+        /* 返回按钮样式 */
+        button[type="button"] {
+            padding: 12px 30px;
+            background-color: #0000ff; /* 蓝色按钮，比较美观的颜色 */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            font-size: 16px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        button[type="button"]:hover {
+            background-color: #0000cc; /* 按钮悬停加深颜色 */
+            transform: scale(1.05);
+        }
+
+        #useInput {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            transition: border-color 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            font-size: 14px;
+        }
+
+        #useInput:focus {
+            border-color: #007bff;
+            outline: none;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        }
+
+        /* 新增按钮容器样式，用于将按钮放置在右下角 */
+        .button-container {
+            width: 100%;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin-top: 20px; /* 根据实际情况调整按钮与上方元素的间距 */
+        }
+
+        /* 表格样式 */
+        table.list {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #ffffff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+            border-radius: 10px;
+            margin-top: 30px;
+            overflow: hidden;
+        }
+
+        table.list th,
+        table.list td {
+            border: 1px solid #e0e0e0; /* 更淡的边框色 */
+            padding: 15px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        table.list th {
+            background-color: #f8f9fa;
+            color: #495057;
+            font-weight: 600;
+        }
+
+        /* 分页样式 */
+        .pagination {
+            text-align: center;
+            margin-top: 30px;
+            color: #999999;
+            font-size: 14px;
+        }
+
+        /* 模态框样式 */
+        .modal {
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1000;
+            overflow: auto;
+        }
+
+        .modal-dialog {
+            max-width: 600px;
+            margin: 1.75rem auto;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .modal-content {
+            padding: 30px;
+        }
+
+        .modal-header {
+            border-bottom: 1px solid #e0e0e0;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-footer {
+            border-top: 1px solid #e0e0e0;
+            padding: 1rem;
+            text-align: right;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+    </style>
+</head>
+
+<body>
+<form id="sparePartsForm" action="/maintenance/saveFitting?key=#(key)" method="post">
+    <!-- 添加隐藏的companyId输入框 -->
+    <input type="hidden" id="companyid" name="fitting.stationid" value="#(companyId)">
+    <input type="hidden" id="mid" name="fitting.mid" value="#(key)">
+    <!-- 添加隐藏的writer输入框 -->
+    <input type="hidden" id="writer" name="fitting.staff" value="#(writer)">
+    <input type="hidden" id="equipmentis" name="interval.equipmentid" value="#(equipmentId)">
+
+    <input type="hidden" id="Iwriter" name="interval.writer" value="#(writer)">
+    <!-- 添加一个隐藏的输入框，用于存储所选备件的Id -->
+    <input type="hidden" id="Icompanyid" name="interval.companyid" value="#(companyId)">
+    <input type="hidden" id="selectedFittingId" name="fid">
+    <label>备件耗材</label>
+    <select id="selectName" name="fitting.name" onchange="chooseName()">
+        <option value="-1" selected>请选择备件</option>
+        #for (x: bsefittings)
+        <option value="#(x.name)">#(x.name)</option>
+        #end
+    </select>
+
+    <label for="quantitySelect">消耗数量：</label>
+    <select id="quantitySelect" name="fitting.count">
+        <option value="-1" selected>请选择数量</option>
+        #for (x: bsefittings)
+        <option value="#(x.number)">#(x.number)</option>
+        #end
+    </select>
+
+
+    <label for="remark">备注：</label>
+    <input type="text" id="remark" name="fitting.content">
+
+    <label for="useInput">使用设备：</label>
+    <input type="text" id="useInput" name="fitting.equipment">
+
+    <!-- 新增按钮容器包裹按钮 -->
+    <div class="button-container">
+        <button type="submit" id="saveButton">保存</button>
+        <button type="button" id="backButton">返回</button>
+    </div>
+</form>
+<script>
+    var bsefittings = [
+        #for (x: bsefittings)
+    { id: "#(x.id)", name: "#(x.name)", number: "#(x.number)" },
+    #end
+    ];
+
+    function chooseName() {
+        var selectName = document.getElementById("selectName").value;
+        console.log("selectName: " + selectName);
+        // 查找选中的备件对象，通过name属性来查找
+        var selectedFitting = bsefittings.find(function (bsefitting) {
+            return bsefitting.name === selectName;
+        });
+
+        if (selectedFitting) {
+            console.log("okkkkkkk")
+            var quantitySelect = document.getElementById("quantitySelect");
+            quantitySelect.innerHTML = "";
+            var maxQuantity = parseInt(selectedFitting.number);
+            for (var i = 0; i <= maxQuantity; i++) {
+                var option = document.createElement("option");
+                option.value = i;
+                option.text = i;
+                quantitySelect.appendChild(option);
+            }
+            document.getElementById("selectedFittingId").value = selectedFitting.id;
+        } else {
+            document.getElementById("quantitySelect").value = "";
+            alert('找不到对应的备件！');
+        }
+    }
+
+    document.getElementById("selectName").addEventListener("change", chooseName);
+
+    // 为返回按钮添加点击事件处理函数
+    document.getElementById("backButton").addEventListener("click", function () {
+        window.history.back();
+    });
+
+    // 为保存按钮添加点击事件处理函数，阻止表单默认提交行为，并添加返回上一个界面逻辑
+    document.getElementById("saveButton").addEventListener("click", function (event) {
+        event.preventDefault();
+        var form = document.getElementById('sparePartsForm');
+        form.submit();
+        // 这里可以添加保存操作的相关代码，如果有的话
+        window.history.back();
+    });
+</script>
+</body>
+
+</html>
+<!--window.onload = function () {-->
+<!--// 发起请求获取后端数据-->
+<!--fetch('/maintenance/add')-->
+<!--.then(response => {-->
+<!--console.log('原始响应数据:', response);-->
+<!--return response.json();-->
+<!--})-->
+<!--.then(data => {-->
+<!--console.log('解析后的JSON数据:', data);-->
+<!--const companyId = data.companyId;-->
+<!--console.log("companyid: " + companyId);-->
+<!--const writer = data.writer;-->
+<!--const fittingNames = data.fittingNames;-->
+<!--console.log("writer: " + writer);-->
+
+<!--if (Array.isArray(fittingNames)) {-->
+<!--const fittingSelect = document.getElementById('fittingId');-->
+<!--fittingNames.forEach(function (fitting) {-->
+<!--const option = document.createElement('option');-->
+<!--option.value = fitting;-->
+<!--option.text = fitting;-->
+<!--fittingSelect.appendChild(option);-->
+<!--});-->
+<!--} else {-->
+<!--console.error('后端返回的fittingNames数据格式不正确，期望是数组，实际为:', fittingNames);-->
+<!--}-->
+<!--// 将获取到的companyId和writer值设置到对应的隐藏输入框中-->
+<!--document.getElementById('companyid').value = companyId;-->
+<!--document.getElementById('writer').value = writer;-->
+
+<!--// 为保存按钮添加点击事件监听器-->
+<!--const saveButton = document.getElementById('saveButton');-->
+<!--saveButton.addEventListener('click', function () {-->
+<!--// 设置一个标识，表示是从模态窗口内的操作发起的保存，并记录来源模态窗口页面的URL-->
+<!--const fromModalPage = sessionStorage.getItem('fromModalPage');-->
+<!--sessionStorage.setItem('fromAddPage', 'true');-->
+<!--sessionStorage.setItem('modalPageUrl', fromModalPage);-->
+<!--// 发送POST请求到后端保存数据-->
+<!--fetch('/maintenance/saveFitting', {-->
+<!--method: 'POST',-->
+<!--headers: {-->
+<!--'Content-Type': 'application/x-www-form-urlencoded'-->
+<!--},-->
+<!--body: new URLSearchParams(new FormData(document.getElementById('sparePartsForm'))).toString()-->
+<!--})-->
+<!--.then(response => response.json())-->
+<!--.then(result => {-->
+<!--if (result.success) {-->
+<!--// 如果保存成功，使用window.history.back()返回上一页（即模态窗口所在页面），并根据记录的模态窗口页面URL进行一些页面恢复操作（这里只是示例一种思路）-->
+<!--const modalPageUrl = sessionStorage.getItem('modalPageUrl');-->
+<!--if (modalPageUrl) {-->
+<!--window.history.pushState(null, null, modalPageUrl);-->
+<!--window.location.reload();-->
+<!--}-->
+<!--} else {-->
+<!--console.error('保存数据失败，请重试');-->
+<!--// 可以在这里添加更详细的提示信息给用户，比如弹出提示框等-->
+<!--}-->
+<!--})-->
+<!--.catch(error => {-->
+<!--console.error('发送数据到后端出错：', error);-->
+<!--// 同样可以添加更友好的错误提示给用户-->
+<!--});-->
+<!--});-->
+<!--})-->
+<!--.then(error => {-->
+<!--console.error('获取后端数据出错：', error);-->
+<!--});-->
+<!--}-->

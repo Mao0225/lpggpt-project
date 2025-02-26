@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Content</title>
+  <!-- Add your custom stylesheets and scripts here -->
+  <link rel="stylesheet" type="text/css" href="/css/lpg.css">
+
+</head>
+<body>
+  <div id="pagediv">
+    <!--a href="add" style="color: #DDDDDD"><b> + </b>新建用户</a-->
+  </div>
+  <table class="list">
+    <tbody>
+    <tr>
+      <th>序号</th>
+      <th>姓名</th>
+      <th>密码</th>
+      <th>操作</th>
+    </tr>
+    #set(startIndex = (users.pageNumber - 1) * users.pageSize + 1)
+
+    #for(x : users.getList())
+    <tr>
+      <td>#(startIndex++)</td> <!-- 显示序号并递增 -->
+      <td>#(x.username)</td>
+      <td>#(x.password)</td>
+      <td style="text-align:left">
+<!--        -->
+        &nbsp;&nbsp;<a href="/userFunc/funclist?userId=#(x.id)">授权</a>
+      </td>
+    </tr>
+    #end
+    </tbody>
+  </table>
+  <div class="pagination" style="color:#f0f0f0; font-size: 15px">
+      #@paginate(users.pageNumber, users.totalPage, "/userFunc/userList/")
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Equipment List</title>
+    <script src="../css/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css">
+    <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/css/lpg.css">
+    <style>
+        form {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        label {
+            margin-right: 10px;
+            color: white;
+        }
+
+        input[type="text"],
+        select {
+            width: 150px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            /* 统一设置输入框和选择框的颜色，这里设置为黑色，你可以根据喜好调整颜色值 */
+            color: #000;
+        }
+
+        button[type="submit"] {
+            padding: 8px 15px;
+            background-color: yellow;
+            color: black;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        /* 添加的选择框样式规则 */
+        /* 添加的选择框样式规则，同时让日期选择框也应用此样式 */
+        #searchForm select,
+        #searchForm input[type="date"] {
+            border-radius: 10px;
+            background-color: #fbf0c5;
+            width: 160px;
+            height: 30px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div id="pagediv">
+    <form id="searchForm" action="/maintenance/maintenancelist" method="post">
+
+        <label>工单状态：</label>
+        <select id="step" name="step">
+            <option value="">--所有状态--</option>
+            <option value="提交">提交</option>
+            <option value="完成">完成</option>
+            <option value="验收">验收</option>
+            <option value="签字">签字</option>
+        </select>
+
+
+
+        <label>工单名称：</label>
+        <input type="text" name="maintenancename" value="#(maintenancename)" />
+
+        <label>工单种类：</label>
+        <select id="kind" name="kind">
+            <option value="">--所有种类--</option>
+            <option value="维修">维修</option>
+            <option value="维护">维护</option>
+        </select>
+
+        <label>报修时间--开始时间：</label>
+        <input type="date" id="startTime" name="startTime" value="#(startTime)" />
+
+        <label>结束时间：</label>
+        <input type="date" id="endTime" name="endTime" value="#(endTime)" />
+
+        <input value="提交" type="submit">
+        <input type="submit" value="重置" name="refresh" />
+        <script>
+            // 获取所有名为'refresh'的按钮元素
+            var buttons = document.getElementsByName("refresh");
+            for (var i = 0; i < buttons.length; i++) {
+                buttons[i].addEventListener('click', function () {
+                    // 获取搜索表单内所有的文本输入框
+                    var inputs = document.querySelectorAll('#searchForm input[type=text]');
+                    for (var j = 0; j < inputs.length; j++) {
+                        inputs[j].value = "";
+                    }
+                    // 提交表单，触发重新查询并刷新页面
+                    document.getElementById('searchForm').submit();
+                });
+            }
+        </script>
+    </form>
+</div>
+
+<table class="list">
+    <tbody>
+    <tr>
+        <th>NO</th>
+        <th>设备名称</th>
+        <th>记录类型</th>
+        <th>主要内容</th>
+        <th>报修时间</th>
+        <th>工单状态</th>
+        <th width="12%">完成</th>
+    </tr>
+    #set(startIndex = (maintenancelist.pageNumber - 1) * maintenancelist.pageSize + 1)
+    #for(x : maintenancelist.getList())
+    <tr>
+        <td>#(startIndex++)</td>
+        <!-- 判断x.name是否为空，若为空则整行对应单元格都显示"设备数据已移除" -->
+        <td><a href="#" class="name openModal" data-title="查看设备详情" data-edit-url="/maintenance/equipmentinfo?id=#(x.equipmentid)">#(x.name!= null? x.name : "设备数据已移除")</a></td>
+        <td>#(x.name!= null? x.kind : "设备数据已移除")</td>
+        <td>#(x.name!= null? x.content : "设备数据已移除")</td>
+        <td>#(x.name!= null? x.reportday : "设备数据已移除")</td>
+        <td>
+            #if(x.name != null)
+            #if(x.step == "提交")
+            <a href="/maintenance/complete?id=#(x.id)&eid=#(x.eid)">提交</a>
+            #else
+            #(x.step)
+            #end
+            #else
+            设备数据已移除
+            #end
+        </td>
+        <td style="text-align:left">
+            &nbsp;&nbsp;  <a href="#" class="repairinfo openModal" data-title="设备维修信息" data-edit-url="/maintenance/repairinfo?id=#(x.id)&eid=#(x.eid)">完成</a>
+        </td>
+    </tr>
+    #end
+
+    </tbody>
+</table>
+
+<div class="pagination" style="color:#DDDDDD;">
+    #@paginate(maintenancelist.pageNumber, maintenancelist.totalPage, "/maintenance/maintenancelist?step=" + (step!= null? step : "") + "&equipmentname=" + (equipmentname!= null? equipmentname : "") + "&maintenancename=" + (maintenancename!= null? maintenancename : "") + "&kind=" + (kind!= null? kind : "") + "&startTime=" + (startTime!= null? startTime : "") + "&endTime=" + (endTime!= null? endTime : "") + "&page=")
+</div>
+
+<script>
+    // 确认删除函数，弹出确认框让用户确认是否删除
+    function confirmDelete(id) {
+        var result = confirm("确定要删除吗？");
+        if (result) {
+            // 如果用户点击确定，跳转到对应的删除链接，向后端发送删除请求（假设后端接收设备id作为参数）
+            window.location.href = "/GasStationStaff/delete/" + id;
+        } else {
+            // 如果用户点击取消，不执行任何操作
+            return false;
+        }
+    }
+    $('#searchButton').click(function (e) {
+        e.preventDefault();
+        $('#searchForm').submit();
+    });
+
+
+    // 点击编辑按钮的事件处理函数，用于弹出编辑模态框
+    $(document).ready(function () {
+        $('.openModal').click(function (e) {
+            e.preventDefault();
+            var editUrl = $(this).data('edit-url');
+            var that = this;
+
+            $.get(editUrl, function (data) {
+                var title = $(that).data('title');
+                $('#myModalLabel').text(title);
+
+                // 清空模态框主体内容
+                $('#modalBody').html(data);
+                $('#myModal').modal('show');
+            });
+        });
+
+        // 修改点击“完成”按钮的事件处理逻辑，使其跳转到complete.html页面
+        $('.complete').click(function (e) {
+            e.preventDefault();
+            // 获取当前按钮对应的工单id（假设数据绑定在data属性中，这里取id值，你可根据实际情况调整）
+            var id = $(this).data('edit-url').split('=')[1];
+            // 构建跳转到complete.html页面的URL，可根据实际情况添加更多参数传递给complete.html页面，这里示例简单跳转
+            window.location.href = "complete.html?id=" + id;
+        });
+    });
+
+</script>
+
+<!-- 模态框结构 -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">模态窗口标题</h4>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- 这里将会加载从后端获取的表单内容，用于编辑操作 -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="saveButton">保存</button>
+                <script>
+                    document.getElementById('saveButton').addEventListener('click', function () {
+                        document.getElementById('myForm').submit();
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+
+</html>

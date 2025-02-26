@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content</title>
+    <script src="../css/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css">
+    <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/lpg.css">
+
+    <!-- Add your custom stylesheets and scripts here -->
+    <script>
+        document.getElementById('showFormButton').addEventListener('click', function () {
+            var form = document.getElementById('searchForm');
+            if (form.style.display === 'none') {
+                form.style.display = 'block'; // 显示表单
+            } else {
+                form.style.display = 'none'; // 再次点击按钮隐藏表单
+            }
+        });
+    </script>
+    <style>
+        table {
+            /* 边框合并，使表格看起来更简洁 */
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th,
+        td {
+            /* 添加边框 */
+            border: 1px solid #ccc;
+            /* 内边距，使内容与边框有一定距离 */
+            padding: 8px;
+        }
+
+        th {
+            /* 文本居中 */
+            text-align: center;
+            /* 背景颜色，可根据需要修改 */
+            /*background-color: #f2f2f2;*/
+        }
+
+        /* 优化选择框样式，统一选择框的一些样式属性 */
+        #searchForm select {
+            border-radius: 10px;
+            background-color: #fbf0c5;
+            width: 160px;
+            height: 30px;
+        }
+        select {
+            width: 150px;
+            padding: 5px;
+            /*border: 1px solid #ccc;*/
+            border-radius: 3px;
+            color: #333;
+            margin-bottom: 10px;
+            background-color: #fbf0c5; /* 设置所有输入框背景颜色为白色 */
+        }
+
+        /* 对搜索表单整体样式调整，使其布局和示例代码类似 */
+        form {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            /*background-color: #f4f4f4;*/
+            border-radius: 5px;
+        }
+
+        label {
+            margin-right: 10px;
+            /*color: white;*/
+        }
+
+        input[type="text"],
+        select {
+            width: 150px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        button[type="submit"] {
+            padding: 8px 15px;
+            background-color: yellow;
+            color: black;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        #searchForm select,
+        #searchForm input[type="date"] {
+            border-radius: 10px;
+            background-color: #fbf0c5;
+            width: 160px;
+            height: 30px;
+        }
+
+
+        /* 新增样式类用于包裹创建工单和维修记录总表所在行，并控制它们之间的间距 */
+        .button-wrapper {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        /* 为两个按钮（链接）之间添加间距 */
+        .button-wrapper a:not(:last-child) {
+            margin-right: 2000px; /* 这里可以调整具体的间距数值，单位是像素，你可以按需修改 */
+        }
+    </style>
+</head>
+
+<body>
+<div id="pagediv">
+    <form id="searchForm" action="/Cequipment/maintenanceList" method="get">
+        <label for="equipmentName">设备名称：</label>
+        <input type="text" id="equipmentName" name="equipmentName" placeholder="模糊搜索设备名称" value="#(equipmentName)" />
+
+        &nbsp;&nbsp;
+        <label for="kind">记录类型：</label>
+        <select id="kind" name="kind">
+            <option value="">全部</option>
+            <option value="维修" #(kind) == "维修"? "selected" : "")>维修</option>
+            <option value="维护" #(kind) == "维护"? "selected" : "")>维护</option>
+        </select>
+
+        &nbsp;&nbsp;
+        <label for="startDate">起始日期：</label>
+        <input type="date" id="startDate" name="startDate" value="#(startDate)" class="datepicker" placeholder="选择起始日期" />
+
+        &nbsp;&nbsp;
+        <label for="endDate">结束日期：</label>
+        <input type="date" id="endDate" name="endDate" value="#(endDate)" class="datepicker" placeholder="选择结束日期" />
+
+        &nbsp;&nbsp;
+        <label for="step">工单状态：</label>
+        <select id="step" name="step">
+            <option value="">全部</option>
+            <option value="进行中" #(step) == "进行中"? "selected" : "")>进行中</option>
+            <option value="完成" #(step) == "完成"? "selected" : "")>完成</option>
+        </select>
+
+        &nbsp;&nbsp;
+        <button type="button" id="searchButton" value="查询">查询</button>
+        <button type="button" id="resetButton" value="重置">重置</button>
+    </form>
+    <a href="#" class="add openModal" data-title="创建工单" data-edit-url="add" style="margin-right: 20px;"><b> + </b>创建工单</a>
+    <a href="/Cequipment/CElist" class="link-button" style="color: #d6d8db">维修记录总表</a>
+</div>
+
+<table class="list">
+    <div>
+        <button id="showFormButton" style="width: 30px; height: 30px; border: 2px solid transparent; border-radius: 50%; background-color: transparent; position: relative; float: right;">
+            <img src="/img/find.png" alt="搜索" style="width: 30px; height: 30px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+        </button>
+
+        <button id="fresh" name="refresh" style="width: 30px; height: 30px; border: 2px solid transparent; border-radius: 50%; background-color: transparent; position: relative; margin-right: 10px; float: right;">
+            <img src="/img/refresh2.png" alt="刷新" style="width: 25px; height: 25px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+        </button>
+
+        <script>
+            var buttons = document.getElementsByName("refresh");
+            for (var i = 0; i < buttons.length; i++) {
+                buttons[i].addEventListener('click', function () {
+                    // 获取所有的输入框并设置为空
+                    var inputs = document.querySelectorAll('#searchForm input[type=text]');
+                    for (var j = 0; j < inputs.length; j++) {
+                        inputs[j].value = "";
+                    }
+
+                    // 提交表单以重新查询并刷新页面
+                    document.getElementById('searchForm').submit();
+                });
+            }
+        </script>
+        <script>
+            document.getElementById('showFormButton').addEventListener('click', function () {
+                var form = document.getElementById('searchForm');
+                if (form.style.display === 'none') {
+                    form.style.display = 'block'; // 显示表单
+                } else {
+                    form.style.display = 'none'; // 再次点击按钮隐藏表单
+                }
+            });
+        </script>
+    </div>
+
+
+    <tbody>
+    <tr>
+        <th width="10%">序号</th>
+        <th width="12%">设备名称</th>
+        <th width="12%">记录类型</th>
+        <th width="12%">报修日期</th>
+        <th width="12%">报修人员</th>
+        <th width="12%">主要内容</th>
+        <th width="12%">操作人</th>
+        <th width="12%">操作时间</th>
+        <th width="12%">工单状态</th>
+        <th width="12%">操作</th>
+    </tr>
+    #set(startIndex = (maintenances.pageNumber - 1) * maintenances.pageSize + 1)
+    #for (x : maintenances.getList())
+    <tr>
+        <td style="text-align:center">#(startIndex++)</td>
+        <td style="text-align:center">#(x.equipment_name)</td>
+        <td style="text-align:center">#(x.kind == "维修"? "维修" : "维护")</td>
+        <td style="text-align:center">#(x.reportday)</td>
+        <td style="text-align:center">#(x.reporter)</td>
+        <td style="text-align:center">#(x.content)</td>
+        <td style="text-align:center">#(x.repairer)</td>
+        <td style="text-align:center">#(x.repairday)</td>
+        <td style="text-align:center">
+            #if(x.step == "完成")
+            <a href="#" class="edit openModal" data-title="编辑设备" data-edit-url="/Cequipment/equipmentdetail?id=#(x.id)" style="color: green;">完成</a>
+            #elseif(x.step == "提交")
+            <span style="color: red;">提交</span>
+            #else
+            #(x.step)
+            #end
+        </td>
+        <td style="text-align:left">
+            &nbsp;&nbsp;<a href="#" onclick="confirmDelete('#(x.id)')">删除</a>
+
+            <a href="#" class="edit openModal" data-title="编辑用户" data-edit-url="/Cequipment/edit/#(x.id)">编辑</a>
+        </td>
+    </tr>
+    #end
+    </tbody>
+</table>
+<div class="pagination" style="color:#000000;">
+    #@paginate(maintenances.pageNumber, maintenances.totalPage, "/Cequipment/maintenanceList?equipmentName=" + (equipmentName!= null? equipmentName : "") + "&kind=" + (kind!= null? kind : "") + "&startDate=" + (startDate!= null? startDate : "") + "&endDate=" + (endDate!= null? endDate : "") + "&step=" + (step!= null? step : "") + "&page=")
+</div>
+<script>
+    function confirmDelete(id) {
+        var result = confirm("确定要删除吗？");
+        if (result) {
+            // 如果用户点击了确定，则执行删除操作
+            window.location.href = "/Cequipment/delete/" + id;
+        } else {
+            // 如果用户点击了取消，则不执行任何操作
+            return false;
+        }
+    }
+
+    // 为搜索按钮添加点击事件，防止默认提交行为被阻止，手动触发表单提交
+    $('#searchButton').click(function (e) {
+        e.preventDefault();
+        $('#searchForm').submit();
+    });
+
+    // 为重置按钮添加点击事件处理函数，用于清空搜索栏并提交表单
+    $('#resetButton').click(function (e) {
+        e.preventDefault();
+        // 获取所有的输入框并设置为空
+        $('#searchForm input[type=text]').val('');
+        // 将下拉选择框设置为默认值（即第一个选项）
+        $('#searchForm select').prop('selectedIndex', 0);
+        // 提交表单以重新查询并刷新页面
+        $('#searchForm').submit();
+    });
+
+    $('.openModal').click(function (e) {
+        e.preventDefault();
+        var editUrl = $(this).data('edit-url');
+        var that = this;
+
+        $.get(editUrl, function (data) {
+            var title = $(that).data('title');
+            $('#myModalLabel').text(title);
+
+            // 清除旧内容
+            $('#modalBody').html(data);
+            $('#myModal').modal('show');
+        });
+    });
+
+    $(document).ready(function () {
+        // 关闭按钮的点击事件，刷新页面
+        document.querySelector('.btn-default[data-dismiss="modal"]').addEventListener('click', function () {
+            window.location.reload();
+        });
+    });
+</script>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">模态窗口标题</h4>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- 这里将会加载你的表单内容 -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="saveButton">保存</button>
+                <script>
+                    document.getElementById('saveButton').addEventListener('click', function () {
+                        document.getElementById('myForm').submit();
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+
+</html>

@@ -1,0 +1,5 @@
+# config
+jdbcUrl = jdbc:mysql://rm-uf61033bwr8nu56uvro.mysql.rds.aliyuncs.com/lpg?characterEncoding=utf8&useSSL=false&zeroDateTimeBehavior=convertToNull
+user = lpg_iot
+password = Lpg_iot12#
+devMode = true

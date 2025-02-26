@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" type="text/css" href="/css/lpg.css">
+
+
+</head>
+<body>
+
+    <div id="pagediv">
+
+        <form id="searchForm" action="/driver/searchdata" method="get">
+            <a href="add" style="color: #DDDDDD"><b> + </b>新增司机</a>
+                <label for="drivername" style="padding-left: 25px; color: #FFFFFF ; font-size: 17px">姓名:</label>
+                <input type="text" id="drivername" name="drivername" style="border-radius: 5px;background-color: #fbf0c5">
+
+                <label for="driverphone" style="padding-left: 25px; color: #FFFFFF ; font-size: 17px">联系方式:</label>
+                <input type="text" id="driverphone" name="driverphone" style="border-radius: 5px;background-color: #fbf0c5">
+
+                <label for="drivercarno" style="padding-left: 25px; color: #FFFFFF ; font-size: 17px">车牌:</label>
+                <input type="text" id="drivercarno" name="drivercarno" style="border-radius: 5px;background-color: #fbf0c5">
+
+                <input type="submit" value="提交">
+
+        </form>
+    </div>
+
+
+    <table class="list">
+        <tbody>
+        <tr>
+            <th>id</th>
+            <th>姓名</th>
+            <th>性别</th>
+            <th>出生日期</th>
+            <th>手机号</th>
+            <th>身份证</th>
+            <th>车牌号</th>
+            <th>车型</th>
+            <th>颜色</th>
+            <th>生产日期</th>
+            <th>车照</th>
+            <th>驾驶证照片</th>
+            <th>危货证件号</th>
+            <th>危货证件有效期</th>
+            <th>危货证件照片</th>
+            <th>操作</th>
+        </tr>
+
+        #for(x : drivers.getList())
+        <tr>
+            <td>#(x.id)</td>
+            <td>#(x.drivername)</td>
+            <td>#(x.driversex)</td>
+            <td>#(x.driverbirthday)</td>
+            <td>#(x.driverphone)</td>
+            <td>#(x.identity_card_no)</td>
+            <td>#(x.drivercarno)</td>
+            <td>#(x.carname)</td>
+            <td>#(x.carcolor)</td>
+            <td>#(x.carshengchanriqi)</td>
+            <td><img src="/upload/#(x.car_image_url)" alt="Car Picture" style="width:150px; height:100px;"></td>
+            <td><img src="/upload/#(x.driver_license_image_url)" alt="Car Picture" style="width:150px; height:100px;"></td>
+            <td>#(x.risk_cargo_license_no)</td>
+            <td>#(x.risk_cargo_license_indate)</td>
+            <td><img src="/upload/#(x.risk_cargo_license_image_oss_id)" alt="Car Picture" style="width:150px; height:100px;"></td>
+            <td style="text-align:left">
+                &nbsp;&nbsp;<a href="/driver/delete/#(x.id)">删除</a>
+                &nbsp;&nbsp;<a href="/driver/edit/#(x.id)">修改</a>
+            </td>
+        </tr>
+        #end
+        </tbody>
+    </table>
+    <div class="pagination" style="color:#DDDDDD; font-size: 12px">
+        #@paginate(drivers.pageNumber, drivers.totalPage, "/driver/driverlist/")
+    </div>
+
+</body>
+</html>
+
+

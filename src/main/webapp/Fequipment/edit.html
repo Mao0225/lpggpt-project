@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content</title>
+</head>
+<body>
+<h1></h1>
+<div class="form_box">
+    <form action="/Fequipment/update" method="post" id="myForm">
+        <input type="hidden" name="bseFitting.id" value="#(fequipment.id)">
+
+        <div>
+            <input type="hidden" id="cstation" name="bseFitting.companyid" value="#(fequipment.companyid)" />
+            <input type="hidden" id="stationid" name="bseFitting.writer" value="#(fequipment.writer)" />
+            <input type="hidden" id="time" name="bseFitting.writetime" value="#(fequipment.writetime)" />
+
+        </div>
+        <div>
+            <label>站点名称</label>
+            <input type="text" name="" value="#(station)" readonly/>
+        </div>
+
+        <div>
+            <label>物资种类</label>
+            <select id="selectName" name="bseFitting.kind" style="border-radius: 5px;background-color: white; width: 200px;height:30px;text-align: center;">
+                <option value="消耗品" #(fequipment.kind == "消耗品" ? "selected" : "")>消耗品</option>
+                <option value="零配件" #(fequipment.kind == "零配件" ? "selected" : "")>零配件</option>
+            </select>
+        </div>
+        <div>
+            <label>物资名称</label>
+            <input type="text" name="bseFitting.name" value="#(fequipment.name)">
+        </div>
+        <div>
+            <label>物资数量</label>
+            <input type="text" name="bseFitting.number" value="#(fequipment.number)">
+        </div>
+        <div>
+            <label>备注信息</label>
+            <input type="text" name="bseFitting.remark" value="#(fequipment.remark)">
+        </div>
+    </form>
+</div>
+
+
+</body>
+</html>

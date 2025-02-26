@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content</title>
+    <script src="../css/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet"  type="text/css" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css">
+    <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/lpg.css">
+</head>
+<body>
+    <div id="pagediv">
+        <form id="searchForm" action="/gasFile/gasFilelist" method="get">
+            <a href="#" class="add openModal" data-title="添加档案" data-edit-url="/gasFile/add"><b>+</b>新建档案</a>
+            <label>气瓶编号:</label>
+            <input type="text" name="gasNumber" placeholder="输入气瓶编号" value="#(gasNumber)" />
+            <input type="text" name="valve_body_code" placeholder="输入阀体编码" value="#(valve_body_code)" />
+            <input type="text" name="filling_specification" placeholder="输入充装规格" value="#(filling_specification)" />
+            <label></label>
+            <input type="submit" value="搜索"/>
+            <input type="submit" value="重置" name="refresh"/>
+            <script>
+                var buttons = document.getElementsByName("refresh");
+                for (var i = 0; i < buttons.length; i++) {
+                    buttons[i].addEventListener('click', function() {
+                        // 获取所有的输入框并设置为空
+                        var inputs = document.querySelectorAll('#searchForm input[type=text]');
+                        for (var j = 0; j < inputs.length; j++) {
+                            inputs[j].value = "";
+                        }
+
+                        // 提交表单以重新查询并刷新页面
+                        document.getElementById('searchForm').submit();
+                    });
+                }
+            </script>
+        </form>
+    </div>
+        <table class="list">
+            <tbody>
+            <tr>
+                <th width="10%">序号</th>
+                <th width="10%">气瓶编号</th>
+                <th width="10%">奉天编码</th>
+                <th width="10%">镂空码</th>
+                <th width="10%">充气站名</th>
+                <th width="10%">制造单位</th>
+                <th width="10%">阀体编码</th>
+                <th width="10%">气瓶使用登记证</th>
+                <th width="10%">制造日期</th>
+                <th width="10%">检验日期</th>
+                <th width="10%">定检日期</th>
+                <th width="10%">终止使用日期</th>
+                <th width="10%">设备品种</th>
+                <th width="10%">充装规格</th>
+                <th width="10%">气瓶规格</th>
+                <th width="10%">充装介质</th>
+                <th width="10%">气瓶自重KG</th>
+                <th width="10%">许可证号</th>
+                <th width="10%">公称压力</th>
+                <th width="10%">水试验压</th>
+                <th width="10%">容积</th>
+                <th width="10%">壁厚</th>
+
+                <th width="10%">建档时间</th>
+                <th width="10%">是否专用</th>
+
+                <th width="10%">使用者名称</th>
+                <th width="10%">使用者地址</th>
+                <th width="10%">电话</th>
+                <th width="10%">经度</th>
+                <th width="10%">纬度</th>
+
+
+                <th width="10%">操作</th>
+            </tr>
+            #set(startIndex = (gasFiles.pageNumber - 1) * gasFiles.pageSize + 1)
+
+            #for(x : gasFiles.getList())
+            <tr>
+                <td style="text-align:center">#(startIndex++)</td> <!-- 显示序号并递增 -->
+                <td>#(x.gas_number)</td>
+                <td>#(x.fengtiangasno)</td>
+                <td>#(x.loukongno)</td>
+                <td>#(x.filing_gas_station)</td>
+                <td>#(x.manufacture_unit)</td>
+                <td>#(x.valve_body_code)</td>
+                <td>#(x.qpsydjzbh)</td>
+                <td>#(x.manufacture_date)</td>
+                <td>#(x.inspect_date)</td>
+                <td>#(x.regular_check_date)</td>
+                <td>#(x.terminate_use_date)</td>
+                <td>#(x.monitoring_station)</td>
+                <td>#(x.filling_specification)</td>
+                <td>#(x.gas_specification)</td>
+                <td>#(x.filling_medium)</td>
+                <td>#(x.gas_suttle)</td>
+                <td>#(x.xukezhenghao)</td>
+                <td>#(x.gongchengyali)</td>
+                <td>#(x.shuishiyanya)</td>
+                <td>#(x.rongji)</td>
+                <td>#(x.bihou)</td>
+                <td>#(x.jiandangshijian)</td>
+                <td>#(x.shifouzhuanyong)</td>
+                <td>#(x.shiyongzhemingcheng)</td>
+                <td>#(x.shiyongzhedizhi)</td>
+                <td>#(x.shiyongzhedianhua)</td>
+                <td>#(x.shiyongzhejingdu)</td>
+                <td>#(x.shiyongzheweidu)</td>
+
+                <td style="text-align:left">
+                    &nbsp;&nbsp;<a href="#" onclick="confirmDelete('#(x.id)')">删除</a>
+                    <a href="#" class="openModal" data-title="修改档案" data-edit-url="/gasFile/edit/#(x.id)">修改</a>
+
+                </td>
+            </tr>
+            #end
+            </tbody>
+        </table>
+        <div class="pagination">
+            #@paginate(gasFiles.pageNumber, gasFiles.totalPage, "/gasFile/gasFilelist?&gasNumber="+(gasNumber != null ? gasNumber : "")+"&valve_body_code="+(valve_body_code != null ? valve_body_code : "")+"&filling_specification="+(filling_specification != null ? filling_specification : "")+"&page=")
+        </div>
+
+    <script>
+        function confirmDelete(id) {
+            var result = confirm("确定要删除吗？");
+            if (result) {
+                // 如果用户点击了确定，则执行删除操作
+                window.location.href = "/gasFile/delete/" + id;
+            } else {
+                // 如果用户点击了取消，则不执行任何操作
+                return false;
+            }
+        }
+    </script>
+
+<script>
+    $('.openModal').click(function(e) {
+        console.log("askl;jdilasjdiowjdiojaiwdjiowa");
+        e.preventDefault();
+        var editUrl = $(this).data('edit-url');
+        var that = this; // 保存正确的上下文
+        $.get(editUrl, function(data) {
+            var title = $(that).data('title');
+            $('#myModalLabel').text(title); // 修改模态窗口标题
+
+            // 清除旧内容
+            $('#modalBody').html(data); // 加载编辑内容到模态窗口
+            $('#myModal').modal('show'); // 显示模态窗口
+        });
+    });
+
+</script>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">模态窗口标题</h4>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- 这里将会加载你的表单内容 -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary"  id="saveButton" >保存</button>
+                <script>
+                    function validateForm() {
+                        // 正确的日期格式 yyyy-mm-dd
+                        const dateFormat = /^\d{4}-\d{2}-\d{2}$/;
+
+                        // 获取所有需要验证的输入框
+                        const inputs = document.querySelectorAll('input[type="text"][name^="gas_file."]');
+
+                        for (let i = 0; i < inputs.length; i++) {
+                            // 如果是日期输入框，且不为空，检查日期格式
+                            if (inputs[i].name.includes("date") && inputs[i].value.trim() !== "" && !dateFormat.test(inputs[i].value)) {
+                                alert('日期格式不正确，无法保存,正确格式为xxxx-xx-xx');
+                                return false; // 如果有任何一个日期格式不正确，直接返回false
+                            }
+                        }
+
+                        return true; // 如果所有字段验证通过，返回true
+                    }
+
+
+                    document.getElementById('saveButton').addEventListener('click', function() {
+                        // 验证表单数据
+                        if (validateForm()) {
+                            // 如果验证通过，则提交表单
+                            document.getElementById('myForm').submit();
+                        }
+                        // 如果验证失败，不提交表单（validateForm内部已经显示了错误消息）
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

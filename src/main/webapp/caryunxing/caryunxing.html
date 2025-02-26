@@ -1,0 +1,49 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Content</title>
+	<!-- Add your custom stylesheets and scripts here -->
+	<link rel="stylesheet" type="text/css" href="/css/lpg.css">
+
+
+
+</head>
+<body>
+	<div id="pagediv">
+		<!--a href="add" style="color: #DDDDDD"><b> + </b>新建用户</a-->
+	</div>
+	<table class="list">
+		<tbody>
+		<tr>
+			<th>序号</th>
+			<th>车牌号</th>
+			<th>司机姓名</th>
+			<th>司机电话</th>
+			<th>GPS经度</th>
+			<th>GPS纬度</th>
+			<th>地点</th>
+			<th>时间</th>
+		</tr>
+		#set(startIndex = (yunxinglist.pageNumber - 1) * yunxinglist.pageSize + 1)
+		#for(x : yunxinglist.getList())
+		<tr>
+			<td>#(startIndex++)</td> <!-- 显示序号并递增 -->
+			<td>#(x.carno)</td>
+			<td>#(x.drivername)</td>
+			<td>#(x.driverphone)</td>
+			<td>#(x.jingdu)</td>
+			<td>#(x.weidu)</td>
+			<td>#(x.address)</td>
+			<td>#(x.updatetime)</td>
+		</tr>
+		#end
+		</tbody>
+	</table>
+	<div class="pagination" style="color:#f0f0f0; font-size: 15px">
+		#@paginate(yunxinglist.pageNumber, yunxinglist.totalPage,"/caryunxing/yunxinglist/")
+	</div>
+
+</body>
+</html>

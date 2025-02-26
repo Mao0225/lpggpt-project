@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content</title>
+    <!-- Add your custom stylesheets and scripts here -->
+    <link rel="stylesheet" type="text/css" href="/css/lpg.css">
+    <script>
+        function clearParams() {
+            const form = document.getElementById("searchForm");
+            form.drivername.value = "";
+            form.drivercarno.value = "";
+            form.biaoqian.value = "";
+        }
+    </script>
+</head>
+<body>
+<div id="pagediv">
+    <form id="searchForm" action="/uploaddianzibiaoqian/getbiaoqianlist" method="get">
+
+
+        <label>司机姓名:</label>
+        <input type="text" name="drivername" value="#(drivername)"/>
+
+        <label>车牌号:</label>
+        <input type="text" name="drivercarno" value="#(drivercarno)"/>
+
+        <label>标签编号:</label>
+        <input type="text" name="biaoqian" value="#(biaoqian)"/>
+
+        <label>&nbsp;</label>
+        <input value="搜索" type="submit">
+        <input type="submit" value="重置" name="refresh" onclick="clearParams()"/>
+    </form>
+
+</div>
+<table class="list">
+    <tbody>
+    <tr>
+        <th>序号</th>
+        <th>设备id</th>
+        <th>标签编号</th>
+        <th>标签数量</th>
+        <th>司机姓名</th>
+        <th>车牌号</th>
+        <th>司机电话</th>
+        <th>地址</th>
+        <th>上传时间</th>
+
+    </tr>
+    #set(startIndex = (dianzibiaoqianlist.pageNumber - 1) * dianzibiaoqianlist.pageSize + 1)
+    #for(x : dianzibiaoqianlist.getList())
+    <tr>
+        <td>#(startIndex++)</td> <!-- 显示序号并递增 -->
+        <td>#(x.deviceid)</td>
+        <td>#(x.biaoqianlist)</td>
+        <td>#(x.biaoqiancount)</td>
+        <td>#(x.drivername)</td>
+        <td>#(x.carno)</td>
+        <td>#(x.driverphone)</td>
+        <td>#(x.address)</td>
+        <td>#(x.uploadtime)</td>
+
+    </tr>
+    #end
+    </tbody>
+</table>
+<div class="pagination" style="color:#f0f0f0; font-size: 15px">
+    #@paginate(dianzibiaoqianlist.pageNumber, dianzibiaoqianlist.totalPage,"/uploaddianzibiaoqian/getbiaoqianlist?drivername="+
+    (drivername != null ? drivername : "") + "&drivercarno=" + (drivercarno != null ? drivercarno : "") + "&biaoqian=" +  (biaoqian != null ? biaoqian : "") + "&page=")
+</div>
+
+</body>
+</html>

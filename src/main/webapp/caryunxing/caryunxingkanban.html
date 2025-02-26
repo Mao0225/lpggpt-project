@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>车辆行驶监控</title>
+	<link rel="stylesheet" type="text/css" href="/css/lpg.css">
+
+	<script src="https://webapi.amap.com/maps?v=1.4.15&key=6ec730c409404096f83c2b971263a591"></script>
+	<script src="../css/jquery-3.3.1.min.js"></script>
+	<link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css" >
+	<script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="../css/lpg.css">
+	<script>
+		document.addEventListener('DOMContentLoaded', (event) => {
+			let resetTimer;
+
+			// 设置一个定时器自动重定向
+			resetTimer = setTimeout(function() {
+				window.location.href = '/caryunxing/yunxingkanban?carno=#(carno !=null?carno: "")';
+			}, 5000); // 5000 milliseconds = 5 seconds
+
+			// 停止自动重置
+			function stopAutoReset() {
+				clearTimeout(resetTimer);
+			}
+
+			// 开始自动重置
+			function startAutoReset() {
+				resetTimer = setTimeout(function() {
+					window.location.href = '/caryunxing/yunxingkanban?carno=#(carno !=null?carno: "")';
+				}, 5000);
+			}
+
+			// 显示路线
+			async function showRoute(carno, updatetime) {
+				console.log(`请求数据: carno=${carno}, timestamp=${updatetime}`);
+				const response = await fetch(`/caryunxing/getVehicleLocations?carno=${carno}&timestamp=${updatetime}`);
+
+				if (!response.ok) {
+					console.error('网络请求失败', response);
+					alert('请求失败，请稍后重试。');
+					return;
+				}
+
+				const data = await response.json();
+				console.log('返回的数据:', data);
+
+				if (data.length > 0) {
+					const path = data.map(location => [location.jingdu, location.weidu]);
+					console.log('路径数据:', path);
+					drawRouteOnMap(path);
+				} else {
+					alert('未找到相关数据');
+				}
+			}
+
+			// 绘制路径
+			function drawRouteOnMap(path) {
+				console.log('绘制路径:', path); // 调试信息
+
+				// 显示弹出框
+				const modal = document.getElementById("mapModal");
+				modal.style.display = "block";
+
+				// 停止自动重置
+				stopAutoReset();
+
+				const map = new AMap.Map('map', {
+					zoom: 12, // 设置适合的缩放级别
+					center: [path[0][0], path[0][1]], // 初始中心点
+					resizeEnable: true // 启用地图自适应
+				});
+
+				const polyline = new AMap.Polyline({
+					path: path,
+					strokeColor: '#3366FF', // 线颜色
+					strokeWeight: 6, // 线宽
+					strokeOpacity: 0.8 // 线透明度
+				});
+				polyline.setMap(map);
+
+				const bounds = polyline.getBounds();
+				if (bounds) {
+					map.setBounds(bounds); // 设置地图视图为路径的边界
+				}
+			}
+
+			// 关闭弹出框
+			function closeModal() {
+				const modal = document.getElementById("mapModal");
+				modal.style.display = "none";
+
+				// 开始自动重置
+				startAutoReset();
+			}
+
+			// 为每个行程的地址添加点击事件
+			document.querySelectorAll('#address').forEach(item => {
+				item.addEventListener('click', function() {
+					const carno = this.getAttribute('data-carno');
+					const updatetime = this.getAttribute('data-updatetime');
+					showRoute(carno, updatetime);
+				});
+			});
+
+			// 为关闭按钮添加事件
+			document.querySelector('.close').addEventListener('click', closeModal);
+		});
+	</script>
+
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			background-color: #2c3e50;
+			color: black; /* 改为黑色 */
+		}
+
+		#map {
+			width: 100%;
+			height: 600px; /* 确保地图高度为600px */
+			margin-top: 20px;
+		}
+
+		table {
+			width: 100%;
+			border-collapse: collapse;
+			margin-top: 20px;
+		}
+
+		th, td {
+			border: 1px solid #ccc;
+			padding: 10px;
+			text-align: center;
+			cursor: pointer; /* 鼠标悬停时显示为手型 */
+		}
+
+		th {
+			background-color: #34495e;
+		}
+
+		tr:nth-child(even) {
+			background-color: #34495e; /* 偶数行背景 */
+		}
+
+		tr:nth-child(odd) {
+			background-color: #2c3e50; /* 奇数行背景 */
+		}
+
+		.pagination {
+			color: #f0f0f0;
+			font-size: 15px;
+			margin-top: 20px;
+		}
+
+		/* 弹出框的样式 */
+		.modal {
+			display: none; /* 默认隐藏 */
+			position: fixed;
+			z-index: 1000;
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 100%;
+			overflow: auto;
+			background-color: rgb(0,0,0);
+			background-color: rgba(0,0,0,0.4); /* 背景颜色 */
+			padding-top: 60px;
+		}
+
+		.modal-content {
+			background-color: #fefefe;
+			margin: 5% auto; /* 从顶部 */
+			padding: 20px;
+			border: 1px solid #888;
+			width: 80%; /* 宽度 */
+		}
+
+		.close {
+			color: #aaa;
+			float: right;
+			font-size: 28px;
+			font-weight: bold;
+		}
+
+		.close:hover,
+		.close:focus {
+			color: black;
+			text-decoration: none;
+			cursor: pointer;
+		}
+	</style>
+</head>
+<body>
+<div id="pagediv">
+	<form id="searchForm" action="/caryunxing/yunxingkanban" method="post">
+		<label for="carno">请输入车牌号：</label>
+		<input type="text" id="carno" name="carno" placeholder="请输入车牌号" value="#(carno)"/>
+		&nbsp;&nbsp;<button type="submit">查询</button>
+	</form>
+</div>
+
+<table class="list">
+	<tbody>
+	<tr>
+		<th>序号</th>
+		<th>车牌号</th>
+		<th>司机姓名</th>
+		<th>司机电话</th>
+		<th>GPS经度</th>
+		<th>GPS纬度</th>
+		<th>地点</th>
+		<th>时间</th>
+	</tr>
+	#set(startIndex = (yunxinglist.pageNumber - 1) * yunxinglist.pageSize + 1)
+	#for(x : yunxinglist.getList())
+	<tr>
+		<td>#(startIndex++)</td>
+		<td>#(x.carno)</td>
+		<td>#(x.drivername)</td>
+		<td>#(x.driverphone)</td>
+		<td>#(x.jingdu)</td>
+		<td>#(x.weidu)</td>
+		<td id="address" data-carno="#(x.carno)" data-updatetime="#(x.updatetime)" >#(x.address)</td>
+		<td>#(x.updatetime)</td>
+	</tr>
+	#end
+	</tbody>
+</table>
+
+<div class="pagination" style="color:#f0f0f0; font-size: 15px">
+	#@paginate(yunxinglist.pageNumber, yunxinglist.totalPage,"/caryunxing/yunxingkanban?carno="+(carno !=null?carno: "")+ "&page=")
+</div>
+
+<!-- 弹出框 -->
+<div id="mapModal" class="modal">
+	<div class="modal-content">
+		<span class="close">&times;</span>
+		<div id="map"></div> <!-- 添加地图容器 -->
+	</div>
+</div>
+
+</body>
+</html>
+

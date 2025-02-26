@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Equipment Repair</title>
+    <style>
+    </style>
+</head>
+
+<body>
+<div class="form_box">
+    <form id="myForm" action="/managegun/update" method="post">
+        <input type="hidden" name="gun.id" value="#(record.id)" />
+        <div>
+            <label>加气枪抢号</label>
+            <input type="text" name="gun.gunno"  value="#(record.gunno)"/>
+        </div>
+        <div>
+            <label>操作</label>
+            <input type="text" name="gun.caozuo"  value="#(record.caozuo)"/>
+        </div>
+        <div>
+            <label>公司名称</label>
+            <select id="selectName" name="gun.stationid" value=#(stationRecord.get("station_name")) onchange="chooseName()">
+                #for (x: gastations)
+                <option value="#(x.id)">#(x.station_name)</option>
+                #end
+            </select>
+        </div>
+    </form>
+</div>
+</body>
+<script>
+    var gastations = [
+        #for (x: gastations)
+    { id: "#(x.id)", name: "#(x.station_name)" },
+    #end
+    ];
+    function chooseName() {
+        var selectName = document.getElementById("selectName").value;
+        console.log("selectName: " + selectName);
+        // 查找选中的备件对象，通过name属性来查找
+        var selectedCompany = gastations.find(function (gastations) {
+            return gastations.name === selectName;
+        });
+    }
+</script>
+</html>

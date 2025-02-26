@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<title>Content</title>
+<body>
+<h1>
+</h1>
+<div class="form_box">
+  <form action="/pressuregauge/save" method="post" id="myForm">
+<!--    <div>-->
+<!--      <label for="name">名称</label>-->
+<!--      <input type="text" id="name" name="pressuregauge.name" value="" />-->
+<!--    </div>-->
+<!--    <div>-->
+<!--      <label for="restaurantid">饭店ID</label>-->
+<!--      <input type="text" id="restaurantid" name="pressuregauge.affiliation_user_id" value="" />-->
+<!--    </div>-->
+    <div>
+      <label for="selectName">饭店名字</label>
+        <input type="hidden" id="restaurantname" name="pressuregauge.name" value="" readonly/>
+        <input type="hidden" id="affiliation_user_id" name="pressuregauge.affiliation_user_id" value="" readonly/>
+      <select id="selectName" name="restaurantname" onchange="chooseName()" style="border-radius: 5px;background-color: white; width: 200px;height:30px;text-align: center;">
+        <option value="-1" selected>请选择饭店名字</option>
+        #for ( x: restaurants)
+        <option value="#(x.id)">#(x.name)#(x.id)</option>
+        #end
+      </select>
+    </div>
+<!--    <div>-->
+<!--      <label for="gasCylinderId">气瓶ID</label>-->
+<!--      <input type="text" id="gasCylinderId" name="pressuregauge.gas_cylinder_id" value="" />-->
+<!--    </div>-->
+    <div>
+      <label for="controllerId">控制器ID</label>
+      <input type="text" id="controllerId" name="pressuregauge.controller_id" value="" />
+    </div>
+      <div>
+          <label for="status">状态</label>
+          <select id="status" name="pressuregauge.status" required>
+              <option value="0">在用</option>
+              <option value="1">停用</option>
+          </select>
+      </div>
+    <div>
+      <label for="created">创建者</label>
+      <input type="text" id="created" name="pressuregauge.created" value="" />
+    </div>
+    <div>
+      <label for="createdTime">创建时间</label>
+      <input type="text" id="createdTime" name="pressuregauge.created_time" value="" />
+    </div>
+<!--    <div>-->
+<!--      <label for="updatedId">更新者ID</label>-->
+<!--      <input type="text" id="updatedId" name="pressuregauge.updated_id" value="" />-->
+<!--    </div>-->
+<!--    <div>-->
+<!--      <label for="updatedTime">更新时间</label>-->
+<!--      <input type="text" id="updatedTime" name="pressuregauge.updated_time" value="" />-->
+<!--    </div>-->
+<!--    <div>-->
+<!--      <label for="deletedTime">删除时间</label>-->
+<!--      <input type="text" id="deletedTime" name="pressuregauge.deleted_time" value="" />-->
+<!--    </div>-->
+<!--    <div>-->
+      <label for="stopTime">停用时间</label>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" id="stopTime" name="pressuregauge.stop_time" value="" />
+    </form>
+    </div>
+    <div>
+      <label for="remark1">备注</label>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" id="remark1" name="pressuregauge.remark1" value="" />
+    </div>
+  </form>
+
+  <script>
+      $(document).ready(function () {
+          // 初始设置默认值
+          $('#status').val(originalValue);
+          $('#status').on('change', function () {
+              isValueSetByUser = true;
+              if ($(this).val() === '1') {
+                  $('#stopTime').attr('required','required');
+              } else {
+                  $('#stopTime').removeAttr('required');
+              }
+          });
+          // 在表单提交或其他相关操作时检查
+          $('form').on('submit', function () {
+              if (!isValueSetByUser) {
+                  $('#status').val(originalValue);
+              }
+              // 检查停用状态下停用时间是否填写
+              if ($('#status').val() === '1' && $('#stopTime').val() === '') {
+                  alert('当状态为停用时，停用时间必填');
+                  return false;
+              }
+              return true;
+          });
+      });
+    // 假设这是服务器端渲染到页面中的JSON数据
+    var jsonData = '#(com.alibaba.fastjson.JSONArray::toJSON(restaurants))';
+    // 解析JSON数据
+    var context = JSON.parse(jsonData.replace(/#/g, ""));
+
+    function chooseName() {
+      var selectId = document.getElementById("selectName").value;
+
+      if (selectId == "-1") {
+        // document.getElementById("dianzicheng_shiyongfandianmingzi").value = "";
+        // document.getElementById("dianzicheng_shiyongfangphone").value = "";
+        return;
+      }
+
+      // 查找选中的饭店对象
+      var selectedRestaurant = context.find(function(restaurant) {
+        return restaurant.id == selectId;
+      });
+
+      if (selectedRestaurant) {
+        document.getElementById("restaurantname").value = selectedRestaurant.name;
+        document.getElementById("affiliation_user_id").value = selectedRestaurant.id;
+
+      } else {
+        document.getElementById("affiliation_user_id").value = "";
+        alert('找不到对应的饭店！');
+      }
+
+    }
+    document.getElementById("selectName").addEventListener("change", chooseName);
+  </script>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<title>Content</title>
+<style>
+    /* 以下是保留你原来的样式部分 */
+    ::-webkit-input-placeholder {
+        /* Chrome/Opera/Safari */
+        color: #8A8A8A;
+        font-size: 12px;
+    }
+
+    ::-moz-placeholder {
+        /* Firefox 19+ */
+        color: #8A8A8A;
+        font-size: 12px;
+    }
+
+    :-ms-input-placeholder {
+        /* IE 10+ */
+        color: #8A8A8A;
+        font-size: 12px;
+    }
+
+    :-moz-placeholder {
+        /* Firefox 18- */
+        color: #8A8A8A;
+        font-size: 12px;
+    }
+</style>
+
+<body>
+<h1>
+</h1>
+<div class="form_box">
+    <form action="/Fequipment/save" method="post" id="myForm">
+        <div>
+            <label>加气站</label>
+            <input type="hidden" id="cstation" name="bseFitting.companyid" value="#(companyid)"/>
+            <input type="hidden" id="stationid" name="bseFitting.writer" value="#(writer)"/>
+
+        </div>
+        <div>
+
+            <label>站点名称</label>
+            <input type="text" name="" value="#(station)" readonly/>
+        </div>
+        <div>
+
+            <label>物资种类</label>
+            <select id="selectName" name="bseFitting.kind" style="border-radius: 5px;background-color: white; width: 200px;height:30px;text-align: center;">
+                <option value="消耗品" selected>消耗品</option>
+                <option value="零配件" >零配件</option>
+            </select>
+        </div>
+        <div>
+            <label>物资名称</label>
+            <input type="text" name="bseFitting.name" value="" />
+        </div>
+        <div>
+            <label>剩余数量</label>
+            <input type="text" name="bseFitting.number" value="" />
+        </div>
+        <div>
+            <label>备注信息</label>
+            <input type="text" name="bseFitting.remark" value="" />
+        </div>
+<!--        <input type="submit" value="提交" />-->
+<!--        <button onclick="goBack()">返回</button>-->
+    </form>
+</div>
+<!-- 添加一个返回按钮 -->
+
+
+
+</body>
+
+</html>

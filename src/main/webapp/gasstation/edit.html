@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<title>加气站修改</title>
+<body style="background-color: #0b333f; color: #FFFFFF">
+<h1>
+</h1>
+<div class="form_box">
+    <form action="/GasStation/update" method="post" id="myForm">
+        <input type="hidden" name="gasStation.id" value="#(GasStation.id??)" />
+        <div>
+            <label >加气站编号</label>
+            <input type="text" name="gasStation.stationId" value="#(GasStation.stationId)" />#(stationId)
+        </div>
+
+        <div>
+            <label >加气站名字</label>
+            <input type="text" name="gasStation.stationName" value="#(GasStation.stationName)" />#(stationName)
+        </div>
+
+        <div>
+            <label >加气站地址</label>
+            <input type="text" name="gasStation.address" value="#(GasStation.address)" />#(address)
+        </div>
+
+        <div>
+            <label >法人姓名</label>
+            <input type="text" name="gasStation.legalPerson" value="#(GasStation.legalPerson)" />#(legalPerson)
+        </div>
+
+        <div>
+            <label >加气站联系方式</label>
+            <input type="text" name="gasStation.telephone" value="#(GasStation.telephone)" />#(telephone)
+        </div>
+
+        <div>
+            <label >加气站密码</label>
+            <input type="text" name="gasStation.password" value="#(GasStation.password)" />#(password)
+        </div>
+
+    </form>
+</div>
+</body>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>加气站管理</title>
+    <!-- Add your custom stylesheets and scripts here -->
+    <script src="../css/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css" >
+    <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/lpg.css">
+
+</head>
+<body>
+
+    <div id="pagediv">
+        <form id="searchForm" action="/GasStation/GasStationList" method="get">
+            <a href="#" class="add openModal" data-title="新建充气站" data-edit-url="add"><b> + </b>新建气站</a>
+            <label> 充气站查找：</label>
+
+            <input type="text" name="searchKey" value="#(searchKey)">
+            <input value="提交" type="submit">
+            <input type="submit" value="重置" name="refresh"/>
+            <script>
+                var buttons = document.getElementsByName("refresh");
+                for (var i = 0; i < buttons.length; i++) {
+                    buttons[i].addEventListener('click', function() {
+                        // 获取所有的输入框并设置为空
+                        var inputs = document.querySelectorAll('#searchForm input[type=text]');
+                        for (var j = 0; j < inputs.length; j++) {
+                            inputs[j].value = "";
+                        }
+
+                        // 提交表单以重新查询并刷新页面
+                        document.getElementById('searchForm').submit();
+                    });
+                }
+            </script>
+        </form>
+    </div>
+    <table class="list">
+        <tbody>
+        <tr>
+            <th width="4%">序号</th>
+            <th width="20%">加气站编号</th>
+            <th width="12%">加气站名字</th>
+            <th width="15%">加气站地址</th>
+            <th width="12%">法人姓名</th>
+            <th width="12%">加气站联系方式</th>
+            <th width="12%">加气站密码</th>
+            <th width="12%">操作</th>
+        </tr>
+        #set(startIndex = (GasStation.pageNumber - 1) * GasStation.pageSize + 1)
+        #for(x : GasStation.getList())
+        <tr>
+            <td>#(startIndex++)</td> <!-- 显示序号并递增 -->
+            <td>#(x.station_id)</td>
+            <td>#(x.station_name)</td>
+            <td>#(x.address)</td>
+            <td>#(x.legal_person)</td>
+            <td>#(x.telephone)</td>
+            <td>#(x.password)</td>
+            <td style="text-align:left">
+                &nbsp;&nbsp;<a href="#" onclick="confirmDelete('#(x.id)')">删除</a>
+                &nbsp;&nbsp; <a href="#" class="edit openModal" data-title="编辑气站" data-edit-url="/GasStation/edit/#(x.id)">修改</a>
+            </td>
+        </tr>
+        #end
+        </tbody>
+    </table>
+    <div class="pagination" style="color:#DDDDDD;">
+        #@paginate(GasStation.pageNumber,GasStation.totalPage, "/GasStation/GasStationList?searchKey="+(searchKey != null ? searchKey :"")+"&pageNum=")
+    </div>
+
+    <script>
+        function confirmDelete(id) {
+            var result = confirm("确定要删除吗？");
+            if (result) {
+                // 如果用户点击了确定，则执行删除操作
+                window.location.href = "/GasStation/delete/" + id;
+            } else {
+                // 如果用户点击了取消，则不执行任何操作
+                return false;
+            }
+        }
+    </script>
+
+    <script>
+        $('.openModal').click(function(e) {
+            console.log("askl;jdilasjdiowjdiojaiwdjiowa");
+            e.preventDefault();
+            var editUrl = $(this).data('edit-url');
+            var that = this; // 保存正确的上下文
+            $.get(editUrl, function(data) {
+                var title = $(that).data('title');
+                $('#myModalLabel').text(title); // 修改模态窗口标题
+
+                // 清除旧内容
+                $('#modalBody').html(data); // 加载编辑内容到模态窗口
+                $('#myModal').modal('show'); // 显示模态窗口
+            });
+        });
+
+    </script>
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">模态窗口标题</h4>
+                </div>
+                <div class="modal-body" id="modalBody">
+                    <!-- 这里将会加载你的表单内容 -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary"  id="saveButton" >保存</button>
+                    <script>
+                        document.getElementById('saveButton').addEventListener('click', function() {
+                            document.getElementById('myForm').submit();
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

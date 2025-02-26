@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Content</title>
+  <style>
+    /* 针对按钮的点击后样式重置 */
+    button:active {
+      background-color: initial;
+      color: initial;
+      border-color: initial;
+    }
+
+    button:focus {
+      outline: none;
+    }
+
+    /* 更具体的选择器覆盖可能影响按钮可点击性的全局样式 */
+    button.edit-btn:active,
+    button.delete-btn:active {
+      pointer-events: auto;
+    }
+  </style>
+</head>
+
+<body>
+<h1>编辑维修记录</h1>
+<div  class="list">
+  <form action="/Cequipment/update" method="post" id="myForm">
+    <!-- 隐藏域，用于传递维修记录的ID -->
+    <input type="hidden" name="bseMaintenance.id" value="#(maintenance.id)" />
+    <input type="hidden" name="bseMaintenance.equipmentid" value="#(maintenance.equipmentid)" />
+    <!-- 设备名称，不可编辑 -->
+    <div class="form-group">
+      <label for="equipmentName">设备名称</label>
+      <input type="text" id="equipmentName" name="" value="#(equipment)" readonly class="form-control" />
+    </div>
+    <!-- 记录类型选择 -->
+    <div class="form-group">
+      <label for="recordType">记录类型</label>
+      <select id="recordType" name="bseMaintenance.kind" class="form-control">
+        #if (maintenance.kind == "维修")maintenance
+        <option value="维修" selected>维修</option>
+        <option value="维护">维护</option>
+        #else
+        <option value="维修">维修</option>
+        <option value="维护" selected>维护</option>
+        #end
+      </select>
+    </div>
+    <!-- 报修日期选择 -->
+    <div class="form-group">
+      <label for="reportDate">报修日期</label>
+      <input type="text" id="reportDate" name="bseMaintenance.reportday" value="#(maintenance.reportday)" class="form-control datepicker" placeholder="点击选择日期" />
+    </div>
+    <!-- 报修人员输入 -->
+    <div class="form-group">
+      <label for="reporter">报修人员</label>
+      <input type="text" id="reporter" name="bseMaintenance.reporter" value="#(maintenance.reporter)" class="form-control" />
+    </div>
+    <!-- 主要内容输入 -->
+    <div class="form-group">
+      <label for="mainContent">主要内容</label>
+      <textarea id="mainContent" name="bseMaintenance.content" class="form-control">#(maintenance.content)</textarea>
+    </div>
+    <!-- 维修人员输入 -->
+    <div class="form-group">
+      <label for="repairer">维修人员</label>
+      <input type="text" id="repairer" name="bseMaintenance.repairer" value="#(maintenance.repairer)" class="form-control" />
+    </div>
+    <!-- 维修时间选择 -->
+    <div class="form-group">
+      <label for="repairday">维修时间</label>
+      <input type="text" id="repairday" name="bseMaintenance.repairday" value="#(maintenance.repairday)" class="form-control datepicker" placeholder="点击选择日期" />
+    </div>
+    <!-- 工单状态选择 -->
+    <div class="form-group">
+      <label for="step">工单状态</label>
+      <select id="step" name="bseMaintenance.step" class="form-control">
+        #if (maintenance.step == "进行中")
+        <option value="进行中" selected>进行中</option>
+        <option value="已完成">已完成</option>
+        #else
+        <option value="进行中">进行中</option>
+        <option value="已完成" selected>已完成</option>
+        #end
+      </select>
+    </div>
+
+  </form>
+</div>
+<script>
+  // 初始化日期选择插件
+  $('.datepicker').datepicker({
+    format: 'yyyy-mm-dd',
+    autoclose: true,
+    todayHighlight: true
+  });
+
+
+</script>
+</body>
+
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content</title>
+    <!-- Add your custom stylesheets and scripts here -->
+    <link rel="stylesheet" type="text/css" href="../css/lpg.css">
+
+</head>
+<body>
+<div id="content">
+
+    <div id="pagediv">
+
+        <a href="/userFunc/userList" style="font-size: 18px;color: white">返回</a>
+    </div>
+<!--    同理点击新增功能后     -->
+    <form id="form_data" action="/userFunc/sure" method="post">
+
+
+
+        <!--前台需要储存的页码-->
+        <input hidden  id="pageNumber" type="text" name="pageNum" value="#(funcs.pageNumber)">
+
+        <!--获取functionid-->
+        <input hidden id="input_id" name="id" type="text" value="" >
+
+        <!--获取userid-->
+        <input hidden name="userId" type="text" value=#(userId) >
+
+    </form>
+    <table class="list">
+        <tbody>
+        <tr>
+            <th>序号</th>
+            <th>id</th>
+            <th>功能名称</th>
+            <th>功能路径</th>
+            <th>操作</th>
+        </tr>
+        #set(startIndex = (funcs.pageNumber - 1) * funcs.pageSize + 1)
+
+        #for(x : funcs.getList())
+        <tr>
+            <td>#(startIndex++)</td> <!-- 显示序号并递增 -->
+
+            <td>#(x.id)</td>
+            <td>#(x.funName)</td>
+            <td>#(x.funUrl)</td>
+            <td style="text-align:left">
+
+                <!--将id和checkbox进行绑定 funcid存在则勾选不存在不勾选-->
+                <input id='#(x.id)' type="checkbox" onclick="newcheck('#(x.id)')">
+            </td>
+        </tr>
+        #end
+        </tbody>
+    </table>
+    <div class="pagination" style="color:#DDDDDD;">
+        #@paginate(funcs.pageNumber, funcs.totalPage, "/userFunc/funclist?userId="+userId + "&pageNum=")
+    </div>
+
+    <!--获取funcid-->
+    <input hidden id="haveFunc" type="text" value=#(haveFunc) >
+
+</div>
+</body>
+<script>
+    <!-- 获取标签 操作funcid-->
+    var haveFunc = document.getElementById("haveFunc").value;
+    var strIdArr = haveFunc.split(",");
+
+    for (let i=0; i< strIdArr.length ; i++){
+        //获取funcid对应的checkbox
+        var elementById = document.getElementById(strIdArr[i]);
+
+        //判断该功能是否存在
+        if (elementById){
+            elementById.checked=true;
+        }
+
+    }
+
+    // var context=[];
+    //
+    // //检查checkbox状态
+    // function check(id){
+    //     var checked = document.getElementById(id).checked;
+    //
+    //     //如果勾选 添加到context容器中
+    //     if (checked){
+    //         context.push(id);
+    //     }else{//如果没有勾选 移除context容器中
+    //         var number = context.indexOf(id);
+    //         if (number!=-1){
+    //             context.splice(number,1);
+    //         }
+    //     }
+    //     //把数据给form form把数据给后台 把点击这个行为的数据偷偷给输入框
+    //     document.getElementById("input_ids").value=context;
+    //}
+
+function newcheck(id){
+            document.getElementById("input_id").value=id;
+            //表单提交
+            document.getElementById("form_data").submit();
+        }
+
+</script>
+</html>

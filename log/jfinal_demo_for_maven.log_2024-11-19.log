@@ -1,0 +1,4 @@
+
+2024-11-19 12:46:07
+[ERROR]-[Thread: XNIO-1 task-1]-[com.jfinal.core.ActionHandler.handleActionException()]: 500 Error: /apptransport/searchList?telephone=13514236878&qipingid=&riqi=&pageNum=1&pageSize=10&_=1731991561979
+com.jfinal.core.ActionException

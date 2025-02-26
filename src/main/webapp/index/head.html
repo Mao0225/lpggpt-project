@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>LPG工作站硕士</title>
+	<!-- Add your custom stylesheets and scripts here -->
+	<style>
+		/* Add your custom CSS styles here */
+		body {
+			margin: 0;
+			padding: 0;
+			background-color: #0b333f;
+			border-bottom:1px solid  #f0bf00;
+			height: 75px;
+			position: relative; /* Make sure body is positioned relative so that absolute positioning within it is relative to the body */
+		}
+		#header-title {
+			font-size: 20px; /* Increased font size for emphasis */
+			margin-top: 20px;
+			color: #f0f0f0; /* Light blue text color */
+			text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Adding a subtle shadow for depth */
+		}
+		#header-title span {
+			float: left;
+			vertical-align: bottom; /* 这个属性在这里不起作用，因为span是float的 */
+			line-height: 80px; /* 调整这个值以匹配图片的高度，从而实现底部对齐 */
+		}
+
+		#header-title img{
+			width: 50px;
+			float: left;
+			margin-left: 20px;
+		}
+		#header-title span{
+			float: left;
+		}
+		#header-title-exit {
+			position: absolute; /* Positioning exit button absolutely within the body */
+			top: 20px; /* Adjust top position as needed */
+			right: 20px; /* Right aligned within the body with a margin */
+			color: #f0f0f0; /* Setting the color of text to light */
+			font-size: 20px; /* Setting a suitable font size */
+		}
+		#header-title-exit img {
+			width: 30px; /* Adjusting the size of the image */
+			vertical-align: middle; /* Aligning image vertically with the text */
+		}
+		#header-title-exit span {
+			margin-left: 5px; /* Adding some space between image and text */
+		}
+		#header-title-exit a {
+			color: #f0f0f0; /* 设置链接文本为白色 */
+			text-decoration: none; /* 移除下划线 */
+		}
+
+		#header-title-exit a:hover {
+			color: #DDDDDD; /* 鼠标悬停时的颜色变化，如果需要的话 */
+		}
+
+	</style>
+</head>
+<body>
+<div id="header-title">
+	<img src="../img/ft.logo.png" alt="Logo"/>
+	<span>LPG工作站</span>
+</div>
+<div id="header-title-exit">
+	<a href="/" target="_top"><img src="../img/sysexit.png" alt="Exit"/>
+		<span>退出</span></a>
+</div>
+</body>
+</html>

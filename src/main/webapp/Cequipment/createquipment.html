@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>报修记录展示</title>
+  <script src="../css/jquery-3.3.1.min.js"></script>
+  <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css">
+  <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="../css/lpg.css">
+
+  <style>
+    table {
+      /* 边框合并，使表格看起来更简洁 */
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    th,
+    td {
+      /* 添加边框 */
+      border: 1px solid #ccc;
+      /* 内边距，使内容与边框有一定距离 */
+      padding: 8px;
+    }
+
+    th {
+      /* 文本居中 */
+      text-align: center;
+      /* 背景颜色，可根据需要修改 */
+      background-color: #f2f2f2;
+    }
+
+    .record-box {
+      width: 200px;
+      height: 50px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      text-align: center;
+      margin: 20px auto;
+      line-height: 50px;
+      background-color: #ffcc00;
+    }
+
+    /* 返回按钮样式 */
+    .back-button {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 3px;
+      padding: 8px 15px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+<div class="record-box">
+  <h2>报修记录</h2>
+</div>
+<button class="back-button" onclick="goBack()">返回</button>
+<table border="1" class="list">
+  <thead>
+  <tr>
+    <th>序号</th>
+    <th>设备名称</th>
+    <th>记录</th>
+    <th>规格型号</th>
+    <th>投用日期</th>
+    <th>放置位置</th>
+    <th>生成厂家</th>
+    <th>报修时间</th>
+    <th>完成时间</th>
+    <th>报修人</th>
+    <th>主要内容</th>
+    <th>维修人员</th>
+    <th>联系电话</th>
+    <th>处置过程</th>
+    <th>备注建议</th>
+    <th>备件耗材</th>
+  </tr>
+  </thead>
+  <tbody>
+  #set(startIndex = 1)
+  #for(x : CEmain)
+  <tr>
+    <td>#(startIndex++)</td>
+    <td>#(x.equipment_name)</td>
+    <td>#(x.kind)</td>
+    <td>#(x.model)</td>
+    <td>#(x.buyday)</td>
+    <td>#(x.location)</td>
+    <td>#(x.factory)</td>
+    <td>#(x.reportday)</td>
+    <td>#(x.repairday)</td>
+    <td>#(x.reporter)</td>
+    <td>#(x.content)</td>
+    <td>#(x.repairer)</td>
+    <td>#(x.phone)</td>
+    <td>#(x.process)</td>
+    <td>#(x.remark)</td>
+    <td>#(x.fitting_name)</td>
+  </tr>
+  #end
+  </tbody>
+</table>
+
+<script>
+  function goBack() {
+    window.history.back();
+  }
+</script>
+</body>
+
+</html>

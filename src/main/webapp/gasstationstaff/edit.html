@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>员工修改</title>
+</head>
+<body>
+<div class="form_box">
+    <form action="/GasStationStaff/update" method="post" id="myForm">
+        <input type="hidden" name="GasStationStaff.id" value="#(GasStationStaff.id??)" />
+        <div>
+            <label >员工编号</label>
+            <input type="text" name="GasStationStaff.staff_id" value="#(GasStationStaff.staff_id)" />
+        </div>
+        <div>
+            <label >员工名称</label>
+            <input type="text" name="GasStationStaff.staff_name" value="#(GasStationStaff.staff_name)" />
+        </div>
+        <div>
+            <label>手机号码</label>
+            <input type="text" name="GasStationStaff.telephone" value="#(GasStationStaff.telephone)" />
+        </div>
+        <div>
+            <label>密码</label>
+            <input type="text" name="GasStationStaff.password" value="#(GasStationStaff.password)" />
+        </div>
+        <!--下拉框-->
+        <div>
+            <label >归属气站</label>
+            <select name="GasStationStaff.station_id" style="border-radius: 5px;background-color: white ">
+                #for ( x: gasStations)
+                <option value="#(x.station_id)" #(x.station_id == GasStationStaff.station_id ? "selected" : "")>#(x.stationName)</option>
+                #end
+            </select>
+
+        </div>
+    </form>
+    <input hidden id="stationId" value="#(GasStationStaff.stationId)">
+</div>
+</body >
+<!--下拉框的回显 获取stationid从而在option中比对-->
+<script>
+    var stationId = document.getElementById("stationId").value;
+    var elementById = document.getElementById(stationId);
+    if (elementById){
+        elementById.selected = true;
+    }
+</script>
+</html>
