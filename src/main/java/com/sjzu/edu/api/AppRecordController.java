@@ -202,53 +202,125 @@ public class AppRecordController extends Controller {
         renderJson(json);
     }
 
+//public void records() {
+//    // 获取前端传递的分页参数
+//    int pageNum = getParaToInt("page", 1); // 默认第一页
+//    int pageSize = getParaToInt("pageSize", 10); // 默认每页10条
+//
+//    // 获取组织代码参数
+//    String org_code = getPara("org_code");
+//
+//    // 获取当前日期
+//    String currentDate = String.valueOf(LocalDate.now());
+//
+//    // SQL 查询语句
+//    String select = "SELECT frc.*, gf.*"; // 选择所有字段
+//    String sqlExceptSelect = "FROM fill_record_check1 frc " +
+//            "LEFT JOIN gas_file gf ON frc.gas_number = gf.gas_number " +
+//            "WHERE frc.memo = ? " +
+//            "AND frc.gasstation = ? " +
+//            "AND frc.fill_time LIKE ? " +
+//            "AND frc.now_gas IS NOT NULL" +
+//            "ORDER BY frc.id DESC";
+//
+//    // 分页查询
+//    Page<FillRecordCheck1> recordPage = dao.paginate(
+//            pageNum,
+//            pageSize,
+//            select,
+//            sqlExceptSelect,
+//            "充装后检查合格", // 对应 frc.memo = ?
+//            org_code,       // 对应 frc.gasstation = ?
+//            '%'+currentDate+'%'    // 对应 frc.fill_time = ?
+//    );
+//    System.out.println("Parameters: " + Arrays.asList("充装后检查合格", org_code, currentDate));
+//
+//
+//    // 构造响应数据
+//    JSONObject json = new JSONObject();
+//    if (recordPage != null && !recordPage.getList().isEmpty()) {
+//        json.put("flag", "200");
+//        json.put("record", recordPage.getList()); // 直接返回查询结果
+//        json.put("totalPage", recordPage.getTotalPage());
+//        json.put("totalRow", recordPage.getTotalRow());
+//    } else {
+//        json.put("flag", "300");
+//        json.put("record", new ArrayList<>()); // 返回空数组
+//    }
+//    renderJson(json);
+//}
 public void records() {
     // 获取前端传递的分页参数
     int pageNum = getParaToInt("page", 1); // 默认第一页
-    int pageSize = getParaToInt("pageSize", 10); // 默认每页10条
+    int pageSize = getParaToInt("pageSize", 30); // 默认每页10条
 
     // 获取组织代码参数
     String org_code = getPara("org_code");
 
-    // 获取当前日期
-    String currentDate = String.valueOf(LocalDate.now());
+    // 获取查询条件参数
+    String gasNumber = getPara("gas_number"); // 气瓶号
+    String startTime = getPara("start_time"); // 开始时间
+    String endTime = getPara("end_time");     // 结束时间
+    String gunNo = getPara("gun_no");        // 枪号
 
-    // SQL 查询语句
-    String select = "SELECT frc.*, gf.*"; // 选择所有字段
-    String sqlExceptSelect = "FROM fill_record_check1 frc " +
-            "LEFT JOIN gas_file gf ON frc.gas_number = gf.gas_number " +
-            "WHERE frc.memo = ? " +
-            "AND frc.gasstation = ? " +
-            "AND frc.fill_time LIKE ? " + // 使用 = 匹配日期
-            "ORDER BY frc.id DESC";
+    // 动态构建 SQL 查询条件
+    StringBuilder sqlExceptSelect = new StringBuilder(
+            "FROM fill_record_check1 frc " +
+                    "LEFT JOIN gas_file gf ON frc.gas_number = gf.gas_number " +
+                    "WHERE frc.memo = ? " +
+                    "AND frc.gasstation = ? " +
+                    "AND frc.now_gas IS NOT NULL "
+    );
+
+    // 动态添加查询条件
+    List<Object> params = new ArrayList<>();
+    params.add("充装后检查合格"); // 对应 frc.memo = ?
+    params.add(org_code);       // 对应 frc.gasstation = ?
+
+    if (gasNumber != null && !gasNumber.isEmpty()) {
+        sqlExceptSelect.append("AND frc.gas_number LIKE ? ");
+        params.add("%" + gasNumber + "%");
+    }
+    if (startTime != null && endTime != null) {
+        sqlExceptSelect.append("AND frc.fill_time BETWEEN ? AND ? ");
+        params.add(startTime);
+        params.add(endTime);
+    }
+    if (gunNo != null && !gunNo.isEmpty()) {
+        sqlExceptSelect.append("AND frc.gun_no LIKE ? ");
+        params.add("%" + gunNo + "%");
+    }
+
+    // 排序
+    sqlExceptSelect.append("ORDER BY frc.id DESC");
 
     // 分页查询
     Page<FillRecordCheck1> recordPage = dao.paginate(
             pageNum,
             pageSize,
-            select,
-            sqlExceptSelect,
-            "充装后检查合格", // 对应 frc.memo = ?
-            org_code,       // 对应 frc.gasstation = ?
-            '%'+currentDate+'%'    // 对应 frc.fill_time = ?
+            "SELECT frc.*, gf.*", // 选择所有字段
+            sqlExceptSelect.toString(),
+            params.toArray() // 动态参数
     );
-    System.out.println("Parameters: " + Arrays.asList("充装后检查合格", org_code, currentDate));
-
 
     // 构造响应数据
     JSONObject json = new JSONObject();
     if (recordPage != null && !recordPage.getList().isEmpty()) {
         json.put("flag", "200");
-        json.put("record", recordPage.getList()); // 直接返回查询结果
-        json.put("totalPage", recordPage.getTotalPage());
-        json.put("totalRow", recordPage.getTotalRow());
+        json.put("page",pageNum);
+        json.put("record", recordPage.getList()); // 返回查询结果
+        json.put("totalPage", recordPage.getTotalPage()); // 总页数
+        json.put("totalRow", recordPage.getTotalRow());   // 总记录数
+        System.out.println("Total Pages: " + recordPage.getTotalPage());
+        System.out.println("Total Rows: " + recordPage.getTotalRow());
     } else {
         json.put("flag", "300");
         json.put("record", new ArrayList<>()); // 返回空数组
+        json.put("totalPage", 0);
+        json.put("totalRow", 0);
     }
     renderJson(json);
 }
-
     public void recordsd() {
         String org_code = getPara("org_code");
         LocalDate currentDate = LocalDate.now();
@@ -297,7 +369,6 @@ public void records() {
     setIfPresent(json, "selectfillingman", record::setFillingStaffName);
     setIfPresent(json, "okcheckman", record::setFillingCheckStaffName);
     setIfPresent(json, "orgCode", record::setGasstation);
-
     setDateIfPresent(json, "fill_time", "yyyy-MM-dd HH:mm:ss", record::setFillTime);
     setJsonFieldIfPresent(json, "before_filling_check", record::setBeforeFillingCheck);
     setJsonFieldIfPresent(json, "before_filling", record::setBeforeFilling);
