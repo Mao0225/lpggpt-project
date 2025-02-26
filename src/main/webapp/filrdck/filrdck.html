@@ -6,9 +6,30 @@
   <title>加气站管理</title>
   <!-- Add your custom stylesheets and scripts here -->
   <script src="../css/jquery-3.3.1.min.js"></script>
-  <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css" >
+  <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css">
   <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
   <link rel="stylesheet" type="text/css" href="../css/lpg.css">
+  <style>
+    /* 自定义模态框样式 */
+    #checkDetailsModal .modal-content {
+      background-color: #ffffff; /* 模态框背景颜色 */
+    }
+    #checkDetailsTable {
+      width: 100%;
+      background-color: #ffffff; /* 表格背景颜色 */
+    }
+    #checkDetailsTable th {
+      background-color: #ffffff; /* 表头背景颜色 */
+      color: #ffffff; /* 表头文字颜色 */
+    }
+    #checkDetailsTable td {
+      background-color: #ffffff; /* 单元格背景颜色 */
+      color: #000000; /* 单元格文字颜色 */
+    }
+    .text-red {
+      color: red !important; /* 红色字体 */
+    }
+  </style>
 </head>
 <body>
 <div id="pagediv">
@@ -24,7 +45,7 @@
     <script>
       var buttons = document.getElementsByName("refresh");
       for (var i = 0; i < buttons.length; i++) {
-        buttons[i].addEventListener('click', function() {
+        buttons[i].addEventListener('click', function () {
           // 获取所有的输入框并设置为空
           var inputs = document.querySelectorAll('#searchForm input[type=text]');
           for (var j = 0; j < inputs.length; j++) {
@@ -38,6 +59,29 @@
     </script>
   </form>
 </div>
+<!-- 新增检查详情模态框 -->
+<div class="modal fade" id="checkDetailsModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="checkDetailsModalTitle">检查详情</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-bordered" id="checkDetailsTable">
+          <tbody>
+          <!-- 动态内容将在这里插入 -->
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+      </div>
+    </div>
+  </div>
+</div>
 <table class="list">
   <tbody>
   <tr>
@@ -46,17 +90,17 @@
     <th width="12%">气瓶终止使用日期</th>
     <th width="12%">充装介质</th>
     <th width="12%">充装规格</th>
-        <th width="12%">充装前检查</th>
-        <th width="12%">充装后检查</th>
-<!--    <th width="30%">充装前检查详细信息</th>-->
-<!--    <th width="30%">充装后检查详细信息</th>-->
-<!--    <th width="12%">合格与否</th>-->
+    <th width="12%">充装前检查</th>
+    <th width="12%">充装后检查</th>
+    <!--    <th width="30%">充装前检查详细信息</th>-->
+    <!--    <th width="30%">充装后检查详细信息</th>-->
+    <!--    <th width="12%">合格与否</th>-->
     <th width="12%">充气时间</th>
     <th width="12%">皮重</th>
 
     <th width="12%">灌装量</th>
     <th width="12%">充装时长</th>
-<!--    <th width="12%">检查结果</th>-->
+    <!--    <th width="12%">检查结果</th>-->
     <th width="12%">枪号</th>
     <th width="12%">充装人员</th>
     <th width="15%">检查人员</th>
@@ -70,26 +114,28 @@
     <td>#(x.terminate_use_date)</td>
     <td>#(x.filling_medium)</td>
     <td>#(x.filling_specification)</td>
-    <td>#(x.before_filling)</td>
-    <td>#(x.after_filling)</td>
-<!--    <td>#(x.before_filling_check)</td>-->
-<!--    <td>#(x.after_filling_check)</td>-->
-<!--    <td>#(x.memo)</td>-->
+    <td>
+      <a href="javascript:void(0)"
+         class="detail-link"
+         data-check-type="前检查"
+         data-details='#(x.before_filling_check)'>
+        #(x.before_filling)
+      </a>
+    </td>
+    <td>
+      <a href="javascript:void(0)"
+         class="detail-link"
+         data-check-type="后检查"
+         data-details='#(x.after_filling_check)'>
+        #(x.after_filling)
+      </a>
+    </td>
+    <!--    <td>#(x.before_filling_check)</td>-->
+    <!--    <td>#(x.after_filling_check)</td>-->
     <td>#(x.fill_time)</td>
     <td>#(x.pressure_begin)</td>
     <td>#(x.now_gas)</td>
     <td>#(x.add_gas_long)</td>
-<!--    <td>-->
-<!--      #if(x.flag == 10)-->
-<!--      充装前不合格-->
-<!--      #elseif(x.flag == 20)-->
-<!--      匹配不成功的但重装后是否合格未知-->
-<!--      #elseif(x.flag == 30)-->
-<!--      充装后不合格-->
-<!--      #elseif(x.flag == 40)-->
-<!--      匹配完成-->
-<!--      #end-->
-<!--    </td>-->
     <td>#(x.gun_no)</td>
     <td>#(x.filling_staff_name)</td>
     <td>#(x.filling_check_staff_name)</td>
@@ -104,36 +150,51 @@
       #(x.gasstation)
       #end</td>
   </tr>
+
+
   #end
   </tbody>
 </table>
 <div class="pagination" style="color:#DDDDDD;">
-  #@paginate(filrdck.pageNumber,filrdck.totalPage, "/filrdck/filrdcklist?finditem="+(finditem != null ? finditem :'')+ "&gastion=" + (gastion != null ? gastion : '')+ "&gasid=" + (gasname != null ? gasname : '')+"&pageNum=")
+  #@paginate(filrdck.pageNumber,filrdck.totalPage, "/filrdck/filrdcklist?finditem="+(finditem != null ? finditem :'')+
+  "&gastion=" + (gastion != null ? gastion : '')+ "&gasid=" + (gasname != null ? gasname : '')+"&pageNum=")
 </div>
 
+<script>
+  // 新增检查详情显示逻辑
+  $(document).ready(function() {
+    $('.detail-link').click(function() {
+      let details = $(this).data('details');
+      const checkType = $(this).data('check-type');
 
+      try {
+        // 如果 details 是字符串，则解析为对象
+        if (typeof details === 'string') {
+          details = JSON.parse(details);
+        }
 
+        let html = '';
+        for (const [key, value] of Object.entries(details)) {
+          // 如果值为 "否"，则添加红色字体样式
+          const textColorClass = value === "否" ? "text-red" : "";
+          html += `
+                    <tr>
+                        <td style="width: 40%; padding: 8px; background: #f8f9fa;">${key}</td>
+                        <td style="padding: 8px;" class="${textColorClass}">${value}</td>
+                    </tr>
+                `;
+        }
 
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title" id="myModalLabel">模态窗口标题</h4>
-      </div>
-      <div class="modal-body" id="modalBody">
-        <!-- 这里将会加载你的表单内容 -->
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-        <button type="button" class="btn btn-primary"  id="saveButton" >保存</button>
-        <script>
-          document.getElementById('saveButton').addEventListener('click', function() {
-            document.getElementById('myForm').submit();
-          });
-        </script>
-      </div>
-    </div>
-  </div>
-</div>
+        $('#checkDetailsModalTitle').text(`充装${checkType}详细信息`);
+        $('#checkDetailsTable tbody').html(html);
+        $('#checkDetailsModal').modal('show');
+      } catch (e) {
+        console.error('数据解析失败:', e);
+        alert('数据解析失败，请检查数据格式');
+      }
+    });
+  });
+</script>
 </body>
 </html>
+
