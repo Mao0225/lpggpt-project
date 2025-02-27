@@ -11,7 +11,7 @@ import com.sjzu.edu.common.model.GasFile;
 import javax.servlet.http.HttpServletResponse;
 import java.nio.charset.StandardCharsets;
 
-//绑定奉天码和镂空码
+
 @Path(value = "/", viewPath = "/appgasfilebangding")
 public class AppgasfilebangdingController extends Controller {
 
@@ -30,67 +30,24 @@ public class AppgasfilebangdingController extends Controller {
 
         JSONObject json = new JSONObject();
         if (StrKit.notBlank(gasnumber)) {
-            // 先检查气瓶档案是否存在
-            GasFile gasFile = dao.findFirst("select * from gas_file where gas_number = ?", gasnumber);
-            if (gasFile == null) {
+            if (dao.findFirst("select * from gas_file where gas_number = ?", gasnumber) != null) {
+                GasFile gasFile = dao.findFirst("select * from gas_file where gas_number = ?", gasnumber);
+                if (StrKit.notBlank(fengtiangasno)) {
+                    gasFile.setFengtiangasno(fengtiangasno);
+                }
+                if (StrKit.notBlank(loukongno)) {
+                    gasFile.setLoukongno(loukongno);
+                }
+                gasFile.update();
+                json.put("flag", "200");
+                json.put("message", "绑定成功");
+                json.put("gasFile", gasFile);
+                renderJson(json);
+            }else{
                 json.put("flag", "300");
                 json.put("message", "气瓶档案不存在，请扫描二维码添加");
                 renderJson(json);
-                return;
             }
-
-            // 校验封头气瓶编号是否已被其他气瓶绑定
-            if (StrKit.notBlank(fengtiangasno)) {
-                GasFile existingFengtian = dao.findFirst(
-                        "select * from gas_file where fengtiangasno = ? and gas_number != ?",
-                        fengtiangasno, gasnumber
-                );
-                if (existingFengtian != null) {
-                    json.put("flag", "300");
-                    json.put("message", "奉天码已被其他气瓶绑定");
-                    renderJson(json);
-                    return;
-                }
-            }
-
-            // 校验镂空编号是否已被其他气瓶绑定
-            if (StrKit.notBlank(loukongno)) {
-                GasFile existingLoukong = dao.findFirst(
-                        "select * from gas_file where loukongno = ? and gas_number != ?",
-                        loukongno, gasnumber
-                );
-                if (existingLoukong != null) {
-                    json.put("flag", "300");
-                    json.put("message", "镂空码已被其他气瓶绑定");
-                    renderJson(json);
-                    return;
-                }
-            }
-
-            // 更新字段
-            boolean updated = false;
-            if (StrKit.notBlank(fengtiangasno)) {
-                gasFile.setFengtiangasno(fengtiangasno);
-                updated = true;
-            }
-            if (StrKit.notBlank(loukongno)) {
-                gasFile.setLoukongno(loukongno);
-                updated = true;
-            }
-
-            // 如果有更新，保存到数据库
-            if (updated) {
-                gasFile.update();
-            }
-
-            json.put("flag", "200");
-            json.put("message", "绑定成功");
-            json.put("gasFile", gasFile);
-            renderJson(json);
-        } else {
-            json.put("flag", "300");
-            json.put("message", "气瓶编号不能为空");
-            renderJson(json);
         }
     }
 

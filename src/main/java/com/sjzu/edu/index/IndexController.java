@@ -61,7 +61,7 @@ public class IndexController extends Controller {
 		try {
 			stationid = user.getStationid();
 			setSessionAttr("user",user);
-
+			setSessionAttr("companyid", user.getCompanyid()); // 存储 companyid 到会话中
 		} catch (NullPointerException e) {
 			// 当user为null或者user.getStationid()返回null时，捕获空指针异常并将stationid赋值为1000
 			stationid = 1000;

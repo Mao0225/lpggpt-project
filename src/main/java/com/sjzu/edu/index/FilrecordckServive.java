@@ -11,8 +11,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.sql.Timestamp;
 
-
-
 public class FilrecordckServive {
     private FillRecordCheck1 dao = new FillRecordCheck1().dao();
     private GasStation daos = new GasStation().dao();
@@ -44,6 +42,13 @@ public class FilrecordckServive {
 
         // 添加 now_gas IS NOT NULL 条件
         baseSql.append("WHERE now_gas IS NOT NULL ");
+        hasCondition = true;
+
+        // 添加 after_filling 和 before_filling 都为合格的条件
+        appendCondition(baseSql, hasCondition);
+        baseSql.append("f.after_filling = ? AND f.before_filling = ? ");
+        params.add("合格");
+        params.add("合格");
         hasCondition = true;
 
         // 处理日期条件
@@ -89,7 +94,4 @@ public class FilrecordckServive {
             sql.append("WHERE ");
         }
     }
-
-
-
 }

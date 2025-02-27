@@ -1,6 +1,5 @@
 package com.sjzu.edu.api;
 
-import cn.hutool.db.Entity;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.jfinal.aop.Clear;
@@ -9,12 +8,8 @@ import com.jfinal.core.Path;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
-import com.jfinal.template.expr.ast.Id;
 import com.sjzu.edu.common.model.*;
 
-import com.sjzu.edu.common.model.BseGun;
-
-import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;

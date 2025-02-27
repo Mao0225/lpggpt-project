@@ -1,17 +1,18 @@
 package com.sjzu.edu.index;
+
 import com.jfinal.aop.Inject;
 import com.jfinal.core.Controller;
 import com.jfinal.core.Path;
 import com.jfinal.plugin.activerecord.Page;
-import com.jfinal.plugin.activerecord.Record;
 import com.sjzu.edu.common.model.FillRecordCheck1;
 import com.sjzu.edu.common.model.GasStation;
+import com.sjzu.edu.common.model.Station;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.sql.Timestamp;
 import java.util.List;
 
 
@@ -24,7 +25,7 @@ public class FilrdckController extends Controller {
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
     @Inject
     FilrecordckServive service;
-
+    private Station station= new Station().dao();
 
 
     public void filrdcklist() {
@@ -35,10 +36,13 @@ public class FilrdckController extends Controller {
         String finditemStr = getPara("finditem");
         Timestamp finditem = null;
 
-        String gastion = getPara("gastion");
-        System.out.println(gastion);
+        String gastion = getPara("gastion_select");
+        System.out.println("gastion_select: "+gastion);
         String gasname = getPara("gasname");
-
+        String companyid = getSessionAttr("companyid");
+        System.out.println(companyid);
+        System.out.println("finditemStr: "+finditemStr);
+        System.out.println("gasname: "+gasname);
         // 解析日期时间字符串
         if (finditemStr!= null &&!finditemStr.isEmpty()) {
             try {
@@ -59,6 +63,8 @@ public class FilrdckController extends Controller {
 
         // 调用 service 进行查询
         Page<FillRecordCheck1> result = service.search(pageNumber, pageSize, finditem, gastion, gasname);
+        List<Station> stations = station.find("SELECT * FROM gas_station");
+
         System.out.println("获取到的充装信息为"+result.getList());
         List<GasStation> resultd = service.pagdetail();
         setAttr("finditem", finditemStr);
@@ -66,7 +72,7 @@ public class FilrdckController extends Controller {
         setAttr("gasname", gasname);
         setAttr("filrdck", result);
         setAttr("gastiond", resultd);
-
+        setAttr("stations",stations);
         // 渲染页面
         render("filrdck.html");
     }

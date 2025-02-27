@@ -29,6 +29,15 @@
     .text-red {
       color: red !important; /* 红色字体 */
     }
+
+    #searchForm select,
+    #searchForm input[type="date"] {
+      border-radius: 10px;
+      background-color: #fbf0c5;
+      width: 160px;
+      height: 30px;
+    }
+
   </style>
 </head>
 <body>
@@ -37,22 +46,65 @@
     <label> 时间查找：</label>
     <input type="date" name="finditem" value="#(finditem)">
     <label> 加气站查找：</label>
-    <input type="text" name="gastion" value="#(gastion)">
+    <select id="selectName" name="gastion_select" onchange="chooseName()">
+      <option value="" selected>请选择加气站</option>
+      #for ( x: stations)
+      <option value="#(x.station_id)" #(x.id == gastionid ? "selected" : "")>#(x.station_name)</option>
+      #end
+    </select>
     <label> 编号查找：</label>
     <input type="text" name="gasname" value="#(gasname)">
     <input value="提交" type="submit">
     <input type="submit" value="重置" name="refresh"/>
     <script>
+      var stations = [
+        #for ( x: stations)
+      { id: "#(x.id)", station_name: "#(x.station_name)" },
+      #end
+      ];
+
+      function chooseName() {
+        var selectId = document.getElementById("selectName").value;
+
+        if (selectId === "") {
+          // 这里可以添加隐藏输入框相关逻辑，若有需要
+          console.log("未选择加气站");
+          return;
+        }
+
+        // 查找选中的加气站对象
+        var selectedStation = stations.find(function(station) {
+          return station.id === selectId;
+        });
+
+        if (selectedStation) {
+          // 这里可以添加隐藏输入框相关逻辑，若有需要
+          console.log("选中加气站，station_id:", selectedStation.id);
+        } else {
+
+        }
+      }
+
+      // 添加监听器
+      document.getElementById("selectName").addEventListener("change", chooseName);
+
       var buttons = document.getElementsByName("refresh");
       for (var i = 0; i < buttons.length; i++) {
-        buttons[i].addEventListener('click', function () {
-          // 获取所有的输入框并设置为空
-          var inputs = document.querySelectorAll('#searchForm input[type=text]');
-          for (var j = 0; j < inputs.length; j++) {
-            inputs[j].value = "";
-          }
+        buttons[i].addEventListener('click', function (e) {
+          e.preventDefault();
 
-          // 提交表单以重新查询并刷新页面
+          // 清空输入框内容
+          var inputs = document.querySelectorAll('#searchForm input');
+          inputs.forEach(function(input) {
+            if (input.type !== 'submit' && input.type !== 'button') {
+              input.value = "";
+            }
+          });
+
+          // 重置选择框为默认选项
+          document.getElementById("selectName").selectedIndex = 0;
+
+          // 提交表单
           document.getElementById('searchForm').submit();
         });
       }
@@ -150,14 +202,12 @@
       #(x.gasstation)
       #end</td>
   </tr>
-
-
   #end
   </tbody>
 </table>
 <div class="pagination" style="color:#DDDDDD;">
   #@paginate(filrdck.pageNumber,filrdck.totalPage, "/filrdck/filrdcklist?finditem="+(finditem != null ? finditem :'')+
-  "&gastion=" + (gastion != null ? gastion : '')+ "&gasid=" + (gasname != null ? gasname : '')+"&pageNum=")
+  "&gastion_select=" + (gastion_select != null ? gastion_select : '')+ "&gasid=" + (gasname != null ? gasname : '')+"&pageNum=")
 </div>
 
 <script>
@@ -197,4 +247,3 @@
 </script>
 </body>
 </html>
-

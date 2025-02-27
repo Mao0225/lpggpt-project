@@ -117,8 +117,6 @@ public class DemoConfig extends JFinalConfig {
 		me.add("/drivercar", DrivercarController.class);
 		me.add("/restaurant", RestaurantController.class);
 		me.add("/gasFile", GasfileController.class);
-		me.add("/GGasFile", GGasFileController.class);
-
 		me.add("/shexiangtoufind", ShexiangtoufindController.class);
 		me.add("/basshexiangtouinfo", BasshexiangtouinfoController.class);
 		me.add("/shexiangtoulanya", ShexiangtoulanyaController.class);
@@ -139,7 +137,15 @@ public class DemoConfig extends JFinalConfig {
 		me.add("/maintenance", MaintenanceController.class);
 		me.add("/managerequip",ManageEquipmentController.class);
 		me.add("managegun",MgGunController.class);
+		me.add("/mmanagegun",MmgGunController.class);
 		me.add("/setrans",SetransController.class);
+		me.add("/GGasFile",GGasFileController.class);
+		me.add("/jiaqizhong",JiaqizhongController.class);
+		me.add("/Jjiaqizhong",JjiaqizhongController.class);
+		me.add("/unqualified",UnqualifiedController.class);
+		me.add("/Uunqualified",UunqualifiedController.class);
+		me.add("/GgasStationStaff",GgasStationStaffController.class);
+		me.add("/Ffilrdck",FfilrdckController.class);
 	}
 	
 	public void configEngine(Engine me) {

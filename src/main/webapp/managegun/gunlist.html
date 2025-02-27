@@ -53,7 +53,7 @@
 <body>
 <div id="pagediv">
 
-    <form id="searchForm" action="/managegun/searchgun" method="post">
+    <form id="searchForm" action="/managegun/gunlist" method="post">
         <a href="#" class="add openModal" data-title="添加加气枪" data-edit-url="/managegun/add"><b> + </b>添加加气枪</a>
         <label>公司名称：</label>
         <select id="selectName" name="companyId" onchange="chooseName()">
@@ -102,7 +102,7 @@
     #if(companyname!= null && companyname!= "-1")
     #set(selectedCompanyId = companyname)
     #end
-    #@paginate(gunlist.pageNumber, gunlist.totalPage, "/managegun/searchgun?companyId=" + selectedCompanyId + "&page=")
+    #@paginate(gunlist.pageNumber, gunlist.totalPage, "/managegun/gunlist?companyId=" + selectedCompanyId + "&page=")
 </div>
 <script>
 

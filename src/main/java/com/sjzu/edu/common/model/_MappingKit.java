@@ -24,11 +24,13 @@ public class _MappingKit {
 		arp.addMapping("bse_company_copy1", "id", BseCompanyCopy1.class);
 		arp.addMapping("bse_equip_operation", "id", BseEquipOperation.class);
 		arp.addMapping("bse_equipment", "id", BseEquipment.class);
+		arp.addMapping("bse_equipment_copy1", "id", BseEquipmentCopy1.class);
 		arp.addMapping("bse_fitt_operate", "id", BseFittOperate.class);
 		arp.addMapping("bse_fitting", "id", BseFitting.class);
 		arp.addMapping("bse_gun", "id", BseGun.class);
 		arp.addMapping("bse_interval", "id", BseInterval.class);
 		arp.addMapping("bse_maintenance", "id", BseMaintenance.class);
+		arp.addMapping("bse_maintenance_copy1", "id", BseMaintenanceCopy1.class);
 		arp.addMapping("cheng", "id", Cheng.class);
 		arp.addMapping("course", "id", Course.class);
 		arp.addMapping("custromer", "id", Custromer.class);

@@ -8,6 +8,7 @@ import com.jfinal.core.Path;
 
 import com.sjzu.edu.common.model.GasFile;
 import com.sjzu.edu.common.model.GasStation;
+import com.sjzu.edu.common.model.Restaurant;
 
 import java.util.List;
 

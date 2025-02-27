@@ -11,36 +11,38 @@ import java.util.Collections;
 public class MgGunService {
     private BseGun dao = new BseGun().dao();
 
-    public Page<Record> paginate(int pageNumber, int pageSize) {
+    public Page<Record> paginate(int pageNumber, int pageSize, Integer stationId) {
         try {
-            // 构建多表连接查询的 SQL 语句
-            String select = "SELECT bg.*, gs.station_name ";
-            String from = " FROM bse_gun bg LEFT JOIN gas_station gs ON bg.stationid = gs.id ORDER BY bg.id DESC";
+            // 基础查询语句
+            StringBuilder sqlBuilder = new StringBuilder()
+                    .append("SELECT bg.*, gs.station_name ")
+                    .append("FROM bse_gun bg ")
+                    .append("LEFT JOIN gas_station gs ON bg.stationid = gs.id ");
 
-            // 使用 Db.paginate 进行分页查询
-            Page<Record> page = Db.paginate(pageNumber, pageSize, select, from);
+            // 动态添加查询条件
+            if (stationId != null) {
+                sqlBuilder.append("WHERE bg.stationid = ? ");
+            }
 
-            return page;
+            // 统一排序条件
+            sqlBuilder.append("ORDER BY bg.id DESC");
+
+            // 执行参数化查询
+            return stationId != null ?
+                    Db.paginate(pageNumber, pageSize,
+                            "SELECT bg.*, gs.station_name", // select 部分
+                            sqlBuilder.toString().replace("SELECT bg.*, gs.station_name", ""), // from 部分
+                            stationId) : // 参数
+                    Db.paginate(pageNumber, pageSize,
+                            "SELECT bg.*, gs.station_name",
+                            sqlBuilder.toString().replace("SELECT bg.*, gs.station_name", ""));
+
         } catch (Exception e) {
             e.printStackTrace();
             return new Page<>(Collections.emptyList(), 0, pageSize, pageNumber, 0);
         }
     }
-    public Page<Record> search(int pageNumber, int pageSize, Integer id) {  // 参数id改为包装类型Integer，方便处理可能为null的情况
-        String selectFields = "select *";
-        StringBuilder sqlBuilder = new StringBuilder("from bse_gun");
 
-        // 构建动态查询条件，添加根据companyid与传入id匹配的筛选条件
-        if (id != null) {
-            sqlBuilder.append(" WHERE stationid = ").append(id);  // 精确匹配companyid与传入的id相等
-            // 如果需要模糊匹配，可以使用如下方式（根据实际需求选择）
-            // sqlBuilder.append(" WHERE companyid LIKE '%").append(id).append("%'");
-        }
-        sqlBuilder.append(" ORDER BY id DESC");
-        String sql = sqlBuilder.toString();
-        System.out.println(sql);
-        return Db.paginate(pageNumber, pageSize, selectFields, sql);
-    }
 
     // 修改后的方法，返回 Record
     public Record findgun(int id) {

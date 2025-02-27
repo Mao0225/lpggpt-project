@@ -17,23 +17,25 @@ public class MgGunController extends Controller {
     public void gunlist(){
         int pageNumber = getParaToInt("page", 1); // 默认为第1页
         int pageSize = getParaToInt("size", 10);
-        Page<Record> BseGunPage=MgGunService.paginate(pageNumber,pageSize);
+        Integer companyId=getParaToInt("companyId");
+        System.out.println("companyId； "+companyId);
+        Page<Record> BseGunPage=MgGunService.paginate(pageNumber,pageSize,companyId);
         List<GasStation> gastations = gastation.find("SELECT * FROM gas_station");
         setAttr("gunlist",BseGunPage);
         setAttr("gastations", gastations);
         render("gunlist.html");
     }
-    public void searchgun(){
-        Integer companyId=getParaToInt("companyId");
-        System.out.println("companyId； "+companyId);
-        int pageNumber = getParaToInt("page", 1); // 默认为第1页
-        int pageSize = getParaToInt("size", 10);
-        Page<Record> BseGunPage=MgGunService.search(pageNumber,pageSize,companyId);
-        List<GasStation> gastations = gastation.find("SELECT * FROM gas_station");
-        setAttr("gastations", gastations);
-        setAttr("gunlist", BseGunPage);
-        render("maequipmentlist.html");
-    }
+//    public void searchgun(){
+//        Integer companyId=getParaToInt("companyId");
+//        System.out.println("companyId； "+companyId);
+//        int pageNumber = getParaToInt("page", 1); // 默认为第1页
+//        int pageSize = getParaToInt("size", 10);
+//        Page<Record> BseGunPage=MgGunService.search(pageNumber,pageSize,companyId);
+//        List<GasStation> gastations = gastation.find("SELECT * FROM gas_station");
+//        setAttr("gastations", gastations);
+//        setAttr("gunlist", BseGunPage);
+//        render("gunlist.html");
+//    }
     public void add(){
         List<GasStation> gastations = gastation.find("SELECT * FROM gas_station");
         setAttr("gastations", gastations);

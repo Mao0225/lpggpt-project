@@ -185,12 +185,12 @@ public abstract class BaseBseEquipmentCopy1<M extends BaseBseEquipmentCopy1<M>> 
 		return getStr("writer");
 	}
 	
-	public void setWritetime(java.lang.String writetime) {
+	public void setWritetime(java.util.Date writetime) {
 		set("writetime", writetime);
 	}
 	
-	public java.lang.String getWritetime() {
-		return getStr("writetime");
+	public java.util.Date getWritetime() {
+		return getDate("writetime");
 	}
 	
 	/**
