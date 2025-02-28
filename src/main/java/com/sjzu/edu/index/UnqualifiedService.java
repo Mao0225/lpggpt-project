@@ -12,49 +12,30 @@ public class UnqualifiedService {
 
         int conditionCount = 0;
 
+        // 添加筛选条件：after_filling 或 before_filling 字段为不合格
+        addsql.append(" WHERE (frc.after_filling = '不合格' OR frc.before_filling = '不合格')");
+        conditionCount++;
+
         // 处理 bottle_no 参数（作为时间字段处理）
         if (bottle_no != null && !bottle_no.isEmpty()) {
-            if (conditionCount == 0) {
-                addsql.append(" WHERE ");
-            } else {
-                addsql.append(" AND ");
-            }
+            addsql.append(" AND ");
             addsql.append("frc.gas_number = '").append(bottle_no).append("'");
             conditionCount++;
         }
 
         // 处理 fill_time 参数（精确查询）
         if (fill_time != null && !fill_time.isEmpty()) {
-            if (conditionCount == 0) {
-                addsql.append(" WHERE ");
-            } else {
-                addsql.append(" AND ");
-            }
+            addsql.append(" AND ");
             addsql.append("frc.fill_time >= '").append(fill_time).append(" 00:00:00' AND frc.fill_time < '").append(fill_time).append(" 23:59:59'");
             conditionCount++;
         }
 
         // 处理 gas_no 参数（精确查询）
         if (gas_no != null && !gas_no.isEmpty()) {
-            if (conditionCount == 0) {
-                addsql.append(" WHERE ");
-            } else {
-                addsql.append(" AND ");
-            }
+            addsql.append(" AND ");
             addsql.append("frc.gun_no = '").append(gas_no).append("'");
             conditionCount++;
         }
-
-//         处理 companyid 参数（精确查询）
-//        if (companyid != null && !companyid.isEmpty()) {
-//            if (conditionCount == 0) {
-//                addsql.append(" WHERE ");
-//            } else {
-//                addsql.append(" AND ");
-//            }
-//            addsql.append("frc.gasstation = '").append(companyid).append("'");
-//            conditionCount++;
-//        }
 
         // 按 id 降序排序
         addsql.append(" ORDER BY frc.id DESC");

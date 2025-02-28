@@ -12,7 +12,7 @@ public class FfilrecordckServive {
     private GasStation daos = new GasStation().dao();
 
     public Page<FillRecordCheck1> paginate(int pageNumber, int pageSize) {
-        return dao.paginate(pageNumber, pageSize, "select *", "from fill_record_check1 order by id asc");
+        return dao.paginate(pageNumber, pageSize, "select *", "from fill_record_check1 order by id DESC");
     }
 
     public FillRecordCheck1 findById(int id) {
