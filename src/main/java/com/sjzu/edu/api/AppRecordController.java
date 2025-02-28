@@ -198,13 +198,13 @@ public void getdaijiandata() {
     // 添加时间范围查询条件
     if (start_time != null && !start_time.isEmpty() && end_time != null && !end_time.isEmpty()) {
         // 如果有时间范围参数，则使用参数查询
-        sqlBuilder.append(" AND real_time BETWEEN ? AND ?");
+        sqlBuilder.append(" AND create_time BETWEEN ? AND ?");
         params.add(start_time);
         params.add(end_time);
     } else {
         // 如果没有时间范围参数，则默认查询当天的数据
         String today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-        sqlBuilder.append(" AND real_time BETWEEN ? AND ?");
+        sqlBuilder.append(" AND create_time BETWEEN ? AND ?");
         params.add(today + " 00:00:00");
         params.add(today + " 23:59:59");
     }
