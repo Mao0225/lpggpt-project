@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" width="device-width, initial-scale=1.0">
+    <title>Equipment List</title>
+    <script src="../css/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css">
+    <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/css/lpg.css">
+    <style>
+        form {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        label {
+            margin-right: 10px;
+            color: white;
+        }
+
+        input[type="text"],
+        select {
+            width: 150px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        button[type="submit"] {
+            padding: 8px 15px;
+            background-color: yellow;
+            color: black;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        /* 添加的选择框样式规则 */
+        #searchForm select {
+            border-radius: 10px;
+            background-color: #fbf0c5;
+            width: 160px;
+            height: 30px;
+        }
+    </style>
+</head>
+
+<body>
+<div id="pagediv">
+    <form id="searchForm" action="/mmanagegun/searchgun" method="post">
+        <a href="#" class="add openModal" data-title="添加加气枪" data-edit-url="/mmanagegun/add"><b> + </b>添加加气枪</a>
+    </form>
+</div>
+
+<table class="list">
+    <tbody>
+    <tr>
+        <th width="8%">序号</th>
+        <th width="10">加气枪编号</th>
+        <th width="10">对应操作</th>
+        <th width="10">公司名称</th>
+        <th width="10">操作</th> <!-- 添加操作列标题 -->
+    </tr>
+    #set(startIndex = (gunlist.pageNumber - 1) * gunlist.pageSize + 1)
+    #for(x : gunlist.getList())
+    <tr>
+        <td>#(startIndex++)</td> <!-- 显示序号并递增 -->
+        <td>#(x.gunno)</td>
+        <td>#(x.caozuo)</td>
+        <td>#(x.station_name)</td>
+        <td>
+            <!-- 修改按钮添加点击事件，弹出编辑模态框，结构和功能与参考代码中编辑按钮类似 -->
+            <a href="#" class="edit openModal" data-title="编辑设备" data-edit-url="/mmanagegun/edit?id=#(x.id)">修改</a>
+            <!-- 将删除按钮修改为a标签形式 -->
+            <a href="#" class="delete" onclick="confirmDelete('#(x.id)')">删除</a>
+            <!-- 为“设备维修”按钮添加点击事件，弹出对应的模态框 -->
+        </td>
+    </tr>
+    #end
+    </tbody>
+</table>
+
+<div class="pagination" style="color:#DDDDDD;">
+    #set(selectedCompanyId = "")
+    #if(companyname!= null && companyname!= "-1")
+    #set(selectedCompanyId = companyname)
+    #end
+    #@paginate(gunlist.pageNumber, gunlist.totalPage, "/mmanagegun/searchgun?companyId=" + selectedCompanyId + "&page=")
+</div>
+
+<script>
+    // 确认删除的函数，向后端delete函数发送删除请求，同样假设后端接收设备id作为参数
+    function confirmDelete(id) {
+        console.log("进入到了删除函数");
+        console.log("id: " + id);
+        if (confirm("确定要删除该设备记录吗？")) {
+            window.location.href = "/mmanagegun/delete?id=" + id;
+        }
+    }
+
+    $(document).ready(function () {
+        $('.openModal').click(function (e) {
+            e.preventDefault();
+            var editUrl = $(this).data('edit-url');
+            var that = this;
+
+            $.get(editUrl, function (data) {
+                var title = $(that).data('title');
+                $('#myModalLabel').text(title);
+
+                // Clear old content
+                $('#modalBody').html(data);
+                $('#myModal').modal('show');
+            });
+        });
+    });
+
+    document.getElementById('saveButton').addEventListener('click', function () {
+        console.log("josqb`1");
+        // 如果验证通过，则提交表单
+        document.getElementById('myForm').submit();
+        // 如果验证失败，不提交表单（validateForm内部已经显示了错误消息）
+    });
+</script>
+
+<!-- 模态框结构 -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">模态窗口标题</h4>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- 这里将会加载你的表单内容，此处暂时为空，后续可以根据从后端获取的数据来填充 -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="saveButton">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>
