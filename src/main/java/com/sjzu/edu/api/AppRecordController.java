@@ -18,7 +18,7 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-
+//test
 @Path(value = "/", viewPath = "/apprecord")
 @Clear
 public class AppRecordController extends Controller {
