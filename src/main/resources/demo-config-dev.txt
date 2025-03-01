@@ -1,6 +1,0 @@
-
-# config
-jdbcUrl = jdbc:mysql://114.115.156.201/ruoyi_lpg?characterEncoding=utf8&useSSL=false&zeroDateTimeBehavior=convertToNull
-user = root
-password = Lgq123456
-devMode = true
