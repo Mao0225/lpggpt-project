@@ -586,5 +586,8 @@
 /target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst
 /target/jfinal_demo_for_maven-5.0.0.jar
 /target/jfinal_demo_for_maven-release.zip
-/target/
+/target/jfinal_demo_for_maven-release
 /src/main/resources/
+/src/main/resources/demo-config-dev.txt
+/src/main/resources/demo-config-jiaqi.txt
+/src/main/resources/demo-config-lpg.txt
