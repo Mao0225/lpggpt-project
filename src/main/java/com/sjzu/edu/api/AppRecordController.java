@@ -544,7 +544,7 @@ public class AppRecordController extends Controller {
 
     public void addBeforeFillingRecords() {
         // 获取请求体
-        addRecords(10); // 充装前合格记录
+        addRecords(10); // 充装前不合格记录
     }
 
     public void addokrecords() {
@@ -600,8 +600,10 @@ public class AppRecordController extends Controller {
 
 
         //User user = User.dao.findFirst("SELECT * FROM user WHERE username = ? AND password = ?", username, password);
-        GasStationStaff stationinfo = stationstaffdao.findFirst("SELECT station_id as stationId,staff_name as stationName, staff_id as staffId ,telephone FROM gas_station_staff WHERE telephone = ? AND password = ?", telephone, password);
+//        GasStationStaff stationinfo = stationstaffdao.findFirst("SELECT station_id as stationId,staff_name as stationName, staff_id as staffId ,telephone FROM gas_station_staff WHERE telephone = ? AND password = ?", telephone, password);
         //System.out.println(user.toString());
+        GasStationStaff stationinfo = stationstaffdao.findFirst("SELECT gss.station_id AS stationId, gss.staff_name AS staffName, gss.staff_id AS staffId, gss.telephone, gs.station_name AS stationName FROM gas_station_staff gss LEFT JOIN gas_station gs ON gss.station_id = gs.station_id WHERE gss.telephone = ? AND gss.password = ?", telephone, password);
+
         JSONObject json = new JSONObject();
         if (stationinfo != null) {
             json.put("code", 200);
