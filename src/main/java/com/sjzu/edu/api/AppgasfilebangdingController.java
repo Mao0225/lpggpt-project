@@ -25,25 +25,32 @@ public class AppgasfilebangdingController extends Controller {
         JSONObject jsonObj = JSON.parseObject(jsonStr); // 解析 JSON
         String loukongno = jsonObj.getString("loukongno");
         String fengtiangasno = jsonObj.getString("fengtiangasno");
+        String filingGasStation = jsonObj.getString("filingGasStation");
         String gasnumber = jsonObj.getString("gasnumber");
-        System.out.println("gasnumber=" + gasnumber + "fengtiangasno=" + fengtiangasno + "loukongno=" + loukongno);
+        System.out.println("gasnumber=" + gasnumber + "fengtiangasno=" + fengtiangasno +
+                "loukongno=" + loukongno + "filingGasStation=" + filingGasStation);
 
         JSONObject json = new JSONObject();
         if (StrKit.notBlank(gasnumber)) {
-            if (dao.findFirst("select * from gas_file where gas_number = ?", gasnumber) != null) {
-                GasFile gasFile = dao.findFirst("select * from gas_file where gas_number = ?", gasnumber);
-                if (StrKit.notBlank(fengtiangasno)) {
+            GasFile gasFile = dao.findFirst("select * from gas_file where gas_number = ?", gasnumber);
+            if (gasFile != null) {
+                // 检查每个字段，如果数据库中为空且传入值不为空，就更新
+                if (StrKit.isBlank(gasFile.getFengtiangasno()) && StrKit.notBlank(fengtiangasno)) {
                     gasFile.setFengtiangasno(fengtiangasno);
                 }
-                if (StrKit.notBlank(loukongno)) {
+                if (StrKit.isBlank(gasFile.getLoukongno()) && StrKit.notBlank(loukongno)) {
                     gasFile.setLoukongno(loukongno);
                 }
+                if (StrKit.isBlank(gasFile.getFilingGasStation()) && StrKit.notBlank(filingGasStation)) {
+                    gasFile.setFilingGasStation(filingGasStation);
+                }
+
                 gasFile.update();
                 json.put("flag", "200");
                 json.put("message", "绑定成功");
                 json.put("gasFile", gasFile);
                 renderJson(json);
-            }else{
+            } else {
                 json.put("flag", "300");
                 json.put("message", "气瓶档案不存在，请扫描二维码添加");
                 renderJson(json);
