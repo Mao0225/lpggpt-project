@@ -38,34 +38,6 @@ public abstract class BaseGasFile<M extends BaseGasFile<M>> extends Model<M> imp
 	}
 	
 	/**
-	 * 奉天瓶体编码
-	 */
-	public void setFengtiangasno(java.lang.String fengtiangasno) {
-		set("fengtiangasno", fengtiangasno);
-	}
-	
-	/**
-	 * 奉天瓶体编码
-	 */
-	public java.lang.String getFengtiangasno() {
-		return getStr("fengtiangasno");
-	}
-	
-	/**
-	 * 镂空码
-	 */
-	public void setLoukongno(java.lang.String loukongno) {
-		set("loukongno", loukongno);
-	}
-	
-	/**
-	 * 镂空码
-	 */
-	public java.lang.String getLoukongno() {
-		return getStr("loukongno");
-	}
-	
-	/**
 	 * 所属于的气站id,关联gasstation表id字段
 	 */
 	public void setGasstationid(java.lang.Integer gasstationid) {
@@ -138,15 +110,15 @@ public abstract class BaseGasFile<M extends BaseGasFile<M>> extends Model<M> imp
 	/**
 	 * 制造日期
 	 */
-	public void setManufactureDate(java.lang.String manufactureDate) {
+	public void setManufactureDate(java.util.Date manufactureDate) {
 		set("manufacture_date", manufactureDate);
 	}
 	
 	/**
 	 * 制造日期
 	 */
-	public java.lang.String getManufactureDate() {
-		return getStr("manufacture_date");
+	public java.util.Date getManufactureDate() {
+		return getDate("manufacture_date");
 	}
 	
 	/**
@@ -461,6 +433,22 @@ public abstract class BaseGasFile<M extends BaseGasFile<M>> extends Model<M> imp
 	
 	public java.lang.String getShiyongzheweidu() {
 		return getStr("shiyongzheweidu");
+	}
+	
+	public void setFengtiangasno(java.lang.String fengtiangasno) {
+		set("fengtiangasno", fengtiangasno);
+	}
+	
+	public java.lang.String getFengtiangasno() {
+		return getStr("fengtiangasno");
+	}
+	
+	public void setLoukongno(java.lang.String loukongno) {
+		set("loukongno", loukongno);
+	}
+	
+	public java.lang.String getLoukongno() {
+		return getStr("loukongno");
 	}
 	
 	public void setStationid(java.lang.Integer stationid) {

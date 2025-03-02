@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Equipment Repair</title>
+    <style>
+    </style>
+</head>
+
+<body>
+<div class="form_box">
+    <form id="myForm" action="/xiaohezi/update" method="post">
+        <input type="hidden" name="xiaohezi.id" value="#(id)" />
+
+        <div>
+            <label>小盒子编号</label>
+            <input type="text" name="xiaohezi.xiaohezi_no" value="#(xiaohezi.xiaohezi_no??)" />
+        </div>
+        <div>
+            <label>创建人</label>
+            <input type="text" name="xiaohezi.writer" value="#(xiaohezi.writer??)" />
+        </div>
+        <div>
+            <label>饭店名称</label>
+            <select id="selectName" name="xiaohezi.restaurantid" onchange="chooseName()">
+                #set(hasSelected = false)
+                #for (x: restaurants)
+                #if ("" + x.id == xiaohezi.restaurantid)
+                <option value="#(x.id)" selected>#(x.name)</option>
+                #set(hasSelected = true)
+                #else
+                <option value="#(x.id)">#(x.name)</option>
+                #end
+                #end
+                #if (!hasSelected)
+                <option value="-1" selected>请选择饭店</option>
+                #end
+            </select>
+        </div>
+
+        <!-- 新增隐藏输入框用于存储选中饭店的名称 -->
+        #set(selectedRestaurantName = '')
+        #for (x: restaurants)
+        #if ("" + x.id == xiaohezi.restaurantid)
+        #set(selectedRestaurantName = x.name)
+        #break
+        #end
+        #end
+        <input type="hidden" id="selectedRestaurantName" name="xiaohezi.restaurant" value="#(selectedRestaurantName)">
+
+        <!-- 阀门链接输入框 -->
+        <div>
+            <label>阀门1打开链接</label>
+            <input type="text" id="famen1open" name="xiaohezi.famen1open" value="#(xiaohezi.famen1open??)">
+        </div>
+        <div>
+            <label>阀门1关闭链接</label>
+            <input type="text" id="famen1close" name="xiaohezi.famen1close" value="#(xiaohezi.famen1close??)">
+        </div>
+        <div>
+            <label>阀门2打开链接</label>
+            <input type="text" id="famen2open" name="xiaohezi.famen2open" value="#(xiaohezi.famen2open??)">
+        </div>
+        <div>
+            <label>阀门2关闭链接</label>
+            <input type="text" id="famen2close" name="xiaohezi.famen2close" value="#(xiaohezi.famen2close??)">
+        </div>
+        <div>
+            <label>阀门3打开链接</label>
+            <input type="text" id="famen3open" name="xiaohezi.famen3open" value="#(xiaohezi.famen3open??)">
+        </div>
+        <div>
+            <label>阀门3关闭链接</label>
+            <input type="text" id="famen3close" name="xiaohezi.famen3close" value="#(xiaohezi.famen3close??)">
+        </div>
+        <div>
+            <label>阀门4打开链接</label>
+            <input type="text" id="famen4open" name="xiaohezi.famen4open" value="#(xiaohezi.famen4open??)">
+        </div>
+        <div>
+            <label>阀门4关闭链接</label>
+            <input type="text" id="famen4close" name="xiaohezi.famen4close" value="#(xiaohezi.famen4close??)">
+        </div>
+        <div>
+            <label>阀门5打开链接</label>
+            <input type="text" id="famen5open" name="xiaohezi.famen5open" value="#(xiaohezi.famen5open??)">
+        </div>
+        <div>
+            <label>阀门5关闭链接</label>
+            <input type="text" id="famen5close" name="xiaohezi.famen5close" value="#(xiaohezi.famen5close??)">
+        </div>
+    </form>
+</div>
+</body>
+<script>
+    var restaurants = [
+        #for (x: restaurants)
+    { id: "#(x.id)", name: "#(x.name)" },
+    #end
+    ];
+
+    function chooseName() {
+        var selectName = document.getElementById("selectName").value;
+        console.log("selectName: " + selectName);
+        // 查找选中的饭店对象，通过 id 属性来查找
+        var selectedRestaurant = restaurants.find(function (restaurant) {
+            return restaurant.id === selectName;
+        });
+        if (selectedRestaurant) {
+            console.log("选中的饭店: " + selectedRestaurant.name);
+            // 更新隐藏输入框的值为选中饭店的名称
+            document.getElementById('selectedRestaurantName').value = selectedRestaurant.name;
+        }
+    }
+    // 移除设置固定值的代码，因为现在数据从后端获取
+    // document.getElementById('famen1open').value = 'http://39.98.221.201:9337/updateCommand/FT00000020/ValveStatus1=0';
+    // ...
+</script>
+
+</html>

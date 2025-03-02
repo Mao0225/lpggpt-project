@@ -146,6 +146,7 @@ public class DemoConfig extends JFinalConfig {
 		me.add("/Uunqualified",UunqualifiedController.class);
 		me.add("/GgasStationStaff",GgasStationStaffController.class);
 		me.add("/Ffilrdck",FfilrdckController.class);
+        me.add("/xiaohezi",XiaoheziController.class);
 	}
 	
 	public void configEngine(Engine me) {

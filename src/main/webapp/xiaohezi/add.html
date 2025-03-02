@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Equipment Repair</title>
+    <style>
+    </style>
+</head>
+
+<body>
+<div class="form_box">
+    <form id="myForm" action="/xiaohezi/save" method="post">
+        <!--        <input type="hidden" name="equipment.id" value="#(equipment.id??)" />-->
+
+        <div>
+            <label>小盒子编号</label>
+            <input type="text" name="xiaohezi.xiaohezi_no" value="" />
+        </div>
+        <div>
+            <label>创建人</label>
+            <input type="text" name="xiaohezi.writer" value="" />
+        </div>
+        <div>
+            <label>饭店名称</label>
+            <select id="selectName" name="xiaohezi.restaurantid" onchange="chooseName()">
+                <option value="-1" selected>请选择饭店</option>
+                #for (x: restaurants)
+                <option value="#(x.id)">#(x.name)</option>
+                #end
+            </select>
+        </div>
+
+        <!-- 阀门链接输入框 -->
+        <div>
+            <label>阀门1打开链接</label>
+            <input type="text" id="famen1open" name="xiaohezi.famen1open" value="">
+        </div>
+        <div>
+            <label>阀门1关闭链接</label>
+            <input type="text" id="famen1close" name="xiaohezi.famen1close" value="">
+        </div>
+        <div>
+            <label>阀门2打开链接</label>
+            <input type="text" id="famen2open" name="xiaohezi.famen2open" value="">
+        </div>
+        <div>
+            <label>阀门2关闭链接</label>
+            <input type="text" id="famen2close" name="xiaohezi.famen2close" value="">
+        </div>
+        <div>
+            <label>阀门3打开链接</label>
+            <input type="text" id="famen3open" name="xiaohezi.famen3open" value="">
+        </div>
+        <div>
+            <label>阀门3关闭链接</label>
+            <input type="text" id="famen3close" name="xiaohezi.famen3close" value="">
+        </div>
+        <div>
+            <label>阀门4打开链接</label>
+            <input type="text" id="famen4open" name="xiaohezi.famen4open" value="">
+        </div>
+        <div>
+            <label>阀门4关闭链接</label>
+            <input type="text" id="famen4close" name="xiaohezi.famen4close" value="">
+        </div>
+        <div>
+            <label>阀门5打开链接</label>
+            <input type="text" id="famen5open" name="xiaohezi.famen5open" value="">
+        </div>
+        <div>
+            <label>阀门5关闭链接</label>
+            <input type="text" id="famen5close" name="xiaohezi.famen5close" value="">
+        </div>
+
+        <!-- 新增隐藏输入框用于存储选中饭店的 id -->
+        <input type="hidden" id="selectedRestaurantId" name="xiaohezi.restaurantid" value="">
+        <!-- 新增隐藏输入框用于存储选中饭店的名称，以 xiaohezi.name 形式传递 -->
+        <input type="hidden" id="selectedRestaurantName" name="xiaohezi.restaurant" value="">
+    </form>
+</div>
+</body>
+<script>
+    var restaurants = [
+        #for (x: restaurants)
+    { id: "#(x.id)", name: "#(x.name)" },
+    #end
+    ];
+    // 设置固定值
+    document.getElementById('famen1open').value = 'http://39.98.221.201:9337/updateCommand/FT00000020/ValveStatus1=0';
+    document.getElementById('famen1close').value = 'http://39.98.221.201:9337/updateCommand/FT00000020/ValveStatus1=1';
+    document.getElementById('famen2open').value = 'http://39.98.221.201:9337/updateCommand/FT00000020/ValveStatus2=0';
+    document.getElementById('famen2close').value = 'http://39.98.221.201:9337/updateCommand/FT00000020/ValveStatus2=1';
+    document.getElementById('famen3open').value = 'http://39.98.221.201:9337/updateCommand/FT00000020/ValveStatus3=0';
+    document.getElementById('famen3close').value = 'http://39.98.221.201:9337/updateCommand/FT00000020/ValveStatus3=1';
+    document.getElementById('famen4open').value = 'http://39.98.221.201:9337/updateCommand/FT00000020/ValveStatus4=0';
+    document.getElementById('famen4close').value = 'http://39.98.221.201:9337/updateCommand/FT00000020/ValveStatus4=1';
+    document.getElementById('famen5open').value = 'http://39.98.221.201:9337/updateCommand/FT00000020/ValveStatus5=0';
+    document.getElementById('famen5close').value = 'http://39.98.221.201:9337/updateCommand/FT00000020/ValveStatus5=1';
+
+    function chooseName() {
+        var selectName = document.getElementById("selectName").value;
+        console.log("selectName: " + selectName);
+        // 查找选中的饭店对象，通过 id 属性来查找
+        var selectedRestaurant = restaurants.find(function (restaurant) {
+            return restaurant.id === selectName;
+        });
+        if (selectedRestaurant) {
+            console.log("YES");
+            // 将选中饭店的 id 赋值给隐藏输入框
+            document.getElementById('selectedRestaurantId').value = selectedRestaurant.id;
+            // 将选中饭店的名称赋值给以 xiaohezi.name 命名的隐藏输入框
+            document.getElementById('selectedRestaurantName').value = selectedRestaurant.name;
+        }
+    }
+
+    // 监听表单提交事件，确保在提交时选中饭店的 id 和名称已正确设置
+    document.getElementById('myForm').addEventListener('submit', function () {
+        chooseName();
+    });
+</script>
+
+</html>

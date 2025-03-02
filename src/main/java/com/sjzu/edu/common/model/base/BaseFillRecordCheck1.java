@@ -12,216 +12,192 @@ public abstract class BaseFillRecordCheck1<M extends BaseFillRecordCheck1<M>> ex
 	public void setId(java.lang.Integer id) {
 		set("id", id);
 	}
-	
+
 	public java.lang.Integer getId() {
 		return getInt("id");
 	}
-	
+
 	/**
 	 * 充装员名
 	 */
 	public void setFillingStaffName(java.lang.String fillingStaffName) {
 		set("filling_staff_name", fillingStaffName);
 	}
-	
+
 	/**
 	 * 充装员名
 	 */
 	public java.lang.String getFillingStaffName() {
 		return getStr("filling_staff_name");
 	}
-	
+
 	/**
 	 * 检察员
 	 */
 	public void setFillingCheckStaffName(java.lang.String fillingCheckStaffName) {
 		set("filling_check_staff_name", fillingCheckStaffName);
 	}
-	
+
 	/**
 	 * 检察员
 	 */
 	public java.lang.String getFillingCheckStaffName() {
 		return getStr("filling_check_staff_name");
 	}
-	
+
 	/**
-	 * 装前检查详细信息
+	 * 装前检查
 	 */
 	public void setBeforeFillingCheck(java.lang.String beforeFillingCheck) {
 		set("before_filling_check", beforeFillingCheck);
 	}
-	
+
 	/**
-	 * 装前检查详细信息
+	 * 装前检查
 	 */
 	public java.lang.String getBeforeFillingCheck() {
 		return getStr("before_filling_check");
 	}
-	
+
 	/**
-	 * 装后检查详细信息
+	 * 装后检查
 	 */
 	public void setAfterFillingCheck(java.lang.String afterFillingCheck) {
 		set("after_filling_check", afterFillingCheck);
 	}
-	
+
 	/**
-	 * 装后检查详细信息
+	 * 装后检查
 	 */
 	public java.lang.String getAfterFillingCheck() {
 		return getStr("after_filling_check");
 	}
-	
-	/**
-	 * 充装后检查状态
-	 */
-	public void setAfterFilling(java.lang.String afterFilling) {
-		set("after_filling", afterFilling);
-	}
-	
-	/**
-	 * 充装后检查状态
-	 */
-	public java.lang.String getAfterFilling() {
-		return getStr("after_filling");
-	}
-	
-	/**
-	 * 充装前检查状态
-	 */
-	public void setBeforeFilling(java.lang.String beforeFilling) {
-		set("before_filling", beforeFilling);
-	}
-	
-	/**
-	 * 充装前检查状态
-	 */
-	public java.lang.String getBeforeFilling() {
-		return getStr("before_filling");
-	}
-	
+
 	/**
 	 * 气瓶编号
 	 */
 	public void setGasNumber(java.lang.String gasNumber) {
 		set("gas_number", gasNumber);
 	}
-	
+
 	/**
 	 * 气瓶编号
 	 */
 	public java.lang.String getGasNumber() {
 		return getStr("gas_number");
 	}
-	
+
 	/**
 	 * 合格与否
 	 */
 	public void setMemo(java.lang.String memo) {
 		set("memo", memo);
 	}
-	
+
 	/**
 	 * 合格与否
 	 */
 	public java.lang.String getMemo() {
 		return getStr("memo");
 	}
-	
+
 	/**
 	 * 充气时间
 	 */
 	public void setFillTime(java.util.Date fillTime) {
 		set("fill_time", fillTime);
 	}
-	
+
 	/**
 	 * 充气时间
 	 */
 	public java.util.Date getFillTime() {
 		return getDate("fill_time");
 	}
-	
+
 	/**
 	 * 皮重
 	 */
 	public void setNowGas(java.lang.String nowGas) {
 		set("now_gas", nowGas);
 	}
-	
+
 	/**
 	 * 皮重
 	 */
 	public java.lang.String getNowGas() {
 		return getStr("now_gas");
 	}
-	
+
 	/**
 	 * 灌装量
 	 */
 	public void setPressureBegin(java.lang.String pressureBegin) {
 		set("pressure_begin", pressureBegin);
 	}
-	
+
 	/**
 	 * 灌装量
 	 */
 	public java.lang.String getPressureBegin() {
 		return getStr("pressure_begin");
 	}
-	
+
 	/**
 	 * 充装时长
 	 */
 	public void setAddGasLong(java.lang.String addGasLong) {
 		set("add_gas_long", addGasLong);
 	}
-	
+
 	/**
 	 * 充装时长
 	 */
 	public java.lang.String getAddGasLong() {
 		return getStr("add_gas_long");
 	}
-	
+
 	/**
 	 * 10是充装前不合格，20是匹配不成功的但重装后是否合格未知，30是充装后不合格的，40是匹配完成的
 	 */
 	public void setFlag(java.lang.Integer flag) {
 		set("flag", flag);
 	}
-	
+
 	/**
 	 * 10是充装前不合格，20是匹配不成功的但重装后是否合格未知，30是充装后不合格的，40是匹配完成的
 	 */
 	public java.lang.Integer getFlag() {
 		return getInt("flag");
 	}
-	
+
 	public void setGunNo(java.lang.String gunNo) {
 		set("gun_no", gunNo);
 	}
-	
+
 	public java.lang.String getGunNo() {
 		return getStr("gun_no");
 	}
-	
+
 	public void setGasstation(java.lang.String gasstation) {
 		set("gasstation", gasstation);
 	}
-	
+
 	public java.lang.String getGasstation() {
 		return getStr("gasstation");
 	}
-	
+
 	public void setUuid(java.lang.String uuid) {
 		set("uuid", uuid);
 	}
-	
+
 	public java.lang.String getUuid() {
 		return getStr("uuid");
 	}
-	
+	public void setBeforeFilling(java.lang.String beforeFilling) {set("before_filling", beforeFilling);}
+	public java.lang.String getBeforeFilling() {return getStr("before_filling");}
+	public void setAfterFilling(java.lang.String afterFilling) {set("after_filling", afterFilling);}
+	public java.lang.String getAfterFilling() {return getStr("after_filling");}
+
 }
 

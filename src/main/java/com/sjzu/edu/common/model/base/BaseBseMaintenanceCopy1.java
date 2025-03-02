@@ -201,13 +201,5 @@ public abstract class BaseBseMaintenanceCopy1<M extends BaseBseMaintenanceCopy1<
 		return getDate("delete_time");
 	}
 	
-	public void setFid(java.lang.Integer fid) {
-		set("fid", fid);
-	}
-	
-	public java.lang.Integer getFid() {
-		return getInt("fid");
-	}
-	
 }
 
