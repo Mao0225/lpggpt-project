@@ -45,8 +45,8 @@
   <form id="searchForm" action="/Ffilrdck/filrdcklist" method="get">
     <label> 时间查找：</label>
     <input type="date" name="finditem" value="#(finditem)">
-<!--    <label> 加气站查找：</label>-->
-<!--    <input type="text" name="gastion" value="#(gastion)">-->
+    <!--    <label> 加气站查找：</label>-->
+    <!--    <input type="text" name="gastion" value="#(gastion)">-->
     <label> 编号查找：</label>
     <input type="text" name="gasname" value="#(gasname)">
     <input value="提交" type="submit">
@@ -54,14 +54,24 @@
     <script>
       var buttons = document.getElementsByName("refresh");
       for (var i = 0; i < buttons.length; i++) {
-        buttons[i].addEventListener('click', function () {
-          // 获取所有的输入框并设置为空
-          var inputs = document.querySelectorAll('#searchForm input[type=text]');
-          for (var j = 0; j < inputs.length; j++) {
-            inputs[j].value = "";
-          }
+        buttons[i].addEventListener('click', function (e) {
+          e.preventDefault();
 
-          // 提交表单以重新查询并刷新页面
+          // 清空输入框内容
+          var inputs = document.querySelectorAll('#searchForm input');
+          inputs.forEach(function(input) {
+            if (input.type !== 'submit' && input.type !== 'button') {
+              input.value = "";
+            }
+          });
+
+          // 重置选择框为默认选项（如果有选择框的话）
+          var selects = document.querySelectorAll('#searchForm select');
+          selects.forEach(function(select) {
+            select.selectedIndex = 0;
+          });
+
+          // 提交表单
           document.getElementById('searchForm').submit();
         });
       }
@@ -206,4 +216,3 @@
 </script>
 </body>
 </html>
-

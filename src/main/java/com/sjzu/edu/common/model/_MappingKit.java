@@ -48,7 +48,6 @@ public class _MappingKit {
 		arp.addMapping("gas_bottle", "id", GasBottle.class);
 		arp.addMapping("gas_file", "id", GasFile.class);
 		arp.addMapping("gas_file123", "id", GasFile123.class);
-		arp.addMapping("gas_file_copy1", "id", GasFileCopy1.class);
 		arp.addMapping("gas_station", "id", GasStation.class);
 		arp.addMapping("gas_station_staff", "id", GasStationStaff.class);
 		arp.addMapping("gasbottleinstore", "id", Gasbottleinstore.class);

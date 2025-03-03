@@ -30,7 +30,7 @@
         <div>
             <label >加气站名字</label>
             <input type="hidden" id="gas_file.filing_gas_station" name="gas_file.filing_gas_station" readonly>
-
+            <input type="hidden" id="gas_file.station_id" name="gas_file.stationid" readonly>
             <select id="selectName" name="gas_file.filing_gas_station" onchange="chooseName()" style="border-radius: 5px;background-color: white; width: 200px;height:30px;text-align: center;">
                 <option value="-#(gas_file.gasstationid)" selected>#(gas_file.filing_gas_station)</option>
                 #for ( x: gasstations)
@@ -174,10 +174,11 @@
             //alert(JSON.stringify(selectedGasStation));
             document.getElementById("gas_file.gasstationid").value = selectedGasStation.id;
             document.getElementById("gas_file.filing_gas_station").value = selectedGasStation.stationName;
-
+            document.getElementById("gas_file.station_id").value = selectedGasStation.id;
         } else {
             document.getElementById("dianzicheng_shiyongfandianmingzi").value = "";
             document.getElementById("gas_file.filing_gas_station").value = "";
+            document.getElementById("gas_file.station_id").value = "";
             alert('找不到对应的加气站！');
         }
 

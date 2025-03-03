@@ -5,6 +5,9 @@ import com.sjzu.edu.common.model.FillRecordCheck1;
 import com.sjzu.edu.common.model.GasStation;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 public class FfilrecordckServive {
@@ -53,14 +56,29 @@ public class FfilrecordckServive {
         params.add("合格");
         hasCondition = true;
 
-        // 处理日期条件
-        if (finditem != null) {
+        // 如果 finditem 为 null，使用当天日期作为查询条件
+        if (finditem == null) {
+            LocalDate today = LocalDate.now();
+            LocalDateTime startOfDay = today.atStartOfDay();
+            LocalDateTime endOfDay = today.atTime(LocalTime.MAX);
+
+            Timestamp startTimestamp = Timestamp.valueOf(startOfDay);
+            Timestamp endTimestamp = Timestamp.valueOf(endOfDay);
+
+            appendCondition(baseSql, hasCondition);
+            baseSql.append("f.fill_time >= ? AND f.fill_time < ? ");
+            params.add(startTimestamp);
+            params.add(endTimestamp);
+            hasCondition = true;
+        } else {
+            // 处理传入的日期条件
             appendCondition(baseSql, hasCondition);
             baseSql.append("f.fill_time >= ? AND f.fill_time < ? ");
             params.add(finditem);
-            params.add(new java.sql.Timestamp(finditem.getTime() + 86400000));
+            params.add(new Timestamp(finditem.getTime() + 86400000));
             hasCondition = true;
         }
+
 
         // 处理加气站条件
         if (gastion != null && !gastion.isEmpty()) {

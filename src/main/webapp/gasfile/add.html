@@ -133,7 +133,7 @@
 <script>
     // 创建一个新的Date对象，表示当前日期和时间
     var currentDate = new Date();
-
+    console.log("11111");
     // 获取年、月、日
     var year = currentDate.getFullYear();
     var month = ('0' + (currentDate.getMonth() + 1)).slice(-2); // 加1是因为月份从0开始，slice(-2)是确保月份为两位数
@@ -164,9 +164,12 @@
         });
 
         if (selectedGasStation) {
+            console.log(selectedGasStation); // 输出选中的加气站对象，检查其属性名称
             document.getElementById("gas_file.gasstationid").value = selectedGasStation.id;
-            document.getElementById("gas_file.filing_gas_station").value = selectedGasStation.station_name;
+            document.getElementById("gas_file.filing_gas_station").value = selectedGasStation.stationName;
             document.getElementById("gas_file.stationid").value = selectedGasStation.id;
+            console.log("stationid: "+selectedGasStation.id);
+            console.log("name: "+selectedGasStation.stationName);
         } else {
             document.getElementById("gas_file.gasstationid").value = "";
             document.getElementById("gas_file.filing_gas_station").value = "";

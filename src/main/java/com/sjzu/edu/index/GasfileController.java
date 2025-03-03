@@ -49,6 +49,7 @@ public class GasfileController extends Controller {
 
     public void save() {
         GasFile gasfile = getModel(GasFile.class, "gas_file");
+        System.out.println("Received stationid: " + gasfile.get("stationid"));
         gasfile.save();
         redirect("/gasFile/gasFilelist");
     }

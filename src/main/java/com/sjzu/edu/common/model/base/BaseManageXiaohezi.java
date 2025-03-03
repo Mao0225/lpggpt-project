@@ -17,12 +17,12 @@ public abstract class BaseManageXiaohezi<M extends BaseManageXiaohezi<M>> extend
 		return getInt("id");
 	}
 	
-	public void setXiaoheziNo(java.lang.Integer xiaoheziNo) {
+	public void setXiaoheziNo(java.lang.String xiaoheziNo) {
 		set("xiaohezi_no", xiaoheziNo);
 	}
 	
-	public java.lang.Integer getXiaoheziNo() {
-		return getInt("xiaohezi_no");
+	public java.lang.String getXiaoheziNo() {
+		return getStr("xiaohezi_no");
 	}
 	
 	public void setRestaurantid(java.lang.String restaurantid) {
