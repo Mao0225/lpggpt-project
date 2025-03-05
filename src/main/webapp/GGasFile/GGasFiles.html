@@ -110,7 +110,7 @@
                 <td>#(x.shiyongzheweidu)</td>
 
                 <td style="text-align:left">
-                    &nbsp;&nbsp;<a href="#" onclick="confirmDelete('#(x.id)')">删除</a>
+<!--                    &nbsp;&nbsp;<a href="#" onclick="confirmDelete('#(x.id)')">删除</a>-->
                     <a href="#" class="openModal" data-title="修改档案" data-edit-url="/GGasFile/edit/#(x.id)">修改</a>
 
                 </td>
@@ -122,18 +122,18 @@
             #@paginate(gasFiles.pageNumber, gasFiles.totalPage, "/GGasFile/gasFilelist?&gasNumber="+(gasNumber != null ? gasNumber : "")+"&valve_body_code="+(valve_body_code != null ? valve_body_code : "")+"&filling_specification="+(filling_specification != null ? filling_specification : "")+"&page=")
         </div>
 
-    <script>
-        function confirmDelete(id) {
-            var result = confirm("确定要删除吗？");
-            if (result) {
-                // 如果用户点击了确定，则执行删除操作
-                window.location.href = "/GGasFile/delete/" + id;
-            } else {
-                // 如果用户点击了取消，则不执行任何操作
-                return false;
-            }
-        }
-    </script>
+<!--    <script>-->
+<!--        function confirmDelete(id) {-->
+<!--            var result = confirm("确定要删除吗？");-->
+<!--            if (result) {-->
+<!--                // 如果用户点击了确定，则执行删除操作-->
+<!--                window.location.href = "/GGasFile/delete/" + id;-->
+<!--            } else {-->
+<!--                // 如果用户点击了取消，则不执行任何操作-->
+<!--                return false;-->
+<!--            }-->
+<!--        }-->
+<!--    </script>-->
 
 <script>
     $('.openModal').click(function(e) {

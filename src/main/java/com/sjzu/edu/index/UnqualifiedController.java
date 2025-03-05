@@ -4,10 +4,13 @@ import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Page;
 import com.sjzu.edu.common.model.AutoGasFillingWaitRecord;
 import com.sjzu.edu.common.model.FillRecordCheck1;
+import com.sjzu.edu.common.model.GasStation;
+
+import java.util.List;
 
 public class UnqualifiedController extends Controller {
     UnqualifiedService service = new UnqualifiedService();
-
+    private GasStation gastation = new GasStation().dao();
     /**
      * 处理分页查询请求，将查询结果传递到前端页面
      */
@@ -22,15 +25,20 @@ public class UnqualifiedController extends Controller {
         String fill_time = getPara("fill_time");
         // 获取状态参数
         String gun_no = getPara("gun_no");
+
+        String companyId=getPara("companyId");
+        System.out.println("companyId； "+companyId);
         // 将参数回显到前端页面
         setAttr("bottle_no", bottle_no);
         setAttr("fill_time", fill_time);
         setAttr("gun_no", gun_no);
+        setAttr("companyId", companyId);
         // 调用 Service 层的分页查询方法
-        Page<FillRecordCheck1> recordPage = service.paginate(pageNumber, pageSize,bottle_no,fill_time,gun_no);
+        Page<FillRecordCheck1> recordPage = service.paginate(pageNumber, pageSize,bottle_no,fill_time,gun_no,companyId);
+        List<GasStation> gastations = gastation.find("SELECT * FROM gas_station");
         // 将查询结果传递到前端页面
         setAttr("recordList", recordPage);
-
+        setAttr("gastations", gastations);
         // 打印查询结果，方便调试
         System.out.println("recordPage: " + recordPage);
 

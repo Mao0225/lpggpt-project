@@ -1,122 +1,3 @@
-<!--<!DOCTYPE html>-->
-<!--<html lang="en">-->
-<!--<head>-->
-<!--    <meta charset="UTF-8">-->
-<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
-<!--    <script src="../css/jquery-3.3.1.min.js"></script>-->
-<!--    <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css">-->
-<!--    <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>-->
-<!--    <link rel="stylesheet" type="text/css" href="/css/lpg.css">-->
-<!--    <style>-->
-<!--        #searchForm select,-->
-<!--        #searchForm input[type="date"] {-->
-<!--            border-radius: 10px;-->
-<!--            background-color: #fbf0c5;-->
-<!--            width: 160px;-->
-<!--            height: 30px;-->
-<!--        }-->
-<!--    </style>-->
-<!--</head>-->
-<!--<body>-->
-<!--<div id="pagediv">-->
-<!--    <form id="searchForm" action="/unqualified/unqualifiedlist" method="post">-->
-<!--        <label>气瓶号</label>-->
-<!--        <input type="text" name="bottle_no" value="#(bottle_no)">-->
-<!--        &lt;!&ndash;        <label>入库时间</label>&ndash;&gt;-->
-<!--        &lt;!&ndash;        <input type="date" name="uptime" value="#(uptime)">&ndash;&gt;-->
-<!--        <label>充装时间</label>-->
-<!--        <input type="date" name="fill_time" value="#(fill_time)">-->
-<!--        <label>枪号</label>-->
-<!--        <input type="text" name="gun_no" value="#(gun_no)">-->
-<!--        <label>&nbsp;</label>-->
-<!--        <input value="搜索" type="submit">-->
-<!--        <input type="button" value="重置" name="refresh" id="resetButton" />-->
-<!--        <table class="list">-->
-<!--            <tbody>-->
-<!--            <tr>-->
-<!--                <th>序号</th>-->
-<!--                <th>充装员</th>-->
-<!--                <th>检查员</th>-->
-<!--                <th>充装前检查</th>-->
-<!--                <th>充装后检查</th>-->
-<!--                <th>气瓶编号</th>-->
-<!--                <th>充装检查记录</th>-->
-<!--                <th>充装时间</th>-->
-<!--                <th>皮重</th>-->
-<!--                <th>充装量</th>-->
-<!--                <th>充装时长</th>-->
-<!--                <th>枪号</th>-->
-<!--                <th>充装站编码</th>-->
-<!--                <th>uuid</th>-->
-<!--                <th>操作</th>-->
-<!--            </tr>-->
-<!--            #set(startIndex = (recordList.pageNumber - 1) * recordList.pageSize + 1)-->
-<!--            #for(x : recordList.getList())-->
-<!--            <tr>-->
-<!--                <td>#(startIndex++)</td>-->
-<!--                <td>#(x.filling_staff_name)</td>-->
-<!--                <td>#(x.filling_check_staff_name)</td>-->
-<!--                <td>#(x.before_filling_check)</td>-->
-<!--                <td>#(x.after_filling_check)</td>-->
-<!--                <td>#(x.gas_number)</td>-->
-<!--                <td>#(x.memo)</td>-->
-<!--                <td>#(x.fill_time)</td>-->
-<!--                <td>#(x.now_gas)</td>-->
-<!--                <td>#(x.pressure_begin)</td>-->
-<!--                <td>#(x.add_gas_long)</td>-->
-<!--                <td>#(x.gun_no)</td>-->
-<!--                <td>#(x.gasstation)</td>-->
-<!--                <td>#(x.uuid)</td>-->
-<!--                <td style="text-align:left">-->
-<!--                    <a href="#" class="btn btn-danger" onclick="deleteRecord('#(x.id)')">删除</a>-->
-<!--                </td>-->
-<!--            </tr>-->
-<!--            #end-->
-<!--            </tbody>-->
-<!--        </table>-->
-<!--        <div class="pagination" style="color:#DDDDDD; font-size: 12px">-->
-<!--            #@paginate(recordList.pageNumber, recordList.totalPage, "/unqualified/unqualifiedlist?bottle_no=" + (bottle_no!=null ? bottle_no:"")+"&fill_time=" + (fill_time!=null ? fill_time:"")+"&gun_no=" + (gun_no!=null ? gun_no:"")+"&page=")-->
-<!--        </div>-->
-<!--    </form>-->
-<!--</div>-->
-<!--<script>-->
-<!--    document.getElementById("resetButton").addEventListener("click", function(e) {-->
-<!--        // 阻止默认行为-->
-<!--        e.preventDefault();-->
-<!--        // 清空所有输入框和下拉框的值-->
-<!--        document.getElementById("searchForm").reset();-->
-<!--        // 手动设置表单字段为空值-->
-<!--        document.querySelector('input[name="bottle_no"]').value = '';-->
-<!--        document.querySelector('input[name="fill_time"]').value = '';-->
-<!--        document.querySelector('input[name="gun_no"]').value = '';-->
-<!--        // 提交表单以刷新页面-->
-<!--        document.getElementById("searchForm").submit();-->
-<!--    });-->
-
-<!--    function deleteRecord(id) {-->
-<!--        // 确认是否删除-->
-<!--        if (confirm("确定要删除吗？")) {-->
-<!--            // 创建一个隐藏的表单字段用于存储ID-->
-<!--            var deleteForm = document.createElement('form');-->
-<!--            deleteForm.method = 'post';-->
-<!--            deleteForm.action = '/unqualified/delete';-->
-
-<!--            var idInput = document.createElement('input');-->
-<!--            idInput.type = 'hidden';-->
-<!--            idInput.name = 'id';-->
-<!--            idInput.value = id;-->
-
-<!--            deleteForm.appendChild(idInput);-->
-<!--            document.body.appendChild(deleteForm);-->
-<!--            deleteForm.submit();-->
-<!--        }-->
-<!--    }-->
-<!--</script>-->
-<!--</body>-->
-<!--</html>-->
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -146,7 +27,7 @@
             color: #000000; /* 单元格文字颜色 */
         }
         .text-red {
-            color: red !important; /* 红色字体 */
+            color: red!important; /* 红色字体 */
         }
 
 
@@ -169,6 +50,13 @@
         <input type="date" name="fill_time" value="#(fill_time)">
         <label> 枪号：</label>
         <input type="text" name="gun_no" value="#(gun_no)">
+        <label>公司名称：</label>
+        <select id="selectName" name="companyId" onchange="chooseName()">
+            <option value="" selected>请选择公司</option>
+            #for (x: gastations)
+            <option value="#(x.station_id)">#(x.station_name)</option>
+            #end
+        </select>
         <input value="提交" type="submit">
         <input type="submit" value="重置" name="refresh"/>
         <script>
@@ -181,10 +69,13 @@
                     var inputs = document.querySelectorAll('#searchForm input');
                     inputs.forEach(function(input) {
                         // 排除提交按钮和重置按钮本身
-                        if (input.type !== 'submit' && input.type !== 'button') {
+                        if (input.type!=='submit' && input.type!=='button') {
                             input.value = ""; // 清空值
                         }
                     });
+
+                    // 将下拉选择框（公司名称选择框）设置为空值，恢复到初始的“请选择公司”状态
+                    $('#selectName').val('');
 
                     // 提交表单以重新查询并刷新页面
                     document.getElementById('searchForm').submit();
@@ -239,12 +130,13 @@
         <th width="12%">充装人员</th>
         <th width="15%">检查人员</th>
         <th width="12%">所属站点</th>
+        <th width="12%">操作</th>
     </tr>
     #set(startIndex = (recordList.pageNumber - 1) * recordList.pageSize + 1)
     #for(x : recordList.getList())
     <tr>
         <td>#(startIndex++)</td> <!-- 显示序号并递增 -->
-        <td>#(x.gas_number)</td>
+        <td>#(x.frc_gas_number)</td>
         <td>#(x.terminate_use_date)</td>
         <td>#(x.filling_medium)</td>
         <td>#(x.filling_specification)</td>
@@ -283,15 +175,17 @@
             #if(!foundStation)
             #(x.gasstation)
             #end</td>
+
+        <td>
+            <a href="#" class="delete" onclick="confirmDelete('#(x.id)')">删除</a>
+        </td>
     </tr>
-
-
     #end
     </tbody>
 </table>
 <div class="pagination" style="color:#DDDDDD;">
-    #@paginate(recordList.pageNumber,recordList.totalPage, "/unqualified/unqualifiedlist?gas_number="+(gas_number != null ? gas_number :'')+
-    "&fill_time=" + (fill_time != null ? fill_time : '')+ "&gun_no=" + (gun_no != null ? gun_no : '')+"&page=")
+    #@paginate(recordList.pageNumber,recordList.totalPage, "/unqualified/unqualifiedlist?gas_number="+(gas_number!= null? gas_number :'')+
+    "&fill_time=" + (fill_time!= null? fill_time : '')+ "&gun_no=" + (gun_no!= null? gun_no : '')+"&page=")
 </div>
 
 <script>
@@ -303,14 +197,14 @@
 
             try {
                 // 如果 details 是字符串，则解析为对象
-                if (typeof details === 'string') {
+                if (typeof details ==='string') {
                     details = JSON.parse(details);
                 }
 
                 let html = '';
                 for (const [key, value] of Object.entries(details)) {
                     // 如果值为 "否"，则添加红色字体样式
-                    const textColorClass = value === "否" ? "text-red" : "";
+                    const textColorClass = value === "否"? "text-red" : "";
                     html += `
                     <tr>
                         <td style="width: 40%; padding: 8px; background: #f8f9fa;">${key}</td>
@@ -327,24 +221,50 @@
                 alert('数据解析失败，请检查数据格式');
             }
         });
-            // 获取所有检查项单元格（第6列充装前检查，第7列充装后检查）
-            $('tr td:nth-child(6) a, tr td:nth-child(7) a').each(function() {
-                const $cell = $(this);
-                const status = $cell.text().trim();
+        // 获取所有检查项单元格（第6列充装前检查，第7列充装后检查）
+        $('tr td:nth-child(6) a, tr td:nth-child(7) a').each(function() {
+            const $cell = $(this);
+            const status = $cell.text().trim();
 
-                // 直接修改单元格颜色
-                if (status === '不合格') {
-                    $cell.css({
-                        'color': 'red',
-                        'font-weight': 'bold' // 可选：增加字体加粗
-                    });
-                }
-            });
+            // 直接修改单元格颜色
+            if (status === '不合格') {
+                $cell.css({
+                    'color':'red',
+                    'font-weight': 'bold' // 可选：增加字体加粗
+                });
+            }
+        });
 
     });
 
+    var gastations = [
+        #for (x: gastations)
+    { id: "#(x.station_id)", name: "#(x.station_name)" },
+    #end
+    ];
+    function chooseName() {
+        var selectName = document.getElementById("selectName").value;
+        console.log("selectName: " + selectName);
+        // 查找选中的备件对象，通过name属性来查找
+        var selectedCompany = gastations.find(function (gastations) {
+            return gastations.name === selectName;
+        });
+    }
+    document.getElementById("selectName").addEventListener("change", chooseName);
+    // 为搜索按钮添加点击事件，防止默认提交行为被阻止，手动触发表单提交
+    $('#searchButton').click(function (e) {
+        e.preventDefault();
+        $('#searchForm').submit();
+    });
+    // 确认删除的函数，向后端delete函数发送删除请求，同样假设后端接收设备id作为参数
+    function confirmDelete(id) {
+        console.log("进入到了删除函数");
+        console.log("id: " + id);
+        if (confirm("确定要删除该条记录吗？")) {
+            window.location.href = "/unqualified/delete?id=" + id;
+        }
+    }
 
 </script>
 </body>
 </html>
-

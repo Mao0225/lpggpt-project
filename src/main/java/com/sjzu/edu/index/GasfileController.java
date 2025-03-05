@@ -23,12 +23,13 @@ public class GasfileController extends Controller {
     public void gasFilelist() {
         int pageNumber = getParaToInt("page", 1); // 默认为第1页
         String gasNumber = getPara("gasNumber");
-        String valve_body_code = getPara("valve_body_code");
+        String fentiancode = getPara("fentiancode");
         String filling_specification = getPara("filling_specification");
+        System.out.println("gasNumber:"+gasNumber);
         setAttr("gasNumber",gasNumber);
-        setAttr("valve_body_code",valve_body_code);
+        setAttr("fentiancode",fentiancode);
         setAttr("filling_specification",filling_specification);
-        setAttr("gasFiles", service.search(pageNumber, 10,gasNumber,valve_body_code,filling_specification));
+        setAttr("gasFiles", service.search(pageNumber, 10,gasNumber,fentiancode,filling_specification));
         // 渲染搜索结果页面
         render("gasFiles.html");
     }
@@ -72,6 +73,7 @@ public class GasfileController extends Controller {
         String gasNumber = getPara("gasNumber");
         String valve_body_code = getPara("valve_body_code");
         String filling_specification = getPara("filling_specification");
+        System.out.println("gasNumber:"+gasNumber);
         setAttr("gasNumber",gasNumber);
         setAttr("valve_body_code",valve_body_code);
         setAttr("filling_specification",filling_specification);

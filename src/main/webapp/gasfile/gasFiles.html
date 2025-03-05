@@ -15,7 +15,7 @@
             <a href="#" class="add openModal" data-title="添加档案" data-edit-url="/gasFile/add"><b>+</b>新建档案</a>
             <label>气瓶编号:</label>
             <input type="text" name="gasNumber" placeholder="输入气瓶编号" value="#(gasNumber)" />
-            <input type="text" name="valve_body_code" placeholder="输入阀体编码" value="#(valve_body_code)" />
+            <input type="text" name="fentiancode" placeholder="输入奉天码" value="#(fentiancode)" />
             <input type="text" name="filling_specification" placeholder="输入充装规格" value="#(filling_specification)" />
             <label></label>
             <input type="submit" value="搜索"/>
@@ -119,7 +119,7 @@
             </tbody>
         </table>
         <div class="pagination">
-            #@paginate(gasFiles.pageNumber, gasFiles.totalPage, "/gasFile/gasFilelist?&gasNumber="+(gasNumber != null ? gasNumber : "")+"&valve_body_code="+(valve_body_code != null ? valve_body_code : "")+"&filling_specification="+(filling_specification != null ? filling_specification : "")+"&page=")
+            #@paginate(gasFiles.pageNumber, gasFiles.totalPage, "/gasFile/gasFilelist?&gasNumber="+(gasNumber != null ? gasNumber : "")+"&fentiancode="+(fentiancode != null ? fentiancode : "")+"&filling_specification="+(filling_specification != null ? filling_specification : "")+"&page=")
         </div>
 
     <script>

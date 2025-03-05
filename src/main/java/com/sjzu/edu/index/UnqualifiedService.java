@@ -2,11 +2,11 @@ package com.sjzu.edu.index;
 
 import com.jfinal.plugin.activerecord.Page;
 import com.sjzu.edu.common.model.FillRecordCheck1;
+import com.sjzu.edu.common.model.GasFile;
 
 public class UnqualifiedService {
     FillRecordCheck1 dao = new FillRecordCheck1().dao();
-
-    public Page<FillRecordCheck1> paginate(int pageNumber, int pageSize, String bottle_no, String fill_time, String gas_no) {
+    public Page<FillRecordCheck1> paginate(int pageNumber, int pageSize, String bottle_no, String fill_time, String gas_no, String companyId) {
         // 构建 SQL 查询语句的基础部分，添加表连接
         StringBuilder addsql = new StringBuilder("FROM fill_record_check1 frc JOIN gas_file gf ON frc.gas_number = gf.gas_number");
 
@@ -37,16 +37,26 @@ public class UnqualifiedService {
             conditionCount++;
         }
 
+        if (companyId != null && !companyId.isEmpty()) {
+            addsql.append(" AND ");
+            addsql.append("frc.gasstation = '").append(companyId).append("'");
+            conditionCount++;
+        }
+
         // 按 id 降序排序
         addsql.append(" ORDER BY frc.id DESC");
+
+        // 为两个表的 gas_number 字段指定别名
+        String selectClause = "SELECT frc.gas_number AS frc_gas_number, gf.gas_number AS gf_gas_number, frc.*, gf.*";
 
         System.out.println("addsql: " + addsql);
 
         // 执行分页查询
-        return dao.paginate(pageNumber, pageSize, "SELECT frc.*,gf.*", addsql.toString());
+        return dao.paginate(pageNumber, pageSize, selectClause, addsql.toString());
     }
 
     public void deleteById(Integer id) {
+        System.out.println("deleteById: " + id);
         dao.deleteById(id);
     }
 }

@@ -10,10 +10,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneId;
 
 public class FilrecordckServive {
     private FillRecordCheck1 dao = new FillRecordCheck1().dao();
@@ -55,22 +51,8 @@ public class FilrecordckServive {
         params.add("合格");
         hasCondition = true;
 
-        // 如果 finditem 为 null，使用当天日期作为查询条件
-        if (finditem == null) {
-            LocalDate today = LocalDate.now();
-            LocalDateTime startOfDay = today.atStartOfDay();
-            LocalDateTime endOfDay = today.atTime(LocalTime.MAX);
-
-            Timestamp startTimestamp = Timestamp.valueOf(startOfDay);
-            Timestamp endTimestamp = Timestamp.valueOf(endOfDay);
-
-            appendCondition(baseSql, hasCondition);
-            baseSql.append("f.fill_time >= ? AND f.fill_time < ? ");
-            params.add(startTimestamp);
-            params.add(endTimestamp);
-            hasCondition = true;
-        } else {
-            // 处理传入的日期条件
+        // 处理日期条件
+        if (finditem != null) {
             appendCondition(baseSql, hasCondition);
             baseSql.append("f.fill_time >= ? AND f.fill_time < ? ");
             params.add(finditem);
