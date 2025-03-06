@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="bef31097-e2fd-4fd6-9377-5642cb374b1b" name="更改" comment="添加了智能数据库助手功能，修改了充装中记录，不合格记录">
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/_2025_3_2_4_24____.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/_2025_3_2_4_24____1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/在进行更新之前于_2025_3_2_下午4_24_取消提交了更改_[更改]/shelved.patch" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/在进行更新之前于_2025_3_2_下午4_24_取消提交了更改_[更改]1/shelved.patch" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/log/jfinal_demo_for_maven.log_2025-02-27.log" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/log/jfinal_demo_for_maven.log_2025-03-01.log" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/log/jfinal_demo_for_maven.log_2025-03-02.log" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/log/jfinal_demo_for_maven.log_2025-03-03.log" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/log/jfinal_demo_for_maven.log_2025-03-04.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/aws.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/aws.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/log/jfinal_demo_for_maven.log" beforeDir="false" afterPath="$PROJECT_DIR$/log/jfinal_demo_for_maven.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/api/AppxiaoheziController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/api/AppxiaoheziController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/common/model/_MappingKit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/common/model/_MappingKit.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/common/model/base/BaseGasFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/common/model/base/BaseGasFile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/common/model/base/BaseGasFileCopy1.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/common/model/base/BaseGasFileCopy1.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/index/FilrecordckServive.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/index/FilrecordckServive.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/index/KangjiashanothergasController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/index/KangjiashanothergasController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/index/KangjiashanothergasService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/index/KangjiashanothergasService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/index/UunqualifiedController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/index/UunqualifiedController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/demo.pfx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/log4j.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/logging.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/undertow.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/Jjiaqizhong/Jjiaqizhong.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/Jjiaqizhong/Jjiaqizhong.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/kangjiashanothergas/othergslist.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/kangjiashanothergas/othergslist.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/sjzu/edu/common/model/base/BaseGasFileCopy1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/sjzu/edu/common/model/base/BaseGasFileCopy1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/UunqualifiedController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/UunqualifiedController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/jfinal_demo_for_maven-release/jfinal_demo_for_maven/webapp/Jjiaqizhong/Jjiaqizhong.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/jfinal_demo_for_maven-release/jfinal_demo_for_maven/webapp/Jjiaqizhong/Jjiaqizhong.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/jfinal_demo_for_maven-release/jfinal_demo_for_maven/webapp/Unqualified/unqualified.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/jfinal_demo_for_maven-release/jfinal_demo_for_maven/webapp/Unqualified/unqualified.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/jfinal_demo_for_maven-release/jfinal_demo_for_maven/webapp/jiaqizhong/jiaqizhong.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/jfinal_demo_for_maven-release/jfinal_demo_for_maven/webapp/jiaqizhong/jiaqizhong.html" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+        <option value="HTML File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 6
+}</component>
+  <component name="ProjectId" id="2tiCv9FYQFBbzeurL7QemKH1bzZ" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultHtmlFileTemplate": "HTML File",
+    "JavaScript 调试.edit.html.executor": "Run",
+    "JavaScript 调试.filrdck.html.executor": "Run",
+    "JavaScript 调试.xiaohezi.html.executor": "Run",
+    "Maven.jfinal_demo_for_maven [clean].executor": "Run",
+    "Maven.jfinal_demo_for_maven [install].executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "master",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "E:/202527Lpggpt/1/lpggpt/src/main/resources",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "SDK",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "vue.rearranger.settings.migration": "true",
+    "应用程序.DemoConfig.executor": "Run",
+    "应用程序._JFinalDemoGenerator.executor": "Run"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\202527Lpggpt\1\lpggpt\src\main\resources" />
+      <recent name="E:\202527Lpggpt\1\lpggpt\src\main" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.sjzu.edu.index" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="lpggptt" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="lpggptt" />
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9f38398b9061-18abd8497189-intellij.indexing.shared.core-IU-241.14494.240" />
+        <option value="bundled-js-predefined-1d06a55b98c1-74d2a5396914-JavaScript-IU-241.14494.240" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="应用程序级" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="默认任务">
+      <changelist id="bef31097-e2fd-4fd6-9377-5642cb374b1b" name="更改" comment="" />
+      <created>1740825735271</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1740825735271</updated>
+      <workItem from="1740825736289" duration="519000" />
+      <workItem from="1740826265805" duration="346000" />
+      <workItem from="1740826618558" duration="213000" />
+      <workItem from="1740826841440" duration="61000" />
+      <workItem from="1740826910228" duration="817000" />
+      <workItem from="1740828006484" duration="6776000" />
+      <workItem from="1740889922579" duration="6420000" />
+      <workItem from="1740896421222" duration="1044000" />
+      <workItem from="1740903697864" duration="451000" />
+      <workItem from="1740904625880" duration="6464000" />
+      <workItem from="1740980260366" duration="12205000" />
+      <workItem from="1741078902661" duration="7179000" />
+      <workItem from="1741136492595" duration="9694000" />
+      <workItem from="1741162619662" duration="15496000" />
+      <workItem from="1741187542015" duration="910000" />
+      <workItem from="1741188730339" duration="5566000" />
+      <workItem from="1741248217113" duration="30000" />
+      <workItem from="1741248381908" duration="12410000" />
+    </task>
+    <task id="LOCAL-00001" summary="添加了小盒子管理功能">
+      <option name="closed" value="true" />
+      <created>1740903872669</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1740903872669</updated>
+    </task>
+    <task id="LOCAL-00002" summary="修改了充装记录，气瓶档案管理。">
+      <option name="closed" value="true" />
+      <created>1740987888183</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1740987888183</updated>
+    </task>
+    <task id="LOCAL-00003" summary="添加了智能数据库助手功能，修改了充装中记录，不合格记录">
+      <option name="closed" value="true" />
+      <created>1741187150165</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1741187150165</updated>
+    </task>
+    <task id="LOCAL-00004" summary="添加了智能数据库助手功能，修改了充装中记录，不合格记录">
+      <option name="closed" value="true" />
+      <created>1741187412991</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1741187412991</updated>
+    </task>
+    <task id="LOCAL-00005" summary="添加了智能数据库助手功能，修改了充装中记录，不合格记录">
+      <option name="closed" value="true" />
+      <created>1741187516537</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1741187516537</updated>
+    </task>
+    <task id="LOCAL-00006" summary="添加了智能数据库助手功能，修改了充装中记录，不合格记录">
+      <option name="closed" value="true" />
+      <created>1741187620663</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1741187620663</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="修改待检记录查询 AppRecordController.java" />
+    <MESSAGE value="添加了小盒子管理功能" />
+    <MESSAGE value="修改了充装记录，气瓶档案管理。" />
+    <MESSAGE value="添加了智能数据库助手功能，修改了充装中记录，不合格记录" />
+    <option name="LAST_COMMIT_MESSAGE" value="添加了智能数据库助手功能，修改了充装中记录，不合格记录" />
+  </component>
+</project>
