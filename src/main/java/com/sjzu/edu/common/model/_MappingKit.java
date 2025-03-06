@@ -31,6 +31,7 @@ public class _MappingKit {
 		arp.addMapping("bse_interval", "id", BseInterval.class);
 		arp.addMapping("bse_maintenance", "id", BseMaintenance.class);
 		arp.addMapping("bse_maintenance_copy1", "id", BseMaintenanceCopy1.class);
+		arp.addMapping("bse_xiaohezi", "id", BseXiaohezi.class);
 		arp.addMapping("cheng", "id", Cheng.class);
 		arp.addMapping("course", "id", Course.class);
 		arp.addMapping("custromer", "id", Custromer.class);
@@ -48,6 +49,7 @@ public class _MappingKit {
 		arp.addMapping("gas_bottle", "id", GasBottle.class);
 		arp.addMapping("gas_file", "id", GasFile.class);
 		arp.addMapping("gas_file123", "id", GasFile123.class);
+		arp.addMapping("gas_file_copy1", "id", GasFileCopy1.class);
 		arp.addMapping("gas_station", "id", GasStation.class);
 		arp.addMapping("gas_station_staff", "id", GasStationStaff.class);
 		arp.addMapping("gasbottleinstore", "id", Gasbottleinstore.class);

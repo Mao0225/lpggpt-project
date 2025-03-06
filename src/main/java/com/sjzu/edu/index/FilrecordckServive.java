@@ -8,6 +8,8 @@ import com.sjzu.edu.common.model.Restaurant;
 import com.sjzu.edu.common.model.GasStation;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.sql.Timestamp;
 
@@ -51,29 +53,48 @@ public class FilrecordckServive {
         params.add("合格");
         hasCondition = true;
 
-        // 处理日期条件
-        if (finditem != null) {
+        // 当所有搜索条件为空时，获取今天的数据
+        if (finditem == null && (gastion == null || gastion.isEmpty()) && (gasnumber == null || gasnumber.isEmpty())) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.HOUR_OF_DAY, 0);
+            calendar.set(Calendar.MINUTE, 0);
+            calendar.set(Calendar.SECOND, 0);
+            calendar.set(Calendar.MILLISECOND, 0);
+            Timestamp startOfDay = new Timestamp(calendar.getTimeInMillis());
+
+            calendar.add(Calendar.DAY_OF_YEAR, 1);
+            Timestamp endOfDay = new Timestamp(calendar.getTimeInMillis());
+
             appendCondition(baseSql, hasCondition);
             baseSql.append("f.fill_time >= ? AND f.fill_time < ? ");
-            params.add(finditem);
-            params.add(new Timestamp(finditem.getTime() + 86400000));
+            params.add(startOfDay);
+            params.add(endOfDay);
             hasCondition = true;
-        }
+        } else {
+            // 处理日期条件
+            if (finditem != null) {
+                appendCondition(baseSql, hasCondition);
+                baseSql.append("f.fill_time >= ? AND f.fill_time < ? ");
+                params.add(finditem);
+                params.add(new Timestamp(finditem.getTime() + 86400000));
+                hasCondition = true;
+            }
 
-        // 处理加气站条件
-        if (gastion != null && !gastion.isEmpty()) {
-            appendCondition(baseSql, hasCondition);
-            baseSql.append("f.gasstation LIKE ? ");
-            params.add("%" + gastion + "%");
-            hasCondition = true;
-        }
+            // 处理加气站条件
+            if (gastion != null && !gastion.isEmpty()) {
+                appendCondition(baseSql, hasCondition);
+                baseSql.append("f.gasstation LIKE ? ");
+                params.add("%" + gastion + "%");
+                hasCondition = true;
+            }
 
-        // 处理气瓶编号条件
-        if (gasnumber != null && !gasnumber.isEmpty()) {
-            appendCondition(baseSql, hasCondition);
-            baseSql.append("f.gas_number LIKE ? ");
-            params.add("%" + gasnumber + "%");
-            hasCondition = true;
+            // 处理气瓶编号条件
+            if (gasnumber != null && !gasnumber.isEmpty()) {
+                appendCondition(baseSql, hasCondition);
+                baseSql.append("f.gas_number LIKE ? ");
+                params.add("%" + gasnumber + "%");
+                hasCondition = true;
+            }
         }
 
         // 添加排序

@@ -20,7 +20,7 @@ public class UunqualifiedController extends Controller {
         // 获取结束时间参数
         String fill_time = getPara("fill_time");
         // 获取状态参数
-        String gun_no = getPara("gun_no");
+        String gun_no = getPara("gun_n");
         String companyid = getSessionAttr("companyid"); // 从会话中获取 companyid
         // 将参数回显到前端页面
         setAttr("companyid", companyid);

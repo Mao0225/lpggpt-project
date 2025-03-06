@@ -43,6 +43,13 @@
 		/*	border-radius: 3px;*/
 		/*	cursor: pointer;*/
 		/*}*/
+		#searchForm select,
+		#searchForm input[type="date"] {
+			border-radius: 10px;
+			background-color: #fbf0c5;
+			width: 160px;
+			height: 30px;
+		}
 	</style>
 </head>
 <body>
@@ -50,7 +57,10 @@
 		<form id="searchForm" action="/kangjiashanothergas/othergslist" method="post">
 			<label for="stationcode">请输入单位编码：</label>
 			<input type="text" id="stationcode" name="stationcode" placeholder="请输入单位编码" value="#(stationcode)"/>
+			<label>时间搜索</label>
+			<input type="date" id="tradedate" name="tradedate" value="#(tradedate)"/>
 			&nbsp;&nbsp;<button type="submit">查询</button>
+			<input type="button" value="重置" name="refresh" id="resetButton" />
 		</form>
 <!--		<a href="#" class="add openModal" data-title="新建加气记录" data-edit-url="add"><b> + </b>新建加气机加气记录</a>-->
 	</div>
@@ -88,7 +98,7 @@
 		</tbody>
 	</table>
 	<div class="pagination" style="color:#f0f0f0; font-size: 15px">
-		#@paginate(othergslist.pageNumber, othergslist.totalPage, "/kangjiashanothergas/othergslist?stationcode=" + (stationcode != null ? stationcode : "")  + "&page=")
+		#@paginate(othergslist.pageNumber, othergslist.totalPage, "/kangjiashanothergas/othergslist?stationcode=" + (stationcode != null ? stationcode : "") +"&tradedate=" + (tradedate != null ? tradedate : "")   + "&page=")
 	</div>
 	<script>
 		$('.openModal').click(function(e) {
@@ -128,7 +138,19 @@
 			</div>
 		</div>
 	</div>
-
+<script>
+	document.getElementById("resetButton").addEventListener("click", function(e) {
+		// 阻止默认行为
+		e.preventDefault();
+		// 清空所有输入框和下拉框的值
+		document.getElementById("searchForm").reset();
+		// 手动设置表单字段为空值
+		document.querySelector('input[name="stationcode"]').value = '';
+		document.querySelector('input[name="tradedate"]').value = '';
+		// 提交表单以刷新页面
+		document.getElementById("searchForm").submit();
+	});
+</script>
 
 </body>
 </html>
