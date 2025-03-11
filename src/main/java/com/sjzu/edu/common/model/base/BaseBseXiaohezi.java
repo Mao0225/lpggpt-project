@@ -157,12 +157,12 @@ public abstract class BaseBseXiaohezi<M extends BaseBseXiaohezi<M>> extends Mode
 		return getStr("worker");
 	}
 	
-	public void setJindu(java.lang.String jindu) {
-		set("jindu", jindu);
+	public void setJingdu(java.lang.String jingdu) {
+		set("jingdu", jingdu);
 	}
 	
-	public java.lang.String getJindu() {
-		return getStr("jindu");
+	public java.lang.String getJingdu() {
+		return getStr("jingdu");
 	}
 	
 	public void setWeidu(java.lang.String weidu) {

@@ -31,9 +31,9 @@ public class EquipmentController extends Controller {
 
                 String savePath = "equipment"; // 新的保存路径
                 File rootDir = new File(uploadFile.getUploadPath(), savePath);
-            if (!rootDir.exists()) {
-                rootDir.mkdirs();
-            }
+                if (!rootDir.exists()) {
+                    rootDir.mkdirs();
+                }
                 File newFile = new File(rootDir, newFileName);
                 uploadFile.getFile().renameTo(newFile);
 

@@ -11,12 +11,18 @@
 
 <body style="background-color: #0b333f; color: #FFFFFF">
 <div class="form_box">
-    <form id="myForm" action="/managegun/save" method="post">
+    <form id="myForm" action="/equipment/save" method="post">
         <!-- 新增设备站点输入框 -->
-        <div>
-            <label>设备站点</label>
-            <input type="text" value="#(gasstation.station_name)" readonly />
+        <div style="margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+            <label style="min-width: 80px;">设备站点</label>
+            <input
+                    type="text"
+                    value="#(gasstation.station_name)"
+                    readonly
+                    style="width: 260px; padding: 5px;"
+            />
         </div>
+
 
         <div>
             <label>设备种类</label>

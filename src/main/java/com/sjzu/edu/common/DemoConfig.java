@@ -98,6 +98,7 @@ public class DemoConfig extends JFinalConfig {
 		me.add("/appscanqcode", AppscanqcodeController.class);
 		me.add("/appgasfilebangding", AppgasfilebangdingController.class);//绑定奉天码镂空码
         me.add("/appxiaohezi", AppxiaoheziController.class);
+		me.add("/appdata", APPdataController.class);
 
 		//手机接口结束  AppbangdingController
 		//me.scan("com.demo.");
@@ -148,6 +149,8 @@ public class DemoConfig extends JFinalConfig {
 		me.add("/Ffilrdck",FfilrdckController.class);
         me.add("/xiaohezi",XiaoheziController.class);
 		me.add("/test",TestController.class);
+		me.add("/data",DataController.class);
+		me.add("/install",InstallController.class);
 	}
 	
 	public void configEngine(Engine me) {
@@ -198,6 +201,7 @@ public class DemoConfig extends JFinalConfig {
 	 * 配置处理器
 	 */
 	public void configHandler(Handlers me) {
-		
+
+
 	}
 }

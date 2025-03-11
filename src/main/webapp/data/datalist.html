@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="../css/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css">
+    <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/lpg.css">
+    <style>
+        .media-container {
+            position: relative;
+            display: inline-block;
+            text-align: center;
+        }
+        .media-content {
+            display: inline-block;
+            margin: 0 10px;
+        }
+        .media-container button {
+            padding: 2px 5px;
+            font-size: 12px;
+            line-height: 1;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+        }
+        .media-container img,
+        .media-container video {
+            max-width: 100px;
+            max-height: 100px;
+            cursor: pointer;
+            vertical-align: middle;
+        }
+        /* 新增媒体控制样式 */
+        .media-controls {
+            position: relative;
+            display: inline-block;
+            margin: 5px;
+        }
+        .media-controls button {
+            padding: 2px 8px;
+            margin: 2px;
+            font-size: 12px;
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+        .media-preview {
+            max-width: 100px;
+            max-height: 100px;
+            cursor: pointer;
+            vertical-align: middle;
+        }
+
+        #searchForm select,
+        #searchForm input[type="date"] {
+            border-radius: 10px;
+            background-color: #fbf0c5;
+            width: 160px;
+            height: 30px;
+        }
+
+    </style>
+</head>
+<body>
+<div id="pagediv"></div>
+<form id="searchForm" action="/data/dlist" method="post">
+    <label>上传时间</label>
+    <input type="date" name="uptime" value="#(uptime)">
+    <input value="搜索" type="submit">
+    <input type="button" value="重置" name="refresh" id="resetButton" />
+
+    <script>
+        var buttons = document.getElementsByName("refresh");
+        for (var i = 0; i < buttons.length; i++) {
+            buttons[i].addEventListener('click', function() {
+                // 获取所有的输入框并设置为空
+                var inputs = document.querySelectorAll('#searchForm input[type=date]');
+                for (var j = 0; j < inputs.length; j++) {
+                    inputs[j].value = "";
+                }
+
+                // 提交表单以重新查询并刷新页面
+                document.getElementById('searchForm').submit();
+            });
+        }
+    </script>
+
+<table class="list">
+    <tbody>
+    <tr>
+        <th width="8%">序号</th>
+        <th width="10%">安装环境</th>
+        <th width="10%">供气合同</th>
+        <th width="10%">连接阀</th>
+        <th width="10%">连接管</th>
+        <th width="10%">上传人员</th>
+        <th width="10%">上传时间</th>
+        <th width="12%">操作</th>
+    </tr>
+    #set(startIndex = (dataPage.pageNumber-1) * dataPage.pageSize + 1)
+    #for(x : dataPage.list)
+    <tr>
+        <td style="text-align:center">#(startIndex++)</td>
+
+        <!-- 门牌照片 -->
+        <td style="text-align:center">
+            #if(x.door_video && x.door_video != "")
+            <div class="media-controls">
+                #set(mediaUrls = x.door_video.split(","))
+                #set(firstUrl = mediaUrls.length > 0 ? mediaUrls[0] : "")  <!-- 修正点：使用 length 属性 -->
+                <button onclick="changeMedia(this, -1)">上一张</button>
+
+                <!-- 动态生成媒体元素 -->
+                #if(firstUrl.matches(".*\\.(webm|mp4|ogg)$"))
+                <video class="media-preview"
+                       data-urls="#(x.door_video)"
+                       data-current-index="0"
+                       onclick="showMedia('/' + this.dataset.urls.split(',')[this.dataset.currentIndex])">
+                       style="max-width:100px;max-height:100px;">
+                    <source src="/#(firstUrl)">
+                </video>
+
+                #else
+                <img class="media-preview"
+                     src="/#(firstUrl)"
+                     data-urls="#(x.door_video)"
+                     data-current-index="0"
+                     onclick="showMedia(this.src)"
+                     style="max-width:100px;max-height:100px;">
+                #end
+
+                <button onclick="changeMedia(this, 1)">下一张</button>
+            </div>
+            #else
+            <div>无内容</div>
+            #end
+        </td>
+
+        <!-- 其他媒体列保持相同结构，只需替换字段名称 -->
+        <!-- 导管照片 -->
+
+        <td style="text-align:center">
+            #if(x.daoguan_video && x.daoguan_video != "")
+            <div class="media-controls">
+                #set(mediaUrls = x.daoguan_video.split(","))
+                #set(firstUrl = mediaUrls.length > 0 ? mediaUrls[0] : "")  <!-- 修正点：使用 length 属性 -->
+                <button onclick="changeMedia(this, -1)">上一张</button>
+
+                <!-- 动态生成媒体元素 -->
+                #if(firstUrl.matches(".*\\.(webm|mp4|ogg)$"))
+                <video class="media-preview"
+                       data-urls="#(x.daoguan_video)"
+                       data-current-index="0"
+                       onclick="showMedia('/' + this.dataset.urls.split(',')[this.dataset.currentIndex])">
+                       style="max-width:100px;max-height:100px;">
+                    <source src="/#(firstUrl)">
+                </video>
+
+                #else
+                <img class="media-preview"
+                     src="/#(firstUrl)"
+                     data-urls="#(x.daoguan_video)"
+                     data-current-index="0"
+                     onclick="showMedia(this.src)"
+                     style="max-width:100px;max-height:100px;">
+                #end
+
+                <button onclick="changeMedia(this, 1)">下一张</button>
+            </div>
+            #else
+            <div>无内容</div>
+            #end
+        </td>
+
+        <!-- 气管照片 -->
+        <td style="text-align:center">
+            #if(x.qiguan_video && x.qiguan_video != "")
+            <div class="media-controls">
+                #set(mediaUrls = x.qiguan_video.split(","))
+                #set(firstUrl = mediaUrls.length > 0 ? mediaUrls[0] : "")  <!-- 修正点：使用 length 属性 -->
+                <button onclick="changeMedia(this, -1)">上一张</button>
+
+                <!-- 动态生成媒体元素 -->
+                #if(firstUrl.matches(".*\\.(webm|mp4|ogg)$"))
+                <video class="media-preview"
+                       data-urls="#(x.qiguan_video)"
+                       data-current-index="0"
+                       onclick="showMedia('/' + this.dataset.urls.split(',')[this.dataset.currentIndex])">
+                       style="max-width:100px;max-height:100px;">
+                    <source src="/#(firstUrl)">
+                </video>
+
+                #else
+                <img class="media-preview"
+                     src="/#(firstUrl)"
+                     data-urls="#(x.qiguan_video)"
+                     data-current-index="0"
+                     onclick="showMedia(this.src)"
+                     style="max-width:100px;max-height:100px;">
+                #end
+
+                <button onclick="changeMedia(this, 1)">下一张</button>
+            </div>
+            #else
+            <div>无内容</div>
+            #end
+        </td>
+
+        <!-- 楼管照片 -->
+        <td style="text-align:center">
+            #if(x.louguan_video && x.louguan_video != "")
+            <div class="media-controls">
+                #set(mediaUrls = x.louguan_video.split(","))
+                #set(firstUrl = mediaUrls.length > 0 ? mediaUrls[0] : "")  <!-- 修正点：使用 length 属性 -->
+                <button onclick="changeMedia(this, -1)">上一张</button>
+
+                <!-- 动态生成媒体元素 -->
+                #if(firstUrl.matches(".*\\.(webm|mp4|ogg)$"))
+                <video class="media-preview"
+                       data-urls="#(x.louguan_video)"
+                       data-current-index="0"
+                       onclick="showMedia('/' + this.dataset.urls.split(',')[this.dataset.currentIndex])">
+                       style="max-width:100px;max-height:100px;">
+                    <source src="/#(firstUrl)">
+                </video>
+
+                #else
+                <img class="media-preview"
+                     src="/#(firstUrl)"
+                     data-urls="#(x.louguan_video)"
+                     data-current-index="0"
+                     onclick="showMedia(this.src)"
+                     style="max-width:100px;max-height:100px;">
+                #end
+
+                <button onclick="changeMedia(this, 1)">下一张</button>
+            </div>
+            #else
+            <div>无内容</div>
+            #end
+        </td>
+        <td style="text-align:center">#(x.worker)</td>
+        <td style="text-align:center">#(x.create_time)</td>
+        <td style="text-align:left">
+            <a href="#" class="btn btn-danger" onclick="deleteRecord('#(x.id)')">删除</a>
+        </td>
+    </tr>
+    #end
+    </tbody>
+</table>
+<div class="pagination" style="color:#000000;">
+    #@paginate(dataPage.pageNumber, dataPage.totalPage, "/data/dlist?uptime= " +(uptime != null ? uptime : "") + "&page=")
+</div>
+</form>
+<script>
+    // 添加在 changeMedia 函数之前
+    function getMimeType(url) {
+        const ext = url.split('.').pop().toLowerCase();
+        return {
+            'webm': 'video/webm',
+            'mp4': 'video/mp4',
+            'ogg': 'video/ogg',
+            'jpg': 'image/jpeg',
+            'jpeg': 'image/jpeg',
+            'png': 'image/png',
+            'gif': 'image/gif'
+        }[ext] || 'application/octet-stream'; // 默认类型
+    }
+
+    function changeMedia(button, direction) {
+        const mediaControls = button.closest('.media-controls');
+        const mediaElement = mediaControls.querySelector('.media-preview');
+        const urls = (mediaElement.dataset.urls || "").split(",")
+            .map(url => url.trim()) // 去除空格
+            .filter(url => url);    // 过滤空值
+
+        if (urls.length === 0) return;
+
+        let currentIndex = parseInt(mediaElement.dataset.currentIndex) || 0;
+        currentIndex = (currentIndex + direction + urls.length) % urls.length;
+        mediaElement.dataset.currentIndex = currentIndex;
+
+        const newUrl = urls[currentIndex];
+        const fullUrl = `/${newUrl}`;
+        if (mediaElement.tagName === 'VIDEO') {
+            mediaElement.src = fullUrl; // 直接修改 src
+            mediaElement.load();
+            mediaElement.play().catch(e => console.log('需要用户交互后才能播放'));
+        } else {
+            mediaElement.src = fullUrl;
+        }
+    }
+
+
+    function showMedia(url) {
+        const overlay = document.createElement('div');
+        overlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.9);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    `;
+
+        const mediaElement = url.match(/\.(webm|mp4|ogg)$/i)
+            ? document.createElement('video')
+            : document.createElement('img');
+
+        if(mediaElement.tagName === 'VIDEO') {
+            mediaElement.controls = true;
+            mediaElement.autoplay = true;
+            mediaElement.innerHTML = `<source src="${url}" type="${getMimeType(url)}">`;
+        } else {
+            mediaElement.src = url;
+        }
+
+        mediaElement.style.maxWidth = '90vw';
+        mediaElement.style.maxHeight = '90vh';
+
+        overlay.onclick = () => overlay.remove();
+        overlay.appendChild(mediaElement);
+        document.body.appendChild(overlay);
+    }
+
+    function deleteRecord(id) {
+        // 确认是否删除
+        if (confirm("确定要删除吗？")) {
+            // 创建一个隐藏的表单字段用于存储ID
+            var deleteForm = document.createElement('form');
+            deleteForm.method = 'post';
+            deleteForm.action = '/data/delete';
+
+            var idInput = document.createElement('input');
+            idInput.type = 'hidden';
+            idInput.name = 'id';
+            idInput.value = id;
+
+            deleteForm.appendChild(idInput);
+            document.body.appendChild(deleteForm);
+            deleteForm.submit();
+        }
+    }
+</script>
+
+
+</body>
+</html>

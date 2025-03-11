@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="../css/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css">
+    <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/css/lpg.css">
+    <style>
+        #searchForm select,
+        #searchForm input[type="date"] {
+            border-radius: 10px;
+            background-color: #fbf0c5;
+            width: 160px;
+            height: 30px;
+        }
+    </style>
+</head>
+<body>
+<div id="pagediv">
+    <form id="searchForm" action="/install/installlist" method="post">
+        <label>小盒子编码</label>
+        <input type="text" name="xiaohezibianma" value="">
+        <label>上传时间</label>
+        <input type="date" name="time" value="">
+        <input value="搜索" type="submit">
+        <input type="button" value="重置" name="refresh" id="resetButton" />
+        <table class="list">
+            <tbody>
+            <tr>
+                <th>序号</th>
+                <th>气瓶一</th>
+                <th>气瓶二</th>
+                <th>气瓶三</th>
+                <th>气瓶四</th>
+                <th>小盒子编码</th>
+                <th>地址</th>
+                <th>经度</th>
+                <th>维度</th>
+                <th>扫描时间</th>
+                <th>扫描员工</th>
+                <th>操作</th>
+            </tr>
+            #set(startIndex = (xiaohezi.pageNumber - 1) * xiaohezi.pageSize + 1)
+            #for(x : xiaohezi.getList())
+            <tr>
+                <td>#(startIndex++)</td>
+                <td>#(x.gas_number1)</td>
+                <td>#(x.gas_number2)</td>
+                <td>#(x.gas_number3)</td>
+                <td>#(x.gas_number4)</td>
+                <td>#(x.xiaohezi_number)</td>
+                <td>#(x.address)</td>
+                <td>#(x.jingdu)</td>
+                <td>#(x.weidu)</td>
+                <td>#(x.creattime)</td>
+                <td>#(x.worker)</td>
+                <td style="text-align:left">
+                    <a href="#" class="delete-link" onclick="deleteRecord('#(x.id)')">删除</a>
+                    <a href="#" class="edit openModal" data-title="编辑用户" data-edit-url="/install/edit?id=#(x.id)">修改</a>
+                </td>
+            </tr>
+            #end
+            </tbody>
+        </table>
+        <div class="pagination" style="color:#DDDDDD; font-size: 12px">
+            #@paginate(xiaohezi.pageNumber, xiaohezi.totalPage, "/install/installlist?xiaohezibianma=" + (xiaohezibianma!=null ? xiaohezibianma:"")+"&time=" + (time!=null ? time:"")+"&page=")
+        </div>
+    </form>
+</div>
+<script>
+    document.getElementById("resetButton").addEventListener("click", function(e) {
+        e.preventDefault();
+
+        // 方法1：直接使用表单重置（推荐）
+        document.getElementById("searchForm").reset();
+
+        // 方法2：若需兼容旧浏览器，手动清空字段（需确保元素存在）
+        // document.getElementById("xiaohezibianma").value = '';
+        // document.getElementById("time").value = '';
+
+        document.getElementById("searchForm").submit();
+    });
+
+    $(document).ready(function () {
+        $('.openModal').click(function (e) {
+            e.preventDefault();
+            var editUrl = $(this).data('edit-url');
+            var that = this;
+
+            $.get(editUrl, function (data) {
+                var title = $(that).data('title');
+                $('#myModalLabel').text(title);
+
+                // Clear old content
+                $('#modalBody').html(data);
+                $('#myModal').modal('show');
+            });
+        });
+    })
+
+        function deleteRecord(id) {
+        // 确认是否删除
+        if (confirm("确定要删除吗？")) {
+            // 创建一个隐藏的表单字段用于存储ID
+            var deleteForm = document.createElement('form');
+            deleteForm.method = 'post';
+            deleteForm.action = '/install/delete';
+
+            var idInput = document.createElement('input');
+            idInput.type = 'hidden';
+            idInput.name = 'id';
+            idInput.value = id;
+
+            deleteForm.appendChild(idInput);
+            document.body.appendChild(deleteForm);
+            deleteForm.submit();
+        }
+    }
+</script>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">模态窗口标题</h4>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- 这里将会加载你的表单内容 -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary"  id="saveButton" >保存</button>
+                <script>
+                    document.getElementById('saveButton').addEventListener('click', function() {
+                        document.getElementById('myForm').submit();
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

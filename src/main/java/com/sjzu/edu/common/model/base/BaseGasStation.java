@@ -24,14 +24,14 @@ public abstract class BaseGasStation<M extends BaseGasStation<M>> extends Model<
 	}
 	
 	/**
-	 * 加气站编码
+	 * bu yong de ziduan
 	 */
 	public void setStationId(java.lang.String stationId) {
 		set("station_id", stationId);
 	}
 	
 	/**
-	 * 加气站编码
+	 * bu yong de ziduan
 	 */
 	public java.lang.String getStationId() {
 		return getStr("station_id");

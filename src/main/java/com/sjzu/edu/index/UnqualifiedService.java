@@ -47,7 +47,7 @@ public class UnqualifiedService {
         addsql.append(" ORDER BY frc.id DESC");
 
         // 为两个表的 gas_number 字段指定别名
-        String selectClause = "SELECT frc.gas_number AS frc_gas_number, gf.gas_number AS gf_gas_number, frc.*, gf.*";
+        String selectClause = "SELECT frc.gas_number AS frc_gas_number, gf.gas_number AS gf_gas_number,frc.id AS fid, frc.*, gf.*";
 
         System.out.println("addsql: " + addsql);
 

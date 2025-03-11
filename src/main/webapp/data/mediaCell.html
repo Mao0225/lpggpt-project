@@ -1,0 +1,27 @@
+#if(field && field != "")
+#set(urls = field.split(","))
+#set(firstUrl = urls[0])
+<div class="media-container" data-urls="#(field)" data-current-index="0">
+    <button onclick="changeMedia(this, -1)">‹</button>
+    <div class="media-content">
+        #if(firstUrl.endsWith(".jpg") || firstUrl.endsWith(".jpeg") || firstUrl.endsWith(".png") || firstUrl.endsWith(".gif"))
+        <img src="#(request.contextPath)#(firstUrl)" onclick="showMedia('#(request.contextPath)#(firstUrl)')">
+        #else
+        <video controls onclick="showMedia('#(request.contextPath)#(firstUrl)')">
+            #if(firstUrl.endsWith(".webm"))
+            <source src="#(request.contextPath)#(firstUrl)" type="video/webm">
+            #else if(firstUrl.endsWith(".mp4"))
+            <source src="#(request.contextPath)#(firstUrl)" type="video/mp4">
+            #else if(firstUrl.endsWith(".ogg"))
+            <source src="#(request.contextPath)#(firstUrl)" type="video/ogg">
+            #else
+            <source src="#(request.contextPath)#(firstUrl)" type="video/mp4">
+            #end
+        </video>
+        #end
+    </div>
+    <button onclick="changeMedia(this, 1)">›</button>
+</div>
+#else
+<div style="width:100px; height:100px; background:#eee"></div>
+#end

@@ -39,14 +39,14 @@ public class AppxiaoheziController extends Controller {
     public void saveXiaoheziData() {
         JSONObject result = new JSONObject();
         try {
-            // 1.接收基础参数
+            // 接收参数
             String worker = getPara("worker");
             String jingdu = getPara("jingdu");
             String weidu = getPara("weidu");
             String address = getPara("address");
             String xiaoheziNumber = getPara("xiaohezi_number");
 
-            // 2.参数校验
+            // 参数校验
             if (xiaoheziNumber == null || xiaoheziNumber.isEmpty()) {
                 result.put("code", 400);
                 result.put("msg", "小盒子编号不能为空");
@@ -54,41 +54,47 @@ public class AppxiaoheziController extends Controller {
                 return;
             }
 
-            // 3.创建单条记录
             Record record = new Record();
-            // 设置基础字段
             record.set("worker", worker)
                     .set("jingdu", jingdu)
                     .set("weidu", weidu)
                     .set("address", address)
                     .set("xiaohezi_number", xiaoheziNumber);
 
-            // 4.处理4个气瓶数据
+            // 处理每个气瓶和通道
             for (int i = 1; i <= 4; i++) {
                 String gasNumber = getPara("gas_number" + i);
                 String tongdao = getPara("tongdao" + i);
 
-                // 动态设置字段（gas_number1、tongdao1等）
                 if (gasNumber != null && !gasNumber.isEmpty()) {
-                    record.set("gas_number" + i, gasNumber)
-                            .set("tongdao" + i, tongdao);
+                    record.set("gas_number" + i, gasNumber);
+                    // 处理通道值
+                    if (tongdao != null && !tongdao.isEmpty()) {
+                        try {
+                            // 验证是否为整数
+                            Integer.parseInt(tongdao);
+                            record.set("tongdao" + i, tongdao);
+                        } catch (NumberFormatException e) {
+                            result.put("code", 400);
+                            result.put("msg", "通道" + i + "的值无效，必须为整数");
+                            renderJson(result);
+                            return;
+                        }
+                    } else {
+                        // 设置为默认值0或NULL，根据数据库约束调整
+                        record.set("tongdao" + i, 0); // 或 null
+                    }
                 } else {
-                    // 如果未填写则设为空
-                    record.set("gas_number" + i, "")
-                            .set("tongdao" + i, "");
+                    // 气瓶为空时不设置或设为NULL/默认值
+                    record.set("gas_number" + i, null);
+                    record.set("tongdao" + i, null); // 或 0
                 }
             }
 
-            // 5.保存单条记录
-            try {
-                Db.save("bse_xiaohezi", record);
-                result.put("code", 200);
-                result.put("msg", "数据保存成功");
-            } catch (Exception e) {
-                result.put("code", 500);
-                result.put("msg", "保存失败: " + e.getMessage());
-                e.printStackTrace();
-            }
+            // 保存记录
+            Db.save("bse_xiaohezi", record);
+            result.put("code", 200);
+            result.put("msg", "数据保存成功");
 
         } catch (Exception e) {
             result.put("code", 500);
