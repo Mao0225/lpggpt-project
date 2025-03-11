@@ -264,6 +264,7 @@ public class AppRecordController extends Controller {
                         combined.put("terminate_use_date", gfRecord.get("terminate_use_date"));
                         combined.put("filling_medium", gfRecord.get("filling_medium"));
                         combined.put("gas_suttle", gfRecord.get("gas_suttle"));
+                        combined.put("stationName",gfRecord.get("filing_gas_station"));
                         // 你可以根据需要添加其他字段
                     });
 
