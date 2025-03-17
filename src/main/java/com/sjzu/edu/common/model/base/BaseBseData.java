@@ -17,58 +17,34 @@ public abstract class BaseBseData<M extends BaseBseData<M>> extends Model<M> imp
 		return getInt("id");
 	}
 	
-	/**
-	 * 安装环境
-	 */
 	public void setDoorVideo(java.lang.String doorVideo) {
 		set("door_video", doorVideo);
 	}
 	
-	/**
-	 * 安装环境
-	 */
 	public java.lang.String getDoorVideo() {
 		return getStr("door_video");
 	}
 	
-	/**
-	 * 连接阀
-	 */
 	public void setQiguanVideo(java.lang.String qiguanVideo) {
 		set("qiguan_video", qiguanVideo);
 	}
 	
-	/**
-	 * 连接阀
-	 */
 	public java.lang.String getQiguanVideo() {
 		return getStr("qiguan_video");
 	}
 	
-	/**
-	 * 连接管
-	 */
 	public void setDaoguanVideo(java.lang.String daoguanVideo) {
 		set("daoguan_video", daoguanVideo);
 	}
 	
-	/**
-	 * 连接管
-	 */
 	public java.lang.String getDaoguanVideo() {
 		return getStr("daoguan_video");
 	}
 	
-	/**
-	 * 供气合同
-	 */
 	public void setLouguanVideo(java.lang.String louguanVideo) {
 		set("louguan_video", louguanVideo);
 	}
 	
-	/**
-	 * 供气合同
-	 */
 	public java.lang.String getLouguanVideo() {
 		return getStr("louguan_video");
 	}
@@ -82,11 +58,11 @@ public abstract class BaseBseData<M extends BaseBseData<M>> extends Model<M> imp
 	}
 	
 	public void setCreateTime(java.util.Date createTime) {
-		set("createTime", createTime);
+		set("create_time", createTime);
 	}
 	
 	public java.util.Date getCreateTime() {
-		return getDate("createTime");
+		return getDate("create_time");
 	}
 	
 	public void setYuliu(java.lang.String yuliu) {

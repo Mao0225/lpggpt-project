@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" width="device-width, initial-scale=1.0">
+    <title>Equipment List</title>
+    <script src="../css/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css">
+    <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/css/lpg.css">
+    <style>
+        form {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        label {
+            margin-right: 10px;
+            color: white;
+        }
+
+        input[type="text"],
+        select {
+            width: 150px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        button[type="submit"] {
+            padding: 8px 15px;
+            background-color: yellow;
+            color: black;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        /* 添加的选择框样式规则 */
+        #searchForm select {
+            border-radius: 10px;
+            background-color: #fbf0c5;
+            width: 160px;
+            height: 30px;
+        }
+
+    </style>
+</head>
+
+<body>
+<div id="pagediv">
+    <!-- 新增“添加设备”按钮 -->
+    <!-- 新增“添加设备”按钮，已修改为和drivercar.html中新建司机按钮类似结构 -->
+
+
+    <!-- 搜索表单 -->
+    <form id="searchForm" action="/xhzinfo/xhzlist" method="post">
+        <label>饭店名称：</label>
+        <select id="selectName" name="companyId" onchange="chooseName()">
+            <option value="-1" selected>请选择饭店</option>
+            #for (x: restaurants)
+            <option value="#(x.xiaohezi)">#(x.name)</option>
+            #end
+        </select>
+
+        <button type="button" type="submit" value="查询" id="searchButton">查询</button>
+        <button type="button" type="submit" value="重置" id="resetButton">重置</button>
+
+    </form>
+</div>
+
+<table class="list">
+    <tbody>
+    <tr>
+        <th width="8%">序号</th>
+        <th width="10">productkey</th>
+        <th width="10">devicename</th>
+        <th width="10">created_time</th>
+        <th width="10">requestid</th>
+        <th width="10">Valuestatus1</th>
+        <th width="10">Valuestatus2</th>
+        <th width="10">Valuestatus3</th>
+        <th width="10">Valuestatus4</th>
+        <th width="10">操作</th> <!-- 添加操作列标题 -->
+    </tr>
+    #set(startIndex = (recordlist.pageNumber - 1) * recordlist.pageSize + 1)
+    #for(x : recordlist.getList())
+    <tr>
+        <td>#(startIndex++)</td> <!-- 显示序号并递增 -->
+        <td>#(x.productKey)</td>
+        <td>#(x.devicename)</td>
+        <td>#(x.created_time)</td>
+        <td>#(x.requestid)</td>
+        <td>#(x.Valuestatus1)</td>
+        <td>#(x.Valuestatus2)</td>
+        <td>#(x.Valuestatus3)</td>
+        <td>#(x.Valuestatus4)</td>
+        <td>
+            <!-- 修改按钮添加点击事件，弹出编辑模态框，结构和功能与参考代码中编辑按钮类似 -->
+            <a href="#" class="edit openModal" data-title="编辑设备" data-edit-url="/xhzinfo/edit?id=#(x.id)">修改</a>
+            <!-- 将删除按钮修改为a标签形式 -->
+            <a href="#" class="delete" onclick="confirmDelete('#(x.id)')">删除</a>
+        </td>
+    </tr>
+    #end
+    </tbody>
+</table>
+
+<div class="pagination" style="color:#DDDDDD;">
+    #set(selectedCompanyId = "")
+    #if(companyname!= null && companyname!= "-1")
+    #set(selectedCompanyId = companyname)
+    #end
+    #@paginate(recordlist.pageNumber, recordlist.totalPage, "/xhzinfo/xhzlist?companyId=" + selectedCompanyId + "&page=")
+</div>
+<script>
+
+    var restaurants = [
+        #for (x: restaurants)
+    { xiaohezi: "#(x.xiaohezi)", name: "#(x.name)" },
+    #end
+    ];
+    function chooseName() {
+        var selectName = document.getElementById("selectName").value;
+        console.log("selectName: " + selectName);
+        // 查找选中的备件对象，通过name属性来查找
+        var selectedCompany = restaurants.find(function (restaurants) {
+            return restaurants.name === selectName;
+        });
+    }
+    document.getElementById("selectName").addEventListener("change", chooseName);
+    // 为搜索按钮添加点击事件，防止默认提交行为被阻止，手动触发表单提交
+    $('#searchButton').click(function (e) {
+        e.preventDefault();
+        $('#searchForm').submit();
+    });
+
+    // 为重置按钮添加点击事件处理函数，用于清空搜索栏并提交表单，让公司名称选择框数据为空
+    $('#resetButton').click(function (e) {
+        e.preventDefault();
+        // 获取所有的输入框并设置为空
+        $('#searchForm input[type=text]').val('');
+        // 将下拉选择框（公司名称选择框）设置为空值，恢复到初始的“请选择公司”状态
+        $('#selectName').val('');
+        // 提交表单以重新查询并刷新页面
+        $('#searchForm').submit();
+    });
+    // 确认删除的函数，向后端delete函数发送删除请求，同样假设后端接收设备id作为参数
+    function confirmDelete(id) {
+        console.log("进入到了删除函数");
+        console.log("id: " + id);
+        if (confirm("确定要删除该设备记录吗？")) {
+            window.location.href = "/xhzinfo/delete?id=" + id;
+        }
+    }
+    $(document).ready(function () {
+        $('.openModal').click(function (e) {
+            e.preventDefault();
+            var editUrl = $(this).data('edit-url');
+            var that = this;
+
+            $.get(editUrl, function (data) {
+                var title = $(that).data('title');
+                $('#myModalLabel').text(title);
+
+                // Clear old content
+                $('#modalBody').html(data);
+                $('#myModal').modal('show');
+            });
+        });
+    });
+</script>
+<!-- 模态框结构 -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">模态窗口标题</h4>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- 这里将会加载你的表单内容，此处暂时为空，后续可以根据从后端获取的数据来填充 -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="saveButton">保存</button>
+                <script>
+                    document.getElementById('saveButton').addEventListener('click', function () {
+                        console.log("josqb`1");
+                        // 如果验证通过，则提交表单
+                        document.getElementById('myForm').submit();
+                        // 如果验证失败，不提交表单（validateForm内部已经显示了错误消息）
+                    });
+                </script>
+            </div>
+
+        </div>
+    </div>
+</div>

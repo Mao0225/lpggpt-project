@@ -60,14 +60,14 @@ public abstract class BaseShexiangtou<M extends BaseShexiangtou<M>> extends Mode
 	}
 	
 	/**
-	 * 报警内容
+	 * 报警类型
 	 */
 	public void setAlarmtype(java.lang.String alarmtype) {
 		set("alarmtype", alarmtype);
 	}
 	
 	/**
-	 * 报警内容
+	 * 报警类型
 	 */
 	public java.lang.String getAlarmtype() {
 		return getStr("alarmtype");
@@ -97,18 +97,30 @@ public abstract class BaseShexiangtou<M extends BaseShexiangtou<M>> extends Mode
 		return getStr("memo");
 	}
 	
+	/**
+	 * 报警图片
+	 */
 	public void setAlarmpic(java.lang.String Alarmpic) {
 		set("Alarmpic", Alarmpic);
 	}
 	
+	/**
+	 * 报警图片
+	 */
 	public java.lang.String getAlarmpic() {
 		return getStr("Alarmpic");
 	}
 	
+	/**
+	 * 警报信息
+	 */
 	public void setAlarmmes(java.lang.String alarmmes) {
 		set("alarmmes", alarmmes);
 	}
 	
+	/**
+	 * 警报信息
+	 */
 	public java.lang.String getAlarmmes() {
 		return getStr("alarmmes");
 	}

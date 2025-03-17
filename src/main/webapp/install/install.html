@@ -22,6 +22,8 @@
     <form id="searchForm" action="/install/installlist" method="post">
         <label>小盒子编码</label>
         <input type="text" name="xiaohezibianma" value="">
+        <label>饭店名称</label>
+        <input type="text" name="restaurantname" value="">
         <label>上传时间</label>
         <input type="date" name="time" value="">
         <input value="搜索" type="submit">
@@ -40,6 +42,9 @@
                 <th>维度</th>
                 <th>扫描时间</th>
                 <th>扫描员工</th>
+                <th>多媒体数据</th>
+                <th>饭店名称</th>
+                <th>位置</th>
                 <th>操作</th>
             </tr>
             #set(startIndex = (xiaohezi.pageNumber - 1) * xiaohezi.pageSize + 1)
@@ -56,6 +61,17 @@
                 <td>#(x.weidu)</td>
                 <td>#(x.creattime)</td>
                 <td>#(x.worker)</td>
+                <td>
+                    <a href="javascript:void(0)" class="view-media"
+                       data-door="#(x.door_video ?? '')"
+                       data-qiguan="#(x.qiguan_video ?? '')"
+                       data-daoguan="#(x.daoguan_video ?? '')"
+                       data-louguan="#(x.louguan_video ?? '')">
+                        查看
+                    </a>
+                </td>
+                <td>#(x.restaurant_name)</td>
+                <td>#(x.restaurant_address)</td>
                 <td style="text-align:left">
                     <a href="#" class="delete-link" onclick="deleteRecord('#(x.id)')">删除</a>
                     <a href="#" class="edit openModal" data-title="编辑用户" data-edit-url="/install/edit?id=#(x.id)">修改</a>
@@ -69,7 +85,162 @@
         </div>
     </form>
 </div>
+<!-- 修改模态窗口结构 -->
+<div class="modal fade" id="mediaModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">安装过程记录</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <!-- 安装环境 -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <h6>安装环境：</h6>
+                            <div class="d-flex flex-wrap media-container" id="doorMedia"></div>
+                        </div>
+                    </div>
+
+                    <!-- 连接阀 -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <h6>连接阀：</h6>
+                            <div class="d-flex flex-wrap media-container" id="qiguanMedia"></div>
+                        </div>
+                    </div>
+
+                    <!-- 连接管 -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <h6>连接管：</h6>
+                            <div class="d-flex flex-wrap media-container" id="daoguanMedia"></div>
+                        </div>
+                    </div>
+
+                    <!-- 供气合同 -->
+                    <div class="row">
+                        <div class="col-12">
+                            <h6>供气合同：</h6>
+                            <div class="d-flex flex-wrap media-container" id="louguanMedia"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
+
+    $(document).ready(function () {
+        // 新增的模态窗口处理代码
+        $('.openModal').click(function (e) {
+            e.preventDefault();
+            var editUrl = $(this).data('edit-url');
+            var that = this;
+
+            $.get(editUrl, function (data) {
+                var title = $(that).data('title');
+                $('#myModalLabel').text(title);
+                $('#modalBody').html(data);
+                $('#myModal').modal('show');
+            });
+        });
+    });
+
+
+    // 新增全局变量管理媒体状态
+    let currentMediaSet = [];
+    let currentMediaIndex = 0;
+    let currentMediaTypeIndex = 0;
+    const mediaTypes = [
+        {name: '安装环境', field: 'door'},
+        {name: '连接阀', field: 'qiguan'},
+        {name: '连接管', field: 'daoguan'},
+        {name: '供气合同', field: 'louguan'}
+    ];
+    function showMediaModal(element) {
+        // 初始化媒体数据
+        currentMediaSet = [];
+        mediaTypes.forEach(type => {
+            const urls = element.dataset[type.field]?.split(",") || [];
+            if(urls.length > 0) {
+                currentMediaSet.push({
+                    type: type.name,
+                    urls: urls.map(url => `/${url.trim()}`),
+                    currentIndex: 0
+                });
+            }
+        });
+
+        if(currentMediaSet.length === 0) {
+            alert("暂无多媒体数据");
+            return;
+        }
+
+        currentMediaTypeIndex = 0;
+        loadCurrentMedia();
+        $('#mediaModal').modal('show');
+    }
+
+    function loadCurrentMedia() {
+        const container = $('#mediaContainer');
+        const typeSpan = $('#currentMediaType');
+        container.empty();
+
+        if(currentMediaSet.length === 0) return;
+
+        const currentType = currentMediaSet[currentMediaTypeIndex];
+        typeSpan.text(currentType.type);
+
+        const currentUrl = currentType.urls[currentType.currentIndex];
+        const isVideo = currentUrl.match(/\.(mp4|webm|ogg)$/i);
+
+        const mediaElement = isVideo ?
+            $(`<video controls autoplay style="max-width:100%; max-height:70vh;">
+            <source src="${currentUrl}" type="${getMimeType(currentUrl)}">
+           </video>`) :
+            $(`<img src="${currentUrl}" style="max-width:100%; max-height:70vh;">`);
+
+        container.append(mediaElement);
+    }
+
+    function changeMedia(direction) {
+        const currentType = currentMediaSet[currentMediaTypeIndex];
+
+        // 切换当前类型的媒体索引
+        currentType.currentIndex = (currentType.currentIndex + direction + currentType.urls.length) % currentType.urls.length;
+
+        // 如果是跨类型切换
+        if(direction === 1 && currentType.currentIndex === 0) {
+            currentMediaTypeIndex = (currentMediaTypeIndex + 1) % currentMediaSet.length;
+        } else if(direction === -1 && currentType.currentIndex === currentType.urls.length - 1) {
+            currentMediaTypeIndex = (currentMediaTypeIndex - 1 + currentMediaSet.length) % currentMediaSet.length;
+        }
+
+        loadCurrentMedia();
+    }
+    // 辅助函数：获取MIME类型
+    function getMimeType(url) {
+        const ext = url.split('.').pop().toLowerCase();
+        const types = {
+            'webm': 'video/webm',
+            'mp4': 'video/mp4',
+            'ogg': 'video/ogg',
+            'jpg': 'image/jpeg',
+            'jpeg': 'image/jpeg',
+            'png': 'image/png'
+        };
+        return types[ext] || 'application/octet-stream';
+    }
+
     document.getElementById("resetButton").addEventListener("click", function(e) {
         e.preventDefault();
 
@@ -83,22 +254,54 @@
         document.getElementById("searchForm").submit();
     });
 
-    $(document).ready(function () {
-        $('.openModal').click(function (e) {
-            e.preventDefault();
-            var editUrl = $(this).data('edit-url');
-            var that = this;
+    $(document).ready(function() {
+        $('.view-media').click(function() {
+            const mediaData = {
+                door: $(this).data('door').split(',').filter(Boolean),
+                qiguan: $(this).data('qiguan').split(',').filter(Boolean),
+                daoguan: $(this).data('daoguan').split(',').filter(Boolean),
+                louguan: $(this).data('louguan').split(',').filter(Boolean)
+            };
 
-            $.get(editUrl, function (data) {
-                var title = $(that).data('title');
-                $('#myModalLabel').text(title);
+            // 清空容器
+            $('.media-container').empty();
 
-                // Clear old content
-                $('#modalBody').html(data);
-                $('#myModal').modal('show');
+            // 填充媒体内容
+            Object.keys(mediaData).forEach(type => {
+                const container = $(`#${type}Media`);
+                const files = mediaData[type];
+
+                if(files.length === 0) {
+                    container.append('<span class="text-muted">无记录</span>');
+                    return;
+                }
+
+                files.forEach(file => {
+                    const isVideo = /\.(mp4|webm|ogg)$/i.test(file);
+                    const mediaElement = isVideo ?
+                        $(`<div class="media-item">
+                        <video controls style="max-width:200px;max-height:150px;">
+                            <source src="/${file.trim()}" type="${getMimeType(file)}">
+                        </video>
+                       </div>`) :
+                        $(`<div class="media-item">
+                        <img src="/${file.trim()}" style="max-width:200px;max-height:150px;cursor:zoom-in;">
+                       </div>`);
+
+                    // 添加点击放大功能
+                    if(!isVideo) {
+                        mediaElement.find('img').click(function() {
+                            window.open('/' + file.trim(), '_blank');
+                        });
+                    }
+
+                    container.append(mediaElement);
+                });
             });
+
+            $('#mediaModal').modal('show');
         });
-    })
+    });
 
         function deleteRecord(id) {
         // 确认是否删除

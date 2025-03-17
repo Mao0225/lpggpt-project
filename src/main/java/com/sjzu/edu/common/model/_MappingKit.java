@@ -22,6 +22,7 @@ public class _MappingKit {
 		arp.addMapping("bottle_person", "pid", BottlePerson.class);
 		arp.addMapping("bse_company", "id", BseCompany.class);
 		arp.addMapping("bse_company_copy1", "id", BseCompanyCopy1.class);
+		arp.addMapping("bse_data", "id", BseData.class);
 		arp.addMapping("bse_equip_operation", "id", BseEquipOperation.class);
 		arp.addMapping("bse_equipment", "id", BseEquipment.class);
 		arp.addMapping("bse_equipment_copy1", "id", BseEquipmentCopy1.class);

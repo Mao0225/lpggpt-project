@@ -151,6 +151,7 @@ public class DemoConfig extends JFinalConfig {
 		me.add("/test",TestController.class);
 		me.add("/data",DataController.class);
 		me.add("/install",InstallController.class);
+		me.add("/xhzinfo",XhzinfoController.class);
 	}
 	
 	public void configEngine(Engine me) {

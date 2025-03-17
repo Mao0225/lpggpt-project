@@ -4,45 +4,84 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bef31097-e2fd-4fd6-9377-5642cb374b1b" name="更改" comment="添加了智能数据库助手功能，修改了充装中记录，不合格记录">
+    <list default="true" id="bef31097-e2fd-4fd6-9377-5642cb374b1b" name="更改" comment="增加了LPG充装端的后台和对应后端">
       <change afterPath="$PROJECT_DIR$/.idea/shelf/_2025_3_2_4_24____.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/shelf/_2025_3_2_4_24____1.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/.idea/shelf/在进行更新之前于_2025_3_2_下午4_24_取消提交了更改_[更改]/shelved.patch" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/shelf/在进行更新之前于_2025_3_2_下午4_24_取消提交了更改_[更改]1/shelved.patch" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/log/jfinal_demo_for_maven.log_2025-02-27.log" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/log/jfinal_demo_for_maven.log_2025-03-01.log" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/log/jfinal_demo_for_maven.log_2025-03-02.log" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/log/jfinal_demo_for_maven.log_2025-03-03.log" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/log/jfinal_demo_for_maven.log_2025-03-04.log" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/log/jfinal_demo_for_maven.log_2025-03-05.log" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/common/model/IotSyncRdsRecordsV3.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/common/model/IotSyncRecordsV3.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/common/model/base/BaseIotSyncRdsRecordsV3.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/common/model/base/BaseIotSyncRecordsV3.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/index/XhzinfoController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/index/XhzinfoService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/upload/temp/data/deecb55d-da92-42ac-ad39-e1a28029929a.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/xhzinfo/xhzlist.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/aws.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/aws.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/在进行更新之前于_2025_3_2_下午4_24_取消提交了更改_[更改]1/BaseGasFileCopy1.class" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_更新_at_2025_3_11_下午12_15_[更改]/BaseGasFileCopy1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/在进行更新之前于_2025_3_2_下午4_24_取消提交了更改_[更改]1/FfilrdckController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/在进行更新之前于_2025_3_2_下午4_24_取消提交了更改_[更改]1/FfilrecordckServive.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/在进行更新之前于_2025_3_2_下午4_24_取消提交了更改_[更改]1/GasFileCopy1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/在进行更新之前于_2025_3_2_下午4_24_取消提交了更改_[更改]1/GgasStationStaffController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/在进行更新之前于_2025_3_2_下午4_24_取消提交了更改_[更改]1/GgasStationStaffService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/在进行更新之前于_2025_3_2_下午4_24_取消提交了更改_[更改]1/JiaqizhongController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/在进行更新之前于_2025_3_2_下午4_24_取消提交了更改_[更改]1/JiaqizhongService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/在进行更新之前于_2025_3_2_下午4_24_取消提交了更改_[更改]1/JjiaqizhongController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/在进行更新之前于_2025_3_2_下午4_24_取消提交了更改_[更改]1/JjiaqizhongService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/在进行更新之前于_2025_3_2_下午4_24_取消提交了更改_[更改]1/MmgGunController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/在进行更新之前于_2025_3_2_下午4_24_取消提交了更改_[更改]1/MmgGunService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/在进行更新之前于_2025_3_2_下午4_24_取消提交了更改_[更改]1/UnqualifiedController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/在进行更新之前于_2025_3_2_下午4_24_取消提交了更改_[更改]1/UnqualifiedService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/在进行更新之前于_2025_3_2_下午4_24_取消提交了更改_[更改]1/UunqualifiedController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/在进行更新之前于_2025_3_2_下午4_24_取消提交了更改_[更改]1/UunqualifiedService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/在进行更新之前于_2025_3_5_下午11_13_取消提交了更改_[更改]/AppxiaoheziController.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/log/jfinal_demo_for_maven.log" beforeDir="false" afterPath="$PROJECT_DIR$/log/jfinal_demo_for_maven.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/api/APPdataController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/api/APPdataController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/api/AppxiaoheziController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/api/AppxiaoheziController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/common/DemoConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/common/DemoConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/common/model/_JFinalDemoGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/common/model/_JFinalDemoGenerator.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/common/model/_MappingKit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/common/model/_MappingKit.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/common/model/base/BaseGasFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/common/model/base/BaseGasFile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/common/model/base/BaseBseData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/common/model/base/BaseBseData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/common/model/base/BaseBseMaintenanceCopy1.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/common/model/base/BaseBseMaintenanceCopy1.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/common/model/base/BaseGasFileCopy1.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/common/model/base/BaseGasFileCopy1.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/index/FilrecordckServive.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/index/FilrecordckServive.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/index/KangjiashanothergasController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/index/KangjiashanothergasController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/index/KangjiashanothergasService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/index/KangjiashanothergasService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/index/UunqualifiedController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/index/UunqualifiedController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/common/model/base/BaseGasStation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/common/model/base/BaseGasStation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/common/model/base/BaseIotSyncRecords.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/common/model/base/BaseIotSyncRecords.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/common/model/base/BaseManageXiaohezi.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/common/model/base/BaseManageXiaohezi.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/common/model/base/BaseShexiangtou.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/common/model/base/BaseShexiangtou.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/index/InstallController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/index/InstallController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/index/InstallService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/index/InstallService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/demo.pfx" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/log4j.properties" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/logging.properties" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/undertow.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/Jjiaqizhong/Jjiaqizhong.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/Jjiaqizhong/Jjiaqizhong.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/kangjiashanothergas/othergslist.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/kangjiashanothergas/othergslist.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/sjzu/edu/common/model/base/BaseGasFileCopy1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/sjzu/edu/common/model/base/BaseGasFileCopy1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/UunqualifiedController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/UunqualifiedController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/jfinal_demo_for_maven-release/jfinal_demo_for_maven/webapp/Jjiaqizhong/Jjiaqizhong.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/jfinal_demo_for_maven-release/jfinal_demo_for_maven/webapp/Jjiaqizhong/Jjiaqizhong.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/jfinal_demo_for_maven-release/jfinal_demo_for_maven/webapp/Unqualified/unqualified.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/jfinal_demo_for_maven-release/jfinal_demo_for_maven/webapp/Unqualified/unqualified.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/jfinal_demo_for_maven-release/jfinal_demo_for_maven/webapp/jiaqizhong/jiaqizhong.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/jfinal_demo_for_maven-release/jfinal_demo_for_maven/webapp/jiaqizhong/jiaqizhong.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/install/install.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/install/install.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/test/test.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/test/test.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/upload/temp/OIP-C (1).jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/upload/temp/OIP-C (1)1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/upload/temp/OIP-C (1)2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/upload/temp/OIP-C (1)3.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/upload/temp/OIP-C (1)4.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/upload/temp/equipment/OIP-C (1).jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/upload/temp/equipment/OIP-C (1)1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/upload/temp/equipment/OIP-C (1)2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/upload/temp/equipment/OIP-C (1)3.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/upload/temp/equipment/OIP-C (1)4.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/upload/temp/equipment/屏幕截图 2024-12-06 193624.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/upload/temp/equipment/微信图片_20241226195029.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/upload/temp/微信图片_20241226195029.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/sjzu/edu/common/model/base/BaseManageXiaohezi.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/sjzu/edu/common/model/base/BaseManageXiaohezi.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -71,41 +110,59 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "DefaultHtmlFileTemplate": "HTML File",
-    "JavaScript 调试.edit.html.executor": "Run",
-    "JavaScript 调试.filrdck.html.executor": "Run",
-    "JavaScript 调试.xiaohezi.html.executor": "Run",
-    "Maven.jfinal_demo_for_maven [clean].executor": "Run",
-    "Maven.jfinal_demo_for_maven [install].executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "master",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "E:/202527Lpggpt/1/lpggpt/src/main/resources",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "SDK",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "preferences.lookFeel",
-    "vue.rearranger.settings.migration": "true",
-    "应用程序.DemoConfig.executor": "Run",
-    "应用程序._JFinalDemoGenerator.executor": "Run"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;JavaScript 调试.edit.html.executor&quot;: &quot;Run&quot;,
+    &quot;JavaScript 调试.filrdck.html.executor&quot;: &quot;Run&quot;,
+    &quot;JavaScript 调试.maequipmentlist.html.executor&quot;: &quot;Run&quot;,
+    &quot;JavaScript 调试.xiaohezi.html.executor&quot;: &quot;Run&quot;,
+    &quot;Maven.jfinal_demo_for_maven [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.jfinal_demo_for_maven [install].executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;E:/202527Lpggpt/1/lpggpt/src/main/resources&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;SDK&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;,
+    &quot;应用程序.DemoConfig.executor&quot;: &quot;Run&quot;,
+    &quot;应用程序._JFinalDemoGenerator.executor&quot;: &quot;Run&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="E:\202527Lpggpt\1\lpggpt\src\main\resources" />
+      <recent name="E:\202527Lpggpt\1\lpggpt\src\main\webapp\upload\temp" />
+      <recent name="E:\202527Lpggpt\1\lpggpt\upload" />
+      <recent name="E:\202527Lpggpt\1\lpggpt\upload\temp" />
       <recent name="E:\202527Lpggpt\1\lpggpt\src\main" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="com.sjzu.edu.index" />
     </key>
+  </component>
+  <component name="RunAnythingCache">
+    <myKeys>
+      <visibility group="Gradle 任务" flag="true" />
+      <visibility group="Grunt" flag="true" />
+      <visibility group="Gulp" flag="true" />
+      <visibility group="HTTP 请求" flag="true" />
+      <visibility group="Maven 目标" flag="true" />
+      <visibility group="Node.js" flag="true" />
+      <visibility group="npm" flag="true" />
+      <visibility group="yarn" flag="true" />
+      <visibility group="最近的项目" flag="true" />
+      <visibility group="运行配置" flag="true" />
+    </myKeys>
   </component>
   <component name="RunManager">
     <configuration default="true" type="JetRunConfigurationType">
@@ -155,7 +212,25 @@
       <workItem from="1741187542015" duration="910000" />
       <workItem from="1741188730339" duration="5566000" />
       <workItem from="1741248217113" duration="30000" />
-      <workItem from="1741248381908" duration="12410000" />
+      <workItem from="1741248381908" duration="14040000" />
+      <workItem from="1741310630093" duration="8334000" />
+      <workItem from="1741401103685" duration="16193000" />
+      <workItem from="1741426134575" duration="788000" />
+      <workItem from="1741426939646" duration="10161000" />
+      <workItem from="1741493085997" duration="16048000" />
+      <workItem from="1741521625561" duration="9638000" />
+      <workItem from="1741578784388" duration="11043000" />
+      <workItem from="1741617913051" duration="3082000" />
+      <workItem from="1741622578050" duration="29000" />
+      <workItem from="1741662967417" duration="3649000" />
+      <workItem from="1741738718916" duration="1228000" />
+      <workItem from="1741746603546" duration="1645000" />
+      <workItem from="1741830230831" duration="6551000" />
+      <workItem from="1741935510419" duration="16922000" />
+      <workItem from="1742007005114" duration="1475000" />
+      <workItem from="1742013078959" duration="4939000" />
+      <workItem from="1742120835455" duration="11780000" />
+      <workItem from="1742190604045" duration="2677000" />
     </task>
     <task id="LOCAL-00001" summary="添加了小盒子管理功能">
       <option name="closed" value="true" />
@@ -205,7 +280,31 @@
       <option name="project" value="LOCAL" />
       <updated>1741187620663</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="添加了智能数据库助手功能，修改了充装中记录，不合格记录">
+      <option name="closed" value="true" />
+      <created>1741270235361</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1741270235361</updated>
+    </task>
+    <task id="LOCAL-00008" summary="修改了充装中记录不显示，仅显示当天，加气机加气记录。">
+      <option name="closed" value="true" />
+      <created>1741270376342</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1741270376342</updated>
+    </task>
+    <task id="LOCAL-00009" summary="增加了LPG充装端的后台和对应后端">
+      <option name="closed" value="true" />
+      <created>1741666506200</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1741666506200</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -216,6 +315,8 @@
     <MESSAGE value="添加了小盒子管理功能" />
     <MESSAGE value="修改了充装记录，气瓶档案管理。" />
     <MESSAGE value="添加了智能数据库助手功能，修改了充装中记录，不合格记录" />
-    <option name="LAST_COMMIT_MESSAGE" value="添加了智能数据库助手功能，修改了充装中记录，不合格记录" />
+    <MESSAGE value="修改了充装中记录不显示，仅显示当天，加气机加气记录。" />
+    <MESSAGE value="增加了LPG充装端的后台和对应后端" />
+    <option name="LAST_COMMIT_MESSAGE" value="增加了LPG充装端的后台和对应后端" />
   </component>
 </project>

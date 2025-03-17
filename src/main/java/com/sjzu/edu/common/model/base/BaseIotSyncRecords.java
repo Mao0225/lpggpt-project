@@ -165,5 +165,33 @@ public abstract class BaseIotSyncRecords<M extends BaseIotSyncRecords<M>> extend
 		return getStr("user");
 	}
 	
+	/**
+	 * 数据来源
+	 */
+	public void setSource(java.lang.String source) {
+		set("source", source);
+	}
+	
+	/**
+	 * 数据来源
+	 */
+	public java.lang.String getSource() {
+		return getStr("source");
+	}
+	
+	/**
+	 * 原始内容
+	 */
+	public void setContent(java.lang.String content) {
+		set("content", content);
+	}
+	
+	/**
+	 * 原始内容
+	 */
+	public java.lang.String getContent() {
+		return getStr("content");
+	}
+	
 }
 

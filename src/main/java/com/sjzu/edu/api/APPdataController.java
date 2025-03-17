@@ -38,8 +38,11 @@ public class APPdataController extends Controller {
 
             // 第二步：此时可以获取普通参数
             String worker = getPara("worker");
+            String uuid = getPara("uuid");
+            String telephone = getPara("telephone");
             System.out.println("Worker参数值：" + worker);  // 现在应该能获取到值
-
+            System.out.println("UUID: "+uuid);
+            System.out.println("Telephone: "+telephone);
             // 参数验证
             if (worker == null || worker.trim().isEmpty()) {
                 result.put("code", 400);
@@ -51,7 +54,8 @@ public class APPdataController extends Controller {
             // 第三步：创建记录对象（必须在文件处理之后）
             Record record = new Record();
             record.set("worker", worker);
-
+            record.set("uuid", uuid);
+            record.set("telephone", telephone);
             // 3. 按类型分组处理文件
             Map<String, List<String>> filePaths = new HashMap<>();
 
@@ -97,7 +101,8 @@ public class APPdataController extends Controller {
 
     private String saveUploadFile(UploadFile uf) throws IOException {
         // 生成唯一文件名
-        String newName = UUID.randomUUID() + getFileExt(uf.getFileName());
+        String ext = getFileExt(uf);
+        String newName = UUID.randomUUID() + ext;
 
         // 创建目标目录
         File targetDir = new File(UPLOAD_DIR);
@@ -117,8 +122,31 @@ public class APPdataController extends Controller {
         return "upload/temp/data/" + newName;
     }
 
-    private String getFileExt(String fileName) {
+    private String getFileExt(UploadFile uf) {
+        // 优先从文件名获取扩展名
+        String fileName = uf.getFileName();
         int dotIndex = fileName.lastIndexOf('.');
-        return (dotIndex == -1) ? "" : fileName.substring(dotIndex);
+        if (dotIndex != -1) {
+            return fileName.substring(dotIndex);
+        }
+
+        // 根据MIME类型补充扩展名
+        String mimeType = uf.getContentType();
+        return getExtensionByMimeType(mimeType);
+    }
+
+    private String getExtensionByMimeType(String mimeType) {
+        switch (mimeType) {
+            case "image/jpeg":
+                return ".jpg";
+            case "image/png":
+                return ".png";
+            case "video/mp4":
+                return ".mp4";
+            case "video/webm":
+                return ".webm";
+            default:
+                return ""; // 未知类型留空
+        }
     }
 }

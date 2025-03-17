@@ -12,11 +12,14 @@ public class InstallController  extends Controller {
         int pageSize = getParaToInt("pageSzie",10);
         String xiaohezibianma= getPara("xiaohezibianma");
         String time =  getPara("time");
-        Page<BseXiaohezi>xiaoheziRecrd =service.paginate(pageNumber,pageSize,xiaohezibianma,time);
+        String restaurantname = getPara("restaurantname");
+        // 修改后
+        Page<Record> xiaoheziRecord = service.paginate(pageNumber, pageSize, xiaohezibianma, time,restaurantname);
         setAttr("time",time);
         setAttr("xiaohezibianma",xiaohezibianma);
+        setAttr("restaurantname",restaurantname);
         render("install.html");
-        setAttr("xiaohezi",xiaoheziRecrd);
+        setAttr("xiaohezi",xiaoheziRecord);
 
     }
     public void edit(){

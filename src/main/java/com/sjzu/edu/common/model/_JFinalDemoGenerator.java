@@ -31,7 +31,7 @@ public class _JFinalDemoGenerator {
 	public static void main(String[] args) {
 		// 假设您希望为默认数据库生成模型
 		DataSource dataSource = getDataSource("demo-config-dev.txt"); // 或者其他配置文件名
-		//DataSource dataSource = getDataSource("demo-config-lpg.txt"); // 或者其他配置文件名
+//		DataSource dataSource = getDataSource("demo-config-lpg.txt"); // 或者其他配置文件名
 //		DataSource dataSource = getDataSource("demo-config-jiaqi.txt"); // 或者其他配置文件名
 
 		// 以下设置与原来相同...
