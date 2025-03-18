@@ -125,7 +125,7 @@ public class AppxiaoheziController extends Controller {
         String restaurantName = getPara("restaurantname");
         String gasNumber = getPara("gas_number");
         String telephone = getPara("telephone");
-        String baseUrl = "http://172.20.10.2:8099/";
+        String baseUrl = "http://114.115.156.201:8099/";
         System.out.println("telephone " + telephone);
         System.out.println("startTime " + startTime);
         System.out.println("endTime " + endTime);
