@@ -114,17 +114,21 @@ public class AppxiaoheziController extends Controller {
 
     public void getData() {
         // 获取分页参数
+        // 获取分页参数（修改参数名）
         int pageNumber = getParaToInt("pageNumber", 1);
-        int pageSize = getParaToInt("size", 10);
-
+        int pageSize = getParaToInt("pageSize", 10); // 参数名改为pageSize
+        System.out.println("pageNumber " + pageNumber);
+        System.out.println("pageSize " + pageSize);
         // 接收查询参数
         String startTime = getPara("startTime");
         String endTime = getPara("endTime");
         String restaurantName = getPara("restaurantname");
         String gasNumber = getPara("gas_number");
-
-        String baseUrl = "http://114.115.156.201:8099/";
-
+        String telephone = getPara("telephone");
+        String baseUrl = "http://172.20.10.2:8099/";
+        System.out.println("telephone " + telephone);
+        System.out.println("startTime " + startTime);
+        System.out.println("endTime " + endTime);
         // 构建SQL查询
         String select = "SELECT " +
                 "d.door_video, d.qiguan_video, d.daoguan_video, d.louguan_video, " +
@@ -145,17 +149,15 @@ public class AppxiaoheziController extends Controller {
                         "INNER JOIN restaurant r ON x.xiaohezi_number = r.xiaohezi "
         );
 
+        StringBuilder whereClause = new StringBuilder();
         List<Object> params = new ArrayList<>();
         boolean hasWhere = false;
 
-        // 构建查询条件
-        StringBuilder whereClause = new StringBuilder();
-
-        // 1. 时间范围条件（使用 JFinal 的 StrKit.isBlank）
-        if (!StrKit.isBlank(startTime) && !StrKit.isBlank(endTime)) {
+        // 1. 时间范围条件（优化时间格式处理）
+        if (StrKit.notBlank(startTime) && StrKit.notBlank(endTime)) {
             whereClause.append("x.creattime BETWEEN ? AND ? ");
-            params.add(startTime);
-            params.add(endTime);
+            params.add(startTime + " 00:00:00");
+            params.add(endTime + " 23:59:59");
             hasWhere = true;
         }
 
@@ -179,15 +181,25 @@ public class AppxiaoheziController extends Controller {
             hasWhere = true;
         }
 
+        // 4. 电话号码精确查询
+        if (!StrKit.isBlank(telephone)) {
+            if (hasWhere) {
+                whereClause.append(" AND ");
+            }
+            whereClause.append("x.telephone = ? ");
+            params.add(telephone);
+            hasWhere = true;
+        }
+
+
         // 组合WHERE条件
         if (hasWhere) {
             sqlExceptSelect.append(" WHERE ").append(whereClause);
         }
         sqlExceptSelect.append(" ORDER BY d.id DESC");
 
-        // 执行分页查询（使用 JFinal 的 Db 工具）
+        // 执行分页查询
         Page<Record> page = Db.paginate(pageNumber, pageSize, select, sqlExceptSelect.toString(), params.toArray());
-
         JSONObject result = new JSONObject();
         if (page.getList().isEmpty()) {
             result.put("flag", "300");
@@ -223,8 +235,8 @@ public class AppxiaoheziController extends Controller {
 
             result.put("flag", "200");
             result.put("bangdinglist", formattedList);
-            result.put("totalPages", page.getTotalPage());
-            result.put("totalItems", page.getTotalRow());
+            result.put("total", page.getTotalRow());       // 关键修改：统一字段名
+            result.put("totalPages", page.getTotalPage()); // 总页数
         }
 
         renderJson(result);

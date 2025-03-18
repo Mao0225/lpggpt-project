@@ -40,6 +40,26 @@ public class AppbottleController extends Controller {
 
 
 	}
+	public void getfengtianBottleinfo() {
+		String bottlenumber = getPara("bottlenumber");
+		System.out.println("test bottlenumber:"+bottlenumber);
+		// 查询数据库中是否存在匹配的用户记录
+
+
+		GasFile gasFile =dao.findFirst("SELECT * FROM gas_file WHERE fengtiangasno = ?", bottlenumber);
+		//System.out.println(gasFile.toString());
+		JSONObject json = new JSONObject();
+		if (gasFile != null) {
+			json.put("flag","200" );
+			json.put("gasFile",gasFile );
+		}else{
+			json.put("flag","300" );
+		}
+
+		renderJson(json);
+
+
+	}
 }
 
 

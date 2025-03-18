@@ -85,6 +85,7 @@ public class APPdataController extends Controller {
             boolean success = Db.save(TABLE_NAME, record);
 
             if (success) {
+                System.out.println("保存成功");
                 result.put("code", 200);
                 result.put("msg", "数据保存成功");
             } else {
