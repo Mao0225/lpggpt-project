@@ -152,6 +152,7 @@ public class DemoConfig extends JFinalConfig {
 		me.add("/data",DataController.class);
 		me.add("/install",InstallController.class);
 		me.add("/xhzinfo",XhzinfoController.class);
+		//测试连接Github
 	}
 	
 	public void configEngine(Engine me) {
