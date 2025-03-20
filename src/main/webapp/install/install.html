@@ -138,7 +138,8 @@
 </div>
 
 <script>
-
+    // 新增服务器配置（加在页面顶部）
+    const SERVER_BASE_URL = 'http://114.115.156.201:8099';
     $(document).ready(function () {
         // 新增的模态窗口处理代码
         $('.openModal').click(function (e) {
@@ -205,7 +206,7 @@
 
         const mediaElement = isVideo ?
             $(`<video controls autoplay style="max-width:100%; max-height:70vh;">
-            <source src="${currentUrl}" type="${getMimeType(currentUrl)}">
+        <source src="${SERVER_BASE_URL}/${file.trim()}"type="${getMimeType(currentUrl)}">
            </video>`) :
             $(`<img src="${currentUrl}" style="max-width:100%; max-height:70vh;">`);
 
@@ -281,11 +282,11 @@
                     const mediaElement = isVideo ?
                         $(`<div class="media-item">
                         <video controls style="max-width:200px;max-height:150px;">
-                            <source src="/${file.trim()}" type="${getMimeType(file)}">
+                            <source  src="${SERVER_BASE_URL}/${file.trim()}" type="${getMimeType(file)}">
                         </video>
                        </div>`) :
                         $(`<div class="media-item">
-                        <img src="/${file.trim()}" style="max-width:200px;max-height:150px;cursor:zoom-in;">
+                        <img src="${SERVER_BASE_URL}/${file.trim()}" style="max-width:200px;max-height:150px;cursor:zoom-in;">
                        </div>`);
 
                     // 添加点击放大功能

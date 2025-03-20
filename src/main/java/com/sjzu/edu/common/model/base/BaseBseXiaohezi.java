@@ -221,5 +221,27 @@ public abstract class BaseBseXiaohezi<M extends BaseBseXiaohezi<M>> extends Mode
 		return getDate("creattime");
 	}
 	
+	/**
+	 * 连接两个表（bas_data和bse_xiaohezi)
+	 */
+	public void setUuid(java.lang.String uuid) {
+		set("uuid", uuid);
+	}
+	
+	/**
+	 * 连接两个表（bas_data和bse_xiaohezi)
+	 */
+	public java.lang.String getUuid() {
+		return getStr("uuid");
+	}
+	
+	public void setTelephone(java.lang.String telephone) {
+		set("telephone", telephone);
+	}
+	
+	public java.lang.String getTelephone() {
+		return getStr("telephone");
+	}
+	
 }
 

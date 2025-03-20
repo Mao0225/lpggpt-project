@@ -16,7 +16,7 @@ public class XhzinfoService {
      * @param xiaohezi   设备名称查询条件
      * @return 分页结果集
      */
-    public Page<Record> paginate(int pageNumber, int pageSize, String xiaohezi) {
+    public Page<Record> paginate(int pageNumber, int pageSize, String xiaohezi,Integer alarm) {
         // 基础查询语句
         String select = "SELECT *";
         StringBuilder sqlExceptSelect = new StringBuilder("FROM t_iot_sync_rds_records_v3 WHERE 1=1");
@@ -25,6 +25,10 @@ public class XhzinfoService {
         if (xiaohezi != null && !xiaohezi.trim().isEmpty()) {
             System.out.println(xiaohezi);
             sqlExceptSelect.append(" AND devicename = '").append(xiaohezi).append("'");
+        }
+        if (alarm != null) {
+            System.out.println(xiaohezi);
+            sqlExceptSelect.append(" AND alarm = ").append(alarm);
         }
 
         // 添加排序条件（按时间倒序）

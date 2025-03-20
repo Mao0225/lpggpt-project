@@ -97,5 +97,27 @@ public abstract class BaseBseData<M extends BaseBseData<M>> extends Model<M> imp
 		return getStr("status");
 	}
 	
+	/**
+	 * 连接两个表（bse_data和bse_xiaohezi)
+	 */
+	public void setUuid(java.lang.String uuid) {
+		set("uuid", uuid);
+	}
+	
+	/**
+	 * 连接两个表（bse_data和bse_xiaohezi)
+	 */
+	public java.lang.String getUuid() {
+		return getStr("uuid");
+	}
+	
+	public void setTelephone(java.lang.String telephone) {
+		set("telephone", telephone);
+	}
+	
+	public java.lang.String getTelephone() {
+		return getStr("telephone");
+	}
+	
 }
 

@@ -1,6 +1,7 @@
 package com.sjzu.edu.index;
 
 import com.jfinal.core.Controller;
+import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.sjzu.edu.common.model.GasStation;
 import com.sjzu.edu.common.model.ManageXiaohezi;
@@ -33,12 +34,33 @@ public class XiaoheziController extends Controller {
         setAttr("restaurants", restaurants);
         render("add.html");
       }
-      public void save(){
-        ManageXiaohezi mx = getModel(ManageXiaohezi.class,"xiaohezi");
-        if(mx.save()) {
-            redirect("/xiaohezi/xiaohezilist");
-        }
-      }
+    public void save() {
+        // 使用事务确保两个操作原子性
+        Db.tx(() -> {
+            // 1. 保存小盒子信息
+            ManageXiaohezi mx = getModel(ManageXiaohezi.class, "xiaohezi");
+            if (!mx.save()) {
+                return false; // 保存失败则回滚
+            }
+
+            // 2. 更新餐厅表的小盒子字段
+            Integer restaurantId = Integer.valueOf(mx.getRestaurantid());
+            if (restaurantId == null || restaurantId <= 0) {
+                return false; // 无效的餐厅ID
+            }
+
+            Restaurant restaurants = restaurant.findById(restaurantId);
+            if (restaurants == null) {
+                return false; // 找不到对应餐厅
+            }
+
+            // 将小盒子编号设置到餐厅记录
+            restaurants.setXiaohezi(mx.getXiaoheziNo());
+            return restaurants.update();
+        });
+
+        redirect("/xiaohezi/xiaohezilist");
+    }
       public void edit() {
         Integer id = getParaToInt("id");
         setAttr("xiaohezi",service.findById(id));

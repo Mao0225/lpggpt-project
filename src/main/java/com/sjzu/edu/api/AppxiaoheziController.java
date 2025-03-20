@@ -4,11 +4,13 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.jfinal.core.Controller;
 import com.jfinal.core.Path;
+import com.jfinal.json.JFinalJsonKit;
 import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 import com.sjzu.edu.common.model.Bangdingren;
+import com.sjzu.edu.common.model.Updateapp;
 import com.sjzu.edu.common.model.User;
 
 import javax.servlet.http.HttpSession;
@@ -18,6 +20,7 @@ import java.util.stream.Collectors;
 @Path(value = "/", viewPath = "/appxiaohezi")
 public class AppxiaoheziController extends Controller {
     private Bangdingren dao = new Bangdingren().dao();
+    private Updateapp udao = new Updateapp().dao();
     public void login() {
         String telephone = getPara("telephone");
         String password = getPara("password");
@@ -36,6 +39,58 @@ public class AppxiaoheziController extends Controller {
             json.put("flag", "300");
         }
         renderJson(json);
+    }
+
+    public void checkUpdate() {
+        try {
+            String clientVersion = getPara("version");
+            Record latestRecord = Db.findFirst("SELECT * FROM updateapp ORDER BY create_time DESC LIMIT 1");
+
+            JSONObject result = new JSONObject();
+
+            if (latestRecord == null) {
+                result.put("error", "未找到版本信息");
+                renderJson(result);
+                return;
+            }
+
+            String latestVersion = latestRecord.getStr("version");
+            boolean needUpdate = compareVersion(clientVersion, latestVersion) < 0;
+
+            // 构建标准响应结构
+            result.put("code", 200);
+            result.put("data", new JSONObject() {{
+                put("needUpdate", needUpdate);
+                put("latestVersion", latestVersion);
+                put("updateUrl", latestRecord.getStr("download_url"));
+                put("description", latestRecord.getStr("description"));
+                put("forceUpdate", latestRecord.getBoolean("force_update"));
+            }});
+
+            renderJson(result);
+        } catch (Exception e) {
+            JSONObject error = new JSONObject();
+            error.put("code", 500);
+            error.put("error", "版本检测失败：" + e.getMessage());
+            renderJson(error);
+        }
+    }
+
+
+    // 语义化版本比较方法
+    private int compareVersion(String v1, String v2) {
+        String[] arr1 = v1.split("\\.");
+        String[] arr2 = v2.split("\\.");
+
+        for (int i = 0; i < Math.max(arr1.length, arr2.length); i++) {
+            int num1 = (i < arr1.length) ? Integer.parseInt(arr1[i]) : 0;
+            int num2 = (i < arr2.length) ? Integer.parseInt(arr2[i]) : 0;
+
+            if (num1 != num2) {
+                return Integer.compare(num1, num2);
+            }
+        }
+        return 0;
     }
 
     public void saveXiaoheziData() {
