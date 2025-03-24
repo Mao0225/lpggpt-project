@@ -109,6 +109,67 @@ public class ApplpgyunxingController extends Controller {
 		}
 		renderJson(json);
 	}
+	public void getdatafordapinglgq() {
+		//刘国奇修改的，因为装了新的小盒子，然后新的大屏接口，很多数据都是最新的。
+		// 使用 "lpg" 数据源，这个是获取最新的20个t_iot_sync_records_v2表里的数据，获取气瓶间报警信息
+		//测试接口地址：http://localhost:8099/applpgyunxing/getdatafordapinglgq
+		//云数据库测试接口：http://114.115.156.201:8099/applpgyunxing/getdatafordapinglgq
+		addCorsHeaders(); // 添加这一行来允许跨域请求
+		//	获取gas_file总数，就是气瓶总数
+		String sqlqipingzongshu = "SELECT count(*) from gas_file";
+		Integer qipingzongshu = Db.use().queryNumber(sqlqipingzongshu).intValue();
+ //	获取当日运输的气罐数
+		String sqlyunshuzongshu = "SELECT COUNT(*) \n" +
+				"FROM gas_bottle \n" +
+				"WHERE DATE(start_time) = CURDATE()";
+		Integer dangriyunshuzongshu = Db.use().queryNumber(sqlyunshuzongshu).intValue();
+
+		//获取当日小盒子报警信息
+		String sqlbaojing = "SELECT count(*) \n" +
+				"FROM t_iot_sync_rds_records_v3 \n" +
+				"WHERE alarm IS NOT NULL \n" +
+				"  AND alarm <> 0\n" +
+				"  AND DATE(FROM_UNIXTIME(created_time / 1000)) = CURDATE()";
+		Integer dangribaojing = Db.use("lpg").queryNumber(sqlbaojing).intValue();
+		//获取当日充装
+		String sqldangrichongzhuang="SELECT COUNT(*) \n" +
+				"FROM fill_record_check1 \n" +
+				"WHERE DATE(fill_time) = CURDATE()";
+		Integer dangrichongzhuang = Db.use().queryNumber(sqldangrichongzhuang).intValue();
+
+		//获取报警信息列表
+		String sqlrecordbaojing="SELECT id, devicename, FROM_UNIXTIME(created_time / 1000) as created_time,alarm  \n" +
+				" from t_iot_sync_rds_records_v3 where alarm IS NOT NULL ORDER BY id desc limit 6\n";
+		List<Record> recordsbaojing = Db.use("lpg").find(sqlrecordbaojing);
+		//获取充装列表
+		String sqlrecordschongzhuang="SELECT fill_record_check1.gas_number,fill_record_check1.now_gas, fill_record_check1.fill_time, gas_station.station_name\n" +
+				"FROM fill_record_check1 \n" +
+				"LEFT JOIN gas_station on fill_record_check1.gasstation = gas_station.station_id\n" +
+				"WHERE DATE(fill_time) = CURDATE()\n" +
+				"ORDER BY fill_record_check1.id DESC\n";
+		List<Record> recordschongzhuang = Db.use().find(sqlrecordschongzhuang);
+
+
+//jason
+		JSONObject json = new JSONObject();
+
+		if (recordsbaojing != null || recordschongzhuang != null) {
+			json.put("flag","200" );
+			if (recordsbaojing != null) {
+				json.put("recordsbaojing", recordsbaojing);
+			}
+			if (recordschongzhuang != null) {
+				json.put("recordschongzhuang", recordschongzhuang);
+			}
+			json.put("qipingzongshu", qipingzongshu);
+			json.put("dangriyunshuzongshu", dangriyunshuzongshu);
+			json.put("dangribaojing", dangribaojing);
+			json.put("dangrichongzhuang", dangrichongzhuang);
+		}else{
+			json.put("flag","300" );
+		}
+		renderJson(json);
+	}
 	public void getdatafordaping() {
 		// 使用 "lpg" 数据源，这个是获取最新的20个t_iot_sync_records_v2表里的数据，获取气瓶间报警信息
 		//测试接口地址：http://localhost:8099/applpgyunxing/getdatafordaping
