@@ -10,7 +10,6 @@ import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 import com.sjzu.edu.common.model.Bangdingren;
-import com.sjzu.edu.common.model.Updateapp;
 import com.sjzu.edu.common.model.User;
 
 import javax.servlet.http.HttpSession;
@@ -20,7 +19,7 @@ import java.util.stream.Collectors;
 @Path(value = "/", viewPath = "/appxiaohezi")
 public class AppxiaoheziController extends Controller {
     private Bangdingren dao = new Bangdingren().dao();
-    private Updateapp udao = new Updateapp().dao();
+//    private Updateapp udao = new Updateapp().dao();
     public void login() {
         String telephone = getPara("telephone");
         String password = getPara("password");
