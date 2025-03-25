@@ -146,11 +146,32 @@ public class ApplpgyunxingController extends Controller {
 				"FROM fill_record_check1 \n" +
 				"LEFT JOIN gas_station on fill_record_check1.gasstation = gas_station.station_id\n" +
 				"WHERE DATE(fill_time) = CURDATE()\n" +
-				"ORDER BY fill_record_check1.id DESC\n";
+				"ORDER BY fill_record_check1.id DESC limit 5\n";
 		List<Record> recordschongzhuang = Db.use().find(sqlrecordschongzhuang);
 		//获取摄像头轮播图片
-		String sqlrecordsshexiangtou="SELECT Alarmpic,happendtime from shexiangtou ORDER BY id desc limit 5";
+		String sqlrecordsshexiangtou="SELECT Alarmpic,happendtime from shexiangtou ORDER BY id desc limit 20";
 		List<Record> recordsshexiangtou = Db.use().find(sqlrecordsshexiangtou);
+
+		//获取安装记录
+		String sqlrecordsanzhuang="SELECT \n" +
+				"    CONCAT_WS(',', \n" +
+				"        COALESCE(bse_xiaohezi.gas_number1, ''),\n" +
+				"        COALESCE(bse_xiaohezi.gas_number2, ''),\n" +
+				"        COALESCE(bse_xiaohezi.gas_number3, ''),\n" +
+				"        COALESCE(bse_xiaohezi.gas_number4, '')\n" +
+				"    ) AS gas_number,\n" +
+				"    bse_xiaohezi.creattime,\n" +
+				"    restaurant.name \n" +
+				"FROM \n" +
+				"    bse_xiaohezi \n" +
+				"LEFT JOIN \n" +
+				"    restaurant \n" +
+				"ON \n" +
+				"    bse_xiaohezi.xiaohezi_number = restaurant.xiaohezi\n" +
+				"ORDER BY \n" +
+				"    bse_xiaohezi.id DESC \n" +
+				"LIMIT 5";
+		List<Record> sqlrecordanzhuang = Db.use().find(sqlrecordsanzhuang);
 
 //jason
 		JSONObject json = new JSONObject();
@@ -165,6 +186,9 @@ public class ApplpgyunxingController extends Controller {
 			}
 			if (recordsshexiangtou != null) {
 				json.put("recordsshexiangtou", recordsshexiangtou);
+			}
+			if (sqlrecordanzhuang != null) {
+				json.put("sqlrecordanzhuang", sqlrecordanzhuang);
 			}
 			json.put("qipingzongshu", qipingzongshu);
 			json.put("dangriyunshuzongshu", dangriyunshuzongshu);

@@ -5,32 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bef31097-e2fd-4fd6-9377-5642cb374b1b" name="更改" comment="增加了LPG充装端的后台和对应后端">
-      <change beforePath="$PROJECT_DIR$/.idea/aws.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/aws.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/log/jfinal_demo_for_maven.log" beforeDir="false" afterPath="$PROJECT_DIR$/log/jfinal_demo_for_maven.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/api/ApplpgyunxingController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/api/ApplpgyunxingController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/sjzu/edu/common/model/GasFileCopy1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/sjzu/edu/common/model/GasFileCopy1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/sjzu/edu/common/model/ManageXiaohezi.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/sjzu/edu/common/model/ManageXiaohezi.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/sjzu/edu/common/model/base/BaseGasFileCopy1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/sjzu/edu/common/model/base/BaseGasFileCopy1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/sjzu/edu/common/model/base/BaseManageXiaohezi.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/sjzu/edu/common/model/base/BaseManageXiaohezi.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/FfilrdckController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/FfilrdckController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/FfilrecordckServive.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/FfilrecordckServive.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/GgasStationStaffController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/GgasStationStaffController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/GgasStationStaffService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/GgasStationStaffService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/JiaqizhongController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/JiaqizhongController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/JiaqizhongService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/JiaqizhongService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/JjiaqizhongController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/JjiaqizhongController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/JjiaqizhongService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/JjiaqizhongService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/MmgGunController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/MmgGunController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/MmgGunService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/MmgGunService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/TestController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/TestController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/UnqualifiedController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/UnqualifiedController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/UnqualifiedService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/UnqualifiedService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/UunqualifiedController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/UunqualifiedController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/UunqualifiedService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/UunqualifiedService.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/XiaoheziController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/XiaoheziController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/XiaoheziService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/XiaoheziService.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -204,7 +181,7 @@
       <workItem from="1742443745916" duration="213000" />
       <workItem from="1742444055489" duration="784000" />
       <workItem from="1742823845926" duration="5252000" />
-      <workItem from="1742910800054" duration="68000" />
+      <workItem from="1742910800054" duration="1643000" />
     </task>
     <task id="LOCAL-00001" summary="添加了小盒子管理功能">
       <option name="closed" value="true" />
