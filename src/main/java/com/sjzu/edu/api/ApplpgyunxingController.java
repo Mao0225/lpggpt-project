@@ -148,7 +148,9 @@ public class ApplpgyunxingController extends Controller {
 				"WHERE DATE(fill_time) = CURDATE()\n" +
 				"ORDER BY fill_record_check1.id DESC\n";
 		List<Record> recordschongzhuang = Db.use().find(sqlrecordschongzhuang);
-
+		//获取摄像头轮播图片
+		String sqlrecordsshexiangtou="SELECT Alarmpic,happendtime from shexiangtou ORDER BY id desc limit 5";
+		List<Record> recordsshexiangtou = Db.use().find(sqlrecordsshexiangtou);
 
 //jason
 		JSONObject json = new JSONObject();
@@ -160,6 +162,9 @@ public class ApplpgyunxingController extends Controller {
 			}
 			if (recordschongzhuang != null) {
 				json.put("recordschongzhuang", recordschongzhuang);
+			}
+			if (recordsshexiangtou != null) {
+				json.put("recordsshexiangtou", recordsshexiangtou);
 			}
 			json.put("qipingzongshu", qipingzongshu);
 			json.put("dangriyunshuzongshu", dangriyunshuzongshu);
