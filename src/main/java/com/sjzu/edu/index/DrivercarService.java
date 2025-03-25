@@ -24,8 +24,8 @@ public class DrivercarService {
         return dao.paginate(pageNumber, pageSize, "select *", "from drivercar order by id asc");
     }
     public Page<Drivercar> search(int pageNumber, int pageSize, String drivername, String driverphone, String drivercarno, String carname, String carshengchanriqi){
-        String sql = "from drivercar where ";
-        String sql2 = "select * ";
+        String sql ="FROM drivercar LEFT JOIN uploaddianzibiaoqian ON drivercar.id = uploaddianzibiaoqian.drivercarid WHERE 1 = 1 ";
+        String sql2 = "SELECT drivercar.*, uploaddianzibiaoqian.deviceid AS did ";
         // 拼接条件
         if (drivername != null && !drivername.isEmpty()) {
             sql += "drivername LIKE '%" + drivername + "%' AND ";

@@ -1,6 +1,7 @@
 package com.sjzu.edu.index;
 
 import com.jfinal.core.Controller;
+import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.sjzu.edu.common.model.GasStation;
@@ -76,12 +77,56 @@ public class XiaoheziController extends Controller {
         setAttr("restaurants", restaurants);
         render("edit.html");
       }
-      public void update(){
-          ManageXiaohezi mx = getModel(ManageXiaohezi.class,"xiaohezi");
-          if(mx.update()) {
-              redirect("/xiaohezi/xiaohezilist");
-          }
-      }
+    public void update() {
+        // 开启事务
+        Db.tx(() -> {
+            try {
+                ManageXiaohezi mx = getModel(ManageXiaohezi.class, "xiaohezi");
+
+                // 参数校验
+                if (StrKit.isBlank(mx.getXiaoheziNo())) {
+                    System.out.println("小盒子编号不能为空");
+                    return false;
+                }
+
+                // 查询饭店表
+                Restaurant restaurants = restaurant.findById(mx.getRestaurantid());
+                if (restaurants == null) {
+                    System.out.println("饭店不存在");
+                    return false;
+                }
+
+                // 唯一性校验（当前饭店是否已绑定其他小盒子）
+//                if (!StrKit.isBlank(restaurants.getXiaohezi())
+//                        && !restaurants.getXiaohezi().equals(mx.getXiaoheziNo())) {
+//                    System.out.println("该饭店已绑定其他小盒子");
+//                    return false;
+//                }
+
+                // 更新饭店表
+                restaurants.setXiaohezi(mx.getXiaoheziNo());
+                if (!restaurants.update()) {
+                    System.out.println("饭店信息更新失败");
+                    return false;
+                }
+
+                // 更新小盒子表
+                if (!mx.update()) {
+                    System.out.println("小盒子信息更新失败");
+                    return false;
+                }
+
+                return true;
+            } catch (Exception e) {
+                System.out.println("系统异常：" + e.getMessage());
+                return false;
+            }
+        });
+
+        // 事务成功后跳转
+        redirect("/xiaohezi/xiaohezilist");
+    }
+
 
       public void delete() {
         Integer id = getParaToInt("id");

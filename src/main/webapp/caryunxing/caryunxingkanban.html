@@ -13,24 +13,11 @@
 	<link rel="stylesheet" type="text/css" href="../css/lpg.css">
 	<script>
 		document.addEventListener('DOMContentLoaded', (event) => {
-			let resetTimer;
-
-			// 设置一个定时器自动重定向
-			resetTimer = setTimeout(function() {
-				window.location.href = '/caryunxing/yunxingkanban?carno=#(carno !=null?carno: "")';
-			}, 5000); // 5000 milliseconds = 5 seconds
-
-			// 停止自动重置
-			function stopAutoReset() {
-				clearTimeout(resetTimer);
-			}
-
-			// 开始自动重置
-			function startAutoReset() {
-				resetTimer = setTimeout(function() {
-					window.location.href = '/caryunxing/yunxingkanban?carno=#(carno !=null?carno: "")';
-				}, 5000);
-			}
+			// 手动刷新功能
+			document.getElementById('manualRefresh').addEventListener('click', function() {
+				const carno = encodeURIComponent("#(carno !=null?carno: '')");
+				window.location.href = `/caryunxing/yunxingkanban?carno=${carno}`;
+			});
 
 			// 显示路线
 			async function showRoute(carno, updatetime) {
@@ -63,8 +50,7 @@
 				const modal = document.getElementById("mapModal");
 				modal.style.display = "block";
 
-				// 停止自动重置
-				stopAutoReset();
+
 
 				const map = new AMap.Map('map', {
 					zoom: 12, // 设置适合的缩放级别
@@ -192,13 +178,12 @@
 	</style>
 </head>
 <body>
-<div id="pagediv">
-	<form id="searchForm" action="/caryunxing/yunxingkanban" method="post">
-		<label for="carno">请输入车牌号：</label>
-		<input type="text" id="carno" name="carno" placeholder="请输入车牌号" value="#(carno)"/>
-		&nbsp;&nbsp;<button type="submit">查询</button>
-	</form>
-</div>
+<form id="searchForm" action="/caryunxing/yunxingkanban" method="post">
+	<label for="carno">请输入车牌号：</label>
+	<input type="text" id="carno" name="carno" placeholder="请输入车牌号" value="#(carno)"/>
+	&nbsp;&nbsp;<button type="submit">查询</button>
+	&nbsp;&nbsp;<button type="button" id="manualRefresh">立即刷新</button>
+</form>
 
 <table class="list">
 	<tbody>

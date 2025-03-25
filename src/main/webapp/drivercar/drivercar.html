@@ -9,12 +9,77 @@
     <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/lpg.css">
     <!-- Add your custom stylesheets and scripts here -->
-</head>
-<body>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
+    <!-- 添加样式 -->
+    <style>
+        .media-gallery {
+            min-height: 200px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .media-item {
+            margin: 10px 0;
+            text-align: center;
+        }
+        .media-item img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px;
+        }
+
+        .modal-header {
+            border-bottom: 1px solid #dee2e6;
+            padding: 0.5rem 1rem;
+        }
+
+        .media-section {
+            margin-bottom: 0.5rem;
+            background: #f8f9fa;
+            border-radius: 4px;
+            padding: 4px;
+        }
+
+        .media-scroll-container {
+            flex-grow: 1;
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding: 2px;
+            margin-left: 8px;
+        }
+
+        .media-item {
+            flex: 0 0 80px;
+            height: 60px;
+            position: relative;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .media-item img,
+        .media-item video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            cursor: pointer;
+        }
+
+        .badge-secondary {
+            background-color: #6c757d;
+            min-width: 72px;
+            font-weight: normal;
+        }
+
+        .empty-placeholder {
+            color: #999;
+            font-size: 0.85em;
+            padding-left: 8px;
+        }
+
+    </style>
+
 </head>
 <body>
 <div id="pagediv">
@@ -90,20 +155,18 @@
         <th width="2%">Id</th>
         <th width="2%">司机姓名</th>
         <th width="2%">联系方式</th>
+        <th width="2%">车载读卡器编号</th>
         <th width="2%">出生日期</th>
         <th width="2%">性别</th>
         <th width="2%">车牌号</th>
         <th width="2%">车辆名称</th>
         <th width="2%">车辆颜色</th>
         <th width="2%">车辆生产日期</th>
-
-        <th width="2%">驾驶证照片</th>
-        <th width="2%">车辆照片</th>
         <th width="2%">身份证号</th>
         <th width="2%">危货证件号</th>
         <th width="2%">危货证件有效期</th>
-        <th width="2%">危货证件照片</th>
         <th width="2%">操作标识</th>
+        <th width="4%">证件照片查看</th>
         <th width="2%">操作</th>
     </tr>
     #set(startIndex = (drivercar.pageNumber - 1) * drivercar.pageSize + 1)
@@ -113,6 +176,7 @@
         <td style="text-align:center">#(startIndex++)</td> <!-- 显示序号并递增 -->
         <td style="text-align:center">#(x.drivername)</td>
         <td style="text-align:center">#(x.driverphone)</td>
+        <td style="text-align:center">#(x.did)</td>
         <td style="text-align:center">#(x.driverbirthday)</td>
         <td style="text-align:center">#(x.driversex)</td>
         <td style="text-align:center">#(x.drivercarno)</td>
@@ -120,38 +184,9 @@
         <td style="text-align:center">#(x.carcolor)</td>
         <td style="text-align:center">#(x.carshengchanriqi)</td>
 
-        <td style="text-align:center">
-            #if(x.driver_license_image_url)
-            <button id="prevButtonDriverLicense#(x.id)" onclick="prevImage('driver_license_image#(x.id)')" style="width: 50px;height: 20px;font-size: 10px">上一张</button>
-            <img id="driver_license_image#(x.id)" src="#(x.driver_license_image_url.split(',')[0])" alt="驾驶执照图像" onclick="showImage(this.src)" data-urls="#(x.driver_license_image_url)">
-            <button id="nextButtonDriverLicense#(x.id)" onclick="nextImage('driver_license_image#(x.id)')" style="width: 50px;height: 20px;font-size: 10px">下一张</button>
-            #else
-            <img src="/img/+++++.png" alt="驾驶执照图像" style="display: none;">
-            #end
-        </td>
-
-        <td style="text-align:center">
-            #if(x.car_image_url)
-            <button id="prevButtonCar#(x.id)" onclick="prevImage('car_image#(x.id)')" style="width: 50px;height: 20px;font-size: 10px">上一张</button>
-            <img id="car_image#(x.id)" src="#(x.car_image_url.split(',')[0])" alt="车辆图像" onclick="showImage(this.src)" data-urls="#(x.car_image_url)">
-            <button id="nextButtonCar#(x.id)" onclick="nextImage('car_image#(x.id)')" style="width: 50px;height: 20px;font-size: 10px">下一张</button>
-            #else
-            <img src="/img/+++++.png" alt="车辆图像" style="display: none;">
-            #end
-        </td>
-
         <td style="text-align:center">#(x.identity_card_no)</td>
         <td style="text-align:center">#(x.risk_cargo_license_no)</td>
         <td style="text-align:center">#(x.risk_cargo_license_indate)</td>
-        <td style="text-align:center">
-            #if(x.risk_cargo_license_image_url)
-            <button id="prevButtonRiskCargo#(x.id)" onclick="prevImage('risk_cargo_license_image#(x.id)')" style="width: 50px;height: 20px;font-size: 10px">上一张</button>
-            <img id="risk_cargo_license_image#(x.id)" src="#(x.risk_cargo_license_image_url.split(',')[0])" alt="危货证件照片" onclick="showImage(this.src)" data-urls="#(x.risk_cargo_license_image_url)">
-            <button id="nextButtonRiskCargo#(x.id)" onclick="nextImage('risk_cargo_license_image#(x.id)')" style="width: 50px;height: 20px;font-size: 10px">下一张</button>
-            #else
-            <img src="/img/+++++.png" alt="危货证件照片" style="display: none;">
-            #end
-        </td>
 
         <td style="text-align:center">
             #if(x.update_sign == 1)
@@ -164,12 +199,117 @@
         </td>
 
         <td style="text-align:center">
+            <a href="javascript:void(0)" class="show-media"
+               data-driver-license="#(x.driver_license_image_url)"
+               data-car-image="#(x.car_image_url)"
+               data-risk-cargo="#(x.risk_cargo_license_image_url)">
+                查看
+            </a>
+        </td>
+
+        <td style="text-align:center">
             &nbsp;&nbsp;<a href="#" onclick="confirmDelete('#(x.id)')">删除</a>
             <a href="#" class="edit openModal" data-title="编辑用户" data-edit-url="/drivercar/edit/#(x.id)">修改</a>
         </td>
+
     </tr>
     #end
 
+    <!-- 修改模态窗口结构 -->
+    <div class="modal fade" id="mediaModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header py-2">
+                    <h6 class="modal-title">证件信息核查</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="font-size: 1.2rem">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body p-2">
+                    <!-- 驾驶证照片 -->
+                    <div class="media-section">
+                        <div class="d-flex align-items-center mb-1">
+                            <span class="badge badge-sm badge-secondary">驾驶证照片</span>
+                            <div class="media-scroll-container" id="driverLicenseGallery"></div>
+                        </div>
+                    </div>
+
+                    <!-- 车辆照片 -->
+                    <div class="media-section">
+                        <div class="d-flex align-items-center mb-1">
+                            <span class="badge badge-sm badge-secondary">车辆照片</span>
+                            <div class="media-scroll-container" id="carImageGallery"></div>
+                        </div>
+                    </div>
+
+                    <!-- 危货证件 -->
+                    <div class="media-section">
+                        <div class="d-flex align-items-center mb-1">
+                            <span class="badge badge-sm badge-secondary">危货证件</span>
+                            <div class="media-scroll-container" id="riskCargoGallery"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 修改脚本中的路径处理 -->
+    <script>
+        $(document).ready(function() {
+            $('.show-media').click(function() {
+                $('.media-scroll-container').empty();
+
+                const driverLicense = $(this).data('driver-license') || '';
+                const carImage = $(this).data('car-image') || '';
+                const riskCargo = $(this).data('risk-cargo') || '';
+
+                // 修改createMediaItems函数中的路径处理逻辑
+                function createMediaItems(urls, containerId) {
+                    const container = $(containerId);
+                    container.empty();
+
+                    if(!urls.trim()) {
+                        container.append('<span class="empty-placeholder">暂无数据</span>');
+                        return;
+                    }
+
+                    const baseUrl = window.location.origin; // 自动获取当前访问域名
+
+                    urls.split(',').forEach(url => {
+                        if(url.trim()) {
+                            let fullUrl = url.trim();
+
+                            // 路径处理逻辑
+                            if(!fullUrl.startsWith('http')) {
+                                fullUrl = fullUrl.startsWith('/') ?
+                                    `${baseUrl}${fullUrl}` :
+                                    `${baseUrl}/upload/temp/drivercar/${fullUrl}`;
+                            }
+
+                            const mediaElement = fullUrl.match(/\.(mp4|webm|ogg)$/i) ?
+                                `<video controls class="w-100 h-100">
+                    <source src="${fullUrl}">
+                </video>` :
+                                `<img src="${fullUrl}" onclick="showImage('${fullUrl}')">`;
+
+                            container.append(`
+                <div class="media-item">
+                    ${mediaElement}
+                </div>
+            `);
+                        }
+                    });
+                }
+
+                createMediaItems(driverLicense, '#driverLicenseGallery');
+                createMediaItems(carImage, '#carImageGallery');
+                createMediaItems(riskCargo, '#riskCargoGallery');
+
+                $('#mediaModal').modal('show');
+            });
+        });
+    </script>
 
 
     <script>
@@ -235,7 +375,7 @@
     "&drivercarno=" + (drivercarno != null ? drivercarno : "") + "&carname=" + (carname != null ? carname : "") +
     "&shengchanriqi=" + (carshengchanriqi != null ? carshengchanriqi : "") + "&page=")")
 </div>
-
+//j oiw
 
 
 <script>
