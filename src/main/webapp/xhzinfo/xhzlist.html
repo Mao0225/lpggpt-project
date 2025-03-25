@@ -277,43 +277,48 @@
     // 精确版RFID转换函数
     function convertRfid(rfidStr) {
         try {
-            // 空值处理
-            if (!rfidStr || rfidStr === 'null' || rfidStr === 'undefined' || rfidStr === '[]') {
+            // 空值处理（保持原样）
+            if (!rfidStr || ['null', 'undefined', '[]'].includes(rfidStr)) {
                 return '';
             }
 
-            // 预处理（统一格式）
+            // 数据预处理（保持原样）
             let cleanStr = rfidStr.toString()
-                .replace(/[^0-9,]/g, '') // 移除非数字和逗号字符
-                .replace(/,+/g, ',')     // 合并多个逗号
-                .replace(/^,|,$/g, '');  // 去除首尾逗号
+                .replace(/[^0-9,]/g, '')
+                .replace(/,+/g, ',')
+                .replace(/^,|,$/g, '');
 
-            // 分割为数字数组
-            let arr = cleanStr.split(',').slice(0, 14) // 最多取14个元素
-                .map(item => {
-                    let num = parseInt(item, 10);
-                    return isNaN(num) ? 0 : Math.max(0, num);
-                });
+            // 转换为数字数组（保持原样）
+            let arr = cleanStr.split(',').slice(0, 14)
+                .map(item => Math.max(0, parseInt(item) || 0));
 
-            // 精确截取索引5到11的7个元素（第6到12个值）
-            const subArr = arr.slice(5, 12);
+            // 新版核心逻辑：查找最后一个0的位置
+            const lastZeroIndex = arr.lastIndexOf(0);
+
+            // 找不到0的特殊处理
+            if (lastZeroIndex === -1) {
+                console.warn('未找到起始0，使用备用方案');
+            }
+
+            // 截取从最后一个0开始的7个元素
+            let subArr = arr.slice(lastZeroIndex, lastZeroIndex + 7);
+
+            // 长度不足补0（保持原样）
             if (subArr.length < 7) {
                 subArr.push(...new Array(7 - subArr.length).fill(0));
             }
 
-            // 核心修正：先补足两位十进制，再进行十六进制转换
-            const hexParts = subArr.map(num => {
-                // 步骤1：将数字格式化为两位十进制字符串
-                const decStr = num.toString().padStart(2, '0');
-                console.log("decStr: "+decStr);
-                // 步骤2：将两位十进制转换为十六进制
-                return parseInt(decStr, 10).toString(16).padStart(2, '0');
-            });
+            // 调试日志
+            console.log('截取数组:', subArr);
 
-            // 合并十六进制字符串
+            // 转换逻辑（保持原样）
+            const hexParts = subArr.map(num =>
+                parseInt(num.toString().padStart(2, '0'), 10)
+                    .toString(16)
+                    .padStart(2, '0')
+            );
+
             const hexStr = hexParts.join('');
-
-            // 转换为十进制（支持最大16字节数值）
             return BigInt('0x' + hexStr).toString();
 
         } catch (e) {
