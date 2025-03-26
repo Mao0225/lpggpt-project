@@ -88,7 +88,26 @@ public class AppgetnowgasController extends Controller {
 		// 返回 JSON 数据
 		renderJson(result);
 	}
+	/**
+	 * 获取每年的加气量
+	 */
+	public void getnowgaseachyear() {
+		addCorsHeaders();
+		String sql = "SELECT " +
+				"    YEAR(tradedate) AS 年份, " +
+				"    ROUND(SUM(nowgas), 2) AS 加气量 " +
+				"FROM othergas " +
+				"GROUP BY YEAR(tradedate) " +
+				"ORDER BY 年份 DESC";
 
+		List<Record> yearlyGasList = Db.use("jiaqi").find(sql);
+
+		JSONObject result = new JSONObject();
+		result.put("success", true);
+		result.put("data", yearlyGasList);
+
+		renderJson(result);
+	}
 	public void addCorsHeaders() {
 		// 获取 HttpServletResponse 对象
 		HttpServletResponse response = getResponse();
