@@ -99,6 +99,8 @@ public class DemoConfig extends JFinalConfig {
 		me.add("/appgasfilebangding", AppgasfilebangdingController.class);//绑定奉天码镂空码
         me.add("/appxiaohezi", AppxiaoheziController.class);
 		me.add("/appdata", APPdataController.class);
+		me.add("/appgetnowgas", AppgetnowgasController.class);
+
 
 		//手机接口结束  AppbangdingController
 		//me.scan("com.demo.");
