@@ -14,13 +14,21 @@ public class InstallService {
     public Page<Record> paginate(int pageNumber, int pageSize, String xiaohezi, String time, String name) {
         // 构建 SELECT 字段
         String select = "SELECT x.*, r.name AS restaurant_name, r.address AS restaurant_address, "
-                + "d.door_video, d.qiguan_video, d.daoguan_video, d.louguan_video ";
+                + "d.door_video, d.qiguan_video, d.daoguan_video, d.louguan_video, "
+                + "gf1.fengtiangasno AS gasfengtianno1, "
+                + "gf2.fengtiangasno AS gasfengtianno2, "
+                + "gf3.fengtiangasno AS gasfengtianno3, "
+                + "gf4.fengtiangasno AS gasfengtianno4 ";
 
         // 构建基础 SQL
         StringBuilder fromSql = new StringBuilder()
                 .append("FROM bse_xiaohezi x ")
                 .append("INNER JOIN bse_data d ON x.uuid = d.uuid ")
-                .append("INNER JOIN restaurant r ON x.xiaohezi_number = r.xiaohezi ");
+                .append("INNER JOIN restaurant r ON x.xiaohezi_number = r.xiaohezi ")
+                .append("LEFT JOIN gas_file gf1 ON x.gas_number1 = gf1.gas_number ")
+                .append("LEFT JOIN gas_file gf2 ON x.gas_number2 = gf2.gas_number ")
+                .append("LEFT JOIN gas_file gf3 ON x.gas_number3 = gf3.gas_number ")
+                .append("LEFT JOIN gas_file gf4 ON x.gas_number4 = gf4.gas_number ");
 
         List<Object> params = new ArrayList<>();
         int conditionCount = 0;
@@ -56,6 +64,8 @@ public class InstallService {
                 params.toArray()
         );
     }
+
+
 
     // 其他方法保持原样
     public BseXiaohezi findById(Integer id){

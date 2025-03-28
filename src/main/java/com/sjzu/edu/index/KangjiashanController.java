@@ -3,6 +3,7 @@ package com.sjzu.edu.index;
 import com.jfinal.aop.Inject;
 import com.jfinal.core.Controller;
 import com.jfinal.core.Path;
+import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.upload.UploadFile;
 import com.sjzu.edu.common.model.Bangdingren;
 
@@ -25,4 +26,6 @@ public class KangjiashanController extends Controller {
         setAttr("jiaqilist", service.paginate(pageNumber,10));
         render("jiaqilist.html");
     }
+
+
 }
