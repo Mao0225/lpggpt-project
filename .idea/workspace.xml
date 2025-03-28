@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bef31097-e2fd-4fd6-9377-5642cb374b1b" name="更改" comment="增加了LPG充装端的后台和对应后端">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/api/ApplpgyunxingController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/api/ApplpgyunxingController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/XiaoheziController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/XiaoheziController.class" afterDir="false" />
-    </list>
+    <list default="true" id="bef31097-e2fd-4fd6-9377-5642cb374b1b" name="更改" comment="新增了出库审核。" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -255,7 +251,15 @@
       <option name="project" value="LOCAL" />
       <updated>1741666506200</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="新增了出库审核。">
+      <option name="closed" value="true" />
+      <created>1743169808255</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1743169808255</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -268,6 +272,7 @@
     <MESSAGE value="添加了智能数据库助手功能，修改了充装中记录，不合格记录" />
     <MESSAGE value="修改了充装中记录不显示，仅显示当天，加气机加气记录。" />
     <MESSAGE value="增加了LPG充装端的后台和对应后端" />
-    <option name="LAST_COMMIT_MESSAGE" value="增加了LPG充装端的后台和对应后端" />
+    <MESSAGE value="新增了出库审核。" />
+    <option name="LAST_COMMIT_MESSAGE" value="新增了出库审核。" />
   </component>
 </project>
