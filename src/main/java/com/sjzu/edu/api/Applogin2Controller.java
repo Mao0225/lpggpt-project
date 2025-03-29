@@ -558,34 +558,83 @@ public class Applogin2Controller extends Controller {
         String bottleid = getPara("bottleid");
         System.out.println("bottleid: " + bottleid);
 
-        // 创建一个 JSON 对象，用于封装查询结果
         JSONObject json = new JSONObject();
 
         if (bottleid != null && !bottleid.isEmpty()) {
-            // 构建 SQL 查询语句，根据 bottleid 从 gas_bottle 表中查询记录
-            String sql = "SELECT * FROM gas_file WHERE gas_number =?";
-            // 执行查询，获取符合条件的记录
-            Record record = Db.use().findFirst(sql, bottleid);
+            try {
+                // 修改后的SQL，使用JOIN关联两个表
+                String sql = "SELECT gf.*, gb.trans_staff, gb.tel " +
+                        "FROM gas_file gf " +
+                        "LEFT JOIN gas_bottle gb ON gf.gas_number = gb.bottle_id " +
+                        "WHERE gf.gas_number = ?";
 
-            if (record != null) {
-                // 如果查询到记录，将记录的所有字段添加到 JSON 对象中
-                json.putAll(record.getColumns());
-                json.put("flag", "200");
-                json.put("message", "数据查询成功");
-            } else {
-                // 如果未查询到记录，设置相应的标志和消息
-                json.put("flag", "300");
-                json.put("message", "未找到对应的气瓶信息");
+                // 执行查询
+                Record record = Db.use().findFirst(sql, bottleid);
+
+                if (record != null) {
+                    // 获取gas_file所有字段
+                    json.putAll(record.getColumns());
+
+                    // 添加gas_bottle的特定字段
+                    json.put("trans_staff", record.getStr("trans_staff"));
+                    json.put("tel", record.getStr("tel"));
+
+                    json.put("flag", "200");
+                    json.put("message", "数据查询成功");
+                } else {
+                    json.put("flag", "300");
+                    json.put("message", "未找到对应的气瓶信息");
+                }
+            } catch (Exception e) {
+                // 处理数据库异常
+                json.put("flag", "500");
+                json.put("message", "数据库查询异常: " + e.getMessage());
+                e.printStackTrace();
             }
         } else {
-            // 如果传入的 bottleid 为空，设置相应的标志和消息
             json.put("flag", "300");
             json.put("message", "传入的气瓶编号为空");
         }
 
-        // 将 JSON 对象以 JSON 格式返回给前端
         renderJson(json);
     }
+
+    public void checkBottleExists() {
+        // 获取前端传来的二维码编号
+        String qrcode = getPara("qrcode");
+        JSONObject json = new JSONObject();
+
+        // 参数有效性验证
+        if (qrcode == null || qrcode.isEmpty()) {
+            json.put("flag", "300");
+            json.put("message", "二维码编号不能为空");
+            renderJson(json);
+            return;
+        }
+
+        try {
+            // 构建查询SQL
+            String sql = "SELECT id FROM transport WHERE bottleid = ? LIMIT 1";
+            // 执行查询
+            Record record = Db.use().findFirst(sql, qrcode);
+
+            if (record != null) {
+                json.put("flag", "200");
+                json.put("message", "存在运输记录");
+            } else {
+                json.put("flag", "300");
+                json.put("message", "无对应运输记录");
+            }
+        } catch (Exception e) {
+            // 数据库异常处理
+            json.put("flag", "500");
+            json.put("message", "数据库查询异常: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        renderJson(json);
+    }
+
 
     }
 
