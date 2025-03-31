@@ -6,6 +6,41 @@
   <component name="ChangeListManager">
     <list default="true" id="bef31097-e2fd-4fd6-9377-5642cb374b1b" name="更改" comment="增加了LPG充装端的后台和对应后端">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/api/ApploginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/api/ApploginController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/api/ApplpgyunxingController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/api/ApplpgyunxingController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/api/AppxiaoheziController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/api/AppxiaoheziController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/sjzu/edu/common/model/GasFileCopy1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/sjzu/edu/common/model/GasFileCopy1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/sjzu/edu/common/model/ManageXiaohezi.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/sjzu/edu/common/model/ManageXiaohezi.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/sjzu/edu/common/model/base/BaseGasFileCopy1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/sjzu/edu/common/model/base/BaseGasFileCopy1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/sjzu/edu/common/model/base/BaseManageXiaohezi.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/sjzu/edu/common/model/base/BaseManageXiaohezi.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/FfilrdckController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/FfilrdckController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/FfilrecordckServive.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/FfilrecordckServive.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/GgasStationStaffController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/GgasStationStaffController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/GgasStationStaffService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/GgasStationStaffService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/JiaqizhongController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/JiaqizhongController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/JiaqizhongService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/JiaqizhongService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/JjiaqizhongController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/JjiaqizhongController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/JjiaqizhongService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/JjiaqizhongService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/MmgGunController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/MmgGunController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/MmgGunService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/MmgGunService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/TestController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/TestController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/UnqualifiedController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/UnqualifiedController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/UnqualifiedService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/UnqualifiedService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/UunqualifiedController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/UunqualifiedController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/UunqualifiedService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/UunqualifiedService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/XiaoheziController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/XiaoheziController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/XiaoheziService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/sjzu/edu/index/XiaoheziService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/jfinal_demo_for_maven-release/jfinal_demo_for_maven/webapp/GgasStationStaff/GasStationStaff.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/jfinal_demo_for_maven-release/jfinal_demo_for_maven/webapp/GgasStationStaff/add.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/jfinal_demo_for_maven-release/jfinal_demo_for_maven/webapp/GgasStationStaff/edit.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/jfinal_demo_for_maven-release/jfinal_demo_for_maven/webapp/Jjiaqizhong/Jjiaqizhong.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/jfinal_demo_for_maven-release/jfinal_demo_for_maven/webapp/Unqualified/unqualified.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/jfinal_demo_for_maven-release/jfinal_demo_for_maven/webapp/Uunqualified/uunqualified.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/jfinal_demo_for_maven-release/jfinal_demo_for_maven/webapp/ffilrdck/filrdck.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/jfinal_demo_for_maven-release/jfinal_demo_for_maven/webapp/jiaqizhong/jiaqizhong.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/jfinal_demo_for_maven-release/jfinal_demo_for_maven/webapp/mmanagegun/add.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/jfinal_demo_for_maven-release/jfinal_demo_for_maven/webapp/mmanagegun/edit.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/jfinal_demo_for_maven-release/jfinal_demo_for_maven/webapp/mmanagegun/gunlist.html" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,38 +70,38 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "DefaultHtmlFileTemplate": "HTML File",
-    "JavaScript 调试.edit.html.executor": "Run",
-    "JavaScript 调试.filrdck.html.executor": "Run",
-    "JavaScript 调试.maequipmentlist.html.executor": "Run",
-    "JavaScript 调试.xiaohezi.html.executor": "Run",
-    "Maven.jfinal_demo_for_maven [clean].executor": "Run",
-    "Maven.jfinal_demo_for_maven [install].executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "master",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/Users/jason/工作/xiangmu/jfinal/lpggpt/lpggpt",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "SDK",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "preferences.lookFeel",
-    "spring.configuration.checksum": "bc76a0d200da92e0f48872cc82c042da",
-    "vue.rearranger.settings.migration": "true",
-    "应用程序.DemoConfig.executor": "Run",
-    "应用程序._JFinalDemoGenerator.executor": "Run"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;JavaScript 调试.edit.html.executor&quot;: &quot;Run&quot;,
+    &quot;JavaScript 调试.filrdck.html.executor&quot;: &quot;Run&quot;,
+    &quot;JavaScript 调试.maequipmentlist.html.executor&quot;: &quot;Run&quot;,
+    &quot;JavaScript 调试.xiaohezi.html.executor&quot;: &quot;Run&quot;,
+    &quot;Maven.jfinal_demo_for_maven [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.jfinal_demo_for_maven [install].executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/jason/工作/xiangmu/jfinal/lpggpt/lpggpt&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;SDK&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
+    &quot;spring.configuration.checksum&quot;: &quot;bc76a0d200da92e0f48872cc82c042da&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;,
+    &quot;应用程序.DemoConfig.executor&quot;: &quot;Run&quot;,
+    &quot;应用程序._JFinalDemoGenerator.executor&quot;: &quot;Run&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="E:\202527Lpggpt\1\lpggpt\src\main\resources" />
@@ -188,6 +223,7 @@
       <workItem from="1743076586029" duration="18000" />
       <workItem from="1743079556652" duration="19000" />
       <workItem from="1743148380179" duration="4809000" />
+      <workItem from="1743385716100" duration="15040000" />
     </task>
     <task id="LOCAL-00001" summary="添加了小盒子管理功能">
       <option name="closed" value="true" />

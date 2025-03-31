@@ -71,6 +71,60 @@ public class ApplpgyunxingController extends Controller {
 		// 返回JSON格式数据
 		renderJson(json);
 	}
+
+	//刘国奇 2025-03-31，写的小盒子报警信息，在 v3表里查的，给小盒子手机端用的
+	public void getbaojingforxinxiaohezi() {
+		// 添加跨域请求头
+		addCorsHeaders();
+
+		// 获取分页参数，默认值为第一页，每页10条
+		int pageNumber = getParaToInt("page", 1);
+		int pageSize = getParaToInt("size", 10);
+		// 获取设备名参数
+		String devicename = getPara("deviceName", "");
+		System.out.println("devicename:" + devicename);
+
+		// 构建查询语句，过滤Alarm不为0并匹配devicename
+		String select = "SELECT t.devicename, t.Alarm, t.created_time, " +
+				"CASE t.Alarm " +
+				"WHEN 0 THEN '正常' " +
+				"WHEN 1 THEN '操作间报警' " +
+				"WHEN 2 THEN '气瓶间报警' " +
+				"WHEN 3 THEN '摄像头报警' " +
+				"WHEN 4 THEN '烟感报警' " +
+				"WHEN 5 THEN '防拆卸报警' " +
+				"ELSE t.Alarm " +
+				"END AS Alarm, t.PowerStatus ";
+		String sqlExceptSelect = "FROM t_iot_sync_rds_records_v3 t " +
+				"WHERE t.Alarm IS NOT NULL AND t.Alarm != 0 AND t.devicename = ? " +
+				"ORDER BY t.id DESC";
+
+		// 执行分页查询
+		Page<Record> page = Db.use("lpg").paginate(pageNumber, pageSize, select, sqlExceptSelect, devicename);
+
+		// 构建返回的JSON对象
+		JSONObject json = new JSONObject();
+		if (page != null && page.getList().size() > 0) {
+			json.put("flag", "200");
+			json.put("baojinglist", page);
+			// 格式化时间戳
+			for (Record record : page.getList()) {
+				Long timestamp = record.getLong("created_time");
+				if (timestamp != null) {
+					Date date = new Date(timestamp);
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+					record.set("created_time", sdf.format(date));
+				}
+			}
+		} else {
+			json.put("flag", "300");
+		}
+
+		// 返回JSON格式数据
+		renderJson(json);
+	}
+
+	//刘国奇 2025-03-31，写的小盒子报警信息，在 v3表里查的，给小盒子手机端用的，结束
 	//下面这个方法是用于大屏的
 	public void getbaojinginfo() {
 		// 使用 "lpg" 数据源，这个是获取最新的50个t_iot_sync_records_v2表里的数据，包括报警信息，秤的读数
