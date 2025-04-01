@@ -85,7 +85,7 @@ public class ApplpgyunxingController extends Controller {
 		System.out.println("devicename:" + devicename);
 
 		// 构建查询语句，过滤Alarm不为0并匹配devicename
-		String select = "SELECT t.devicename, t.Alarm, t.created_time, " +
+		String select = "SELECT t.devicename, t.M_ValStat, t.Alarm, t.Gas_Pg, t.created_time, " +
 				"CASE t.Alarm " +
 				"WHEN 0 THEN '正常' " +
 				"WHEN 1 THEN '操作间报警' " +
@@ -96,7 +96,7 @@ public class ApplpgyunxingController extends Controller {
 				"ELSE t.Alarm " +
 				"END AS Alarm, t.PowerStatus ";
 		String sqlExceptSelect = "FROM t_iot_sync_rds_records_v3 t " +
-				"WHERE t.Alarm IS NOT NULL AND t.Alarm != 0 AND t.devicename = ? " +
+				"WHERE (t.Alarm IS NOT Null or t.Gas_Pg is not Null) AND t.devicename = ? " +
 				"ORDER BY t.id DESC";
 
 		// 执行分页查询
