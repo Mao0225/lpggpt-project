@@ -118,33 +118,36 @@
         <td>#(x.devicename)</td>
         <td class="created-time">#(x.created_time)</td>
         <td>#(x.requestid)</td>
-        <td>#if(x.get("Valuestatus1") == null)
-            #else if(x.get("Valuestatus1") == 0)
+        <td>
+            #if(x.get("ValveStatus1") == null)
+            #else if(x.get("ValveStatus1") == 0)
             关
-            #else if(x.get("Valuestatus1") == 1)
+            #else if(x.get("ValveStatus1") == 1)
+            开
+            #else
+            <span style="color: red;">未知值</span>
+            #end
+        </td>
+
+        <td>#if(x.get("ValveStatus2") == null)
+            #else if(x.get("ValveStatus2") == 0)
+            关
+            #else if(x.get("ValveStatus2") == 1)
             开
             #end
         </td>
 
-        <td>#if(x.get("Valuestatus2") == null)
-            #else if(x.get("Valuestatus2") == 0)
+        <td>#if(x.get("ValveStatus3") == null)
+            #else if(x.get("ValveStatus3") == 0)
             关
-            #else if(x.get("Valuestatus2") == 1)
+            #else if(x.get("ValveStatus3") == 1)
             开
             #end
         </td>
-
-        <td>#if(x.get("Valuestatus3") == null)
-            #else if(x.get("Valuestatus3") == 0)
+        <td>#if(x.get("ValveStatus4") == null)
+            #else if(x.get("ValveStatus4") == 0)
             关
-            #else if(x.get("Valuestatus3") == 1)
-            开
-            #end
-        </td>
-        <td>#if(x.get("Valuestatus4") == null)
-            #else if(x.get("Valuestatus4") == 0)
-            关
-            #else if(x.get("Valuestatus4") == 1)
+            #else if(x.get("ValveStatus4") == 1)
             开
             #end
         </td>
@@ -174,7 +177,7 @@
             </script-->
             #end
         </td>
-        <td>#if(x.get("Gas_Pg") == null);
+        <td>#if(x.get("Gas_Pg") == null)
             #else if(x.get("Gas_Pg") ==0)
             正常
             #else if(x.get("Gas_Pg") ==1)
@@ -183,7 +186,7 @@
             超压
             #end
         </td>
-        <td>#if(x.get("PowerStatus") == null);
+        <td>#if(x.get("PowerStatus") == null)
             #else if(x.get("PowerStatus") ==0)
             正常
             #else if(x.get("PowerStatus") ==1)
@@ -272,60 +275,109 @@
         var formattedDate = formatDate(timestamp); // 格式化时间
         element.textContent = formattedDate; // 更新元素的文本内容
     });
-
-    // 增强版RFID转换函数
-    // 精确版RFID转换函数
+    //新的 5000个标签的 rfid 转换方法，开始，这个方法把刘卓的10进制数变成 16进制数
     function convertRfid(rfidStr) {
-        try {
-            // 空值处理（保持原样）
-            if (!rfidStr || ['null', 'undefined', '[]'].includes(rfidStr)) {
-                return '';
-            }
-
-            // 数据预处理（保持原样）
-            let cleanStr = rfidStr.toString()
-                .replace(/[^0-9,]/g, '')
-                .replace(/,+/g, ',')
-                .replace(/^,|,$/g, '');
-
-            // 转换为数字数组（保持原样）
-            let arr = cleanStr.split(',').slice(0, 14)
-                .map(item => Math.max(0, parseInt(item) || 0));
-
-            // 新版核心逻辑：查找最后一个0的位置
-            const lastZeroIndex = arr.lastIndexOf(0);
-
-            // 找不到0的特殊处理
-            if (lastZeroIndex === -1) {
-                console.warn('未找到起始0，使用备用方案');
-            }
-
-            // 截取从最后一个0开始的7个元素
-            let subArr = arr.slice(lastZeroIndex, lastZeroIndex + 7);
-
-            // 长度不足补0（保持原样）
-            if (subArr.length < 7) {
-                subArr.push(...new Array(7 - subArr.length).fill(0));
-            }
-
-            // 调试日志
-            console.log('截取数组:', subArr);
-
-            // 转换逻辑（保持原样）
-            const hexParts = subArr.map(num =>
-                parseInt(num.toString().padStart(2, '0'), 10)
-                    .toString(16)
-                    .padStart(2, '0')
-            );
-
-            const hexStr = hexParts.join('');
-            return BigInt('0x' + hexStr).toString();
-
-        } catch (e) {
-            console.error('RFID转换失败:', { input: rfidStr, error: e });
-            return '数据异常';
+        // 检查是否包含 '['
+        if (!rfidStr.includes('[')) {
+            console.log("Input string does not contain '['. Returning empty string.");
+            return '';
         }
+
+        // 去掉字符串首尾的 []
+        rfidStr = rfidStr.substring(1, rfidStr.length - 1);
+        console.log('After removing brackets:', rfidStr);
+
+        // 分割为数组
+        const rfidArray = rfidStr.split(',');
+        console.log('After splitting into array:', rfidArray);
+
+        // 找到第一个非零数字的位置（从第二组数据开始查找）
+        let firstNonZeroIndex = -1;
+        for (let i = 1; i < rfidArray.length; i++) { // 从索引1开始查找
+            if (rfidArray[i].trim() !== '0') {
+                firstNonZeroIndex = i;
+                break;
+            }
+        }
+        console.log('First non-zero index:', firstNonZeroIndex);
+
+        // 如果没有找到非零数字，返回空字符串
+        if (firstNonZeroIndex === -1) {
+            console.log("No non-zero number found. Returning empty string.");
+            return '';
+        }
+
+        // 从第一个非零数字开始提取7组数据
+        const targetArray = rfidArray.slice(firstNonZeroIndex, firstNonZeroIndex + 7);
+        console.log('Target array:', targetArray);
+
+        // 将每组数据转换为两位的十六进制字符串
+        const hexArray = targetArray.map(value => {
+            const intValue = parseInt(value.trim(), 10);
+            return intValue.toString(16).padStart(2, '0');
+        });
+        console.log('Hex array:', hexArray);
+
+        // 将所有十六进制字符串合并为一个字符串
+        const result = hexArray.join('');
+        console.log('Final result:', result);
+
+        return result;
     }
+    //新的 5000个标签的 rfid 转换方法，结束
+    // 增强版RFID转换函数
+    // 精确版RFID转换函数，这是老的标签的 rfid 转换方法
+    // function convertRfid-old(rfidStr) {
+    //     try {
+    //         // 空值处理（保持原样）
+    //         if (!rfidStr || ['null', 'undefined', '[]'].includes(rfidStr)) {
+    //             return '';
+    //         }
+    //
+    //         // 数据预处理（保持原样）
+    //         let cleanStr = rfidStr.toString()
+    //             .replace(/[^0-9,]/g, '')
+    //             .replace(/,+/g, ',')
+    //             .replace(/^,|,$/g, '');
+    //
+    //         // 转换为数字数组（保持原样）
+    //         let arr = cleanStr.split(',').slice(0, 14)
+    //             .map(item => Math.max(0, parseInt(item) || 0));
+    //
+    //         // 新版核心逻辑：查找最后一个0的位置
+    //         const lastZeroIndex = arr.lastIndexOf(0);
+    //
+    //         // 找不到0的特殊处理
+    //         if (lastZeroIndex === -1) {
+    //             console.warn('未找到起始0，使用备用方案');
+    //         }
+    //
+    //         // 截取从最后一个0开始的7个元素
+    //         let subArr = arr.slice(lastZeroIndex, lastZeroIndex + 7);
+    //
+    //         // 长度不足补0（保持原样）
+    //         if (subArr.length < 7) {
+    //             subArr.push(...new Array(7 - subArr.length).fill(0));
+    //         }
+    //
+    //         // 调试日志
+    //         console.log('截取数组:', subArr);
+    //
+    //         // 转换逻辑（保持原样）
+    //         const hexParts = subArr.map(num =>
+    //             parseInt(num.toString().padStart(2, '0'), 10)
+    //                 .toString(16)
+    //                 .padStart(2, '0')
+    //         );
+    //
+    //         const hexStr = hexParts.join('');
+    //         return BigInt('0x' + hexStr).toString();
+    //
+    //     } catch (e) {
+    //         console.error('RFID转换失败:', { input: rfidStr, error: e });
+    //         return '数据异常';
+    //     }
+    // }
 
     // 页面加载后执行转换
     window.addEventListener('DOMContentLoaded', () => {
