@@ -24,30 +24,38 @@ public class DrivercarService {
         return dao.paginate(pageNumber, pageSize, "select *", "from drivercar order by id asc");
     }
     public Page<Drivercar> search(int pageNumber, int pageSize, String drivername, String driverphone, String drivercarno, String carname, String carshengchanriqi){
-        String sql ="FROM drivercar LEFT JOIN uploaddianzibiaoqian ON drivercar.id = uploaddianzibiaoqian.drivercarid WHERE 1 = 1 ";
-        String sql2 = "SELECT drivercar.*, uploaddianzibiaoqian.deviceid AS did ";
-        // 拼接条件
+        String baseSql = "FROM drivercar " +
+                "LEFT JOIN ( " +
+                "   SELECT *, ROW_NUMBER() OVER (PARTITION BY drivercarid ORDER BY id DESC) AS rn " +
+                "   FROM uploaddianzibiaoqian " +
+                ") AS sub ON drivercar.id = sub.drivercarid AND sub.rn = 1 " +
+                "WHERE 1 = 1 ";
+
+        String selectSql = "SELECT drivercar.*, sub.deviceid AS did ";
+
+        // 动态拼接查询条件
+        StringBuilder condition = new StringBuilder();
+
         if (drivername != null && !drivername.isEmpty()) {
-            sql += "drivername LIKE '%" + drivername + "%' AND ";
+            condition.append(" AND drivername LIKE '%").append(drivername).append("%'");
         }
         if (driverphone != null && !driverphone.isEmpty()) {
-            sql += "driverphone LIKE '%" + driverphone + "%' AND ";
+            condition.append(" AND driverphone LIKE '%").append(driverphone).append("%'");
         }
         if (drivercarno != null && !drivercarno.isEmpty()) {
-            sql += "drivercarno LIKE '%" + drivercarno + "%' AND ";
+            condition.append(" AND drivercarno LIKE '%").append(drivercarno).append("%'");
         }
         if (carname != null && !carname.isEmpty()) {
-            sql += "carname LIKE '%" + carname + "%' AND ";
+            condition.append(" AND carname LIKE '%").append(carname).append("%'");
         }
         if (carshengchanriqi != null && !carshengchanriqi.isEmpty()) {
-            sql += "carshengchanriqi LIKE '%" + carshengchanriqi + "%' AND ";
+            condition.append(" AND carshengchanriqi LIKE '%").append(carshengchanriqi).append("%'");
         }
 
-        // 去掉最后的 AND
-        sql = sql.substring(0, sql.length() - 4);
-        String finalsql = sql2 + sql;
-        System.out.println(finalsql);
-        return dao.paginate(pageNumber, pageSize, sql2, sql);
+        String finalSql = selectSql + baseSql + condition;
+        System.out.println("Final SQL: " + finalSql);
+
+        return dao.paginate(pageNumber, pageSize, selectSql, baseSql + condition);
     }
 
 
