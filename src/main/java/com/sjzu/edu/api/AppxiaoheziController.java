@@ -12,13 +12,209 @@ import com.jfinal.plugin.activerecord.Record;
 import com.sjzu.edu.common.model.Bangdingren;
 import com.sjzu.edu.common.model.User;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Path(value = "/", viewPath = "/appxiaohezi")
 public class AppxiaoheziController extends Controller {
     private Bangdingren dao = new Bangdingren().dao();
+
+
+    ////小盒子 2025-04-01年更新后代码开始，刘国奇，这段代码是新的小盒子代码，主要用于饭店手机端获取小盒子信息
+
+    public void getxiaoheziinfo() {
+        addCorsHeaders();
+        String xiaohezino = getPara("xiaohezino");
+        //获取小盒子的基本操作信息开始
+        String sqlxiaohezi = "SELECT * FROM manage_xiaohezi WHERE xiaohezi_no = ?";
+
+        // 执行查询
+        List<Record> basxiaohezi = Db.use().find(sqlxiaohezi, xiaohezino);
+
+        //获取小盒子的基本操作信息结束
+        System.out.println("jason:"+xiaohezino);
+        // 根据小盒子编号，获取最后 10 条小盒子信息
+        String sql = "SELECT * FROM t_iot_sync_rds_records_v3 v WHERE v.devicename = ? ORDER BY v.id DESC LIMIT 10";
+        List<Record> xiaohezilist = Db.use("lpg").find(sql, xiaohezino);
+
+
+        // 初始化返回结果
+        JSONObject result = new JSONObject();
+        result.put("flag", 200);
+
+        // 初始化存储数据的变量
+        Map<String, Object> famenstatus = new HashMap<>();
+        Set<String> rfidSet = new HashSet<>();
+
+        // 遍历数据
+        boolean foundFirstNonNull = false;
+        for (Record record : xiaohezilist) {
+            // 查找第一条 ValveStatus1 不为 Null 的数据
+            if (record.get("ValveStatus1") != null && !foundFirstNonNull) {
+                // 转换时间戳为日期格式
+                long timestamp = Long.parseLong(record.get("created_time").toString());
+                Date date = new Date(timestamp);
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                famenstatus.put("created_time", sdf.format(date));
+                famenstatus.put("devicename", record.get("devicename"));
+                // 转换 ValveStatus 值
+                famenstatus.put("ValveStatus1", convertValveStatus(record.get("ValveStatus1")));
+                famenstatus.put("ValveStatus2", convertValveStatus(record.get("ValveStatus2")));
+                famenstatus.put("ValveStatus3", convertValveStatus(record.get("ValveStatus3")));
+                famenstatus.put("ValveStatus4", convertValveStatus(record.get("ValveStatus4")));
+
+                // 转换 Alarm 值
+                famenstatus.put("Alarm", convertAlarm(record.get("Alarm")));
+
+                // 转换 PowerStatus 值
+                famenstatus.put("PowerStatus", convertPowerStatus(record.get("PowerStatus")));
+
+                // 转换 M_ValStat 值
+                famenstatus.put("M_ValStat", convertM_ValStat(record.get("M_ValStat")));
+
+                foundFirstNonNull = true;
+            } else {
+                // 收集所有 ValveStatus1 为 Null 的数据中的 Rfid1, Rfid2, Rfid3, Rfid4, Rfid5, Rfid6, Rfid7, Rfid8
+                if (record.get("Rfid1") != null) {
+                    rfidSet.add(record.get("Rfid1").toString());
+                }
+                if (record.get("Rfid2") != null) {
+                    rfidSet.add(record.get("Rfid2").toString());
+                }
+                if (record.get("Rfid3") != null) {
+                    rfidSet.add(record.get("Rfid3").toString());
+                }
+                if (record.get("Rfid4") != null) {
+                    rfidSet.add(record.get("Rfid4").toString());
+                }
+                if (record.get("Rfid5") != null) {
+                    rfidSet.add(record.get("Rfid5").toString());
+                }
+                if (record.get("Rfid6") != null) {
+                    rfidSet.add(record.get("Rfid6").toString());
+                }
+                if (record.get("Rfid7") != null) {
+                    rfidSet.add(record.get("Rfid7").toString());
+                }
+                if (record.get("Rfid8") != null) {
+                    rfidSet.add(record.get("Rfid8").toString());
+                }
+            }
+        }
+
+        // 处理 Rfid 数据
+        List<Long> processedRfidList = new ArrayList<>();
+        for (String rfid : rfidSet) {
+            // 去掉 []
+            String cleanedRfid = rfid.substring(1, rfid.length() - 1);
+            // 分割为数组
+            String[] rfidArray = cleanedRfid.split(",");
+            // 去掉第一个元素（52）
+            if (rfidArray.length > 1) {
+                String[] trimmedArray = Arrays.copyOfRange(rfidArray, 1, rfidArray.length);
+                // 从最后一个 0 开始，取 7 组数据
+                List<String> finalArray = new ArrayList<>();
+                int zeroIndex = -1;
+                for (int i = trimmedArray.length - 1; i >= 0; i--) {
+                    if (trimmedArray[i].trim().equals("0")) {
+                        zeroIndex = i;
+                        break;
+                    }
+                }
+                if (zeroIndex != -1 && zeroIndex + 7 <= trimmedArray.length) {
+                    for (int i = zeroIndex; i < zeroIndex + 7; i++) {
+                        finalArray.add(trimmedArray[i].trim());
+                    }
+                }
+                // 转换为 16 进制
+                StringBuilder hexBuilder = new StringBuilder();
+                for (String value : finalArray) {
+                    int intValue = Integer.parseInt(value);
+                    hexBuilder.append(String.format("%02X", intValue));
+                }
+                // 转换为 10 进制
+                if (hexBuilder.length() > 0) {
+                    long decimalValue = Long.parseLong(hexBuilder.toString(), 16);
+                    processedRfidList.add(decimalValue);
+                }
+            }
+        }
+
+        // 将结果存入返回对象basxiaohezi
+        result.put("famenstatus", famenstatus);
+        result.put("processedRfidList", processedRfidList);
+        result.put("basxiaohezi", basxiaohezi);
+        // 返回 JSON 数据
+        renderJson(result);
+    }
+
+    private String convertValveStatus(Object status) {
+        if (status == null) return null;
+        return (Integer) status == 0 ? "关闭" : "打开";
+    }
+
+    private String convertAlarm(Object alarm) {
+        if (alarm == null) return null;
+        int alarmValue = (Integer) alarm;
+        switch (alarmValue) {
+            case 0: return "无报警";
+            case 1: return "操作间报警";
+            case 2: return "气瓶间报警";
+            case 3: return "视频报警";
+            case 4: return "视频+操作间 报警";
+            case 5: return "压力表超压报警";
+            default: return "未知报警";
+        }
+    }
+
+    private String convertPowerStatus(Object status) {
+        if (status == null) return null;
+        return (Integer) status == 0 ? "正常" : "故障";
+    }
+
+    private String convertM_ValStat(Object status) {
+        if (status == null) return null;
+        return (Integer) status == 0 ? "关" : "开";
+    }
+    public void appanzhuanginfo() {
+        //app手机端，获取
+        //http://localhost:8099/appxiaohezi/appanzhuanginfo
+        addCorsHeaders();
+
+        // 获取分页参数，默认值为第一页，每页10条
+        int pageNumber = getParaToInt("page", 1);
+        int pageSize = getParaToInt("size", 10);
+        // 获取小盒子编号参数
+        String xiaohezino = getPara("xiaohezino", "");
+
+        // 构建查询语句
+        String select = "SELECT *";
+        String sqlExceptSelect = "FROM bse_xiaohezi WHERE xiaohezi_number = ? ORDER BY id DESC";
+
+        // 执行分页查询
+        Page<Record> page = Db.paginate(pageNumber, pageSize, select, sqlExceptSelect, xiaohezino);
+
+        // 构建返回的JSON对象
+        JSONObject json = new JSONObject();
+        if (page != null && page.getList().size() > 0) {
+            json.put("flag", "200");
+            json.put("anzhuanglist", page.getList());
+            json.put("totalPage", page.getTotalPage());
+            json.put("totalRow", page.getTotalRow());
+            json.put("pageNumber", page.getPageNumber());
+            json.put("pageSize", page.getPageSize());
+        } else {
+            json.put("flag", "300");
+        }
+
+        // 返回JSON格式数据
+        renderJson(json);
+    }
+
+    // 小盒子 2025年更新后代码结束
 //    private Updateapp udao = new Updateapp().dao();
     public void login() {
         String telephone = getPara("telephone");
@@ -317,5 +513,21 @@ public class AppxiaoheziController extends Controller {
             item.put(jsonKey, new ArrayList<>());
         }
     }
-
+    public void addCorsHeaders() {
+        // 获取 HttpServletResponse 对象
+        HttpServletResponse response = getResponse();
+        // 设置允许跨域的来源
+        String origin = getHeader("Origin");
+        if (StrKit.notBlank(origin)) {
+            // 设置允许跨域的方法
+            ((HttpServletResponse) response).setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+            // 设置允许跨域的头
+            response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+            // 设置允许跨域的最大缓存时间（单位：秒）
+            response.setHeader("Access-Control-Max-Age", "3600");
+            // 设置允许跨域的来源
+            response.setHeader("Access-Control-Allow-Origin", origin);
+        }
+        renderNull();
+    }
 }

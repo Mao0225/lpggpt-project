@@ -5,9 +5,14 @@ import com.alibaba.fastjson.JSONObject;
 import com.jfinal.aop.Clear;
 import com.jfinal.core.Controller;
 import com.jfinal.core.Path;
+import com.jfinal.plugin.activerecord.Db;
+import com.jfinal.plugin.activerecord.Record;
 import com.sjzu.edu.common.model.PressureGaugeRecords;
 import com.sjzu.edu.common.model.Restaurant;
 import com.sjzu.edu.common.model.User;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 本 demo 仅表达最为粗浅的 jfinal 用法，更为有价值的实用的企业级用法
@@ -45,28 +50,51 @@ public class ApploginController extends Controller {
 		renderJson(json);
 	}
 	public void restaurantlogin() {
+		//http://localhost:8099/applogin/restaurantlogin
+		// 获取前端传递的参数
 		String telephone = getPara("telephone");
 		String pwd = getPara("pwd");
-		System.out.println("hello jason"+telephone+":"+pwd);
+		System.out.println("hello jason" + telephone + ":" + pwd);
 
 		// 查询数据库中是否存在匹配的用户记录
 		Restaurant restaurant = restaurantdao.findFirst("SELECT * FROM restaurant WHERE telephone = ? AND pwd = ?", telephone, pwd);
-		System.out.println(restaurant.getChengno());
-		String ranqibiao = restaurant.getChengno();
-		System.out.println("hello jason2");
-		PressureGaugeRecords pressuregauge = pressuregaugedao.findFirst("SELECT * FROM t_pressure_gauge_records WHERE controller_id = ? ", ranqibiao);
-
 
 		JSONObject json = new JSONObject();
 		if (restaurant != null) {
+			// 查询成功
 			json.put("flag", "200");
 			json.put("users", restaurant);
-			json.put("ranqibiao", pressuregauge);
+
+			// 获取restaurant的id
+			Integer restaurantId = restaurant.getId();
+
+			// 查询basshexiangtouinfo表中restaurantid与restaurantId相等的数据的shexiangtoubianhao
+			List<Record> shexiangtouList = Db.use().find("SELECT shexiangtoubianhao FROM basshexiangtouinfo WHERE restaurantid = ?", restaurantId);
+
+			// 提取shexiangtoubianhao值
+			List<String> shexiangtoubianhaoList = new ArrayList<>();
+			for (Record record : shexiangtouList) {
+				shexiangtoubianhaoList.add(record.getStr("shexiangtoubianhao"));
+			}
+
+			// 将shexiangtoubianhaoList放入json对象
+			json.put("shexiangtoulist", shexiangtoubianhaoList);
+
+			// 查询ranqibiao
+			String ranqibiao = restaurant.getChengno();
+			System.out.println("hello jason2");
+			PressureGaugeRecords pressuregauge = pressuregaugedao.findFirst("SELECT * FROM t_pressure_gauge_records WHERE controller_id = ?", ranqibiao);
+
+			// 将ranqibiao和pressuregauge放入json对象
+			json.put("ranqibiao", ranqibiao);
+			json.put("pressuregauge", pressuregauge);
 			json.put("login", restaurant.getId());
 		} else {
+			// 查询失败
 			json.put("flag", "300");
 		}
 
+		// 返回JSON数据
 		renderJson(json);
 	}
 	public void signup() {
