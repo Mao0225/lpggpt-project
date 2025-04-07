@@ -9,6 +9,7 @@ import com.jfinal.core.Path;
 import com.jfinal.kit.PropKit;
 import com.jfinal.upload.UploadFile;
 import com.sjzu.edu.common.model.Drivercar;
+import com.sjzu.edu.common.model.Uploaddianzibiaoqian;
 
 import java.io.File;
 import java.util.List;
@@ -24,6 +25,7 @@ import java.util.List;
 public class DrivercarController extends Controller {
     @Inject
     DrivercarService service;
+    private Uploaddianzibiaoqian dianzibiaoqian = new Uploaddianzibiaoqian().dao();
     //图片上传功能
     public void localUpload() {
         List<UploadFile> uploadFiles = getFiles();
@@ -88,7 +90,7 @@ public class DrivercarController extends Controller {
 
     public void save(){
         Drivercar drivercar = getModel(Drivercar.class, "drivercar");
-
+        System.out.println("drivercar/save");
         if (drivercar.save()) {
             // 保存成功，可以重定向到列表页面或者显示成功消息
             redirect("/drivercar/drivercarlist");
@@ -132,7 +134,8 @@ public class DrivercarController extends Controller {
         }
     }
     public void add() {
-        redirect("add.html");
+        System.out.println("add");
+        render("add.html");
 
     }
     public void delete() {

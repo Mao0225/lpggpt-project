@@ -8,7 +8,7 @@
 <body>
 <script>
     var imageCount = 0;
-
+    console.log("drivercar/add.html")
     function uploadFile(inputElementId) {
         var fileInput = document.getElementById(inputElementId);
         var file = fileInput.files[0];
@@ -85,7 +85,7 @@
     function deleteImage(inputElementId, imageElement, urlIndex) {
         // 从 DOM 中移除图片元素
         imageElement.parentNode.removeChild(imageElement);
-
+        console.log("delete");
         // 从 URL 列表中删除对应的 URL
         var urlInput = document.getElementById(inputElementId + 'Url');
         var urls = urlInput.value.split(',');
@@ -109,7 +109,7 @@
                 <input type="file" id="riskCargoLicenseImageUrlInput" name="risk_cargo_license_image_file" onchange="uploadFile('riskCargoLicenseImageUrlInput')"  style="display: none;" />
             </div>
             <input type="hidden" id="riskCargoLicenseImageUrlInputUrl" name="drivercar.risk_cargo_license_image_url" value="" />
-            <input type="file">
+
         </div>
 
         <div>
@@ -186,4 +186,7 @@
 </div>
 
 </body>
+<script>
+    console.log("drivercar/add")
+</script>
 </html>
