@@ -37,8 +37,9 @@ public class AppxiaoheziController extends Controller {
         //获取小盒子的基本操作信息结束
         System.out.println("jason:"+xiaohezino);
         // 根据小盒子编号，获取最后 10 条小盒子信息
-        String sql = "SELECT * FROM t_iot_sync_rds_records_v3 v WHERE v.devicename = ? ORDER BY v.id DESC LIMIT 10";
+        String sql = "SELECT * FROM t_iot_sync_rds_records_v3 v WHERE v.devicename = ? ORDER BY v.id DESC LIMIT 8";
         List<Record> xiaohezilist = Db.use("lpg").find(sql, xiaohezino);
+        System.out.println("jason1:"+xiaohezilist.toString());
 
 
         // 初始化返回结果
@@ -78,6 +79,10 @@ public class AppxiaoheziController extends Controller {
                 foundFirstNonNull = true;
             } else {
                 // 收集所有 ValveStatus1 为 Null 的数据中的 Rfid1, Rfid2, Rfid3, Rfid4, Rfid5, Rfid6, Rfid7, Rfid8
+
+                System.out.println("rfid1:"+record.get("Rfid1"));
+                System.out.println("rfid2:"+record.get("Rfid2"));
+                System.out.println("rfid3:"+record.get("Rfid3"));
                 if (record.get("Rfid1") != null) {
                     rfidSet.add(record.get("Rfid1").toString());
                 }
@@ -106,43 +111,45 @@ public class AppxiaoheziController extends Controller {
         }
 
         // 处理 Rfid 数据
-        List<Long> processedRfidList = new ArrayList<>();
+
+        List<String> processedRfidList = new ArrayList<>();
+
         for (String rfid : rfidSet) {
             // 去掉 []
             String cleanedRfid = rfid.substring(1, rfid.length() - 1);
+            System.out.println("小盒子cleanedRfid: " + cleanedRfid);
+
             // 分割为数组
             String[] rfidArray = cleanedRfid.split(",");
-            // 去掉第一个元素（52）
-            if (rfidArray.length > 1) {
-                String[] trimmedArray = Arrays.copyOfRange(rfidArray, 1, rfidArray.length);
-                // 从最后一个 0 开始，取 7 组数据
-                List<String> finalArray = new ArrayList<>();
-                int zeroIndex = -1;
-                for (int i = trimmedArray.length - 1; i >= 0; i--) {
-                    if (trimmedArray[i].trim().equals("0")) {
-                        zeroIndex = i;
-                        break;
-                    }
-                }
-                if (zeroIndex != -1 && zeroIndex + 7 <= trimmedArray.length) {
-                    for (int i = zeroIndex; i < zeroIndex + 7; i++) {
-                        finalArray.add(trimmedArray[i].trim());
-                    }
-                }
-                // 转换为 16 进制
+
+            // 获取最后7组数据
+            if (rfidArray.length >= 7) {
+                String[] finalArray = Arrays.copyOfRange(rfidArray, rfidArray.length - 7, rfidArray.length);
+
+                // 转换为16进制，并补足2位
                 StringBuilder hexBuilder = new StringBuilder();
                 for (String value : finalArray) {
-                    int intValue = Integer.parseInt(value);
+                    int intValue = Integer.parseInt(value.trim());
                     hexBuilder.append(String.format("%02X", intValue));
                 }
-                // 转换为 10 进制
-                if (hexBuilder.length() > 0) {
-                    long decimalValue = Long.parseLong(hexBuilder.toString(), 16);
-                    processedRfidList.add(decimalValue);
-                }
+
+                // 组合成一组数字
+                String combinedValue = hexBuilder.toString();
+                processedRfidList.add(combinedValue);
             }
         }
 
+        // 输出处理后的结果
+        for (String value : processedRfidList) {
+            System.out.println("处理后的组合数字: " + value);
+        }
+
+
+
+        // 输出处理后的结果
+        for (String value : processedRfidList) {
+            System.out.println("处理后的10进制值: " + value);
+        }
         // 将结果存入返回对象basxiaohezi
         result.put("famenstatus", famenstatus);
         result.put("processedRfidList", processedRfidList);
