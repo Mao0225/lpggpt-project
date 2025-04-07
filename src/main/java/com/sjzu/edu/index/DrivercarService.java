@@ -25,8 +25,8 @@ public class DrivercarService {
     }
     public Page<Drivercar> search(int pageNumber, int pageSize, String drivername, String driverphone, String drivercarno, String carname, String carshengchanriqi){
         String baseSql = "FROM drivercar " +
-                "LEFT JOIN ( " +
-                "   SELECT *, ROW_NUMBER() OVER (PARTITION BY drivercarid ORDER BY id DESC) AS rn " +
+                "LEFT  JOIN ( " +
+                "   SELECT *, ROW_NUMBER() OVER (PARTITION BY drivercarid ORDER BY id ASC) AS rn " +
                 "   FROM uploaddianzibiaoqian " +
                 ") AS sub ON drivercar.id = sub.drivercarid AND sub.rn = 1 " +
                 "WHERE 1 = 1 ";
