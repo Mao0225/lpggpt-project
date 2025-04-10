@@ -39,14 +39,24 @@ public class FfilrecordckServive {
     public Page<FillRecordCheck1> search(int pageNumber, int pageSize, Timestamp finditem, String gastion, String gasnumber, String companyid) {
         StringBuilder baseSql = new StringBuilder(
                 "FROM fill_record_check1 f " +
-                        "LEFT JOIN gas_file g " +
+                        "LEFT JOIN (" +
+                        "    SELECT g.* " +
+                        "    FROM gas_file g " +
+                        "    WHERE g.id = (" +
+                        "        SELECT g2.id " +
+                        "        FROM gas_file g2 " +
+                        "        WHERE g2.gas_number = g.gas_number " +
+                        "        ORDER BY g2.id " +
+                        "        LIMIT 1 " +
+                        "    )" +
+                        ") g " +
                         "ON g.gas_number = f.gas_number ");
         String selectSql = "SELECT f.*, g.* ";
         List<Object> params = new ArrayList<>();
         boolean hasCondition = false;
 
         // 添加 now_gas IS NOT NULL 条件
-        baseSql.append("WHERE now_gas IS NOT NULL ");
+        baseSql.append(" WHERE now_gas IS NOT NULL ");
         hasCondition = true;
 
         // 添加 after_filling 和 before_filling 都为合格的条件
@@ -124,3 +134,4 @@ public class FfilrecordckServive {
         }
     }
 }
+
