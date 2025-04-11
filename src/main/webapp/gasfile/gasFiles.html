@@ -118,19 +118,32 @@
             #end
             </tbody>
         </table>
-        <div class="pagination">
-            #@paginate(gasFiles.pageNumber, gasFiles.totalPage, "/gasFile/gasFilelist?&gasNumber="+(gasNumber != null ? gasNumber : "")+"&fentiancode="+(fentiancode != null ? fentiancode : "")+"&filling_specification="+(filling_specification != null ? filling_specification : "")+"&page=")
-        </div>
+    <!-- 修改分页部分 -->
+    <div class="pagination">
+        #@paginate(gasFiles.pageNumber, gasFiles.totalPage,
+        "/gasFile/gasFilelist?gasNumber=" + (gasNumber != null ? gasNumber : "")
+        + "&fentiancode=" + (fentiancode != null ? fentiancode : "")
+        + "&filling_specification=" + (filling_specification != null ? filling_specification : "")
+        + "&page=")
+    </div>
+
 
     <script>
         function confirmDelete(id) {
+            // 获取当前搜索条件
+            var gasNumber = document.querySelector('input[name="gasNumber"]').value;
+            var fentiancode = document.querySelector('input[name="fentiancode"]').value;
+            var filling_specification = document.querySelector('input[name="filling_specification"]').value;
+
             var result = confirm("确定要删除吗？");
             if (result) {
-                // 如果用户点击了确定，则执行删除操作
-                window.location.href = "/gasFile/delete/" + id;
-            } else {
-                // 如果用户点击了取消，则不执行任何操作
-                return false;
+                // 构造带参数的删除URL
+                var deleteUrl = "/gasFile/delete/" + id
+                    + "?gasNumber=" + encodeURIComponent(gasNumber)
+                    + "&fentiancode=" + encodeURIComponent(fentiancode)
+                    + "&filling_specification=" + encodeURIComponent(filling_specification);
+
+                window.location.href = deleteUrl;
             }
         }
     </script>

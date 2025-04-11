@@ -62,8 +62,19 @@ public class GasfileController extends Controller {
     }
 
     public void delete() {
+        // 获取当前搜索参数
+        String gasNumber = getPara("gasNumber");
+        String fentiancode = getPara("fentiancode");
+        String filling_specification = getPara("filling_specification");
+
+        // 执行删除
         service.delete(getParaToInt());
-        redirect("/gasFile/gasFilelist");
+
+        // 带参数重定向
+        redirect("/gasFile/gasFilelist"
+                + "?gasNumber=" + (gasNumber != null ? gasNumber : "")
+                + "&fentiancode=" + (fentiancode != null ? fentiancode : "")
+                + "&filling_specification=" + (filling_specification != null ? filling_specification : ""));
     }
 
     public void search() {
