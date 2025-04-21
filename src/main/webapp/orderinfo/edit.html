@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content</title>
+</head>
+<body>
+<h1></h1>
+<div class="form_box">
+    <form action="/orderinfo/update" method="post" id="myForm">
+        <input type="hidden" name="order.id" value="#(order.id)">
+        <input type="hidden" name="order.bid" value="#(bid)">
+        <div>
+            <label>订气顾客</label>
+            <input type="text" name="order.custormer" value="#(order.custormer)">
+        </div>
+
+        <div>
+            <label>订气数量</label>
+            <input type="text" name="order.number" value="#(order.number)">
+        </div>
+        <div>
+            <label>总价格</label>
+            <input type="text" name="order.price" value="#(order.price)">
+        </div>
+        <div>
+            <label>加气站</label>
+            <select id="SelectName" name="order.station"
+                    style="border-radius: 5px;background-color: white;height:auto;width:auto;text-align: center;">
+                #for(x : gastations)
+                <option value="#(x.station_name)"
+                        #if(order.station == x.station_name) selected #end>
+                    #(x.station_name)
+                </option>
+                #end
+            </select>
+        </div>
+        <div>
+            <label>运送司机</label>
+            <input type="text" name="order.driver" value="#(order.driver)">
+        </div>
+    </form>
+</div>
+</body>
+</html>

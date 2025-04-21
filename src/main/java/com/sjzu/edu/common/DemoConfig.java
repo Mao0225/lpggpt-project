@@ -100,6 +100,7 @@ public class DemoConfig extends JFinalConfig {
         me.add("/appxiaohezi", AppxiaoheziController.class);
 		me.add("/appdata", APPdataController.class);
 		me.add("/appgetnowgas", AppgetnowgasController.class);
+		me.add("/appbillinfo",AppbillInforController.class);
 
 
 		//手机接口结束  AppbangdingController
@@ -154,6 +155,8 @@ public class DemoConfig extends JFinalConfig {
 		me.add("/data",DataController.class);
 		me.add("/install",InstallController.class);
 		me.add("/xhzinfo",XhzinfoController.class);
+		me.add("/orderinfo",OrderInfoController.class);
+		me.add("/oorderinfo",OorderInfoController.class);
 		//测试连接Github
 	}
 	

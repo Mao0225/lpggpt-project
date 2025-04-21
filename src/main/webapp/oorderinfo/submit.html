@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content</title>
+</head>
+<body>
+<h1></h1>
+<div class="form_box">
+    <form action="/oorderinfo/update" method="post" id="myForm">
+        <input type="hidden" name="order.id" value="#(id)">
+        <input type="hidden" name="order.bid" value="#(bid)">
+        <input type="hidden" name="order.jiedanstatus" value="1">
+        <!--        <input type="hidden" id="driverName" name="order.driver" value="">-->
+        <div>
+            <label>总价格</label>
+            <input type="text" name="order.price" value="">
+        </div>
+        <div>
+            <label>接单时间</label>
+            <input type="date" name="order.jiedanshijian" value="">
+        </div>
+        <div>
+            <label>配送司机</label>
+            <select id="selectName" name="order.driver">  <!-- 直接使用 name="order.driver" -->
+                <option value="" selected>选择司机</option>
+                #for (x: drivers)
+                <option value="#(x.drivername)">#(x.drivername)</option>  <!-- value 改为司机姓名 -->
+                #end
+            </select>
+        </div>
+
+    </form>
+</div>
+<script>
+    var drivers = [
+        #for (x: drivers)
+    { id: "#(x.id)", name: "#(x.drivername)" },
+    #end
+    ];
+
+    function chooseName() {
+        const selectElement = document.getElementById("selectName");
+        const selectedId = selectElement.value;
+        const selectedOption = selectElement.options[selectElement.selectedIndex];
+
+        // 获取司机姓名（从data-name属性）
+        const driverName = selectedOption.getAttribute('data-name');
+
+        // 设置隐藏字段的值
+        document.getElementById('driverName').value = driverName;
+
+        console.log("选中的司机ID:", selectedId);
+        console.log("选中的司机姓名:", driverName);
+
+        // 如果需要可以使用完整对象
+        const selectedDriver = drivers.find(driver => driver.id === selectedId);
+        console.log("完整司机对象:", selectedDriver);
+    }
+</script>
+</body>
+</html>
