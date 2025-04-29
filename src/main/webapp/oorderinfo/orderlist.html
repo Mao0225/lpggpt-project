@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content</title>
+    <script src="../css/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css" >
+    <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/lpg.css">
+
+    <!-- Add your custom stylesheets and scripts here -->
+    <script>
+        document.getElementById('showFormButton').addEventListener('click', function() {
+            var form = document.getElementById('searchForm');
+            if (form.style.display === 'none') {
+                form.style.display = 'block'; // 显示表单
+            } else {
+                form.style.display = 'none'; // 再次点击按钮隐藏表单
+            }
+        });
+    </script>
+    <style>
+        table {
+            /* 边框合并，使表格看起来更简洁 */
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th,
+        td {
+            /* 添加边框 */
+            border: 1px solid #ccc;
+            /* 内边距，使内容与边框有一定距离 */
+            padding: 8px;
+        }
+
+        th {
+            /* 文本居中 */
+            text-align: center;
+            /* 背景颜色，可根据需要修改 */
+            background-color: #f2f2f2;
+        }
+        #searchForm select,
+        #searchForm input[type="date"] {
+            border-radius: 10px;
+            background-color: #fbf0c5;
+            width: 160px;
+            height: 30px;
+        }
+    </style>
+</head>
+<body>
+<div id="pagediv">
+    <form id="searchForm" action="/oorderinfo/orderlist" method="post">
+
+        <!--        <label>饭店编号:</label>-->
+        <!--        <input type="text" name="restaurantno" value="#(restaurantno)">-->
+
+
+
+        <label>下单时间:</label>
+        <input type="date" name="time" value="#(time)">
+
+        <label>订气饭店:</label>
+        <select id="selectName" name="companyId" onchange="chooseName()">
+            <option value="" selected>饭店名称</option>
+            #for (x: restaurants)
+            <option value="#(x.id)">#(x.name)</option>
+            #end
+        </select>
+        <input type="submit" value="提交">
+        <input type="button" value="重置" name="refresh" id="resetButton" />
+    </form>
+
+
+</div>
+
+<table class="list">
+    <div>
+        <button id="showFormButton" style="width: 30px; height: 30px; border: 2px solid transparent; border-radius: 50%; background-color: transparent; position: relative; float: right;">
+            <img src="/img/find.png" alt="搜索" style="width: 30px; height: 30px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+        </button>
+
+        <button id="fresh" name = "refresh" style="width: 30px; height: 30px; border: 2px solid transparent; border-radius: 50%; background-color: transparent; position: relative;  margin-right: 10px;float: right;">
+            <img src="/img/refresh2.png" alt="刷新" style="width: 25px; height: 25px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+        </button>
+
+        <script>
+            var buttons = document.getElementsByName("refresh");
+            for (var i = 0; i < buttons.length; i++) {
+                buttons[i].addEventListener('click', function() {
+                    // 获取所有的输入框并设置为空
+                    var inputs = document.querySelectorAll('#searchForm input[type=text]');
+                    for (var j = 0; j < inputs.length; j++) {
+                        inputs[j].value = "";
+                    }
+
+                    // 提交表单以重新查询并刷新页面
+                    document.getElementById('searchForm').submit();
+                });
+            }
+        </script>
+        <script>
+            document.getElementById('showFormButton').addEventListener('click', function() {
+                var form = document.getElementById('searchForm');
+                if (form.style.display === 'none') {
+                    form.style.display = 'block'; // 显示表单
+                } else {
+                    form.style.display = 'none'; // 再次点击按钮隐藏表单
+                }
+            });
+        </script>
+        <script>
+            document.getElementById("resetButton").addEventListener("click", function(e) {
+                // 阻止默认行为
+                e.preventDefault();
+                // 清空所有输入框和下拉框的值
+                document.getElementById("searchForm").reset();
+                // 手动设置表单字段为空值
+                document.querySelector('input[name="station"]').value = '';
+                document.querySelector('input[name="time"]').value = '';
+                document.querySelector('select[name="companyId"]').value = '';
+                // 提交表单以刷新页面
+                document.getElementById("searchForm").submit();
+            });
+
+        </script>
+    </div>
+
+
+    <tbody>
+    <tr>
+        <th width="10%">序号</th>
+        <!--        <th width="12%">饭店编号</th>-->
+        <th width="12%">订气顾客</th>
+        <th width="5%">订气数量</th>
+        <th width="12%">总价格</th>
+        <th width="12%">饭店名称</th>
+        <th width="12%">联系电话</th>
+        <th width="12%">加气站</th>
+        <th width="8%">运送司机</th>
+        <th width="8%">气瓶规格</th>
+        <th width="8%">期待送达时间</th>
+        <th width="8%">订单状态</th>
+        <th width="8%">接单时间</th>
+        <th width="12%">操作</th>
+    </tr>
+    #set(startIndex = (orderpage.pageNumber - 1) * orderpage.pageSize + 1)
+    #for(x : orderpage.getList())
+    <tr>
+        <td style="text-align:center">#(startIndex++)</td> <!-- 显示序号并递增 -->
+        <!--        <td style="text-align:center">#(x.restaurantno)</td>-->
+        <td style="text-align:center">#(x.custormer)</td>
+        <td style="text-align:center">#(x.number)</td>
+        <td style="text-align:center">
+            #if(x.jiedanstatus == 0)
+            <span style="color: red">暂未接单</span>
+            #else
+            #(x.price)
+            #end
+        </td>
+        <td style="text-align:center">#(x.restaurant)</td>
+        <td style="text-align:center">#(x.buyer)</td>
+        <td style="text-align:center">#(x.station)</td>
+        <td style="text-align:center">#(x.driver)</td>
+        <td style="text-align:center">#(x.gas_specification)</td>
+        <td style="text-align:center">#(x.expect_time)</td>
+        <td style="text-align:center">
+            #if(x.jiedanstatus == 0)
+            <span style="color: red">未接单</span>
+            #else
+            <span style="color: green">已接单</span>
+            #end
+        </td>
+        <td style="text-align:center">
+            #if(x.jiedanstatus == 0)
+            <span style="color: red">暂未接单</span>
+            #else
+            #(x.jiedanshijian)
+            #end
+        </td>
+        <td style="text-align:left">
+            <!--        -->
+            &nbsp;&nbsp;<a href="#" onclick="confirmDelete('#(x.id)')">删除</a>
+            <a href="#" class="edit openModal" data-title="编辑用户" data-edit-url="/oorderinfo/edit/?id=#(x.id)&bid=#(x.bid)">修改</a>
+            <a href="#" class="submit openModal" data-title="接单信息" data-edit-url="/oorderinfo/submit/?id=#(x.id)&bid=#(x.bid)">接单</a>
+
+        </td>
+    </tr>
+    #end
+    </tbody>
+</table>
+<div class="pagination" style="color:#000000;">
+    #@paginate(orderpage.pageNumber, orderpage.totalPage, "/oorderinfo/orderlist?station=" + (station != null ? restaurantno : "") + "&saddress=" + (saddress != null ? saddress : "") + "&custromer=" + (custromer != null ? custromer : "") + "&caddress=" + (caddress != null ? caddress : "") + "&telephone=" + (telephone != null ? telephone : "") + "&page=")
+</div>
+<script>
+    var restaurants = [
+        #for (x: restaurants)
+    { id: "#(x.id)", name: "#(x.name)" },
+    #end
+    ];
+    function chooseName() {
+        var selectName = document.getElementById("selectName").value;
+        console.log("selectName: " + selectName);
+        // 查找选中的备件对象，通过name属性来查找
+        var selectedrestaurant = restaurants.find(function (restaurants) {
+            return restaurants.name === selectName;
+        });
+    }
+    function confirmDelete(id) {
+        var result = confirm("确定要删除吗？");
+        if (result) {
+            // 如果用户点击了确定，则执行删除操作
+            window.location.href = "/oorderinfo/delete/" + id;
+        } else {
+            // 如果用户点击了取消，则不执行任何操作
+            return false;
+        }
+    }
+</script>
+<script>
+    $('.openModal').click(function(e) {
+        e.preventDefault();
+        var editUrl = $(this).data('edit-url');
+        var that = this; // 保存正确的上下文
+
+        $.get(editUrl, function(data) {
+            var title = $(that).data('title');
+            $('#myModalLabel').text(title); // 修改模态窗口标题
+
+            // 清除旧内容
+            $('#modalBody').html(data); // 加载编辑内容到模态窗口
+            $('#myModal').modal('show'); // 显示模态窗口
+        });
+    });
+
+</script>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">模态窗口标题</h4>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- 这里将会加载你的表单内容 -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary"  id="saveButton" >保存</button>
+                <script>
+                    document.getElementById('saveButton').addEventListener('click', function() {
+                        document.getElementById('myForm').submit();
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

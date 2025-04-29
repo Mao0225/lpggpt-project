@@ -18,7 +18,9 @@ public class _MappingKit {
 	public static void mapping(ActiveRecordPlugin arp) {
 		arp.addMapping("auto_gas_filling_record", "id", AutoGasFillingRecord.class);
 		arp.addMapping("bangdingren", "id", Bangdingren.class);
+		arp.addMapping("bas_bill", "id", BasBill.class);
 		arp.addMapping("basshexiangtouinfo", "id", Basshexiangtouinfo.class);
+		arp.addMapping("bill_info", "id", BillInfo.class);
 		arp.addMapping("bottle_person", "pid", BottlePerson.class);
 		arp.addMapping("bse_company", "id", BseCompany.class);
 		arp.addMapping("bse_company_copy1", "id", BseCompanyCopy1.class);
