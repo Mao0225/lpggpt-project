@@ -6,8 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="bef31097-e2fd-4fd6-9377-5642cb374b1b" name="更改" comment="增加了LPG充装端的后台和对应后端">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/log/jfinal_demo_for_maven.log" beforeDir="false" afterPath="$PROJECT_DIR$/log/jfinal_demo_for_maven.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/index/OrderInfoController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/index/OrderInfoController.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -202,7 +200,7 @@
       <workItem from="1745422319087" duration="1668000" />
       <workItem from="1745817949213" duration="1704000" />
       <workItem from="1745837476192" duration="696000" />
-      <workItem from="1745883334626" duration="2327000" />
+      <workItem from="1745883334626" duration="3299000" />
     </task>
     <task id="LOCAL-00001" summary="添加了小盒子管理功能">
       <option name="closed" value="true" />
