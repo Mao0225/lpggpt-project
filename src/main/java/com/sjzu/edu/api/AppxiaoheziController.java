@@ -5,15 +5,19 @@ import com.alibaba.fastjson.JSONObject;
 import com.jfinal.core.Controller;
 import com.jfinal.core.Path;
 import com.jfinal.json.JFinalJsonKit;
+import com.jfinal.kit.PathKit;
 import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
+import com.jfinal.upload.UploadFile;
 import com.sjzu.edu.common.model.Bangdingren;
-import com.sjzu.edu.common.model.User;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -21,7 +25,8 @@ import java.util.stream.Collectors;
 @Path(value = "/", viewPath = "/appxiaohezi")
 public class AppxiaoheziController extends Controller {
     private Bangdingren dao = new Bangdingren().dao();
-
+    private static final String WEBAPP_ROOT = PathKit.getWebRootPath();
+    private static final String UPLOAD_DIR = WEBAPP_ROOT + "/upload/temp/data";
 
     ////小盒子 2025-04-01年更新后代码开始，刘国奇，这段代码是新的小盒子代码，主要用于饭店手机端获取小盒子信息
 
@@ -296,6 +301,7 @@ public class AppxiaoheziController extends Controller {
     }
 
     public void saveXiaoheziData() {
+
         System.out.println("接收参数: " + getParaMap());
 
         JSONObject result = new JSONObject();
@@ -499,6 +505,8 @@ public class AppxiaoheziController extends Controller {
         renderJson(result);
     }
 
+
+
     // 新增的媒体路径转换方法
     private void convertMediaPath(Record record, JSONObject item,
                                   String dbField, String jsonKey,
@@ -520,6 +528,119 @@ public class AppxiaoheziController extends Controller {
             item.put(jsonKey, new ArrayList<>());
         }
     }
+
+    public void updateAccountInfo() {
+        //保存手机端的上传的绑定人信息
+        // 测试接口：http://114.115.156.201:8099/appxiaohezi/updateAccountInfo
+        // 测试接口：http://localhost:8099/appxiaohezi/updateAccountInfo，
+        //http://192.168.0.102:8099/appxiaohezi/updateAccountInfo
+        try {
+            // 获取上传的文件
+            UploadFile trainCertificatePhotoFile = getFile("trainCertificatePhoto");
+            String trainCertificatePhotoPath = null;
+            if (trainCertificatePhotoFile != null) {
+                trainCertificatePhotoPath = saveUploadFile(trainCertificatePhotoFile);
+            }
+            // 获取文本参数
+            String bindName = getPara("bindName");
+            String bindPhone = getPara("bindPhone");
+            String bindPassword = getPara("bindPassword");
+            String bindSex = getPara("bindSex");
+            Integer id = getParaToInt("id");
+            String identityCardNo = getPara("identityCardNo");
+            String trainCertificateNo = getPara("trainCertificateNo");
+            String trainCertificateIndate = getPara("trainCertificateIndate");
+
+            // 检查 id 是否为空
+            if (id == null) {
+                renderJson("{\"flag\":\"500\",\"message\":\"缺少必要参数 id\"}");
+                return;
+            }
+
+            // 构建 SQL 更新语句
+            StringBuilder sqlBuilder = new StringBuilder("UPDATE bangdingren SET name = ?, telphone = ?, psw = ?, sex = ?, identity_card_no = ?, train_certificate_no = ?, train_certificate_indate = ?");
+            List<Object> params = new ArrayList<>();
+            params.add(bindName);
+            params.add(bindPhone);
+            params.add(bindPassword);
+            params.add(bindSex);
+            params.add(identityCardNo);
+            params.add(trainCertificateNo);
+            params.add(trainCertificateIndate);
+
+            if (trainCertificatePhotoPath != null) {
+                sqlBuilder.append(", train_certificate_image_url = ?");
+                params.add(trainCertificatePhotoPath);
+            }
+
+            sqlBuilder.append(" WHERE id = ?");
+            params.add(id);
+
+            // 执行 SQL 更新操作
+            int result = Db.update(sqlBuilder.toString(), params.toArray());
+
+            if (result > 0) {
+                // 更新成功，返回成功响应
+                renderJson("{\"flag\":\"200\"}");
+            } else {
+                // 更新失败，返回失败响应
+                renderJson("{\"flag\":\"500\",\"message\":\"信息更新失败，未找到对应记录\"}");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            // 发生异常，返回错误响应
+            renderJson("{\"flag\":\"500\",\"message\":\"请求出错，请稍后重试\"}");
+        }
+    }
+
+    private String saveUploadFile(UploadFile uf) throws IOException {
+        // 生成唯一文件名
+        String ext = getFileExt(uf);
+        String newName = UUID.randomUUID() + ext;
+
+        // 创建目标目录
+        File targetDir = new File(UPLOAD_DIR);
+        if (!targetDir.exists() && !targetDir.mkdirs()) {
+            throw new IOException("目录创建失败: " + targetDir.getAbsolutePath());
+        }
+
+        // 移动文件
+        File destFile = new File(targetDir, newName);
+        Files.move(
+                uf.getFile().toPath(),
+                destFile.toPath(),
+                StandardCopyOption.REPLACE_EXISTING
+        );
+
+        // 返回相对路径
+        return "upload/temp/data/" + newName;
+    }
+
+    private String getFileExt(UploadFile uf) {
+        // 优先从文件名获取扩展名
+        String fileName = uf.getFileName();
+        int dotIndex = fileName.lastIndexOf('.');
+        if (dotIndex != -1) {
+            return fileName.substring(dotIndex);
+        }
+
+        // 根据MIME类型补充扩展名
+        String mimeType = uf.getContentType();
+        return getExtensionByMimeType(mimeType);
+    }
+
+    private String getExtensionByMimeType(String mimeType) {
+        switch (mimeType) {
+            case "image/jpeg":
+                return ".jpg";
+            case "image/png":
+                return ".png";
+            case "image/gif":
+                return ".gif";
+            default:
+                return ".unknown";
+        }
+    }
     public void addCorsHeaders() {
         // 获取 HttpServletResponse 对象
         HttpServletResponse response = getResponse();
@@ -537,4 +658,5 @@ public class AppxiaoheziController extends Controller {
         }
         renderNull();
     }
+
 }
