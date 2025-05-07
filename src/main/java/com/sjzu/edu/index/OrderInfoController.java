@@ -6,7 +6,6 @@ import com.jfinal.kit.LogKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.sjzu.edu.common.model.*;
-import sun.security.ssl.Record;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
