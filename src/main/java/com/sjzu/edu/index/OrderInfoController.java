@@ -8,6 +8,8 @@ import com.jfinal.plugin.activerecord.Page;
 import com.sjzu.edu.common.model.*;
 import sun.security.ssl.Record;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class OrderInfoController extends Controller {
@@ -20,11 +22,12 @@ public class OrderInfoController extends Controller {
         int PageNumber = getParaToInt("page", 1);
         int PageSize = getParaToInt("size", 10);
         String time = getPara("time");
-        String station = getPara("stationId");
+        String station = getPara("station");
         String restaurantId = getPara("companyId");
+        System.out.println("restaurantId: "+restaurantId);
         setAttr("time",time);
-        setAttr("companyId",station);
-        setAttr("restaurantid",restaurantId);
+        setAttr("restaurantId",restaurantId);
+        System.out.println("station: "+station);
         setAttr("station",station);
         Page<BasBill> orderpage =service.paginate(PageNumber, PageSize, time, station,restaurantId);
         List<Restaurant> restaurants = restaurant.find("SELECT * FROM restaurant");
@@ -108,6 +111,9 @@ public void delete(){
 public void submit(){
         Integer id = getParaToInt("id");
         Integer bid = getParaToInt("bid");
+    // 生成当前时间字符串，格式为：YYYY-MM-DDTHH:mm
+      String currentTime = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm").format(new Date());
+       set("currentTime", currentTime); // 传递到模板
        List<Drivercar> drivers = drivercar.find("SELECT * FROM drivercar");
         System.out.println("bid: "+bid);
         setAttr("id", id);

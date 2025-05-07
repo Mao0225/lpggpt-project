@@ -19,7 +19,10 @@
         </div>
         <div>
             <label>接单时间</label>
-            <input type="date" name="order.jiedanshijian" value="">
+            <!-- 使用后端传入的 currentTime -->
+            <input type="datetime-local"
+                   name="order.jiedanshijian"
+                   value="#(currentTime)">
         </div>
         <div>
             <label>配送司机</label>
