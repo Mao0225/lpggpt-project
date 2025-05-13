@@ -86,7 +86,7 @@ public class AppbillInforController extends Controller {
         }
     }
 
-    public void Notreceive_list(){
+    public void Notreceive_list() {
         int pageNumber = getParaToInt("pageNumber");
         int pageSize = getParaToInt("pageSize");
         String telephone = getPara("telephone");
@@ -259,7 +259,7 @@ public class AppbillInforController extends Controller {
             bill.set("station_id", station_id);
             // 4. 保存到数据库
             boolean success = Db.use().save("bill_info", bill);
-            System.out.println("success: "+success);
+            System.out.println("success: " + success);
             Number generatedId = bill.getNumber("id"); // 根据实际主键字段名调整
             if (generatedId == null) {
                 renderJson(new JSONObject().fluentPut("code", 500).fluentPut("msg", "获取订单ID失败"));
@@ -282,7 +282,7 @@ public class AppbillInforController extends Controller {
             basBill.set("station_id", station_id);
             boolean success2 = Db.use().save("bas_bill", basBill);
             // 5. 返回响应
-            if (success&&success2) {
+            if (success && success2) {
                 System.out.println("保存成功!");
                 renderJson(new JSONObject().fluentPut("code", 200).fluentPut("msg", "订单创建成功89779"));
             } else {
@@ -294,150 +294,128 @@ public class AppbillInforController extends Controller {
         }
     }
 
-public void Success_Search_Data(){
-    int pageNum = getParaToInt("pageNum");
-    int pageSize = getParaToInt("pageSize");
-    String station = getPara("station");
-    String buyer = getPara("buyer");
-    String riqi = getPara("riqi");
-
-    System.out.println(station + "\n" + riqi + "\n" + pageNum + "\n" + pageSize + "\n"+buyer + "\n");
-
-    try {
-        String fromSql = "from bill_info where buyer = " + buyer + " ";
-
-        if (station!= null) {
-            fromSql += "and station like '%" + station + "%' ";
-        }
-
-        if (riqi!= null) {
-            fromSql += " AND writetime >= '" + riqi + " 00:00:00' AND writetime < '" + riqi + " 23:59:59'";
-        }
-
-        fromSql += " order by id desc";
-        System.out.println(fromSql);
-
-        // 获取总记录数
-        // 获取总记录数（同样要加上 jiedanstatus = 1 条件）
-        Record totalRecord = Db.use().findFirst("SELECT COUNT(*) AS total FROM bill_info WHERE buyer = " + buyer + " AND jiedanstatus = 1");
-        if (totalRecord!= null) {
-            int total = totalRecord.getInt("total");
-            System.out.println(total);
-
-            // 获取当前页的记录
-            Page<Record> records = Db.use().paginate(pageNum, pageSize, "select *", fromSql);
-
-            // 创建一个JSONArray用于存储所有符合条件的记录（以JSON形式）
-            JSONArray jsonArray = new JSONArray();
-
-            for (Record record : records.getList()) {
-                JSONObject recordJson = new JSONObject();
-                recordJson.put("number", record.get("number"));
-                recordJson.put("station", record.get("station"));
-                recordJson.put("price", record.get("price"));
-                recordJson.put("driver", record.get("driver"));
-                recordJson.put("jiedanstatus", record.get("jiedanstatus"));
-                recordJson.put("writetime", record.get("writetime"));
-
-                jsonArray.add(recordJson);
-            }
-
-            // 创建一个JSONObject用于返回给前端
-            JSONObject json = new JSONObject();
-            json.put("total", total);
-            json.put("rows", jsonArray);
-
-            // 将结果返回给前端
-            renderJson(json);
-        } else {
-            System.out.println(fromSql);
-            // 如果没有找到记录，可以返回一个空的JSON对象
-            JSONObject json = new JSONObject();
-            json.put("total", 0);
-            json.put("rows", new ArrayList<>());
-
-            // 将结果返回给前端
-            renderJson(json);
-        }
-    } catch (Exception e) {
-        // 这里可以添加更详细的错误处理，比如记录日志
-        e.printStackTrace();
-        renderError(500);
-    }
-}
-
-    public void Wait_Search_Data(){
+    public void Success_Search_Data() {
         int pageNum = getParaToInt("pageNum");
         int pageSize = getParaToInt("pageSize");
         String station = getPara("station");
         String buyer = getPara("buyer");
         String riqi = getPara("riqi");
 
-        System.out.println(station + "\n" + riqi + "\n" + pageNum + "\n" + pageSize + "\n"+buyer + "\n");
-
         try {
-            String fromSql = "from bill_info where buyer = " + buyer + " ";
+            // 构建动态 WHERE 条件（参数化查询）
+            StringBuilder whereSql = new StringBuilder();
+            List<Object> params = new ArrayList<>();
 
-            if (station!= null) {
-                fromSql += "and station like '%" + station + "%' ";
+            whereSql.append("WHERE buyer = ? AND jiedanstatus = 1 ");
+            params.add(buyer); // buyer 参数
+
+            if (station != null && !station.isEmpty()) {
+                whereSql.append("AND station LIKE ? ");
+                params.add("%" + station + "%"); // station 模糊匹配
             }
 
-            if (riqi!= null) {
-                fromSql += " AND writetime >= '" + riqi + " 00:00:00' AND writetime < '" + riqi + " 23:59:59'";
+            if (riqi != null && !riqi.isEmpty()) {
+                whereSql.append("AND writetime >= ? AND writetime < ? ");
+                params.add(riqi + " 00:00:00"); // 开始时间
+                params.add(riqi + " 23:59:59"); // 结束时间
             }
 
-            fromSql += " order by id desc";
-            System.out.println(fromSql);
+            // 获取总记录数（使用相同条件）
+            String countSql = "SELECT COUNT(*) AS total FROM bill_info " + whereSql;
+            Record totalRecord = Db.use().findFirst(countSql, params.toArray());
+            int total = totalRecord != null ? totalRecord.getInt("total") : 0;
 
-            // 获取总记录数
-            // 获取总记录数（同样要加上 jiedanstatus = 1 条件）
-            Record totalRecord = Db.use().findFirst("SELECT COUNT(*) AS total FROM bill_info WHERE buyer = " + buyer + " AND jiedanstatus = 0");
-            if (totalRecord!= null) {
-                int total = totalRecord.getInt("total");
-                System.out.println(total);
+            // 构建分页查询（正确拆分 SELECT 和 FROM）
+            String selectPart = "SELECT *";
+            String fromWhereSql = "FROM bill_info " + whereSql + " ORDER BY id DESC";
 
-                // 获取当前页的记录
-                Page<Record> records = Db.use().paginate(pageNum, pageSize, "select *", fromSql);
+            // 执行分页查询（参数化）
+            Page<Record> records = Db.use().paginate(pageNum, pageSize, selectPart, fromWhereSql, params.toArray());
+            System.out.println("total1: " + total);
+            // 构建返回的 JSON
+            JSONObject json = new JSONObject();
+            json.put("total", total);
+            json.put("rows", convertRecordsToJson(records.getList()));
+            renderJson(json);
 
-                // 创建一个JSONArray用于存储所有符合条件的记录（以JSON形式）
-                JSONArray jsonArray = new JSONArray();
-
-                for (Record record : records.getList()) {
-                    JSONObject recordJson = new JSONObject();
-                    recordJson.put("number", record.get("number"));
-                    recordJson.put("station", record.get("station"));
-                    recordJson.put("price", record.get("price"));
-                    recordJson.put("driver", record.get("driver"));
-                    recordJson.put("jiedanstatus", record.get("jiedanstatus"));
-                    recordJson.put("writetime", record.get("writetime"));
-
-                    jsonArray.add(recordJson);
-                }
-
-                // 创建一个JSONObject用于返回给前端
-                JSONObject json = new JSONObject();
-                json.put("total", total);
-                json.put("rows", jsonArray);
-
-                // 将结果返回给前端
-                renderJson(json);
-            } else {
-                System.out.println(fromSql);
-                // 如果没有找到记录，可以返回一个空的JSON对象
-                JSONObject json = new JSONObject();
-                json.put("total", 0);
-                json.put("rows", new ArrayList<>());
-
-                // 将结果返回给前端
-                renderJson(json);
-            }
         } catch (Exception e) {
-            // 这里可以添加更详细的错误处理，比如记录日志
             e.printStackTrace();
             renderError(500);
         }
     }
 
 
+    public void Wait_Search_Data() {
+        int pageNum = getParaToInt("pageNum");
+        int pageSize = getParaToInt("pageSize");
+        String station = getPara("station");
+        String buyer = getPara("buyer");
+        String riqi = getPara("riqi");
+
+        try {
+            // 构建动态 WHERE 条件（带参数化查询）
+            StringBuilder whereSql = new StringBuilder();
+            List<Object> params = new ArrayList<>();
+
+            whereSql.append("WHERE buyer = ? AND jiedanstatus = 0 ");
+            params.add(buyer);
+
+            if (station != null && !station.isEmpty()) {
+                whereSql.append("AND station LIKE ? ");
+                params.add("%" + station + "%");
+            }
+
+            if (riqi != null && !riqi.isEmpty()) {
+                whereSql.append("AND writetime >= ? AND writetime < ? ");
+                params.add(riqi + " 00:00:00");
+                params.add(riqi + " 23:59:59");
+            }
+
+            // 获取总记录数（必须与分页查询条件一致）
+            String countSql = "SELECT COUNT(*) AS total FROM bill_info " + whereSql;
+            Record totalRecord = Db.use().findFirst(countSql, params.toArray());
+            int total = totalRecord != null ? totalRecord.getInt("total") : 0;
+
+            // 构建分页查询（关键修改点）
+            String selectPart = "SELECT * "; // SELECT 子句
+            String fromWhereSql = "FROM bill_info " + whereSql + " ORDER BY id DESC"; // FROM 及后续子句
+
+            // 调用正确的 paginate 方法
+            Page<Record> records = Db.use().paginate(
+                    pageNum,
+                    pageSize,
+                    selectPart,
+                    fromWhereSql,
+                    params.toArray()
+            );
+            System.out.println("total2: " + total);
+            // 构建返回的JSON
+            JSONObject json = new JSONObject();
+            json.put("total", total);
+            json.put("rows", convertRecordsToJson(records.getList()));
+            renderJson(json);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            renderError(500);
+        }
+    }
+
+    // 辅助方法：Record列表转JSONArray
+    private JSONArray convertRecordsToJson(List<Record> records) {
+        for (Record record : records) {
+            JSONObject json = new JSONObject();
+            json.put("number", record.get("number"));
+            json.put("station", record.get("station"));
+            json.put("price", record.get("price"));
+            json.put("driver", record.get("driver"));
+            json.put("jiedanstatus", record.get("jiedanstatus"));
+            json.put("writetime", record.get("writetime"));
+            jsonArray.add(json);
+        }
+        return jsonArray;
+    }
+
 }
+
 

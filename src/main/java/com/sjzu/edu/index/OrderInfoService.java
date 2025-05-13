@@ -12,7 +12,7 @@ public class OrderInfoService {
         // 基础SQL
         StringBuilder baseSql = new StringBuilder("FROM bas_bill");
         List<Object> params = new ArrayList<>();
-
+        System.out.println("restaurantid" + restaurantId);
         // 构建WHERE条件
         List<String> conditions = new ArrayList<>();
 

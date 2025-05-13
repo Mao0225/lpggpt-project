@@ -143,7 +143,7 @@
         <!--        <input type="text" name="restaurantno" value="#(restaurantno)">-->
 
         <label>下单时间:</label>
-        <input type="date" name="time" value="#(time)">
+        <input type="date" name="time" value="">
 
         <label>订气饭店:</label>
         <select id="selectName" name="companyId" onchange="chooseName()">
@@ -278,7 +278,7 @@
     </tbody>
 </table>
 <div class="pagination" style="color:#000000;">
-    #@paginate(orderpage.pageNumber, orderpage.totalPage, "/oorderinfo/orderlist?station=" + (station != null ? restaurantno : "") + "&saddress=" + (saddress != null ? saddress : "") + "&custromer=" + (custromer != null ? custromer : "") + "&caddress=" + (caddress != null ? caddress : "") + "&telephone=" + (telephone != null ? telephone : "") + "&page=")
+    #@paginate(orderpage.pageNumber, orderpage.totalPage, "/oorderinfo/orderlist?station=" + (station != null ? station : "") + "&time=" + (time != null ? time : "") + "&restaurantId=" + (restaurantId != null ? restaurantId : "") + "&page=")
 </div>
 <script>
     var restaurants = [
