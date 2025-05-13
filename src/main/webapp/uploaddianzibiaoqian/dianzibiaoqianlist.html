@@ -6,6 +6,62 @@
     <title>Content</title>
     <!-- Add your custom stylesheets and scripts here -->
     <link rel="stylesheet" type="text/css" href="/css/lpg.css">
+    <style>
+        /* 设置 #pagediv 的样式 */
+        #pagediv {
+            background-color: #f0f0f0;
+            color: black;
+            padding: 10px;
+        }
+
+        /* 设置表格样式 */
+        table.list {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        /* 设置表格表头样式 */
+        table.list th {
+            background-color: #add8e6;
+            color: black;
+            padding: 8px;
+            text-align: left;
+        }
+
+        /* 设置表格单元格样式 */
+        table.list td {
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        /* 设置表格隔行颜色 */
+        table.list tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        table.list tr:nth-child(odd) {
+            background-color: #e0e0e0;
+        }
+
+        /* 设置鼠标悬停时表格行的颜色 */
+        table.list tr:hover {
+            background-color: #d3d3d3;
+        }
+
+        /* 新增样式：设置新建司机链接为黑色 */
+        #pagediv .add {
+            color: black;
+        }
+
+        /* 新增样式：设置输入框背景色为淡灰色 */
+        #pagediv input[type="text"] {
+            background-color: #f0f0f0;
+        }
+        /* 新增样式：设置 label 文字颜色为黑色 */
+        #pagediv label {
+            color: black;
+        }
+    </style>
     <script>
         function clearParams() {
             const form = document.getElementById("searchForm");

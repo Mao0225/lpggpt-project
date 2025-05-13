@@ -6,7 +6,78 @@
   <component name="ChangeListManager">
     <list default="true" id="bef31097-e2fd-4fd6-9377-5642cb374b1b" name="更改" comment="增加了LPG充装端的后台和对应后端">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/api/AppxiaoheziController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/api/AppxiaoheziController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hs_err_pid12932.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/hs_err_pid18072.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/hs_err_pid20540.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/hs_err_pid21060.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/hs_err_pid21288.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/hs_err_pid21984.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/hs_err_pid23708.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/hs_err_pid7780.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/hs_err_pid8484.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/log/jfinal_demo_for_maven.log" beforeDir="false" afterPath="$PROJECT_DIR$/log/jfinal_demo_for_maven.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/api/APPdataController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/api/APPdataController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/Cequipment/createquipment.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/Cequipment/createquipment.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/Cequipment/equipment.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/Cequipment/equipment.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/Cequipment/equipmentdetail.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/Cequipment/equipmentdetail.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/Eequipment/Eequipment.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/Eequipment/Eequipment.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/Fequipment/Fequipment.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/Fequipment/Fequipment.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/Fequipment/oequipment.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/Fequipment/oequipment.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/GGasFile/GGasFiles.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/GGasFile/GGasFiles.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/GgasStationStaff/GasStationStaff.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/GgasStationStaff/GasStationStaff.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/Jjiaqizhong/Jjiaqizhong.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/Jjiaqizhong/Jjiaqizhong.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/Unqualified/unqualified.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/Unqualified/unqualified.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/Uunqualified/uunqualified.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/Uunqualified/uunqualified.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/bangdingren/bangdingrens.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/bangdingren/bangdingrens.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/basshexiangtouinfo/basshexiangtous.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/basshexiangtouinfo/basshexiangtous.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/caryunxing/caryunxing.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/caryunxing/caryunxing.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/caryunxing/caryunxingkanban.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/caryunxing/caryunxingkanban.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/css/lpg.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/css/lpg.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/custromer/custromer.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/custromer/custromer.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/custromer/supercustromer.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/custromer/supercustromer.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/dianzicheng/dianzichengs.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/dianzicheng/dianzichengs.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/driver/drivers.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/driver/drivers.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/drivercar/drivercar.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/drivercar/drivercar.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/equipment/equipment.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/equipment/equipment.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/ffilrdck/filrdck.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/ffilrdck/filrdck.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/filrdck/filrdck.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/filrdck/filrdck.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/func/funcs.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/func/funcs.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/gasbottle/gasbottles.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/gasbottle/gasbottles.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/gasfile/gasFiles.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/gasfile/gasFiles.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/gasstation/GasStation.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/gasstation/GasStation.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/gasstationstaff/GasStationStaff.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/gasstationstaff/GasStationStaff.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/index/content.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/index/content.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/index/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/index/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/index/left.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/index/left.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/index/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/index/login.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/install/install.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/install/install.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/jiaqizhong/jiaqizhong.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/jiaqizhong/jiaqizhong.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/jiebangding/jiebangdings.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/jiebangding/jiebangdings.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/jieping/jieping.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/jieping/jieping.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/kangjiashan/jiaqilist.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/kangjiashan/jiaqilist.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/kangjiashanothergas/othergslist.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/kangjiashanothergas/othergslist.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/lpgyunxing/yunxinglist.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/lpgyunxing/yunxinglist.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/maintenance/equipmentinfo.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/maintenance/equipmentinfo.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/maintenance/maintenance.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/maintenance/maintenance.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/maintenance/repairinfo.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/maintenance/repairinfo.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/managegun/gunlist.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/managegun/gunlist.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/managerequip/maequipmentlist.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/managerequip/maequipmentlist.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/mmanagegun/gunlist.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/mmanagegun/gunlist.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/oorderinfo/orderlist.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/oorderinfo/orderlist.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/orderinfo/orderlist.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/orderinfo/orderlist.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/pressuregauge/pressuregauges.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/pressuregauge/pressuregauges.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/pressurevalue/pressurevalues.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/pressurevalue/pressurevalues.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/ranqibiaobangding/ranqibiaobangding.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/ranqibiaobangding/ranqibiaobangding.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/restaurant/restaurants.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/restaurant/restaurants.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/setrans/setrans.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/setrans/setrans.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/shexiangtoufind/shexiangtous.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/shexiangtoufind/shexiangtous.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/shexiangtoulanya/shexiangtoulanyas.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/shexiangtoulanya/shexiangtoulanyas.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/uploaddianzibiaoqian/dianzibiaoqianlist.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/uploaddianzibiaoqian/dianzibiaoqianlist.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/user/users.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/user/users.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/userFunc/func.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/userFunc/func.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/userFunc/user.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/userFunc/user.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/xhzinfo/xhzlist.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/xhzinfo/xhzlist.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/xiaohezi/xiaohezi.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/xiaohezi/xiaohezi.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -204,6 +275,22 @@
       <workItem from="1745883334626" duration="3299000" />
       <workItem from="1746371160424" duration="4615000" />
       <workItem from="1746431703707" duration="5004000" />
+      <workItem from="1746583505069" duration="1801000" />
+      <workItem from="1746619823787" duration="640000" />
+      <workItem from="1746622658486" duration="638000" />
+      <workItem from="1746626492487" duration="1370000" />
+      <workItem from="1746658580579" duration="10869000" />
+      <workItem from="1746686653411" duration="5550000" />
+      <workItem from="1746710361901" duration="91000" />
+      <workItem from="1746885540362" duration="5000" />
+      <workItem from="1746885857962" duration="2000" />
+      <workItem from="1746885895831" duration="3000" />
+      <workItem from="1746964657803" duration="43000" />
+      <workItem from="1746964779362" duration="107000" />
+      <workItem from="1747006395111" duration="122000" />
+      <workItem from="1747042719745" duration="7122000" />
+      <workItem from="1747110758565" duration="598000" />
+      <workItem from="1747141917961" duration="3216000" />
     </task>
     <task id="LOCAL-00001" summary="添加了小盒子管理功能">
       <option name="closed" value="true" />

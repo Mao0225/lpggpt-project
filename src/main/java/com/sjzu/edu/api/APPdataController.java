@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Path(value = "/", viewPath = "/appdata")
 public class APPdataController extends Controller {
@@ -20,6 +21,14 @@ public class APPdataController extends Controller {
     private static final String WEBAPP_ROOT = PathKit.getWebRootPath();
     private static final String UPLOAD_DIR = WEBAPP_ROOT + "/upload/temp/data";
     private static final String TABLE_NAME = "bse_data";
+    // 移除固定文件数量限制
+
+    // 临时存储上传中的数据
+    private static final Map<String, Record> tempDataMap = new ConcurrentHashMap<>();
+    private static final Map<String, Integer> fileCountMap = new ConcurrentHashMap<>();
+    private static final Map<String, Integer> expectedFileCountMap = new ConcurrentHashMap<>(); // 存储每个UUID预期的文件数量
+    private static final Map<String, Long> lastUpdateTimeMap = new ConcurrentHashMap<>();
+    private static final long EXPIRATION_TIME = 30 * 60 * 1000; // 30分钟过期时间
 
     // 字段映射关系（前端类型 -> 数据库字段）
     private static final Map<String, String> FIELD_MAPPING = new HashMap<String, String>() {{
@@ -32,17 +41,22 @@ public class APPdataController extends Controller {
     public void upload() {
         JSONObject result = new JSONObject();
         System.out.println("所有接收到的参数：" + getParaMap());
-        try {
 
+        try {
+            // 必须先调用 getFiles() 处理文件上传
             List<UploadFile> allFiles = getFiles();
 
-            // 第二步：此时可以获取普通参数
+            // 再获取普通参数
             String worker = getPara("worker");
             String uuid = getPara("uuid");
             String telephone = getPara("telephone");
-            System.out.println("Worker参数值：" + worker);  // 现在应该能获取到值
-            System.out.println("UUID: "+uuid);
-            System.out.println("Telephone: "+telephone);
+            int totalFiles = getParaToInt("totalFiles", 0); // 新增：从前端获取总文件数
+
+            System.out.println("worker:" + worker);
+            System.out.println("uuid:" + uuid);
+            System.out.println("telephone:" + telephone);
+            System.out.println("totalFiles:" + totalFiles);
+
             // 参数验证
             if (worker == null || worker.trim().isEmpty()) {
                 result.put("code", 400);
@@ -51,12 +65,36 @@ public class APPdataController extends Controller {
                 return;
             }
 
-            // 第三步：创建记录对象（必须在文件处理之后）
-            Record record = new Record();
-            record.set("worker", worker);
-            record.set("uuid", uuid);
-            record.set("telephone", telephone);
-            // 3. 按类型分组处理文件
+            if (uuid == null || uuid.trim().isEmpty()) {
+                result.put("code", 400);
+                result.put("msg", "UUID不能为空");
+                renderJson(result);
+                return;
+            }
+
+            if (totalFiles <= 0) {
+                result.put("code", 400);
+                result.put("msg", "总文件数必须大于0");
+                renderJson(result);
+                return;
+            }
+
+            // 从临时存储中获取或创建记录
+            Record record = tempDataMap.computeIfAbsent(uuid, k -> {
+                Record newRecord = new Record();
+                newRecord.set("worker", worker);
+                newRecord.set("uuid", uuid);
+                newRecord.set("telephone", telephone);
+                return newRecord;
+            });
+
+            // 存储预期的文件总数
+            expectedFileCountMap.putIfAbsent(uuid, totalFiles);
+
+            // 更新最后更新时间
+            lastUpdateTimeMap.put(uuid, System.currentTimeMillis());
+
+            // 处理上传的文件
             Map<String, List<String>> filePaths = new HashMap<>();
 
             for (UploadFile uf : allFiles) {
@@ -75,28 +113,146 @@ public class APPdataController extends Controller {
                 filePaths.computeIfAbsent(dbField, k -> new ArrayList<>()).add(filePath);
             }
 
-            // 4. 将路径拼接为字符串存入Record
+            // 将路径添加到记录中
             filePaths.forEach((dbField, paths) -> {
-                record.set(dbField, String.join(",", paths));
+                // 获取现有路径
+                String existingPaths = record.getStr(dbField);
+                if (existingPaths == null) {
+                    record.set(dbField, String.join(",", paths));
+                } else {
+                    record.set(dbField, existingPaths + "," + String.join(",", paths));
+                }
             });
-            String worker1 = getPara("worker");
-            System.out.println("Worker参数值：" + worker1);  // 应该显示"猫"
-            // 5. 保存到数据库
-            boolean success = Db.save(TABLE_NAME, record);
 
-            if (success) {
-                System.out.println("保存成功");
-                result.put("code", 200);
-                result.put("msg", "数据保存成功");
+            // 更新文件计数
+            int currentFileCount = fileCountMap.getOrDefault(uuid, 0) + allFiles.size();
+            fileCountMap.put(uuid, currentFileCount);
+
+            // 获取预期文件总数
+            int expectedFiles = expectedFileCountMap.get(uuid);
+
+            // 检查是否所有文件都已上传
+            boolean allFilesUploaded = currentFileCount >= expectedFiles;
+
+            if (allFilesUploaded) {
+                // 保存到数据库
+                boolean success = Db.save(TABLE_NAME, record);
+
+                // 清理临时数据
+                tempDataMap.remove(uuid);
+                fileCountMap.remove(uuid);
+                expectedFileCountMap.remove(uuid);
+                lastUpdateTimeMap.remove(uuid);
+
+                if (success) {
+                    System.out.println("保存成功，uuid: " + uuid);
+                    result.put("code", 200);
+                    result.put("msg", "数据保存成功");
+                } else {
+                    result.put("code", 500);
+                    result.put("msg", "数据库保存失败");
+                }
             } else {
-                result.put("code", 500);
-                result.put("msg", "数据库保存失败");
+                // 返回部分成功，等待其他文件
+                result.put("code", 201);
+                result.put("msg", "部分文件上传成功，等待剩余文件");
+                result.put("uploadedCount", currentFileCount);
+                result.put("expectedCount", expectedFiles);
             }
         } catch (Exception e) {
             result.put("code", 500);
             result.put("msg", "服务器异常: " + e.getMessage());
             e.printStackTrace();
         }
+        renderJson(result);
+    }
+
+    // 检查上传状态
+    public void checkUploadStatus() {
+        JSONObject result = new JSONObject();
+        try {
+            String uuid = getPara("uuid");
+            if (uuid == null || uuid.trim().isEmpty()) {
+                result.put("code", 400);
+                result.put("msg", "UUID不能为空");
+                renderJson(result);
+                return;
+            }
+
+            // 检查是否存在该uuid的记录
+            if (tempDataMap.containsKey(uuid)) {
+                // 检查是否所有必要的文件都已上传
+                int currentCount = fileCountMap.getOrDefault(uuid, 0);
+                int expectedCount = expectedFileCountMap.getOrDefault(uuid, 0);
+
+                if (expectedCount <= 0) {
+                    result.put("code", 400);
+                    result.put("msg", "无法获取预期文件数量");
+                    renderJson(result);
+                    return;
+                }
+
+                boolean allFilesUploaded = currentCount >= expectedCount;
+
+                if (allFilesUploaded) {
+                    // 所有文件已上传，可以保存到数据库
+                    Record record = tempDataMap.get(uuid);
+                    boolean success = Db.save(TABLE_NAME, record);
+
+                    if (success) {
+                        // 清理临时数据
+                        tempDataMap.remove(uuid);
+                        fileCountMap.remove(uuid);
+                        expectedFileCountMap.remove(uuid);
+                        lastUpdateTimeMap.remove(uuid);
+
+                        result.put("code", 200);
+                        result.put("msg", "所有文件已上传，数据已保存");
+                    } else {
+                        result.put("code", 500);
+                        result.put("msg", "数据库保存失败");
+                    }
+                } else {
+                    result.put("code", 206);
+                    result.put("msg", "部分文件已上传，等待剩余文件");
+                    result.put("uploadedCount", currentCount);
+                    result.put("expectedCount", expectedCount);
+                }
+            } else {
+                result.put("code", 404);
+                result.put("msg", "未找到上传记录或记录已过期");
+            }
+        } catch (Exception e) {
+            result.put("code", 500);
+            result.put("msg", "服务器异常: " + e.getMessage());
+            e.printStackTrace();
+        }
+        renderJson(result);
+    }
+
+    // 清理过期的临时数据
+    public void cleanExpiredData() {
+        long currentTime = System.currentTimeMillis();
+        List<String> expiredUuids = new ArrayList<>();
+
+        // 找出所有过期的uuid
+        for (Map.Entry<String, Long> entry : lastUpdateTimeMap.entrySet()) {
+            if (currentTime - entry.getValue() > EXPIRATION_TIME) {
+                expiredUuids.add(entry.getKey());
+            }
+        }
+
+        // 清理过期数据
+        for (String uuid : expiredUuids) {
+            tempDataMap.remove(uuid);
+            fileCountMap.remove(uuid);
+            expectedFileCountMap.remove(uuid);
+            lastUpdateTimeMap.remove(uuid);
+        }
+
+        JSONObject result = new JSONObject();
+        result.put("code", 200);
+        result.put("msg", "清理完成，共清理 " + expiredUuids.size() + " 条过期数据");
         renderJson(result);
     }
 

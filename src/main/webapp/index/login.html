@@ -5,84 +5,237 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f8ff; /* 浅蓝色背景 */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            padding: 20px;
         }
 
         .login-container {
-            background-color: #fff; /* 白色背景 */
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 蓝色阴影 */
+            width: 100%;
+            max-width: 400px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            position: relative;
+            z-index: 10;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .login-container h2 {
-            margin-bottom: 20px;
-            color: #333; /* 黑色标题 */
+        .login-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .login-header {
+            padding: 40px 30px 20px;
             text-align: center;
         }
 
-        .login-form input[type="text"],
-        .login-form input[type="password"] {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc; /* 灰色边框 */
-            border-radius: 3px;
-            box-sizing: border-box;
+        .login-header h2 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 10px;
         }
 
-        .login-form input[type="submit"] {
+        .login-header p {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+        }
+
+        .login-form {
+            padding: 0 30px 40px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #bdc3c7;
+            transition: color 0.3s;
+        }
+
+        .form-group input {
             width: 100%;
-            padding: 10px;
-            background-color: #007bff; /* 蓝色按钮 */
-            color: #fff; /* 白色文字 */
+            height: 50px;
+            border-radius: 8px;
+            border: 1px solid #ecf0f1;
+            padding: 0 15px 0 45px;
+            font-size: 15px;
+            color: #2c3e50;
+            background: #f8f9fa;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #3498db;
+            background: white;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.1);
+        }
+
+        .form-group input:focus + i {
+            color: #3498db;
+        }
+
+        .login-form button {
+            width: 100%;
+            height: 50px;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
             border: none;
-            border-radius: 3px;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            font-weight: 500;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+            position: relative;
+            overflow: hidden;
         }
 
-        .login-form input[type="submit"]:hover {
-            background-color: #0056b3; /* 深蓝色按钮 */
-        }
-        .image-container {
-            margin-bottom: 20px; /* 添加一些底部间距 */
+        .login-form button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(52, 152, 219, 0.4);
         }
 
-        .login-container {
-            width: 400px; /* 设置登录框宽度以匹配图像和页面的整体布局 */
-            margin: auto; /* 水平居中显示 */
+        .login-form button:active {
+            transform: translateY(1px);
+            box-shadow: 0 3px 10px rgba(52, 152, 219, 0.3);
         }
 
-        body {
-            display: flex;
-            flex-direction: column; /* 改为列布局，图像在上，登录框在下 */
-            align-items: center; /* 中心对齐所有内容 */
-            justify-content: center;
+        .login-form button span {
+            position: relative;
+            z-index: 2;
         }
 
+        .login-form button::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: all 0.6s;
+        }
+
+        .login-form button:hover::after {
+            left: 100%;
+        }
+
+        .wave-bg {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(52, 152, 219, 0.05)" fill-opacity="1" d="M0,224L48,213.3C96,203,192,181,288,186.7C384,192,480,224,576,224C672,224,768,192,864,170.7C960,149,1056,139,1152,149.3C1248,160,1344,192,1392,208L1440,224L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+            background-size: 100% 100px;
+            background-repeat: no-repeat;
+            z-index: -1;
+        }
+
+        .bg-circles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .bg-circles span {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .bg-circles span:nth-child(1) {
+            width: 300px;
+            height: 300px;
+            top: -150px;
+            left: -150px;
+        }
+
+        .bg-circles span:nth-child(2) {
+            width: 200px;
+            height: 200px;
+            bottom: -100px;
+            right: -100px;
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                max-width: 90%;
+            }
+
+            .login-header {
+                padding: 30px 20px 15px;
+            }
+
+            .login-header h2 {
+                font-size: 24px;
+            }
+
+            .login-form {
+                padding: 0 20px 30px;
+            }
+
+            .form-group input,
+            .login-form button {
+                height: 45px;
+                font-size: 14px;
+            }
+        }
     </style>
 </head>
 <body>
-<!--div class="image-container">
-    <img src="../img/img_1.png" alt="Login Image" style="width:100%; height: 100%; vertical-align: middle; display: block;">
-</div-->
-
+<div class="bg-circles">
+    <span></span>
+    <span></span>
+</div>
 
 <div class="login-container">
-    <h2>Login</h2>
-    <form class="login-form" action="/index" method="post" >
-        <input type="text" name="username" placeholder="Username" value="" required>
-        <input type="password" name="password" placeholder="Password" value="" required>
-        <input type="submit" value="Login">
+    <div class="wave-bg"></div>
+    <div class="login-header">
+        <h2>奉天数智</h2>
+        <p>天然气安全管理平台</p>
+    </div>
+    <form class="login-form" action="/index" method="post">
+        <div class="form-group">
+            <i class="fa fa-user"></i>
+            <input type="text" name="username" placeholder="Username" value="" required>
+        </div>
+        <div class="form-group">
+            <i class="fa fa-lock"></i>
+            <input type="password" name="password" placeholder="Password" value="" required>
+        </div>
+        <button type="submit">
+            <span>登录</span>
+        </button>
     </form>
 </div>
 </body>

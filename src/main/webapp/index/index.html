@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,37 +12,118 @@
 	<link href="../css/font-awesome.css" rel="stylesheet">
 	<script src="../css/jquery-3.3.1.min.js"></script>
 	<script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
-    <link href="../css/index.css" rel="stylesheet">
+	<link href="../css/index.css" rel="stylesheet">
 
+	<style>
+		/* 添加 tab 样式 */
+		#tabHeader {
+			display: flex;
+			border-bottom: 1px solid #ccc;
+		}
+
+		.tab {
+			padding: 10px 20px;
+			background-color: #95a5a6;
+			cursor: pointer;
+			border: 1px solid transparent;
+			border-bottom: none;
+		}
+		.tab:hover {
+			background-color: #007bff; /* 鼠标划过的颜色，可根据需要调整 */
+		}
+		.tab.active {
+			background-color: #0099CC;
+			border-color: #ccc;
+			border-bottom: 1px solid #f0f0f0;
+		}
+
+		.tab .close {
+			margin-left: 10px;
+			color: #999;
+		}
+
+		.tab .close:hover {
+			color: #333;
+		}
+	</style>
 
 	<script>
-		$(document).ready(function() {
-			$('.menu > li').click(function(event) {
-				event.stopPropagation(); // 阻止事件冒泡
-				// $('.submenu').not($(this).children('.submenu')).slideUp(); // 隐藏其他打开的子菜单
-				$(this).children('.submenu').slideToggle(); // 切换当前子菜单的显示和隐藏
+		$(document).ready(function () {
+			// 处理主菜单点击事件
+			$('.menu > li').click(function (event) {
+				event.stopPropagation();
+				$(this).children('.submenu').slideToggle();
 
 				// 切换图标
-				var icon = $(this).find('.fa1'); // 获取<i>标签
+				var icon = $(this).find('.fa1');
 				icon.toggleClass('fa-angle-down fa-angle-up');
 			});
 
-			$('.submenu li a').click(function(event) {
-				event.stopPropagation(); // 阻止事件冒泡
-				$('.submenu li a').removeClass('active'); // 移除所有子菜单项的激活状态
-				$(this).addClass('active'); // 添加激活状态到当前点击的子菜单项
-				loadPage($(this).attr('href')); // 加载页面
+			// 处理子菜单点击事件
+			$('.submenu li a').click(function (event) {
+				event.stopPropagation();
+				$('.submenu li a').removeClass('active');
+				$(this).addClass('active');
+				// 从 onclick 属性中提取实际的 URL
+				var onclickAttr = $(this).attr('onclick');
+				var url = onclickAttr.match(/loadPage\('([^']+)'\)/)[1];
+				loadPage(url);
+				addTab($(this).find('span').text(), url);
 			});
+
+			// 加载页面到 iframe
+			function loadPage(url) {
+				var contentFrame = document.getElementById('contentFrame');
+				if (contentFrame) {
+					contentFrame.src = url;
+				} else {
+					console.error('Content frame not found');
+				}
+			}
+
+			// 添加 tab 标签
+			function addTab(title, url) {
+				var encodedUrl = encodeURI(url);
+				console.log('Checking for tab with URL:', encodedUrl);
+				if ($('.tab[data-url="' + encodedUrl + '"]').length === 0) {
+					var tab = $('<div class="tab" data-url="' + encodedUrl + '">' + title + '<span class="close">&times;</span></div>');
+					$('#tabHeader').append(tab);
+					tab.click(function () {
+						$('.tab').removeClass('active');
+						$(this).addClass('active');
+						loadPage($(this).data('url'));
+					});
+					tab.find('.close').click(function (event) {
+						event.stopPropagation();
+						var tabToRemove = $(this).parent();
+						if (tabToRemove.hasClass('active')) {
+							var nextTab = tabToRemove.next('.tab');
+							if (nextTab.length === 0) {
+								nextTab = tabToRemove.prev('.tab');
+							}
+							if (nextTab.length > 0) {
+								nextTab.click();
+							} else {
+								loadPage('content.html');
+							}
+						}
+						tabToRemove.remove();
+					});
+					$('.tab').removeClass('active');
+					tab.addClass('active');
+					console.log('New tab added with URL:', encodedUrl);
+				} else {
+					$('.tab[data-url="' + encodedUrl + '"]').click();
+					console.log('Tab already exists, clicked:', encodedUrl);
+				}
+			}
 		});
 	</script>
 
 </head>
+
 <body>
 <div id="container">
-	<header id="header">
-		<!-- Include head.html content here -->
-		<iframe src="head.html" frameborder="1" width="100%" height="100"></iframe>
-	</header>
 	<div id="main">
 		<div id="left" class="menu-container">
 			<ul class="menu">
@@ -55,9 +137,9 @@
 				#else
 				<li class="menu-item">
 					<a href="javascript:void(0);" onclick="">
-						<i class="fa #(x.fun_logo) fa2" aria-hidden="true" ></i>
+						<i class="fa #(x.fun_logo) fa2" aria-hidden="true"></i>
 						<span>#(x.fun_name)</span>
-						<i class="fa fa-angle-down fa1" aria-hidden="true" ></i>
+						<i class="fa fa-angle-down fa1" aria-hidden="true"></i>
 					</a>
 					<ul class="submenu">
 						#for(y : x.getChildFunctions())
@@ -74,22 +156,26 @@
 			</ul>
 		</div>
 		<div id="content">
+			<!-- 右侧 tab 头部 -->
+			<div id="tabHeader"></div>
 			<!-- 右侧内容展示区域 -->
 			<iframe id="contentFrame" src="content.html" frameborder="0" width="100%" height="100%"></iframe>
 		</div>
 	</div>
-	<footer id="footer">
-		<!-- Include foot.html content here -->
-		<iframe src="foot.html" frameborder="1" width="100%" height="50"></iframe>
-	</footer>
 </div>
 
 <script>
 	// JavaScript function to load content in iframe
 	function loadPage(url) {
-		document.getElementById('contentFrame').src = url;
+		var contentFrame = document.getElementById('contentFrame');
+		if (contentFrame) {
+			contentFrame.src = url;
+		} else {
+			console.error('Content frame not found');
+		}
 	}
 </script>
 
 </body>
+
 </html>

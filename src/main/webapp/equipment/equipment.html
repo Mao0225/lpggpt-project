@@ -9,44 +9,96 @@
     <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css">
     <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
     <link rel="stylesheet" type="text/css" href="/css/lpg.css">
-    <style>
-        form {
-            font-family: Arial, sans-serif;
-            padding: 20px;
+
+    <style scoped>
+        .container {
+            padding: 50px 20px;
             display: flex;
-            flex-wrap: wrap;
+            justify-content: center;
             align-items: center;
         }
 
-        label {
-            margin-right: 10px;
-            color: white;
-        }
-
-        input[type="text"],
-        select {
-            width: 150px;
-            padding: 5px;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-        }
-
-        button[type="submit"] {
-            padding: 8px 15px;
-            background-color: yellow;
-            color: black;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-        }
-        /* 添加的选择框样式规则 */
-        #searchForm select {
+        input {
+            padding: 15px;
+            font-size: 18px;
+            border: 2px solid #a3bffa;
             border-radius: 10px;
-            background-color: #fbf0c5;
-            width: 160px;
-            height: 30px;
+            width: 100%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: border-color 0.3s ease;
         }
 
+        input:focus {
+            outline: none;
+            border-color: #4c87c9;
+        }
+    </style>
+
+    <style>
+        /* 设置 #pagediv 的样式 */
+        #pagediv {
+            background-color: #f0f0f0;
+            color: black;
+            padding: 10px;
+            border: 2px solid #007bff;
+        }
+
+        /* 设置表格样式 */
+        table.list {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        /* 设置表格表头样式 */
+        table.list th {
+            background-color: #add8e6;
+            color: black;
+            padding: 8px;
+            text-align: left;
+            border: 1px solid #ddd; /* 新增：添加边框 */
+        }
+
+        /* 设置表格单元格样式 */
+        table.list td {
+            padding: 8px;
+            border: 1px solid #ddd; /* 修改：添加边框 */
+        }
+
+        /* 设置表格隔行颜色 */
+        table.list tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        table.list tr:nth-child(odd) {
+            background-color: #e0e0e0;
+        }
+
+        /* 设置鼠标悬停时表格行的颜色 */
+        table.list tr:hover {
+            background-color: #d3d3d3;
+        }
+
+        /* 新增样式：设置新建司机链接为黑色 */
+        #pagediv .add {
+            color: black;
+        }
+
+        /* 新增样式：设置输入框背景色为淡灰色 */
+        #pagediv input[type="text"] {
+            background-color: #f0f0f0;
+        }
+        /* 新增样式：设置 label 文字颜色为黑色 */
+        #pagediv label {
+            color: black;
+        }
+        #pagediv .add {
+            color: white;
+            background-color: #007bff;
+            padding: 6px 12px;
+            text-decoration: none;
+            display: inline-block;
+            border-radius: 5; /* 方方正正的边框 */
+        }
     </style>
 </head>
 
