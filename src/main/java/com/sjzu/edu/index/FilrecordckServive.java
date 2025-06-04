@@ -36,17 +36,7 @@ public class FilrecordckServive {
     public Page<FillRecordCheck1> search(int pageNumber, int pageSize, Timestamp finditem, String gastion, String gasnumber) {
         StringBuilder baseSql = new StringBuilder(
                 "FROM fill_record_check1 f " +
-                        "LEFT JOIN (" +
-                        "    SELECT g.* " +
-                        "    FROM gas_file g " +
-                        "    WHERE g.id = (" +
-                        "        SELECT g2.id " +
-                        "        FROM gas_file g2 " +
-                        "        WHERE g2.gas_number = g.gas_number " +
-                        "        ORDER BY g2.id " +
-                        "        LIMIT 1 " +
-                        "    )" +
-                        ") g " +
+                        "LEFT JOIN  gas_file g " +
                         "ON g.gas_number = f.gas_number ");
         String selectSql = "SELECT f.*, g.* ";
         List<Object> params = new ArrayList<>();

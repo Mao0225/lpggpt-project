@@ -11,25 +11,88 @@
   <link rel="stylesheet" type="text/css" href="../css/lpg.css">
   <style scoped>
     .container {
-      padding: 50px 20px;
+      padding: 30px 15px;
       display: flex;
       justify-content: center;
       align-items: center;
     }
 
     input {
-      padding: 15px;
-      font-size: 18px;
-      border: 2px solid #a3bffa;
-      border-radius: 10px;
-      width: 100%;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 8px 12px;
+      font-size: 14px;
+      border: 1px solid #a3bffa;
+      border-radius: 4px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
       transition: border-color 0.3s ease;
+    }
+
+    input[type="date"] {
+      max-width: 180px;
     }
 
     input:focus {
       outline: none;
       border-color: #4c87c9;
+    }
+
+    select {
+      padding: 8px 12px;
+      font-size: 14px;
+      border: 1px solid #a3bffa;
+      border-radius: 4px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      background-color: white;
+    }
+
+    button, input[type="submit"], input[type="button"] {
+      padding: 6px 12px;
+      font-size: 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 80px;
+    }
+
+    input[type="submit"] {
+      background-color: #007bff;
+      color: white;
+      border: 1px solid #007bff;
+      margin-right: 8px;
+    }
+
+    input[type="button"] {
+      background-color: #f8f9fa;
+      color: #333;
+      border: 1px solid #ddd;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #0069d9;
+    }
+
+    input[type="button"]:hover {
+      background-color: #e2e6ea;
+    }
+
+    .form-group {
+      display: inline-flex;
+      align-items: center;
+      margin-right: 15px;
+      margin-bottom: 10px;
+    }
+
+    .form-group label {
+      margin-right: 8px;
+      margin-bottom: 0;
+      white-space: nowrap;
+    }
+
+    .btn-danger {
+      padding: 4px 8px;
+      font-size: 12px;
     }
   </style>
 
@@ -38,29 +101,32 @@
     #pagediv {
       background-color: #f0f0f0;
       color: black;
-      padding: 10px;
-      border: 2px solid #007bff;
+      padding: 15px;
+      border: 1px solid #007bff;
+      border-radius: 4px;
     }
 
     /* 设置表格样式 */
     table.list {
       width: 100%;
       border-collapse: collapse;
+      margin-top: 15px;
     }
 
     /* 设置表格表头样式 */
     table.list th {
       background-color: #add8e6;
       color: black;
-      padding: 8px;
+      padding: 10px;
       text-align: left;
-      border: 1px solid #ddd; /* 新增：添加边框 */
+      border: 1px solid #ddd;
+      font-weight: 600;
     }
 
     /* 设置表格单元格样式 */
     table.list td {
-      padding: 8px;
-      border: 1px solid #ddd; /* 修改：添加边框 */
+      padding: 10px;
+      border: 1px solid #ddd;
     }
 
     /* 设置表格隔行颜色 */
@@ -77,26 +143,68 @@
       background-color: #d3d3d3;
     }
 
-    /* 新增样式：设置新建司机链接为黑色 */
-    #pagediv .add {
-      color: black;
-    }
-
-    /* 新增样式：设置输入框背景色为淡灰色 */
-    #pagediv input[type="text"] {
-      background-color: #f0f0f0;
-    }
-    /* 新增样式：设置 label 文字颜色为黑色 */
-    #pagediv label {
-      color: black;
-    }
+    /* 设置新建司机链接为黑色 */
     #pagediv .add {
       color: white;
       background-color: #007bff;
       padding: 6px 12px;
       text-decoration: none;
       display: inline-block;
-      border-radius: 5; /* 方方正正的边框 */
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    /* 设置输入框背景色为淡灰色 */
+    #pagediv input[type="text"] {
+      background-color: white;
+    }
+
+    /* 设置 label 文字颜色为黑色 */
+    #pagediv label {
+      color: black;
+      margin-right: 5px;
+      margin-left: 10px;
+    }
+
+    #pagediv label:first-child {
+      margin-left: 0;
+    }
+
+    /* 检查详情模态框样式 */
+    .modal-title {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .modal-body table td {
+      padding: 8px;
+    }
+
+    .text-red {
+      color: red;
+    }
+
+    /* 分页样式 */
+    .pagination {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .pagination a, .pagination span {
+      padding: 6px 12px;
+      margin: 0 2px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      text-decoration: none;
+      color: #007bff;
+    }
+
+    .pagination .current {
+      background-color: #007bff;
+      color: white;
+      border-color: #007bff;
     }
   </style>
 </head>

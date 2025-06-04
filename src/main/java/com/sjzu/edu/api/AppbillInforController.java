@@ -403,6 +403,7 @@ public class AppbillInforController extends Controller {
 
     // 辅助方法：Record列表转JSONArray
     private JSONArray convertRecordsToJson(List<Record> records) {
+        JSONArray jsonArray = new JSONArray();
         for (Record record : records) {
             JSONObject json = new JSONObject();
             json.put("number", record.get("number"));
