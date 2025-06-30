@@ -29,7 +29,7 @@ import java.util.*;
  *   Jason 2024-03-09
  * AppbottleController//这个是手机端获取司机gps数据的接口
  */
-@Path(value = "/", viewPath = "/applpgyunxing")
+@Path(value = "/", viewPath = "/shexiangtou")
  @Clear
 public class AppshexiangtouController extends Controller {
 	private Shexiangtou dao = new Shexiangtou().dao();
