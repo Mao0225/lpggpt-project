@@ -95,8 +95,11 @@ public class ApplpgyunxingController extends Controller {
 				"WHEN 5 THEN '防拆卸报警' " +
 				"ELSE t.Alarm " +
 				"END AS Alarm, t.PowerStatus ";
+//		String sqlExceptSelect = "FROM t_iot_sync_rds_records_v3 t " +
+//				"WHERE (t.Alarm IS NOT Null or t.Gas_Pg is not Null) AND t.devicename = ? " +
+//				"ORDER BY t.id DESC";
 		String sqlExceptSelect = "FROM t_iot_sync_rds_records_v3 t " +
-				"WHERE (t.Alarm IS NOT Null or t.Gas_Pg is not Null) AND t.devicename = ? " +
+				"WHERE t.Alarm IS NOT NULL AND t.Alarm != 0 AND t.devicename = ? " +
 				"ORDER BY t.id DESC";
 
 		// 执行分页查询
