@@ -71,7 +71,7 @@ public class AppxiaoheziController extends Controller {
                 famenstatus.put("ValveStatus2", convertValveStatus(record.get("ValveStatus2")));
                 famenstatus.put("ValveStatus3", convertValveStatus(record.get("ValveStatus3")));
                 famenstatus.put("ValveStatus4", convertValveStatus(record.get("ValveStatus4")));
-
+                famenstatus.put("gaspg", convertgaspgStatus(record.get("Gas_Pg")));
                 // 转换 Alarm 值
                 famenstatus.put("Alarm", convertAlarm(record.get("Alarm")));
 
@@ -179,6 +179,16 @@ public class AppxiaoheziController extends Controller {
             case 4: return "视频+操作间 报警";
             case 5: return "压力表超压报警";
             default: return "未知报警";
+        }
+    }
+    private String convertgaspgStatus(Object gaspg) {
+        if (gaspg == null) return null;
+        int gaspgvalue = (Integer) gaspg;
+        switch (gaspgvalue) {
+            case 0: return "正常";
+            case 1: return "压力低于下限";
+            case 2: return "超压";
+            default: return "压力未知";
         }
     }
 

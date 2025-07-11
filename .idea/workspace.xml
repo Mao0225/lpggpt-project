@@ -5,16 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bef31097-e2fd-4fd6-9377-5642cb374b1b" name="更改" comment="增加了LPG充装端的后台和对应后端">
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/lpggpt.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/lpggpt.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/img/beijing.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/log/jfinal_demo_for_maven.log" beforeDir="false" afterPath="$PROJECT_DIR$/log/jfinal_demo_for_maven.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/api/AppbillInforController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/api/AppbillInforController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/index/FilrecordckServive.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/index/FilrecordckServive.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/drivercar/drivercar.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/drivercar/drivercar.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/filrdck/filrdck.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/filrdck/filrdck.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/setrans/setrans.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/setrans/setrans.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/api/AppxiaoheziController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/api/AppxiaoheziController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/index/content.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/index/content.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/index/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/index/login.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,7 +55,7 @@
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/jason/工作/xiangmu/jfinal/lpggpt/lpggpt/src/main/java/com/sjzu/edu/index&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/jason/工作/xiangmu/jfinal/lpggpt/lpggpt/src/main/webapp/img&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -78,11 +73,11 @@
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/webapp/img" />
       <recent name="$PROJECT_DIR$/src/main/java/com/sjzu/edu/index" />
       <recent name="$PROJECT_DIR$/src/main/webapp/orderinfo" />
       <recent name="$PROJECT_DIR$/src/main/java/com/sjzu/edu/api" />
       <recent name="E:\202527Lpggpt\1\lpggpt\src\main\resources" />
-      <recent name="E:\202527Lpggpt\1\lpggpt\src\main\webapp\upload\temp" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="com.sjzu.edu.api" />
@@ -103,7 +98,7 @@
       <visibility group="运行配置" flag="true" />
     </myKeys>
   </component>
-  <component name="RunManager" selected="应用程序._JFinalDemoGenerator">
+  <component name="RunManager" selected="应用程序.DemoConfig">
     <configuration name="DemoConfig" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.sjzu.edu.common.DemoConfig" />
       <module name="jfinal_demo_for_maven" />
@@ -145,8 +140,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="应用程序._JFinalDemoGenerator" />
         <item itemvalue="应用程序.DemoConfig" />
+        <item itemvalue="应用程序._JFinalDemoGenerator" />
       </list>
     </recent_temporary>
   </component>
@@ -249,6 +244,8 @@
       <workItem from="1748509282599" duration="2926000" />
       <workItem from="1748584610372" duration="694000" />
       <workItem from="1748592963629" duration="1580000" />
+      <workItem from="1752218234110" duration="2067000" />
+      <workItem from="1752240943813" duration="9000" />
     </task>
     <task id="LOCAL-00001" summary="添加了小盒子管理功能">
       <option name="closed" value="true" />
