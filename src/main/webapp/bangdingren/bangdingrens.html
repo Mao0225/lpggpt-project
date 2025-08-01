@@ -8,17 +8,9 @@
 <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css" >
 <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
 <link rel="stylesheet" type="text/css" href="../css/lpg.css">
-<!-- Add your custom stylesheets and scripts here -->
-<script>
-    document.getElementById('showFormButton').addEventListener('click', function() {
-        var form = document.getElementById('searchForm');
-        if (form.style.display === 'none') {
-            form.style.display = 'block'; // 显示表单
-        } else {
-            form.style.display = 'none'; // 再次点击按钮隐藏表单
-        }
-    });
-</script>
+
+<link rel="stylesheet" type="text/css" href="../css/lpg.css">
+
 
 <style scoped>
     .container {
@@ -33,7 +25,7 @@
         font-size: 18px;
         border: 2px solid #a3bffa;
         border-radius: 10px;
-        width: 100%;
+        width: auto; /* 修改宽度为自动适应内容 */
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         transition: border-color 0.3s ease;
     }
@@ -41,6 +33,46 @@
     input:focus {
         outline: none;
         border-color: #4c87c9;
+    }
+
+    /* 设置提交和重置按钮样式 */
+    #searchForm input[type="submit"],
+    #searchForm input[type="button"] {
+        width: auto;
+        padding: 8px 16px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        cursor: pointer;
+        background-color: #f0f0f0;
+        margin-right: 10px;
+    }
+
+    #searchForm input[type="submit"]:hover,
+    #searchForm input[type="button"]:hover {
+        background-color: #e0e0e0;
+    }
+
+    /* 设置日期输入框样式 */
+    #searchForm input[type="date"] {
+        width: auto;
+        padding: 8px 16px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #f0f0f0;
+        margin-right: 10px;
+    }
+
+    /* 设置下拉框样式 */
+    #searchForm select {
+        width: auto;
+        padding: 8px 16px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #f0f0f0;
+        margin-right: 10px;
     }
 </style>
 
@@ -50,7 +82,6 @@
         background-color: #f0f0f0;
         color: black;
         padding: 10px;
-        border: 2px solid #007bff;
     }
 
     /* 设置表格样式 */
@@ -97,19 +128,24 @@
     #pagediv input[type="text"] {
         background-color: #f0f0f0;
     }
+
     /* 新增样式：设置 label 文字颜色为黑色 */
     #pagediv label {
         color: black;
     }
-    #pagediv .add {
-        color: white;
-        background-color: #007bff;
-        padding: 6px 12px;
-        text-decoration: none;
-        display: inline-block;
-        border-radius: 5; /* 方方正正的边框 */
-    }
 </style>
+<!-- Add your custom stylesheets and scripts here -->
+<script>
+    document.getElementById('showFormButton').addEventListener('click', function() {
+        var form = document.getElementById('searchForm');
+        if (form.style.display === 'none') {
+            form.style.display = 'block'; // 显示表单
+        } else {
+            form.style.display = 'none'; // 再次点击按钮隐藏表单
+        }
+    });
+</script>
+
 <!DOCTYPE html>
 <html>
 <head>

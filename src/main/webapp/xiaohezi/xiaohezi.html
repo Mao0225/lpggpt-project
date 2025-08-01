@@ -8,7 +8,8 @@
     <script src="../css/jquery-3.3.1.min.js"></script>
     <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css">
     <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="/css/lpg.css">
+    <link rel="stylesheet" type="text/css" href="../css/lpg.css">
+
 
     <style scoped>
         .container {
@@ -40,6 +41,24 @@
             background-color: #f0f0f0;
             color: black;
             padding: 10px;
+            border: 2px solid #007bff;
+            margin-bottom: 15px;
+        }
+
+        /* 搜索区域布局优化 */
+        #searchForm {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+
+        /* 日期输入框专门样式 - 解决过大问题 */
+        input[type="date"] {
+            padding: 14px 10px;  /* 调整内边距 */
+            font-size: 16px;    /* 调整字体大小 */
+            width: auto;        /* 自动适应内容宽度 */
+            min-width: 180px;   /* 最小宽度保证可用性 */
         }
 
         /* 设置表格样式 */
@@ -54,13 +73,13 @@
             color: black;
             padding: 8px;
             text-align: left;
-            border: 1px solid #ddd; /* 新增：添加边框 */
+            border: 1px solid #ddd;
         }
 
         /* 设置表格单元格样式 */
         table.list td {
             padding: 8px;
-            border: 1px solid #ddd; /* 修改：添加边框 */
+            border: 1px solid #ddd;
         }
 
         /* 设置表格隔行颜色 */
@@ -77,18 +96,41 @@
             background-color: #d3d3d3;
         }
 
-        /* 新增样式：设置新建司机链接为黑色 */
+        /* 设置新建司机链接样式 */
         #pagediv .add {
-            color: black;
+            color: white;
+            background-color: #007bff;
+            padding: 6px 12px;
+            text-decoration: none;
+            display: inline-block;
+            border-radius: 4px;
         }
 
-        /* 新增样式：设置输入框背景色为淡灰色 */
+        /* 设置输入框背景色为淡灰色 */
         #pagediv input[type="text"] {
             background-color: #f0f0f0;
+            width: auto;
+            min-width: 150px;
         }
-        /* 新增样式：设置 label 文字颜色为黑色 */
+
+        /* 设置 label 文字颜色为黑色 */
         #pagediv label {
             color: black;
+            margin-bottom: 0;
+        }
+
+        /* 操作列样式 */
+        .edit, .delete {
+            margin: 0 5px;
+            text-decoration: none;
+        }
+
+        .edit {
+            color: #007bff;
+        }
+
+        .delete {
+            color: #dc3545;
         }
     </style>
 </head>
