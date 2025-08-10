@@ -112,11 +112,11 @@
         &nbsp;&nbsp<select name="alarm" id="alarmSelect">
         <option value="">请选择报警类型</option>
         <option value="0" #(alarm == 0 ? "selected" : "")>无报警</option>
-        <option value="1" #(alarm == 1 ? "selected" : "")>厨房警报</option>
-        <option value="2" #(alarm == 2 ? "selected" : "")>气瓶间报警</option>
-        <option value="3" #(alarm == 3 ? "selected" : "")>摄像头报警</option>
+        <option value="1" #(alarm == 1 ? "selected" : "")>操作间燃气报警</option>
+        <option value="2" #(alarm == 2 ? "selected" : "")>气瓶间燃气报警</option>
+        <option value="3" #(alarm == 3 ? "selected" : "")>摄像头监控报警</option>
         <option value="4" #(alarm == 4 ? "selected" : "")>烟感报警</option>
-        <option value="5" #(alarm == 5 ? "selected" : "")>防拆卸警报</option>
+        <option value="5" #(alarm == 5 ? "selected" : "")>管道压力超压报警</option>
     </select>
 
         <button type="button" type="submit" value="查询" id="searchButton">查询</button>
