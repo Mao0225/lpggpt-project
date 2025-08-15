@@ -20,7 +20,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class APPdataController extends Controller {
 
     private static final String WEBAPP_ROOT = PathKit.getWebRootPath();
-    private static final String UPLOAD_DIR = WEBAPP_ROOT + "/upload/temp/data";
+    // 为视频和图片创建不同的存储目录，避免处理冲突
+    private static final String UPLOAD_IMAGE_DIR = WEBAPP_ROOT + "/upload/temp/data/images";
+    private static final String UPLOAD_VIDEO_DIR = WEBAPP_ROOT + "/upload/temp/data/videos";
     private static final String TABLE_NAME = "bse_data";
 
     // 使用AtomicInteger确保并发计数安全
@@ -42,17 +44,22 @@ public class APPdataController extends Controller {
         System.out.println("所有接收到的参数：" + getParaMap());
 
         try {
-            List<UploadFile> allFiles = getFiles();
+            // 移除setMaxPostSize调用，通过JFinal配置文件设置上传大小限制
+            // 改为在getFiles方法中指定最大文件大小
+            List<UploadFile> allFiles = getFiles(UPLOAD_IMAGE_DIR, 100 * 1024 * 1024); // 单个文件最大100MB
+
             String worker = getPara("worker");
             String uuid = getPara("uuid");
             String telephone = getPara("telephone");
             int totalFiles = getParaToInt("totalFiles", 0);
+            String fileType = getPara("fileType"); // 获取文件类型（image或video）
 
             System.out.println("worker:" + worker);
             System.out.println("uuid:" + uuid);
             System.out.println("telephone:" + telephone);
             System.out.println("totalFiles:" + totalFiles);
-            System.out.println("当前请求文件数:" + allFiles.size()); // 新增日志
+            System.out.println("文件类型:" + fileType);
+            System.out.println("当前请求文件数:" + allFiles.size());
 
             // 参数验证
             if (worker == null || worker.trim().isEmpty()) {
@@ -76,13 +83,22 @@ public class APPdataController extends Controller {
                 return;
             }
 
-            // 初始化记录（添加主键ID）
+            // 验证是否有文件需要上传
+            if (allFiles == null || allFiles.isEmpty()) {
+                result.put("code", 400);
+                result.put("msg", "未检测到上传的文件");
+                renderJson(result);
+                return;
+            }
+
+            // 初始化记录
             Record record = tempDataMap.computeIfAbsent(uuid, k -> {
                 Record newRecord = new Record();
-                //newRecord.set("id", UUID.randomUUID().toString()); // 关键：添加主键
+                //newRecord.set("id", UUID.randomUUID().toString()); // 确保主键存在
                 newRecord.set("worker", worker);
                 newRecord.set("uuid", uuid);
                 newRecord.set("telephone", telephone);
+                newRecord.set("create_time", new Date()); // 添加创建时间
                 return newRecord;
             });
 
@@ -94,27 +110,32 @@ public class APPdataController extends Controller {
             // 处理上传文件
             Map<String, List<String>> filePaths = new HashMap<>();
             for (UploadFile uf : allFiles) {
-                String paramName = uf.getParameterName();
-                String[] parts = paramName.split("_");
-                if (parts.length < 2) continue;
-
-                String type = parts[0];
+                String type = getPara("type");
                 String dbField = FIELD_MAPPING.get(type);
-                if (dbField == null) continue;
+                if (dbField == null) {
+                    System.out.println("未知的文件类型: " + type);
+                    continue;
+                }
 
-                String filePath = saveUploadFile(uf);
+                // 根据文件类型保存到不同目录
+                String filePath = saveUploadFile(uf, "video".equals(fileType));
                 filePaths.computeIfAbsent(dbField, k -> new ArrayList<>()).add(filePath);
+
+                // 记录文件类型和大小
+               // record.set(dbField + "_type", fileType);
+                //record.set(dbField + "_size", uf.getFile().length());
             }
 
             // 更新记录中的文件路径
             filePaths.forEach((dbField, paths) -> {
                 String existingPaths = record.getStr(dbField);
-                record.set(dbField, existingPaths == null ?
+                String newPaths = existingPaths == null ?
                         String.join(",", paths) :
-                        existingPaths + "," + String.join(",", paths));
+                        existingPaths + "," + String.join(",", paths);
+                record.set(dbField, newPaths);
             });
 
-            // 原子方式更新计数（关键修复）
+            // 原子方式更新计数
             AtomicInteger counter = fileCountMap.get(uuid);
             int currentFileCount = counter.addAndGet(allFiles.size());
             System.out.println("UUID:" + uuid + " 累计上传:" + currentFileCount + "/" + totalFiles);
@@ -124,7 +145,7 @@ public class APPdataController extends Controller {
             System.out.println("UUID:" + uuid + " 是否完成上传:" + allFilesUploaded);
 
             if (allFilesUploaded) {
-                // 表存在性测试（现在会执行）
+                // 表存在性测试
                 try {
                     Db.query("SELECT 1 FROM bse_data LIMIT 1");
                     System.out.println("表 bse_data 存在");
@@ -167,7 +188,7 @@ public class APPdataController extends Controller {
         renderJson(result);
     }
 
-    // 检查上传状态接口（同步修改计数方式）
+    // 检查上传状态接口
     public void checkUploadStatus() {
         JSONObject result = new JSONObject();
         try {
@@ -180,7 +201,7 @@ public class APPdataController extends Controller {
             }
 
             if (tempDataMap.containsKey(uuid)) {
-                int currentCount = fileCountMap.get(uuid).get(); // 使用原子计数器
+                int currentCount = fileCountMap.get(uuid).get();
                 int expectedCount = expectedFileCountMap.getOrDefault(uuid, 0);
                 System.out.println("checkUploadStatus - UUID:" + uuid + " 进度:" + currentCount + "/" + expectedCount);
 
@@ -237,7 +258,7 @@ public class APPdataController extends Controller {
         renderJson(result);
     }
 
-    // 清理过期数据方法保持不变
+    // 清理过期数据
     public void cleanExpiredData() {
         long currentTime = System.currentTimeMillis();
         List<String> expiredUuids = new ArrayList<>();
@@ -262,12 +283,16 @@ public class APPdataController extends Controller {
         renderJson(result);
     }
 
-    // 文件保存相关方法保持不变
-    private String saveUploadFile(UploadFile uf) throws IOException {
+    // 文件保存方法，区分视频和图片目录
+    private String saveUploadFile(UploadFile uf, boolean isVideo) throws IOException {
         String ext = getFileExt(uf);
         String newName = UUID.randomUUID() + ext;
 
-        File targetDir = new File(UPLOAD_DIR);
+        // 根据文件类型选择保存目录
+        String targetDirPath = isVideo ? UPLOAD_VIDEO_DIR : UPLOAD_IMAGE_DIR;
+        File targetDir = new File(targetDirPath);
+
+        // 确保目录存在
         if (!targetDir.exists() && !targetDir.mkdirs()) {
             throw new IOException("目录创建失败: " + targetDir.getAbsolutePath());
         }
@@ -275,7 +300,10 @@ public class APPdataController extends Controller {
         File destFile = new File(targetDir, newName);
         Files.move(uf.getFile().toPath(), destFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
-        return "upload/temp/data/" + newName;
+        // 返回相对路径
+        return isVideo ?
+                "upload/temp/data/videos/" + newName :
+                "upload/temp/data/images/" + newName;
     }
 
     private String getFileExt(UploadFile uf) {
@@ -290,10 +318,15 @@ public class APPdataController extends Controller {
     }
 
     private String getExtensionByMimeType(String mimeType) {
+        if (mimeType == null) return "";
+
         switch (mimeType) {
             case "image/jpeg": return ".jpg";
             case "image/png": return ".png";
+            case "image/gif": return ".gif";
             case "video/mp4": return ".mp4";
+            case "video/quicktime": return ".mov";
+            case "video/x-msvideo": return ".avi";
             case "video/webm": return ".webm";
             default: return "";
         }

@@ -5,11 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bef31097-e2fd-4fd6-9377-5642cb374b1b" name="更改" comment="增加了LPG充装端的后台和对应后端">
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/img/beijing.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/api/AppxiaoheziController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/api/AppxiaoheziController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/index/content.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/index/content.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/index/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/index/login.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/log/jfinal_demo_for_maven.log" beforeDir="false" afterPath="$PROJECT_DIR$/log/jfinal_demo_for_maven.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/api/APPdataController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/api/APPdataController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/api/ApplpgyunxingController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/api/ApplpgyunxingController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/api/AppshexiangtouController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/api/AppshexiangtouController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/shexiangtoufind/shexiangtous.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/shexiangtoufind/shexiangtous.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -246,6 +247,11 @@
       <workItem from="1748592963629" duration="1580000" />
       <workItem from="1752218234110" duration="2067000" />
       <workItem from="1752240943813" duration="9000" />
+      <workItem from="1754034294403" duration="6646000" />
+      <workItem from="1754623950990" duration="1695000" />
+      <workItem from="1754786301072" duration="1699000" />
+      <workItem from="1755008385138" duration="23000" />
+      <workItem from="1755008417148" duration="6419000" />
     </task>
     <task id="LOCAL-00001" summary="添加了小盒子管理功能">
       <option name="closed" value="true" />

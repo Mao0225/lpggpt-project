@@ -88,11 +88,11 @@ public class ApplpgyunxingController extends Controller {
 		String select = "SELECT t.devicename, t.M_ValStat, t.Alarm, t.Gas_Pg, t.created_time, " +
 				"CASE t.Alarm " +
 				"WHEN 0 THEN '正常' " +
-				"WHEN 1 THEN '操作间报警' " +
-				"WHEN 2 THEN '气瓶间报警' " +
-				"WHEN 3 THEN '摄像头报警' " +
+				"WHEN 1 THEN '操作间燃气报警' " +
+				"WHEN 2 THEN '气瓶间燃气报警' " +
+				"WHEN 3 THEN '摄像头监控报警' " +
 				"WHEN 4 THEN '烟感报警' " +
-				"WHEN 5 THEN '防拆卸报警' " +
+				"WHEN 5 THEN '管道压力超压报警' " +
 				"ELSE t.Alarm " +
 				"END AS Alarm, t.PowerStatus ";
 //		String sqlExceptSelect = "FROM t_iot_sync_rds_records_v3 t " +

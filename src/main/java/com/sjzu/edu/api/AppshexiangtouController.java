@@ -98,6 +98,7 @@ public class AppshexiangtouController extends Controller {
 		//System.out.println("happendtime: " + happendtime);
 
 		String alarmmes = getPara("alarmmes");
+		String memo = getPara("memo");
 		//System.out.println("happendtime: " + happendtime);
 		if (file != null) {
 			System.out.println("接收到摄像头文件: " + file.getFileName());
@@ -121,6 +122,7 @@ public class AppshexiangtouController extends Controller {
 					.set("happendtime", happendtime)
 					.set("alarmtype", baojingtype)
 					.set("alarmmes", alarmmes)
+					.set("memo", memo)
 					.set("Alarmpic", fileName);  // 保存文件名
 			System.out.println("test3");
 

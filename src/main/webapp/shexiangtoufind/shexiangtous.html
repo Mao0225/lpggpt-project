@@ -216,15 +216,16 @@
 <table class="list">
     <tbody>
     <tr>
-        <th width="10%">id</th>
+        <th width="3%">id</th>
         <th width="12%">摄像头编号</th>
         <th width="12%">发生时间</th>
         <th width="5%">报警类型</th>
-        <th width="12%">报警图片</th>
-        <th width="12%">报警信息</th>
-        <th width="12%">饭店名称</th>
-        <th width="12%">饭店电话</th>
-        <th width="12%">饭店地址</th>
+        <th width="10%">报警图片</th>
+        <th width="10%">报警信息</th>
+        <th width="10%">饭店名称</th>
+        <th width="10%">饭店电话</th>
+        <th width="10%">饭店地址</th>
+        <th width="10%">cpu 温度</th>
     </tr>
     #set(startIndex = (shexiangtou.pageNumber - 1) * shexiangtou.pageSize + 1)
     #for(x : shexiangtou.getList())
@@ -238,6 +239,7 @@
         <td style="text-align:center">#(x.restaurantname)</td>
         <td style="text-align:center">#(x.restaurantphone)</td>
         <td style="text-align:center">#(x.restaurantaddress)</td>
+        <td style="text-align:center">#(x.memo)</td>
     </tr>
     #end
     </tbody>
