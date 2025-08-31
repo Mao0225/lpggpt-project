@@ -54,7 +54,7 @@ public class DemoConfig extends JFinalConfig {
 	public void configConstant(Constants me) {
 		loadConfig();
 		me.setBaseUploadPath("upload/temp");  // 设置文件上传的基础路径
-		me.setMaxPostSize(10 * 1024 * 1024);
+		me.setMaxPostSize(100 * 1024 * 1024);
 		me.setDevMode(p.getBoolean("devMode", false));
 		me.setJsonFactory(new MixedJsonFactory());
 
@@ -101,6 +101,7 @@ public class DemoConfig extends JFinalConfig {
 		me.add("/appdata", APPdataController.class);
 		me.add("/appgetnowgas", AppgetnowgasController.class);
 		me.add("/appbillinfo",AppbillInforController.class);
+		me.add("/appversion", AppVersionController.class);
 
 
 		//手机接口结束  AppbangdingController
@@ -157,6 +158,8 @@ public class DemoConfig extends JFinalConfig {
 		me.add("/xhzinfo",XhzinfoController.class);
 		me.add("/orderinfo",OrderInfoController.class);
 		me.add("/oorderinfo",OorderInfoController.class);
+		me.add("/appmanage",AppManageController.class);
+		me.add("/ipaddress",IpaddressController.class);
 		//测试连接Github
 	}
 	

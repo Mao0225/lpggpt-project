@@ -10,11 +10,15 @@ import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 import com.sjzu.edu.common.model.Drivergpsinfo;
+import com.sjzu.edu.common.model.IotSyncRdsRecordsV2;
 
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static cn.hutool.extra.servlet.ServletUtil.setHeader;
 
@@ -25,7 +29,137 @@ import static cn.hutool.extra.servlet.ServletUtil.setHeader;
 @Path(value = "/", viewPath = "/applpgyunxing")
 @Clear
 public class ApplpgyunxingController extends Controller {
+	/**
+	 * App（HBuilder）设备实时数据专用接口：
+	 *   http://localhost:8099/applpgyunxing/listAll
+	 */
+	public void listAll() {
+		// 修复：先处理跨域，再处理业务逻辑
+		addCorsHeaders();
 
+		try {
+			// 获取分页参数，默认第1页，每页20条数据
+			Integer pageNumber = getParaToInt("page", 1);
+			Integer pageSize = getParaToInt("pageSize", 10);
+
+			// 获取查询参数
+			String restaurantname = getPara("restaurantname");
+			Integer alarm = getParaToInt("alarm");
+
+			System.out.println("App端查询参数 - restaurantname: " + restaurantname + ", alarm: " + alarm);
+			System.out.println("分页参数 - pageNumber: " + pageNumber + ", pageSize: " + pageSize);
+
+			// 构建查询SQL
+			String select = "SELECT *";
+			String sqlExceptSelect = "FROM t_iot_sync_rds_records_v2 WHERE 1=1";
+
+			// 处理餐厅名称查询条件
+			if (restaurantname != null && !restaurantname.trim().isEmpty()) {
+				String query = "SELECT xiaohezi FROM restaurant WHERE name LIKE ?";
+				List<Record> deviceNames = Db.find(query, "%" + restaurantname.trim() + "%");
+
+				if (!deviceNames.isEmpty()) {
+					StringBuilder whereClause = new StringBuilder();
+					List<String> deviceList = new ArrayList<>();
+
+					for (Record record : deviceNames) {
+						String deviceName = record.getStr("xiaohezi");
+						if (deviceName != null) {
+							deviceList.add("'" + deviceName + "'");
+						}
+					}
+
+					if (!deviceList.isEmpty()) {
+						whereClause.append(" AND devicename IN (").append(String.join(", ", deviceList)).append(")");
+						sqlExceptSelect += whereClause.toString();
+					}
+				}
+			}
+
+			// 处理报警状态查询条件
+			if (alarm != null) {
+				sqlExceptSelect += " AND Alarm = " + alarm;
+			}
+
+			// 添加排序
+			String finalSql = sqlExceptSelect + " ORDER BY id DESC";
+
+			System.out.println("App端最终SQL: " + finalSql);
+
+			// 执行分页查询
+			Page<Record> pageOfRecords = Db.use("lpg").paginate(pageNumber, pageSize, select, finalSql);
+
+			// 查询餐厅信息用于关联
+			List<Record> restaurants = Db.find("SELECT * FROM restaurant");
+
+			// 构建设备名到餐厅名的映射
+			Map<String, String> xiaoheziToNameMap = restaurants.stream()
+					.filter(record -> record.getStr("xiaohezi") != null)
+					.collect(Collectors.toMap(
+							record -> record.getStr("xiaohezi"),
+							record -> record.getStr("name"),
+							(existing, replacement) -> existing // 处理重复key
+					));
+
+			// 转换数据并关联餐厅名称
+			List<IotSyncRdsRecordsV2> listOfModels = pageOfRecords.getList().stream()
+					.map(record -> {
+						IotSyncRdsRecordsV2 model = new IotSyncRdsRecordsV2()._setAttrs(record.getColumns());
+
+						String devicename = record.getStr("devicename");
+						String fandianname = xiaoheziToNameMap.get(devicename);
+						model.put("fandianname", fandianname);
+
+						return model;
+					})
+					.collect(Collectors.toList());
+
+			// 构建分页结果
+			Page<IotSyncRdsRecordsV2> pageOfModels = new Page<>(
+					listOfModels,
+					pageOfRecords.getPageNumber(),
+					pageOfRecords.getPageSize(),
+					pageOfRecords.getTotalPage(),
+					pageOfRecords.getTotalRow()
+			);
+
+			// 打印调试信息
+			System.out.println("App端查询结果数量: " + listOfModels.size());
+			System.out.println("总页数: " + pageOfModels.getTotalPage());
+			System.out.println("总记录数: " + pageOfModels.getTotalRow());
+
+			// 修复：构建返回的JSON对象，使用与前端期望匹配的格式
+			JSONObject json = new JSONObject();
+			json.put("flag", "200");
+			json.put("message", "查询成功");
+
+			// 修复：直接返回列表数据和分页信息，匹配前端期望的格式
+			JSONObject dataObj = new JSONObject();
+			dataObj.put("list", listOfModels);
+			dataObj.put("pageNumber", pageOfModels.getPageNumber());
+			dataObj.put("pageSize", pageOfModels.getPageSize());
+			dataObj.put("totalPage", pageOfModels.getTotalPage());
+			dataObj.put("totalRow", pageOfModels.getTotalRow());
+
+			json.put("data", dataObj);
+			json.put("total", pageOfModels.getTotalRow()); // 额外添加total字段兼容
+
+			// 返回JSON格式数据给App端
+			renderJson(json);
+
+		} catch (Exception e) {
+			System.err.println("App端查询异常: " + e.getMessage());
+			e.printStackTrace();
+
+			// 返回错误信息
+			JSONObject json = new JSONObject();
+			json.put("flag", "300");
+			json.put("message", "查询失败: " + e.getMessage());
+			json.put("data", null);
+
+			renderJson(json);
+		}
+	}
 	//下面的方法是饭店端获取报警信息的，手机端：我的报警信息
 	public void getbaojingforkehu() {
 		// 添加跨域请求头

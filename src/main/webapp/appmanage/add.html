@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>添加应用</title>
+    <style>
+        .form_box {
+            padding: 20px;
+        }
+        input, textarea, select {
+            padding: 15px;
+            font-size: 18px;
+            border: 2px solid #a3bffa;
+            border-radius: 10px;
+            width: 100%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: border-color 0.3s ease;
+        }
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #4c87c9;
+        }
+        .file-upload {
+            margin-top: 10px;
+            position: relative;
+        }
+        .file-upload label {
+            display: inline-block;
+            background-color: #4c87c9;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+            margin-bottom: 10px;
+        }
+        .file-upload label:hover {
+            background-color: #3b6ca0;
+        }
+        .file-upload input[type="file"] {
+            display: none;
+        }
+        .file-name {
+            margin-top: 8px;
+            font-size: 14px;
+            color: #333;
+            background-color: #f8fafc;
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+            display: inline-block;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .modal-dialog {
+            min-width: 100px;
+            max-width: 40vw;
+            width: auto;
+        }
+    </style>
+</head>
+<body>
+<div class="form_box">
+    <script>
+        function showFileName(event, inputElementId) {
+            var fileInput = document.getElementById(inputElementId);
+            var fileNameDisplay = document.getElementById(inputElementId + 'Name');
+            if (fileInput.files.length > 0) {
+                fileNameDisplay.textContent = '已选择文件: ' + fileInput.files[0].name;
+            } else {
+                fileNameDisplay.textContent = '';
+            }
+        }
+    </script>
+    <form action="/appmanage/save" method="post" id="myForm" enctype="multipart/form-data">
+        <div>
+            <label><span style="color: red;">*</span>文件上传</label>
+            <div class="file-upload">
+                <label for="fileInput">选择文件</label>
+                <input type="file" id="fileInput" name="app.file" onchange="showFileName(event, 'fileInput')" accept=".apk,.ipa" />
+                <div id="fileInputName" class="file-name"></div>
+            </div>
+        </div>
+        <div>
+            <label><span style="color: red;">*</span>应用编码</label>
+            #if(app.appcode != null)
+            <input type="text" name="app.appcode" value="#(app.appcode)" readonly />
+            #else
+            <input type="text" name="app.appcode" value="" required />
+            #end
+        </div>
+        <div></div>
+        <div>
+            <label><span style="color: red;">*</span>应用名称</label>
+            <input type="text" name="app.name" value="#(app.name ?? '')" required />
+        </div>
+        <div>
+            <label><span style="color: red;">*</span>版本号</label>
+            <input type="text" name="app.version" value="#(app.version ?? '')" required />
+        </div>
+        <div>
+            <label>备注</label>
+            <textarea name="app.memo" rows="4"></textarea>
+        </div>
+        <div>
+            <label><span style="color: red;">*</span>更新内容</label>
+            <textarea name="app.content" rows="4" required></textarea>
+        </div>
+        <div>
+            <label>强制更新</label>
+            <select name="app.isforce">
+                <option value="1">是</option>
+                <option value="0" selected>否</option>
+            </select>
+        </div>
+    </form>
+</div>
+</body>
+</html>

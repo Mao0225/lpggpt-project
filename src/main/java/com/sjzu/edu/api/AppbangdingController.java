@@ -23,7 +23,7 @@ import java.util.List;
  * AppbottleController//这个是处理电子秤绑定的接口
  */
 @Path(value = "/", viewPath = "/applpgyunxing")
- @Clear
+@Clear
 public class AppbangdingController extends Controller {
 	private Jiebangding dao = new Jiebangding().dao();
 

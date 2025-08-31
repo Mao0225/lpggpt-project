@@ -16,6 +16,7 @@ import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 public class _MappingKit {
 	
 	public static void mapping(ActiveRecordPlugin arp) {
+		arp.addMapping("app_manage", "id", AppManage.class);
 		arp.addMapping("auto_gas_filling_record", "id", AutoGasFillingRecord.class);
 		arp.addMapping("bangdingren", "id", Bangdingren.class);
 		arp.addMapping("bas_bill", "id", BasBill.class);

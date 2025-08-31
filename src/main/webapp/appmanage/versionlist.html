@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>历史版本列表</title>
+    <style>
+        .form_box {
+            padding: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 18px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            padding: 15px;
+            border: 2px solid #a3bffa;
+            text-align: left;
+        }
+        th {
+            background-color: #4c87c9;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #e0e7ff;
+        }
+        a {
+            color: #4c87c9;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        #saveButton{
+            display: none;
+        }
+
+
+        .modal-dialog {
+            min-width: 100px;
+            max-width: 80vw;
+            width: auto;
+        }
+
+    </style>
+</head>
+<body>
+<div class="form_box">
+    <h2>历史版本列表</h2>
+    #if(list != null && list.size() > 0)
+    <table>
+        <thead>
+        <tr>
+<!--            <th>应用编码</th>-->
+            <th>应用名称</th>
+            <th>版本号</th>
+            <th>文件</th>
+            <th>备注</th>
+            <th>更新内容</th>
+            <th>强制更新</th>
+            <th>更新时间</th>
+        </tr>
+        </thead>
+        <tbody>
+        #for(app : list)
+        <tr>
+<!--            <td>#(app.appcode ?? '')</td>-->
+            <td>#(app.name ?? '')</td>
+            <td>#(app.version ?? '')</td>
+            <td>
+                #if(app.file != null)
+                <a href="#(app.file)" target="_blank">查看文件</a>
+                #else
+                无
+                #end
+            </td>
+            <td>#(app.memo ?? '')</td>
+            <td>#(app.content ?? '')</td>
+            <td>#(app.isforce == 1 ? '是' : '否')</td>
+            <td>#date(app.updatetime, 'yyyy-MM-dd HH:mm:ss')</td>
+        </tr>
+        #end
+        </tbody>
+    </table>
+    #else
+    <p>暂无历史版本记录</p>
+    #end
+</div>
+</body>
+</html>

@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>应用管理</title>
+    <script src="../css/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css">
+    <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/lpg.css">
+    <style scoped>
+        .container {
+            padding: 50px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        input {
+            padding: 15px;
+            font-size: 18px;
+            border: 2px solid #a3bffa;
+            border-radius: 10px;
+            width: auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #4c87c9;
+        }
+
+        #searchForm input[type="submit"],
+        #searchForm input[type="button"] {
+            width: auto;
+            padding: 8px 16px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #f0f0f0;
+            margin-right: 10px;
+        }
+
+        #searchForm input[type="submit"]:hover,
+        #searchForm input[type="button"]:hover {
+            background-color: #e0e0e0;
+        }
+
+        #searchForm input[type="date"] {
+            width: auto;
+            padding: 8px 16px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f0f0f0;
+            margin-right: 10px;
+        }
+
+        #searchForm select {
+            width: auto;
+            padding: 8px 16px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f0f0f0;
+            margin-right: 10px;
+        }
+
+        #pagediv {
+            background-color: #f0f0f0;
+            color: black;
+            padding: 10px;
+        }
+
+        table.list {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table.list th {
+            background-color: #add8e6;
+            color: black;
+            padding: 8px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        table.list td {
+            padding: 8px;
+            border: 1px solid #ddd;
+        }
+
+        table.list tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        table.list tr:nth-child(odd) {
+            background-color: #e0e0e0;
+        }
+
+        table.list tr:hover {
+            background-color: #d3d3d3;
+        }
+
+        #pagediv .add {
+            color: black;
+        }
+
+        #pagediv input[type="text"] {
+            background-color: #f0f0f0;
+        }
+
+        #pagediv label {
+            color: black;
+        }
+
+        .modal-content {
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            border: none;
+        }
+
+        .modal-header {
+            background-color: #4c87c9;
+            color: white;
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+            padding: 20px;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .modal-body {
+            padding: 30px;
+            background-color: #f8f9fa;
+        }
+
+        .modal-footer {
+            padding: 20px;
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+            background-color: #ffffff;
+        }
+
+        .modal-footer .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .modal-footer .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .modal-footer .btn-default {
+            background-color: #e0e0e0;
+            border: none;
+            color: #333;
+        }
+
+        .modal-footer .btn-default:hover {
+            background-color: #d3d3d3;
+            transform: translateY(-2px);
+        }
+
+        /* 示例代码弹窗样式 */
+        .code-modal .modal-dialog {
+            max-width: 95%;
+            width: 900px;
+        }
+
+        .code-container {
+            position: relative;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            z-index: 1000;
+        }
+
+        .copy-btn:hover {
+            background: #2980b9;
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            overflow-x: auto;
+            font-size: 13px;
+            line-height: 1.5;
+            white-space: pre;
+            font-family: 'Courier New', monospace;
+            margin: 0;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .code-modal .modal-body {
+            padding: 0;
+            background-color: #1e1e1e;
+        }
+
+        .code-modal .modal-header {
+            background-color: #2c3e50;
+        }
+    </style>
+</head>
+<body>
+<div id="pagediv">
+    <form id="searchForm" action="/appmanage/list" method="post">
+        <a href="#" class="add openModal" data-title="新建应用" data-edit-url="/appmanage/toAdd"><b> + </b>新建应用</a>
+        <label>名称：</label>
+        <input type="text" name="name" placeholder="应用名称" value="#(name)">
+        <label>版本：</label>
+        <input type="text" name="version" placeholder="版本号" value="#(version)">
+        <input value="搜索" type="submit">
+        <input type="submit" value="重置" name="refresh">
+    </form>
+    <a href="#" id="showExampleCode">查看app更新示例代码</a>
+
+</div>
+
+<div style="width: 100%; overflow-x: auto; position: relative;">
+    <table class="list">
+        <tbody>
+        <tr>
+            <th style="width: 50px; position: sticky;">序号</th>
+            <th style="width: 150px;">编码</th>
+            <th>名称</th>
+            <th>版本</th>
+            <th>文件</th>
+            <th>更新内容</th>
+            <th>强制更新</th>
+            <th>更新时间</th>
+            <th>备注</th>
+            <th style="width: 450px; position: sticky; right: 0; z-index: 10;">操作</th>
+        </tr>
+        #set(startIndex = (appList.pageNumber - 1) * appList.pageSize + 1)
+        #for(x : appList.getList())
+        <tr>
+            <td>#(startIndex++)</td>
+            <td>#(x.appcode)</td>
+            <td>#(x.name)</td>
+            <td>#(x.version)</td>
+            <td>
+                #if(x.file)
+                <a href="#(x.file)" download style="display: inline-block;
+                padding: 8px 16px; color: #4c87c9; text-align: center;">点击下载</a>
+                #end
+            </td>
+            <td>#(x.content)</td>
+            <td>#(x.isforce ==1 ? "是" : "否")</td>
+            <td>#(x.updatetime)</td>
+            <td>#(x.memo)</td>
+            <td style="width: 240px; position: sticky; right: 0; z-index: 10; padding: 8px 15px;">
+                <span style="margin-right: 6px;"><a href="#" onclick="confirmDelete('#(x.id)')">删除该版本</a></span>
+                <span style="margin-right: 6px;"><a href="#" onclick="confirmDelete2('#(x.appcode)')">删除该应用</a></span>
+                <span style="margin-right: 6px;"><a href="#" class="edit openModal" data-title="编辑应用" data-edit-url="/appmanage/toEdit/#(x.id)">编辑该版本</a></span>
+                <span style="margin-right: 6px;"><a href="#" class="edit openModal" data-title="更新版本" data-edit-url="/appmanage/toAdd/#(x.id)">更新版本</a></span>
+                <span><a href="#" class="edit openModal" data-title="查看历史版本" data-edit-url="/appmanage/getVersionList?appcode=#(x.appcode)">查看历史版本</a></span>
+            </td>
+        </tr>
+        #end
+        </tbody>
+    </table>
+</div>
+<div class="pagination" style="color:#333; margin-top: 20px;">
+    #@paginate(appList.pageNumber, appList.totalPage, "/appmanage/list?name="+(name != null ? name : "")+"&version="+(version != null ? version : "")+"&page=")
+</div>
+
+<!-- 通用模态窗口 -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: auto;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">模态窗口标题</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- 这里将会加载你的表单内容 -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="saveButton">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 示例代码模态窗口 -->
+<div class="modal fade code-modal" id="codeModal" tabindex="-1" role="dialog" aria-labelledby="codeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="codeModalLabel">App更新示例代码</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="code-container">
+                    <button class="copy-btn" onclick="copyCode()">复制</button>
+                    <pre class="code-block" id="codeBlock">&lt;script&gt;
+export default {
+  data() {
+    return {
+      isUpdating: false, // 是否正在更新（下载或安装）
+      isDownloading: false, // 是否正在下载
+      lastUpdateCheck: 0 // 上次检查更新的时间戳
+    };
+  },
+  onLaunch: function() {
+    console.log('应用启动');
+    this.checkForUpdate();
+  },
+  onShow: function() {
+    console.log('应用显示');
+    // 仅在距离上次检查超过5秒后才检查更新，防止启动时重复调用
+    const now = Date.now();
+    if (!this.isUpdating && !this.isDownloading && now - this.lastUpdateCheck > 5000) {
+      this.checkForUpdate();
+    }
+  },
+  onHide: function() {
+    console.log('应用隐藏');
+  },
+  methods: {
+    checkForUpdate() {
+      // 防止重复检查更新
+      if (this.isUpdating || this.isDownloading) {
+        console.log('正在更新或下载，跳过检查');
+        return;
+      }
+
+      // 记录检查时间并设置更新状态
+      this.lastUpdateCheck = Date.now();
+      this.isUpdating = true;
+
+      // 获取当前应用版本
+      const currentVersion = plus.runtime.version;
+      console.log('当前版本:', currentVersion);
+      const baseURL = 'http://114.115.156.201:8099';
+      const appID = '__UNI__9A38355';//定义appID因为要考虑到不同人使用会更新appID所以直接写死一个
+      // 发送API请求检查最新版本
+      uni.request({
+        url: baseURL + '/appversion/getLatestVersion',
+        method: 'GET',
+        data: {
+          appcode: appID
+        },
+        success: (res) => {
+          if (res.data && res.data.flag === '200' && res.data.app) {
+            const latestVersion = res.data.app.version;
+            const downloadUrl = baseURL + res.data.app.file;
+            const isForceUpdate = res.data.app.isforce === 1;
+            const updateContent = res.data.app.content || '无更新说明';
+            console.log('最新版本:', latestVersion);
+
+            // 比较版本号
+            if (this.compareVersion(currentVersion, latestVersion) < 0) {
+              // 显示更新提示弹窗，强制更新时提示取消将退出应用
+              const forceUpdateMessage = isForceUpdate ? '\n本次为强制更新，若取消则退出应用' : '';
+              uni.showModal({
+                title: '发现更新',
+                content: `有新版本 (${latestVersion}) 可用。\n当前版本: ${currentVersion}\n更新内容: ${updateContent}${forceUpdateMessage}`,
+                confirmText: '更新',
+                cancelText: '取消',
+                showCancel: true, // 始终显示取消按钮
+                success: (modalRes) => {
+                  if (modalRes.confirm) {
+                    // 用户点击更新，开始下载
+                    this.isDownloading = true;
+                    this.downloadUpdate(downloadUrl);
+                  } else if (isForceUpdate) {
+                    // 强制更新时点击取消，退出应用
+                    console.log('强制更新被取消，退出应用');
+                    plus.runtime.quit();
+                  } else {
+                    // 非强制更新，允许取消
+                    this.isUpdating = false;
+                  }
+                }
+              });
+            } else {
+              console.log('应用已是最新版本');
+              this.isUpdating = false; // 没有更新，重置状态
+            }
+          } else {
+            console.log('获取更新信息失败:', res.data);
+            uni.showToast({
+              title: '检查更新失败',
+              icon: 'none'
+            });
+            this.isUpdating = false; // 检查失败，重置状态
+          }
+        },
+        fail: (err) => {
+          console.log('检查更新失败:', err);
+          uni.showToast({
+            title: '检查更新失败',
+            icon: 'none'
+          });
+          this.isUpdating = false; // 检查失败，重置状态
+        }
+      });
+    },
+    compareVersion(current, latest) {
+      // 版本号比较逻辑
+      const currentParts = current.split('.').map(Number);
+      const latestParts = latest.split('.').map(Number);
+      for (let i = 0; i < Math.max(currentParts.length, latestParts.length); i++) {
+        const c = currentParts[i] || 0;
+        const l = latestParts[i] || 0;
+        if (c < l) return -1;
+        if (c > l) return 1;
+      }
+      return 0;
+    },
+    downloadUpdate(url) {
+      // 初始化下载进度提示
+      let lastProgress = -1; // 记录上一次进度
+      uni.showLoading({
+        title: '正在下载更新 0%',
+        mask: true // 防止用户交互
+      });
+
+      const downloadTask = uni.downloadFile({
+        url: url,
+        success: (downloadRes) => {
+          uni.hideLoading();
+          this.isDownloading = false; // 下载完成
+          if (downloadRes.statusCode === 200) {
+            console.log('下载成功，临时文件路径:', downloadRes.tempFilePath);
+            // 提示用户确认安装
+            uni.showModal({
+              title: '下载完成',
+              content: '更新包已下载完成，是否立即安装？',
+              confirmText: '安装',
+              showCancel: false,
+              success: (installRes) => {
+                if (installRes.confirm) {
+                  // 开始安装
+                  this.installUpdate(downloadRes.tempFilePath);
+                }
+              }
+            });
+          } else {
+            console.error('下载失败: 状态码', downloadRes.statusCode);
+            uni.showToast({
+              title: '下载失败',
+              icon: 'none'
+            });
+            this.isUpdating = false; // 重置更新状态
+          }
+        },
+        fail: (err) => {
+          uni.hideLoading();
+          this.isDownloading = false; // 下载失败
+          console.error('下载失败:', err);
+          uni.showToast({
+            title: '下载失败',
+            icon: 'none'
+          });
+          this.isUpdating = false; // 重置更新状态
+        },
+        progress: (progressRes) => {
+          const progress = Math.round((progressRes.downloadedSize / progressRes.totalSize) * 100);
+          if (progress !== lastProgress) {
+            lastProgress = progress;
+            uni.showLoading({
+              title: `正在下载更新 ${progress}%`,
+              mask: true
+            });
+          }
+        }
+      });
+    },
+    installUpdate(tempFilePath) {
+      // 执行安装
+      plus.runtime.install(tempFilePath, { force: true }, () => {
+        console.log('安装成功');
+        uni.showModal({
+          title: '更新完成',
+          content: '应用已更新，立即重启？',
+          showCancel: false,
+          success: () => {
+            plus.runtime.restart();
+          }
+        });
+        setTimeout(() => {
+          this.isUpdating = false; // 延迟重置更新状态
+        }, 1000);
+      }, (err) => {
+        console.error('安装失败:', err);
+        uni.showToast({
+          title: '安装失败',
+          icon: 'none'
+        });
+        this.isUpdating = false; // 重置更新状态
+      });
+    }
+  }
+}
+&lt;/script&gt;
+
+&lt;style lang="scss"&gt;
+  @import "./common/iconfont.css";
+  @import "./uni_modules/vk-uview-ui/index.scss";
+&lt;/style&gt;</pre>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function confirmDelete(id) {
+        var result = confirm("确定删除该版本嘛？");
+        if (result) {
+            window.location.href = "/appmanage/deleteVersion/" + id;
+        } else {
+            return false;
+        }
+    }
+
+    function confirmDelete2(appcode) {
+        var result = confirm("确定删除该应用嘛？这会删除所有版本！");
+        if (result) {
+            window.location.href = "/appmanage/deleteApp?appcode=" + appcode;
+        } else {
+            return false;
+        }
+    }
+
+    var buttons = document.getElementsByName("refresh");
+    for (var i = 0; i < buttons.length; i++) {
+        buttons[i].addEventListener('click', function() {
+            var inputs = document.querySelectorAll('#searchForm input[type=text]');
+            for (var j = 0; j < inputs.length; j++) {
+                inputs[j].value = "";
+            }
+            document.getElementById('searchForm').submit();
+        });
+    }
+
+    // 通用模态窗口处理
+    $('.openModal').click(function(e) {
+        e.preventDefault();
+        var editUrl = $(this).data('edit-url');
+        var that = this;
+        $.get(editUrl, function(data) {
+            var title = $(that).data('title');
+            $('#myModalLabel').text(title);
+            $('#modalBody').html(data);
+            $('#myModal').modal('show');
+        });
+    });
+
+    // 示例代码模态窗口处理
+    document.getElementById('showExampleCode').addEventListener('click', function(e) {
+        e.preventDefault();
+        $('#codeModal').modal('show');
+    });
+
+    function validateForm() {
+        var form = document.getElementById('myForm');
+        if (!form) {
+            alert('表单未加载，请稍后重试');
+            return false;
+        }
+        var name = form.querySelector('input[name="app.name"]');
+        var version = form.querySelector('input[name="app.version"]');
+        var appcode = form.querySelector('input[name="app.appcode"]');
+        var content = form.querySelector('textarea[name="app.content"]');
+        var fileInput = form.querySelector('input[name="app.file"]');
+
+        if (!name || !name.value.trim()) {
+            alert('应用名称为必填项');
+            return false;
+        }
+        if (!version || !version.value.trim()) {
+            alert('版本号为必填项');
+            return false;
+        }
+        if (appcode && !appcode.readOnly && !appcode.value.trim()) {
+            alert('Android包名为必填项');
+            return false;
+        }
+        if (!content || !content.value.trim()) {
+            alert('更新内容为必填项');
+            return false;
+        }
+        if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
+            alert('请选择要上传的文件');
+            return false;
+        }
+
+        form.submit();
+    }
+
+    document.getElementById('saveButton').addEventListener('click', function() {
+        validateForm();
+    });
+
+    function copyCode() {
+        const codeBlock = document.getElementById('codeBlock');
+        const text = codeBlock.textContent;
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = document.querySelector('.copy-btn');
+                const originalText = btn.textContent;
+                btn.textContent = '已复制';
+                btn.style.background = '#27ae60';
+
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.background = '#3498db';
+                }, 2000);
+            }).catch(() => {
+                fallbackCopyTextToClipboard(text);
+            });
+        } else {
+            fallbackCopyTextToClipboard(text);
+        }
+    }
+
+    function fallbackCopyTextToClipboard(text) {
+        // 兼容旧浏览器
+        const tempTextArea = document.createElement('textarea');
+        tempTextArea.value = text;
+        document.body.appendChild(tempTextArea);
+        tempTextArea.select();
+        try {
+            document.execCommand('copy');
+            const btn = document.querySelector('.copy-btn');
+            const originalText = btn.textContent;
+            btn.textContent = '已复制';
+            btn.style.background = '#27ae60';
+
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.style.background = '#3498db';
+            }, 2000);
+        } catch (err) {
+            console.error('复制失败', err);
+        }
+        document.body.removeChild(tempTextArea);
+    }
+</script>
+</body>
+</html>
