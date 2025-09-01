@@ -102,6 +102,7 @@ public class DemoConfig extends JFinalConfig {
 		me.add("/appgetnowgas", AppgetnowgasController.class);
 		me.add("/appbillinfo",AppbillInforController.class);
 		me.add("/appversion", AppVersionController.class);
+		me.add("/appxhzinfo",AppXhzinfoController.class);
 
 
 		//手机接口结束  AppbangdingController
