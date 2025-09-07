@@ -19,13 +19,25 @@ public class XhzinfoController  extends Controller {
     public void xhzlist(){
         int pageNumber=getParaToInt("page",1);
         int pageSize=getParaToInt("size",10);
-        String xiaohezi=getPara("companyId");
-        Integer alarm = getParaToInt("alarm");
-        System.out.println("alarm: "+alarm);
-        System.out.println("xiaohezi: "+xiaohezi);
-        setAttr("xiaohezi",xiaohezi);
-        setAttr("alarm",alarm);
-        Page<Record> recordPage = service.paginate(pageNumber, pageSize,xiaohezi,alarm);
+
+        String companyId = getPara("companyId", "");
+        String xiaohezi = getPara("xiaohezi", "");
+        String alarmStr = getPara("alarm", "");
+        Integer alarm = null;
+        if (alarmStr != null && !alarmStr.trim().isEmpty()) {
+            try {
+                alarm = Integer.valueOf(alarmStr);
+            } catch (NumberFormatException e) {
+                System.out.println("alarm 参数不是数字: " + alarmStr);
+            }
+        }
+        setAttr("companyId", companyId);
+        setAttr("xiaohezi", xiaohezi);
+        setAttr("alarm", alarmStr);
+
+// 调用 service
+        Page<Record> recordPage = service.paginate(pageNumber, pageSize, xiaohezi, alarm);
+
         List<Restaurant> restaurants = restaurant.find("SELECT * FROM restaurant");
         setAttr("recordlist",recordPage);
         setAttr("restaurants",restaurants);

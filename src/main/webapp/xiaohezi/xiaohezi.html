@@ -207,24 +207,37 @@
     #@paginate(xiaohezilist.pageNumber, xiaohezilist.totalPage, "/xiaohezi/xiaohezilist?xiaohezino=" + (xiaohezino!=null ? xiaohezino:"")+"&createTime=" + (createTime!=null ? createTime:"")+"&restaurant=" + (restaurant!=null ? restaurant:"")+"&page=")
 </div>
 <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var searchForm = document.getElementById("searchForm");
+        var searchButton = document.getElementById("searchButton");
+        var resetButton = document.getElementById("resetButton");
 
-    // 为搜索按钮添加点击事件，防止默认提交行为被阻止，手动触发表单提交
-    $('#searchButton').click(function (e) {
-        e.preventDefault();
-        $('#searchForm').submit();
+        // 查询按钮：正常提交表单
+        searchButton.addEventListener("click", function(e) {
+            e.preventDefault();
+            searchForm.submit();
+        });
+
+        // 重置按钮：清空条件并提交表单
+        resetButton.addEventListener("click", function(e) {
+            e.preventDefault();
+
+            // 清空文本框、日期框
+            searchForm.querySelectorAll('input[type="text"], input[type="date"]').forEach(function(el){
+                el.value = '';
+            });
+
+            // 重置下拉框
+            searchForm.querySelectorAll('select').forEach(function(el){
+                el.selectedIndex = 0;
+            });
+
+            // 关键：提交空表单，刷新数据
+            searchForm.submit();
+        });
     });
 
-    // 为重置按钮添加点击事件处理函数，用于清空搜索栏并提交表单，让公司名称选择框数据为空
-    $('#resetButton').click(function (e) {
-        e.preventDefault();
-        // 获取所有的输入框并设置为空
-        $('#searchForm input[type=text]').val('');
-        // 将下拉选择框（公司名称选择框）设置为空值，恢复到初始的“请选择公司”状态
-        $('#selectName').val('');
-        // 提交表单以重新查询并刷新页面
-        $('#searchForm').submit();
-    });
-    // 确认删除的函数，向后端delete函数发送删除请求，同样假设后端接收设备id作为参数
+    // 确认删除
     function confirmDelete(id) {
         console.log("进入到了删除函数");
         console.log("id: " + id);
@@ -232,6 +245,8 @@
             window.location.href = "/xiaohezi/delete?id=" + id;
         }
     }
+
+    // 打开模态框
     $(document).ready(function () {
         $('.openModal').click(function (e) {
             e.preventDefault();
@@ -242,13 +257,14 @@
                 var title = $(that).data('title');
                 $('#myModalLabel').text(title);
 
-                // Clear old content
+                // 清空旧内容，加载新内容
                 $('#modalBody').html(data);
                 $('#myModal').modal('show');
             });
         });
     });
 </script>
+
 <!-- 模态框结构 -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">

@@ -91,15 +91,21 @@
 </head>
 <body>
 <div id="pagediv">
-    <form id="searchForm" action="/install/installlist" method="post">
-        <label>小盒子编码</label>
-        <input type="text" name="xiaohezibianma" value="">
+    <form id="searchForm" action="/install/installlist" method="get">
+
+    <label>小盒子编码</label>
+        <input type="text" name="xiaohezibianma" value="#(xiaohezibianma)">
         <label>饭店名称</label>
-        <input type="text" name="restaurantname" value="">
+        <input type="text" name="restaurantname" value="#(restaurantname)">
         <label>上传时间</label>
-        <input type="date" name="time" value="">
-        <input value="搜索" type="submit">
-        <input type="button" value="重置" name="refresh" id="resetButton" />
+        <input type="date" name="time" value="#(time)">
+        <!-- 查询按钮 -->
+        <button type="submit" id="searchButton">搜索</button>
+        <!-- 重置按钮 -->
+        <button type="button" id="resetButton">重置</button>
+        <!-- 分页隐藏字段 -->
+        <input type="hidden" name="page" value="#(xiaohezi.pageNumber != null ? xiaohezi.pageNumber : 1)">
+        <input type="hidden" name="pageSize" value="10">
         <table class="list">
             <tbody>
             <tr>
@@ -161,7 +167,8 @@
             </tbody>
         </table>
         <div class="pagination" style="color:#DDDDDD; font-size: 12px">
-            #@paginate(xiaohezi.pageNumber, xiaohezi.totalPage, "/install/installlist?xiaohezibianma=" + (xiaohezibianma!=null ? xiaohezibianma:"")+"&time=" + (time!=null ? time:"")+"&page=")
+            #@paginate(xiaohezi.pageNumber, xiaohezi.totalPage, "/install/installlist?xiaohezibianma=" + (xiaohezibianma!=null ? xiaohezibianma:"") + "&time=" + (time!=null ? time:"") + "&restaurantname=" + (restaurantname!=null ? restaurantname:"") + "&page=")
+
         </div>
     </form>
 </div>
@@ -389,17 +396,13 @@
         return types[ext] || 'application/octet-stream';
     }
 
-    document.getElementById("resetButton").addEventListener("click", function(e) {
+        document.getElementById("resetButton").addEventListener("click", function(e) {
         e.preventDefault();
-
-        // 方法1：直接使用表单重置（推荐）
-        document.getElementById("searchForm").reset();
-
-        // 方法2：若需兼容旧浏览器，手动清空字段（需确保元素存在）
-        // document.getElementById("xiaohezibianma").value = '';
-        // document.getElementById("time").value = '';
-
-        document.getElementById("searchForm").submit();
+        const form = document.getElementById("searchForm");
+        form.reset();
+        form.querySelector('input[name="page"]').value = 1;
+        form.querySelector('input[name="pageSize"]').value = 10;
+        form.submit();
     });
 
     // 修改后的媒体查看代码

@@ -37,7 +37,7 @@ public class BangdingrenService {
 
         // 如果传入了电话参数，则添加电话作为搜索条件
         if (telephone != null && !telephone.isEmpty()) {
-            sqlBuilder.append(" AND telephone LIKE '%").append(telephone).append("%'");
+            sqlBuilder.append(" AND telphone LIKE '%").append(telephone).append("%'");
         }
 
         // 添加排序条件

@@ -102,27 +102,31 @@
     <!-- 搜索表单 -->
     <form id="searchForm" action="/xhzinfo/xhzlist" method="post">
         <label>饭店名称：</label>
-        <select id="selectName" name="companyId" onchange="chooseName()">
-            <option value="" selected>请选择饭店</option>
-            #for (x: restaurants)
-            <option value="#(x.xiaohezi)">#(x.name)</option>
+        <select name="companyId" id="companySelect">
+            <option value="" #if(companyId == "") selected #end>全部公司</option>
+            #for(x : restaurants)
+            <option value="#(x.id)" #if(companyId == (x.id + "")) selected #end>#(x.name)</option>
             #end
         </select>
 
-        &nbsp;&nbsp<select name="alarm" id="alarmSelect">
-        <option value="">请选择报警类型</option>
-        <option value="0" #(alarm == 0 ? "selected" : "")>无报警</option>
-        <option value="1" #(alarm == 1 ? "selected" : "")>操作间燃气报警</option>
-        <option value="2" #(alarm == 2 ? "selected" : "")>气瓶间燃气报警</option>
-        <option value="3" #(alarm == 3 ? "selected" : "")>摄像头监控报警</option>
-        <option value="4" #(alarm == 4 ? "selected" : "")>烟感报警</option>
-        <option value="5" #(alarm == 5 ? "selected" : "")>管道压力超压报警</option>
-    </select>
 
-        <button type="button" type="submit" value="查询" id="searchButton">查询</button>
-        <button type="button" type="submit" value="重置" id="resetButton">重置</button>
 
+
+        &nbsp;&nbsp;
+        <select name="alarm" id="alarmSelect">
+            <option value="" ${alarm == '' ? 'selected' : ''}>请选择报警类型</option>
+            <option value="0" #(alarm == '0' ? 'selected' : '')>无报警</option>
+            <option value="1" #(alarm == '1' ? 'selected' : '')>操作间燃气报警</option>
+            <option value="2" #(alarm == '2' ? 'selected' : '')>气瓶间燃气报警</option>
+            <option value="3" #(alarm == '3' ? 'selected' : '')>摄像头监控报警</option>
+            <option value="4" #(alarm == '4' ? 'selected' : '')>烟感报警</option>
+            <option value="5" #(alarm == '5' ? 'selected' : '')>管道压力超压报警</option>
+        </select>
+
+        <button type="submit" value="查询" id="searchButton">查询</button>
+        <button type="button" value="重置" id="resetButton">重置</button>
     </form>
+
 </div>
 
 <table class="list">
@@ -271,14 +275,15 @@
     #end
     ];
     function chooseName() {
-        var selectName = document.getElementById("selectName").value;
-        console.log("selectName: " + selectName);
-        // 查找选中的备件对象，通过name属性来查找
-        var selectedCompany = restaurants.find(function (restaurants) {
-            return restaurants.name === selectName;
+        var selectName = document.getElementById("companySelect").value;
+        console.log("companySelect: " + selectName);
+        // 查找选中的公司对象，通过id来查找
+        var selectedCompany = restaurants.find(function (r) {
+            return r.id === selectName;
         });
     }
-    document.getElementById("selectName").addEventListener("change", chooseName);
+    document.getElementById("companySelect").addEventListener("change", chooseName);
+
     // 为搜索按钮添加点击事件，防止默认提交行为被阻止，手动触发表单提交
     $('#searchButton').click(function (e) {
         e.preventDefault();
@@ -286,16 +291,20 @@
     });
 
     // 为重置按钮添加点击事件处理函数，用于清空搜索栏并提交表单，让公司名称选择框数据为空
-    $('#resetButton').click(function (e) {
-        e.preventDefault();
-        // 获取所有的输入框并设置为空
-        $('#searchForm input[type=text]').val('');
-        // 将下拉选择框（公司名称选择框）设置为空值，恢复到初始的“请选择公司”状态
-        $('#selectName').val('');
-        $('#alarmSelect').val('');
-        // 提交表单以重新查询并刷新页面
-        $('#searchForm').submit();
+    $(document).ready(function () {
+        $('#resetButton').click(function (e) {
+            e.preventDefault();
+            // 清空所有文本输入框
+            $('#searchForm input[type="text"]').val('');
+            // 清空公司下拉框
+            $('#companySelect').val('');
+            // 清空报警下拉框
+            $('#alarmSelect').val('');
+            // 提交表单刷新
+            $('#searchForm').submit();
+        });
     });
+
 
     // 将时间戳转换为指定格式的日期时间字符串
     function formatDate(timestamp) {

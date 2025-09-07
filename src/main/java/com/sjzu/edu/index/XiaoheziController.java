@@ -19,12 +19,12 @@ public class XiaoheziController extends Controller {
         String xiaohezino = getPara("xiaohezino");
         System.out.println("xiaohezinno: " + xiaohezino);
         String Restaurant = getPara("restaurant");
-        String craeteTime = getPara("createTime");
+        String createTime = getPara("createTime");
         System.out.println("restaurant: " + Restaurant);
         setAttr("xiaohezino", xiaohezino);
         setAttr("restaurant", Restaurant);
-        setAttr("craeteTime", craeteTime);
-        Page<ManageXiaohezi> xiaoheziPage = service.paginate(pageNumber, pageSize, xiaohezino, Restaurant, craeteTime);
+        setAttr("createTime", createTime);
+        Page<ManageXiaohezi> xiaoheziPage = service.paginate(pageNumber, pageSize, xiaohezino, Restaurant, createTime);
         setAttr("xiaohezilist", xiaoheziPage);
         List<Restaurant> restaurants = restaurant.find("SELECT * FROM restaurant");
         setAttr("restaurants", restaurants);

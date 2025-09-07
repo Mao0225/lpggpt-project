@@ -22,9 +22,13 @@ public class OorderInfoController  extends Controller {
         String station = getPara("station");
         String restaurantId = getPara("companyId");
         Integer companyid = getSessionAttr("stationid");
+
+        if (time != null && !time.isEmpty() && time.length() >= 10) {
+            time = time.substring(0, 10);
+        }
         System.out.println("companyid: "+companyid);// 从会话中获取 companyid
         setAttr("time",time);
-        setAttr("companyId",station);
+        setAttr("station",station);
         setAttr("restaurantid",restaurantId);
         setAttr("companyid",companyid);
         Page<BasBill> orderpage =service.paginate(PageNumber, PageSize, time, station,restaurantId,companyid);

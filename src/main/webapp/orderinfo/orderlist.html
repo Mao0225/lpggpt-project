@@ -52,32 +52,31 @@
 </head>
 <body>
 <div id="pagediv">
-    <form id="searchForm" action="/orderinfo/orderlist" method="post">
+    <form id="searchForm" action="/orderinfo/orderlist" method="get">
 
-        <!--        <label>饭店编号:</label>-->
-        <!--        <input type="text" name="restaurantno" value="#(restaurantno)">-->
-
-        <label>加气站:</label>
-        <select id="selectstation" name="station" onchange="choose_station_Name()">
-            <option value="" selected>加气站名称</option>
-            #for (x: gasstations)
-            <option value="#(x.id)">#(x.station_name)</option>
-            #end
-        </select>
 
         <label>下单时间:</label>
-        <input type="date" name="time" value="">
+        <input type="date" name="time" value="#(time)">
 
-        <label>订气饭店:</label>
-        <select id="selectName" name="restaurantId" onchange="chooseName()">
-            <option value="" selected>饭店名称</option>
-            #for (x: restaurants)
-            <option value="#(x.id)">#(x.name)</option>
+        <select id="selectstation" name="station" onchange="choose_station_Name()">
+            <option value="" ${station == '' ? 'selected' : ''}>加气站名称</option>
+            #for (x: gasstations)
+            <option value="#(x.id)" #(x.id.toString() == station ? 'selected' : '')>#(x.station_name)</option>
             #end
         </select>
+
+        <select id="selectName" name="restaurantid" onchange="chooseName()">
+            <option value="" ${restaurantid == '' ? 'selected' : ''}>饭店名称</option>
+            #for (x: restaurants)
+            <option value="#(x.id)" #(x.id.toString() == restaurantid ? 'selected' : '')>#(x.name)</option>
+            #end
+        </select>
+
+
         <input type="submit" value="提交">
         <input type="button" value="重置" name="refresh" id="resetButton" />
     </form>
+
 
 
 </div>
@@ -118,18 +117,35 @@
             });
         </script>
         <script>
-            document.getElementById("resetButton").addEventListener("click", function(e) {
-                e.preventDefault();
+            document.addEventListener("DOMContentLoaded", function() {
+                var resetButton = document.getElementById("resetButton");
+                var searchForm = document.getElementById("searchForm");
 
-                // 重置表单并手动清空时间输入框
-                document.getElementById("searchForm").reset();
-                document.querySelector('input[name="time"]').value = ''; // 强制清空时间
+                resetButton.addEventListener("click", function(e) {
+                    e.preventDefault(); // 阻止默认提交
 
-                // 修改提交地址为无参数形式，防止参数残留
-                document.getElementById("searchForm").action = "/orderinfo/orderlist";
-                document.getElementById("searchForm").submit();
+                    // 清空所有文本输入框
+                    searchForm.querySelectorAll('input[type="text"]').forEach(function(input) {
+                        input.value = "";
+                    });
 
+                    // 清空日期输入框
+                    searchForm.querySelectorAll('input[type="date"]').forEach(function(input) {
+                        input.value = "";
+                    });
+
+                    // 清空下拉框
+                    var selectStation = document.getElementById("selectstation");
+                    var selectName = document.getElementById("selectName");
+                    if (selectStation) selectStation.value = "";
+                    if (selectName) selectName.value = "";
+
+                    // 提交表单刷新页面
+                    searchForm.submit();
+                });
+            });
         </script>
+
     </div>
 
 

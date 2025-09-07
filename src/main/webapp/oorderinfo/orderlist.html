@@ -1,18 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Content</title>
     <script src="../css/jquery-3.3.1.min.js"></script>
-    <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css" >
     <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/lpg.css">
 
     <!-- Add your custom stylesheets and scripts here -->
     <script>
-        document.getElementById('showFormButton').addEventListener('click', function () {
+        document.getElementById('showFormButton').addEventListener('click', function() {
             var form = document.getElementById('searchForm');
             if (form.style.display === 'none') {
                 form.style.display = 'block'; // 显示表单
@@ -21,160 +20,81 @@
             }
         });
     </script>
-
-    <style scoped>
-        .container {
-            padding: 50px 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        input {
-            padding: 15px;
-            font-size: 18px;
-            border: 2px solid #a3bffa;
-            border-radius: 10px;
-            width: 100%;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: border-color 0.3s ease;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: #4c87c9;
-        }
-
-        /* 设置提交和重置按钮样式 */
-        #searchForm input[type="submit"],
-        #searchForm input[type="button"] {
-            width: auto;
-            padding: 8px 16px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            cursor: pointer;
-            background-color: #f0f0f0;
-            margin-right: 10px;
-        }
-
-        #searchForm input[type="submit"]:hover,
-        #searchForm input[type="button"]:hover {
-            background-color: #e0e0e0;
-        }
-
-        /* 设置日期输入框样式 */
-        #searchForm input[type="date"] {
-            width: auto;
-            padding: 8px 16px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background-color: #f0f0f0;
-            margin-right: 10px;
-        }
-    </style>
-
     <style>
-        /* 设置 #pagediv 的样式 */
-        #pagediv {
-            background-color: #f0f0f0;
-            color: black;
-            padding: 10px;
-        }
-
-        /* 设置表格样式 */
-        table.list {
-            width: 100%;
+        table {
+            /* 边框合并，使表格看起来更简洁 */
             border-collapse: collapse;
+            width: 100%;
         }
 
-        /* 设置表格表头样式 */
-        table.list th {
-            background-color: #add8e6;
-            color: black;
+        th,
+        td {
+            /* 添加边框 */
+            border: 1px solid #ccc;
+            /* 内边距，使内容与边框有一定距离 */
             padding: 8px;
-            text-align: left;
-            border: 1px solid #ddd; /* 新增：添加边框 */
         }
 
-        /* 设置表格单元格样式 */
-        table.list td {
-            padding: 8px;
-            border: 1px solid #ddd; /* 修改：添加边框 */
-        }
-
-        /* 设置表格隔行颜色 */
-        table.list tr:nth-child(even) {
+        th {
+            /* 文本居中 */
+            text-align: center;
+            /* 背景颜色，可根据需要修改 */
             background-color: #f2f2f2;
         }
-
-        table.list tr:nth-child(odd) {
-            background-color: #e0e0e0;
-        }
-
-        /* 设置鼠标悬停时表格行的颜色 */
-        table.list tr:hover {
-            background-color: #d3d3d3;
-        }
-
-        /* 新增样式：设置新建司机链接为黑色 */
-        #pagediv .add {
-            color: black;
-        }
-
-        /* 新增样式：设置输入框背景色为淡灰色 */
-        #pagediv input[type="text"] {
-            background-color: #f0f0f0;
-        }
-
-        /* 新增样式：设置 label 文字颜色为黑色 */
-        #pagediv label {
-            color: black;
+        #searchForm select,
+        #searchForm input[type="date"] {
+            border-radius: 10px;
+            background-color: #fbf0c5;
+            width: 160px;
+            height: 30px;
         }
     </style>
 </head>
-
 <body>
 <div id="pagediv">
-    <form id="searchForm" action="/oorderinfo/orderlist" method="post">
+    <form id="searchForm" action="/orderinfo/orderlist" method="get">
 
-        <!--        <label>饭店编号:</label>-->
-        <!--        <input type="text" name="restaurantno" value="#(restaurantno)">-->
 
         <label>下单时间:</label>
-        <input type="date" name="time" value="">
+        <input type="date" name="time" value="#(time)">
 
-        <label>订气饭店:</label>
-        <select id="selectName" name="companyId" onchange="chooseName()">
-            <option value="" selected>饭店名称</option>
-            #for (x: restaurants)
-            <option value="#(x.id)">#(x.name)</option>
+        <select id="selectstation" name="station" onchange="choose_station_Name()">
+            <option value="" ${station == '' ? 'selected' : ''}>加气站名称</option>
+            #for (x: gasstations)
+            <option value="#(x.id)" #(x.id.toString() == station ? 'selected' : '')>#(x.station_name)</option>
             #end
         </select>
+
+        <select id="selectName" name="restaurantid" onchange="chooseName()">
+            <option value="" ${restaurantid == '' ? 'selected' : ''}>饭店名称</option>
+            #for (x: restaurants)
+            <option value="#(x.id)" #(x.id.toString() == restaurantid ? 'selected' : '')>#(x.name)</option>
+            #end
+        </select>
+
+
         <input type="submit" value="提交">
         <input type="button" value="重置" name="refresh" id="resetButton" />
     </form>
+
+
+
 </div>
 
 <table class="list">
     <div>
-        <button id="showFormButton"
-                style="width: 30px; height: 30px; border: 2px solid transparent; border-radius: 50%; background-color: transparent; position: relative; float: right;">
-            <img src="/img/find.png" alt="搜索"
-                 style="width: 30px; height: 30px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+        <button id="showFormButton" style="width: 30px; height: 30px; border: 2px solid transparent; border-radius: 50%; background-color: transparent; position: relative; float: right;">
+            <img src="/img/find.png" alt="搜索" style="width: 30px; height: 30px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
         </button>
 
-        <button id="fresh" name="refresh"
-                style="width: 30px; height: 30px; border: 2px solid transparent; border-radius: 50%; background-color: transparent; position: relative;  margin-right: 10px;float: right;">
-            <img src="/img/refresh2.png" alt="刷新"
-                 style="width: 25px; height: 25px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+        <button id="fresh" name = "refresh" style="width: 30px; height: 30px; border: 2px solid transparent; border-radius: 50%; background-color: transparent; position: relative;  margin-right: 10px;float: right;">
+            <img src="/img/refresh2.png" alt="刷新" style="width: 25px; height: 25px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
         </button>
 
         <script>
             var buttons = document.getElementsByName("refresh");
             for (var i = 0; i < buttons.length; i++) {
-                buttons[i].addEventListener('click', function () {
+                buttons[i].addEventListener('click', function() {
                     // 获取所有的输入框并设置为空
                     var inputs = document.querySelectorAll('#searchForm input[type=text]');
                     for (var j = 0; j < inputs.length; j++) {
@@ -187,7 +107,7 @@
             }
         </script>
         <script>
-            document.getElementById('showFormButton').addEventListener('click', function () {
+            document.getElementById('showFormButton').addEventListener('click', function() {
                 var form = document.getElementById('searchForm');
                 if (form.style.display === 'none') {
                     form.style.display = 'block'; // 显示表单
@@ -197,21 +117,37 @@
             });
         </script>
         <script>
-            document.getElementById("resetButton").addEventListener("click", function (e) {
-                // 阻止默认行为
-                e.preventDefault();
-                // 清空所有输入框和下拉框的值
-                document.getElementById("searchForm").reset();
-                // 手动设置表单字段为空值
-                document.querySelector('input[name="station"]').value = '';
-                document.querySelector('input[name="time"]').value = '';
-                document.querySelector('select[name="companyId"]').value = '';
-                // 提交表单以刷新页面
-                document.getElementById("searchForm").submit();
-            });
+            document.addEventListener("DOMContentLoaded", function() {
+                var resetButton = document.getElementById("resetButton");
+                var searchForm = document.getElementById("searchForm");
 
+                resetButton.addEventListener("click", function(e) {
+                    e.preventDefault(); // 阻止默认提交
+
+                    // 清空所有文本输入框
+                    searchForm.querySelectorAll('input[type="text"]').forEach(function(input) {
+                        input.value = "";
+                    });
+
+                    // 清空日期输入框
+                    searchForm.querySelectorAll('input[type="date"]').forEach(function(input) {
+                        input.value = "";
+                    });
+
+                    // 清空下拉框
+                    var selectStation = document.getElementById("selectstation");
+                    var selectName = document.getElementById("selectName");
+                    if (selectStation) selectStation.value = "";
+                    if (selectName) selectName.value = "";
+
+                    // 提交表单刷新页面
+                    searchForm.submit();
+                });
+            });
         </script>
+
     </div>
+
 
     <tbody>
     <tr>
@@ -267,10 +203,8 @@
         <td style="text-align:left">
             <!--        -->
             &nbsp;&nbsp;<a href="#" onclick="confirmDelete('#(x.id)')">删除</a>
-            <a href="#" class="edit openModal" data-title="编辑用户"
-               data-edit-url="/oorderinfo/edit/?id=#(x.id)&bid=#(x.bid)">修改</a>
-            <a href="#" class="submit openModal" data-title="接单信息"
-               data-edit-url="/oorderinfo/submit/?id=#(x.id)&bid=#(x.bid)">接单</a>
+            <a href="#" class="edit openModal" data-title="编辑用户" data-edit-url="/orderinfo/edit/?id=#(x.id)&bid=#(x.bid)">修改</a>
+            <a href="#" class="submit openModal" data-title="接单信息" data-edit-url="/orderinfo/submit/?id=#(x.id)&bid=#(x.bid)">接单</a>
 
         </td>
     </tr>
@@ -278,7 +212,7 @@
     </tbody>
 </table>
 <div class="pagination" style="color:#000000;">
-    #@paginate(orderpage.pageNumber, orderpage.totalPage, "/oorderinfo/orderlist?station=" + (station != null ? station : "") + "&time=" + (time != null ? time : "") + "&restaurantId=" + (restaurantId != null ? restaurantId : "") + "&page=")
+    #@paginate(orderpage.pageNumber, orderpage.totalPage, "/orderinfo/orderlist?station=" + (station != null ? station : "") + "&time=" + (time != null ? time : "") + "&restaurantId=" + (restaurantId != null ? restaurantId : "") + "&page=")
 </div>
 <script>
     var restaurants = [
@@ -286,6 +220,14 @@
     { id: "#(x.id)", name: "#(x.name)" },
     #end
     ];
+
+    var gasstations = [
+        #for (x: gasstations)
+    {
+        id: "#(x.id)", name: "#(x.station_name)"
+    },
+    #end
+    ]
 
     function chooseName() {
         var selectName = document.getElementById("selectName").value;
@@ -296,11 +238,20 @@
         });
     }
 
+    function choose_station_Name() {
+        var selectName = document.getElementById("selectstation").value;
+        console.log("selectstation: " + selectName);
+        // 查找选中的备件对象，通过name属性来查找
+        var selectedstation = gasstations.find(function (gasstations) {
+            return gasstations.name === selectName;
+        });
+    }
+
     function confirmDelete(id) {
         var result = confirm("确定要删除吗？");
         if (result) {
             // 如果用户点击了确定，则执行删除操作
-            window.location.href = "/oorderinfo/delete/" + id;
+            window.location.href = "/orderinfo/delete/" + id;
         } else {
             // 如果用户点击了取消，则不执行任何操作
             return false;
@@ -308,12 +259,12 @@
     }
 </script>
 <script>
-    $('.openModal').click(function (e) {
+    $('.openModal').click(function(e) {
         e.preventDefault();
         var editUrl = $(this).data('edit-url');
         var that = this; // 保存正确的上下文
 
-        $.get(editUrl, function (data) {
+        $.get(editUrl, function(data) {
             var title = $(that).data('title');
             $('#myModalLabel').text(title); // 修改模态窗口标题
 
@@ -335,9 +286,9 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary" id="saveButton">保存</button>
+                <button type="button" class="btn btn-primary"  id="saveButton" >保存</button>
                 <script>
-                    document.getElementById('saveButton').addEventListener('click', function () {
+                    document.getElementById('saveButton').addEventListener('click', function() {
                         document.getElementById('myForm').submit();
                     });
                 </script>
@@ -347,5 +298,4 @@
 </div>
 
 </body>
-
 </html>

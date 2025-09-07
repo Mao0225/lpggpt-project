@@ -176,7 +176,7 @@ public class ApplpgyunxingController extends Controller {
 		String devicename = getPara("devicename", "");
 
 		// 构建查询语句，过滤Alarm不为0并匹配devicename
-		String select = "SELECT t.devicename, t.Alarm, t.created_time, " +
+		String select = "SELECT t.devicename, t.Alarm, DATE_FORMAT(FROM_UNIXTIME(created_time / 1000) ,'%Y-%m-%d %H:%i:%s') AS created_time, " +
 				"CASE t.Alarm " +
 				"WHEN 0 THEN '正常' " +
 				"WHEN 1 THEN '操作间报警' " +
@@ -186,7 +186,7 @@ public class ApplpgyunxingController extends Controller {
 				"WHEN 5 THEN '防拆卸报警' " +
 				"ELSE t.Alarm " +
 				"END AS Alarm, t.PowerStatus ";
-		String sqlExceptSelect = "FROM t_iot_sync_records_v2 t " +
+		String sqlExceptSelect = "FROM t_iot_sync_rds_records_v2 t " +
 				"WHERE t.Alarm IS NOT NULL AND t.Alarm != 0 AND t.devicename = ? " +
 				"ORDER BY t.id DESC";
 

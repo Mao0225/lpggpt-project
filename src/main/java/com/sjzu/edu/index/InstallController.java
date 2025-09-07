@@ -7,21 +7,24 @@ import com.sjzu.edu.common.model.BseXiaohezi;
 
 public class InstallController  extends Controller {
     InstallService service = new InstallService();
-    public void installlist(){
-        int pageNumber = getParaToInt("page",1);
-        int pageSize = getParaToInt("pageSzie",10);
-        String xiaohezibianma= getPara("xiaohezibianma");
-        String time =  getPara("time");
-        String restaurantname = getPara("restaurantname");
-        // 修改后
-        Page<Record> xiaoheziRecord = service.paginate(pageNumber, pageSize, xiaohezibianma, time,restaurantname);
-        setAttr("time",time);
-        setAttr("xiaohezibianma",xiaohezibianma);
-        setAttr("restaurantname",restaurantname);
-        render("install.html");
-        setAttr("xiaohezi",xiaoheziRecord);
 
+    public void installlist(){
+        int pageNumber = getParaToInt("page", 1);
+        int pageSize = getParaToInt("pageSize", 10);  // 注意你写错了 pageSzie
+        String xiaohezibianma= getPara("xiaohezibianma");
+        String time = getPara("time");
+        String restaurantname = getPara("restaurantname");
+
+        Page<Record> xiaoheziRecord = service.paginate(pageNumber, pageSize, xiaohezibianma, time, restaurantname);
+
+        setAttr("xiaohezi", xiaoheziRecord);
+        setAttr("xiaohezibianma", xiaohezibianma);
+        setAttr("restaurantname", restaurantname);
+        setAttr("time", time);
+
+        render("install.html");  // 注意顺序：先 setAttr 再 render
     }
+
     public void edit(){
         int id = getParaToInt("id");
         BseXiaohezi xiaohezi=service.findById(id);

@@ -6,7 +6,17 @@
   <component name="ChangeListManager">
     <list default="true" id="bef31097-e2fd-4fd6-9377-5642cb374b1b" name="更改" comment="增加了LPG充装端的后台和对应后端">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/common/DemoConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/common/DemoConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/api/ApplpgyunxingController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/api/ApplpgyunxingController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/index/BangdingrenService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/index/BangdingrenService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/index/InstallController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/index/InstallController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/index/OorderInfoController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/index/OorderInfoController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/index/XhzinfoController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/index/XhzinfoController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/index/XiaoheziController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/index/XiaoheziController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/install/install.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/install/install.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/oorderinfo/orderlist.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/oorderinfo/orderlist.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/orderinfo/orderlist.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/orderinfo/orderlist.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/xhzinfo/xhzlist.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/xhzinfo/xhzlist.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/xiaohezi/xiaohezi.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/xiaohezi/xiaohezi.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,7 +64,7 @@
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Administrator/Desktop/code/lpgprogram/lpggpt/src/main/java/com/sjzu/edu/api&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/jason/工作/xiangmu/jfinal/lpggpt/lpggpt/src/main/webapp/bangdingren&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -72,11 +82,11 @@
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\Administrator\Desktop\code\lpgprogram\lpggpt\src\main\java\com\sjzu\edu\api" />
-      <recent name="C:\Users\Administrator\Desktop\code\lpgprogram\lpggpt\src\main\java\com\sjzu\edu\index" />
-      <recent name="C:\Users\Administrator\Desktop\code\lpgprogram\lpggpt\src\main\webapp" />
-      <recent name="C:\Users\Administrator\Desktop\code\lpgprogram\lpggpt\src\main\webapp\upload" />
-      <recent name="$PROJECT_DIR$/src/main/webapp/img" />
+      <recent name="$PROJECT_DIR$/src/main/webapp/bangdingren" />
+      <recent name="$PROJECT_DIR$/src/main/java/com/sjzu/edu/index" />
+      <recent name="$PROJECT_DIR$/src/main/webapp/install" />
+      <recent name="$PROJECT_DIR$/src/main/webapp/oorderinfo" />
+      <recent name="$PROJECT_DIR$/src/main/webapp/orderinfo" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Administrator\Desktop\code\lpgprogram\lpggpt\src\main\java\com\sjzu\edu\api" />
@@ -87,7 +97,7 @@
       <recent name="com.sjzu.edu.index" />
     </key>
   </component>
-  <component name="RunManager" selected="应用程序.DemoConfig">
+  <component name="RunManager" selected="应用程序._JFinalDemoGenerator">
     <configuration name="DemoConfig" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.sjzu.edu.common.DemoConfig" />
       <module name="jfinal_demo_for_maven" />
@@ -129,8 +139,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="应用程序.DemoConfig" />
         <item itemvalue="应用程序._JFinalDemoGenerator" />
+        <item itemvalue="应用程序.DemoConfig" />
       </list>
     </recent_temporary>
   </component>
@@ -248,6 +258,8 @@
       <workItem from="1756649089426" duration="2698000" />
       <workItem from="1756651873812" duration="32000" />
       <workItem from="1756695521134" duration="1232000" />
+      <workItem from="1757034715191" duration="4518000" />
+      <workItem from="1757086665828" duration="1190000" />
     </task>
     <task id="LOCAL-00001" summary="添加了小盒子管理功能">
       <option name="closed" value="true" />
