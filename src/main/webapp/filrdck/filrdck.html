@@ -2,356 +2,103 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>加气站管理</title>
-  <!-- Add your custom stylesheets and scripts here -->
-  <script src="../css/jquery-3.3.1.min.js"></script>
+  <title>加气站充装记录管理</title>
   <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css">
+  <script src="../css/jquery-3.3.1.min.js"></script>
   <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
-  <link rel="stylesheet" type="text/css" href="../css/lpg.css">
-  <style scoped>
-    .container {
-      padding: 30px 15px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    input {
-      padding: 8px 12px;
-      font-size: 14px;
-      border: 1px solid #a3bffa;
-      border-radius: 4px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-      transition: border-color 0.3s ease;
-    }
-
-    input[type="date"] {
-      max-width: 180px;
-    }
-
-    input:focus {
-      outline: none;
-      border-color: #4c87c9;
-    }
-
-    select {
-      padding: 8px 12px;
-      font-size: 14px;
-      border: 1px solid #a3bffa;
-      border-radius: 4px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-      background-color: white;
-    }
-
-    button, input[type="submit"], input[type="button"] {
-      padding: 6px 12px;
-      font-size: 14px;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 80px;
-    }
-
-    input[type="submit"] {
-      background-color: #007bff;
-      color: white;
-      border: 1px solid #007bff;
-      margin-right: 8px;
-    }
-
-    input[type="button"] {
-      background-color: #f8f9fa;
-      color: #333;
-      border: 1px solid #ddd;
-    }
-
-    input[type="submit"]:hover {
-      background-color: #0069d9;
-    }
-
-    input[type="button"]:hover {
-      background-color: #e2e6ea;
-    }
-
-    .form-group {
-      display: inline-flex;
-      align-items: center;
-      margin-right: 15px;
-      margin-bottom: 10px;
-    }
-
-    .form-group label {
-      margin-right: 8px;
-      margin-bottom: 0;
-      white-space: nowrap;
-    }
-
-    .btn-danger {
-      padding: 4px 8px;
-      font-size: 12px;
-    }
-  </style>
-
   <style>
-    /* 设置 #pagediv 的样式 */
-    #pagediv {
-      background-color: #f0f0f0;
-      color: black;
-      padding: 15px;
-      border: 1px solid #007bff;
-      border-radius: 4px;
-    }
-
-    /* 设置表格样式 */
-    table.list {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 15px;
-    }
-
-    /* 设置表格表头样式 */
-    table.list th {
-      background-color: #add8e6;
-      color: black;
-      padding: 10px;
-      text-align: left;
-      border: 1px solid #ddd;
-      font-weight: 600;
-    }
-
-    /* 设置表格单元格样式 */
-    table.list td {
-      padding: 10px;
-      border: 1px solid #ddd;
-    }
-
-    /* 设置表格隔行颜色 */
-    table.list tr:nth-child(even) {
-      background-color: #f2f2f2;
-    }
-
-    table.list tr:nth-child(odd) {
-      background-color: #e0e0e0;
-    }
-
-    /* 设置鼠标悬停时表格行的颜色 */
-    table.list tr:hover {
-      background-color: #d3d3d3;
-    }
-
-    /* 设置新建司机链接为黑色 */
-    #pagediv .add {
-      color: white;
-      background-color: #007bff;
-      padding: 6px 12px;
-      text-decoration: none;
-      display: inline-block;
-      border-radius: 4px;
-      font-size: 14px;
-    }
-
-    /* 设置输入框背景色为淡灰色 */
-    #pagediv input[type="text"] {
-      background-color: white;
-    }
-
-    /* 设置 label 文字颜色为黑色 */
-    #pagediv label {
-      color: black;
-      margin-right: 5px;
-      margin-left: 10px;
-    }
-
-    #pagediv label:first-child {
-      margin-left: 0;
-    }
-
-    /* 检查详情模态框样式 */
-    .modal-title {
-      font-size: 18px;
-      font-weight: 600;
-    }
-
-    .modal-body table td {
-      padding: 8px;
-    }
-
-    .text-red {
-      color: red;
-    }
-
-    /* 分页样式 */
-    .pagination {
-      margin-top: 20px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .pagination a, .pagination span {
-      padding: 6px 12px;
-      margin: 0 2px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      text-decoration: none;
-      color: #007bff;
-    }
-
-    .pagination .current {
-      background-color: #007bff;
-      color: white;
-      border-color: #007bff;
-    }
+    body { font-family: Arial, sans-serif; background: #fff; }
+    #pagediv { padding: 20px; background: #f0f0f0; border-radius: 6px; margin-bottom: 15px; }
+    input, select { padding: 6px 10px; border: 1px solid #a3bffa; border-radius: 4px; margin-right: 6px; }
+    input[type="submit"] { background: #007bff; color: white; border: none; }
+    input[type="submit"]:hover { background: #0069d9; }
+    table.list { width: 100%; border-collapse: collapse; margin-top: 15px; }
+    table.list th, table.list td { padding: 10px; border: 1px solid #ddd; text-align: left; }
+    table.list th { background-color: #add8e6; font-weight: 600; }
+    table.list tr:nth-child(even) { background-color: #f2f2f2; }
+    table.list tr:hover { background-color: #d3d3d3; }
+    .text-red { color: red; }
+    .pagination { margin-top: 20px; display: flex; justify-content: center; }
+    .pagination a, .pagination span { padding: 6px 12px; margin: 0 2px; border: 1px solid #ddd; border-radius: 4px; text-decoration: none; color: #007bff; }
+    .pagination .current { background-color: #007bff; color: white; border-color: #007bff; }
   </style>
 </head>
 <body>
+
 <div id="pagediv">
   <form id="searchForm" action="/filrdck/filrdcklist" method="get">
     <label> 时间查找：</label>
     <input type="date" name="finditem" value="#(finditem)">
     <label> 加气站查找：</label>
-    <select id="selectName" name="gastion_select" onchange="chooseName()">
-      <option value="" selected>请选择加气站</option>
-      #for ( x: stations)
-      <option value="#(x.station_id)" #(x.id == gastionid ? "selected" : "")>#(x.station_name)</option>
+    <select id="selectName" name="gastion_select">
+      <option value="">请选择加气站</option>
+      #for(x : stations)
+      #if(gastion != null && !gastion.isEmpty() && x.companyid.toString() == gastion.toString())
+      <option value="#(x.companyid)" selected>#(x.station_name)</option>
+      #else
+      <option value="#(x.companyid)">#(x.station_name)</option>
+      #end
       #end
     </select>
+
     <label> 编号查找：</label>
     <input type="text" name="gasname" value="#(gasname)">
-    <input value="提交" type="submit">
-    <input type="submit" value="重置" name="refresh"/>
-    <script>
-      var stations = [
-        #for ( x: stations)
-      { id: "#(x.id)", station_name: "#(x.station_name)" },
-      #end
-      ];
-
-      function chooseName() {
-        var selectId = document.getElementById("selectName").value;
-
-        if (selectId === "") {
-          // 这里可以添加隐藏输入框相关逻辑，若有需要
-          console.log("未选择加气站");
-          return;
-        }
-
-        // 查找选中的加气站对象
-        var selectedStation = stations.find(function(station) {
-          return station.id === selectId;
-        });
-
-        if (selectedStation) {
-          // 这里可以添加隐藏输入框相关逻辑，若有需要
-          console.log("选中加气站，station_id:", selectedStation.id);
-        } else {
-
-        }
-      }
-
-      // 添加监听器
-      document.getElementById("selectName").addEventListener("change", chooseName);
-
-      var buttons = document.getElementsByName("refresh");
-      for (var i = 0; i < buttons.length; i++) {
-        buttons[i].addEventListener('click', function (e) {
-          e.preventDefault();
-
-          // 清空输入框内容
-          var inputs = document.querySelectorAll('#searchForm input');
-          inputs.forEach(function(input) {
-            if (input.type !== 'submit' && input.type !== 'button') {
-              input.value = "";
-            }
-          });
-
-          // 重置选择框为默认选项
-          document.getElementById("selectName").selectedIndex = 0;
-
-          // 提交表单
-          document.getElementById('searchForm').submit();
-        });
-      }
-    </script>
+    <input type="submit" value="提交">
+    <input type="button" value="重置" name="refresh"/>
   </form>
 </div>
-<!-- 新增检查详情模态框 -->
-<div class="modal fade" id="checkDetailsModal" tabindex="-1" role="dialog">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="checkDetailsModalTitle">检查详情</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <table class="table table-bordered" id="checkDetailsTable">
-          <tbody>
-          <!-- 动态内容将在这里插入 -->
-          </tbody>
-        </table>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
-      </div>
-    </div>
-  </div>
-</div>
-<table class="list">
-  <tbody>
-  <tr>
-    <th width="4%">序号</th>
-    <th width="20%">气瓶编号</th>
-    <th width="12%">气瓶终止使用日期</th>
-    <th width="12%">充装介质</th>
-    <th width="12%">充装规格</th>
-    <th width="12%">充装前检查</th>
-    <th width="12%">充装后检查</th>
-    <!--    <th width="30%">充装前检查详细信息</th>-->
-    <!--    <th width="30%">充装后检查详细信息</th>-->
-    <!--    <th width="12%">合格与否</th>-->
-    <th width="12%">充气时间</th>
-    <th width="12%">皮重</th>
+<script>
+  // 提交和重置逻辑
+  document.addEventListener("DOMContentLoaded", function() {
+    // 重置按钮
+    var refreshButtons = document.getElementsByName("refresh");
+    for (var i = 0; i < refreshButtons.length; i++) {
+      refreshButtons[i].addEventListener('click', function() {
+        // 清空表单输入框
+        var inputs = document.querySelectorAll('#searchForm input[type=text], #searchForm input[type=date]');
+        for (var j = 0; j < inputs.length; j++) {
+          inputs[j].value = "";
+        }
+        // 清空下拉框
+        document.getElementById("selectName").value = "";
+        // 提交表单
+        document.getElementById("searchForm").submit();
+      });
+    }
+  });
+</script>
 
-    <th width="12%">灌装量</th>
-    <th width="12%">充装时长</th>
-    <!--    <th width="12%">检查结果</th>-->
-    <th width="12%">枪号</th>
-    <th width="12%">充装人员</th>
-    <th width="15%">检查人员</th>
-    <th width="12%">所属站点</th>
+<table class="list">
+  <thead>
+  <tr>
+    <th>序号</th>
+    <th>气瓶编号</th>
+    <th>气瓶终止使用日期</th>
+    <th>充装介质</th>
+    <th>充装规格</th>
+    <th>充装前检查</th>
+    <th>充装后检查</th>
+    <th>充气时间</th>
+    <th>皮重</th>
+    <th>灌装量</th>
+    <th>充装时长</th>
+    <th>枪号</th>
+    <th>充装人员</th>
+    <th>检查人员</th>
+    <th>所属站点</th>
   </tr>
+  </thead>
+  <tbody>
   #set(startIndex = (filrdck.pageNumber - 1) * filrdck.pageSize + 1)
   #for(x : filrdck.getList())
   <tr>
-    <td>#(startIndex++)</td> <!-- 显示序号并递增 -->
+    <td>#(startIndex++)</td>
     <td>#(x.gas_number)</td>
     <td>#(x.terminate_use_date)</td>
     <td>#(x.filling_medium)</td>
     <td>#(x.filling_specification)</td>
-    <td>
-      <a href="javascript:void(0)"
-         class="detail-link"
-         data-check-type="前检查"
-         data-details='#(x.before_filling_check)'>
-        #(x.before_filling)
-      </a>
-    </td>
-    <td>
-      <a href="javascript:void(0)"
-         class="detail-link"
-         data-check-type="后检查"
-         data-details='#(x.after_filling_check)'>
-        #(x.after_filling)
-      </a>
-    </td>
-    <!--    <td>#(x.before_filling_check)</td>-->
-    <!--    <td>#(x.after_filling_check)</td>-->
+    <td>#(x.before_filling)</td>
+    <td>#(x.after_filling)</td>
     <td>#(x.fill_time)</td>
     <td>#(x.pressure_begin)</td>
     <td>#(x.now_gas)</td>
@@ -359,59 +106,29 @@
     <td>#(x.gun_no)</td>
     <td>#(x.filling_staff_name)</td>
     <td>#(x.filling_check_staff_name)</td>
-    <td> #set(foundStation = false)
+    <td>
+      #set(foundStation=false)
       #for(g : gastiond)
       #if(x.gasstation == g.station_id)
       #(g.station_name)
-      #set(foundStation = true)
+      #set(foundStation=true)
       #end
       #end
       #if(!foundStation)
       #(x.gasstation)
-      #end</td>
+      #end
+    </td>
   </tr>
   #end
   </tbody>
 </table>
-<div class="pagination" style="color:#DDDDDD;">
-  #@paginate(filrdck.pageNumber,filrdck.totalPage, "/filrdck/filrdcklist?finditem="+(finditem != null ? finditem :'')+
-  "&gastion_select=" + (gastion_select != null ? gastion_select : '')+ "&gasid=" + (gasname != null ? gasname : '')+"&pageNum=")
+
+<div class="pagination">
+  #@paginate(filrdck.pageNumber, filrdck.totalPage,
+  "/filrdck/filrdcklist?finditem=" + (finditem != null ? finditem : '') +
+  "&gastion_select=" + (gastion != null ? gastion : '') +
+  "&gasname=" + (gasname != null ? gasname : '') + "&pageNum=")
 </div>
 
-<script>
-  // 新增检查详情显示逻辑
-  $(document).ready(function() {
-    $('.detail-link').click(function() {
-      let details = $(this).data('details');
-      const checkType = $(this).data('check-type');
-
-      try {
-        // 如果 details 是字符串，则解析为对象
-        if (typeof details === 'string') {
-          details = JSON.parse(details);
-        }
-
-        let html = '';
-        for (const [key, value] of Object.entries(details)) {
-          // 如果值为 "否"，则添加红色字体样式
-          const textColorClass = value === "否" ? "text-red" : "";
-          html += `
-                    <tr>
-                        <td style="width: 40%; padding: 8px; background: #f8f9fa;">${key}</td>
-                        <td style="padding: 8px;" class="${textColorClass}">${value}</td>
-                    </tr>
-                `;
-        }
-
-        $('#checkDetailsModalTitle').text(`充装${checkType}详细信息`);
-        $('#checkDetailsTable tbody').html(html);
-        $('#checkDetailsModal').modal('show');
-      } catch (e) {
-        console.error('数据解析失败:', e);
-        alert('数据解析失败，请检查数据格式');
-      }
-    });
-  });
-</script>
 </body>
 </html>

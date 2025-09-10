@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" width="device-width, initial-scale=1.0">
+    <title>Equipment List</title>
+    <script src="../css/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css">
+    <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/css/lpg.css">
+
+    <style scoped>
+        .container {
+            padding: 50px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        input {
+            padding: 15px;
+            font-size: 18px;
+            border: 2px solid #a3bffa;
+            border-radius: 10px;
+            width: 100%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #4c87c9;
+        }
+    </style>
+
+    <style>
+        /* 设置 #pagediv 的样式 */
+        #pagediv {
+            background-color: #f0f0f0;
+            color: black;
+            padding: 10px;
+        }
+
+        /* 设置表格样式 */
+        table.list {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        /* 设置表格表头样式 */
+        table.list th {
+            background-color: #add8e6;
+            color: black;
+            padding: 8px;
+            text-align: left;
+            border: 1px solid #ddd; /* 新增：添加边框 */
+        }
+
+        /* 设置表格单元格样式 */
+        table.list td {
+            padding: 8px;
+            border: 1px solid #ddd; /* 修改：添加边框 */
+        }
+
+        /* 设置表格隔行颜色 */
+        table.list tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        table.list tr:nth-child(odd) {
+            background-color: #e0e0e0;
+        }
+
+        /* 设置鼠标悬停时表格行的颜色 */
+        table.list tr:hover {
+            background-color: #d3d3d3;
+        }
+
+        /* 新增样式：设置新建司机链接为黑色 */
+        #pagediv .add {
+            color: black;
+        }
+
+        /* 新增样式：设置输入框背景色为淡灰色 */
+        #pagediv input[type="text"] {
+            background-color: #f0f0f0;
+        }
+        /* 新增样式：设置 label 文字颜色为黑色 */
+        #pagediv label {
+            color: black;
+        }
+    </style>
+</head>
+
+<body>
+<div id="pagediv">
+
+    <form id="searchForm" action="/managegun/gunlist" method="post">
+        <a href="#" class="add openModal" data-title="添加加气枪" data-edit-url="/managegun/add"><b> + </b>添加加气枪</a>
+        <label>公司名称：</label>
+        <select id="selectName" name="companyId" onchange="chooseName()">
+            <option value="-1" selected>请选择公司</option>
+            #for (x: gastations)
+            <option value="#(x.id)">#(x.station_name)</option>
+            #end
+        </select>
+
+        <button type="button" type="submit" value="查询" id="searchButton">查询</button>
+        <button type="button" type="submit" value="重置" id="resetButton">重置</button>
+
+    </form>
+</div>
+
+<table class="list">
+    <tbody>
+    <tr>
+        <th width="8%">序号</th>
+        <th width="10">加气枪编号</th>
+        <th width="10">对应操作</th>
+        <th width="10">公司名称</th>
+        <th width="10">操作</th> <!-- 添加操作列标题 -->
+    </tr>
+    #set(startIndex = (gunlist.pageNumber - 1) * gunlist.pageSize + 1)
+    #for(x : gunlist.getList())
+    <tr>
+        <td>#(startIndex++)</td> <!-- 显示序号并递增 -->
+        <td>#(x.gunno)</td>
+        <td>#(x.caozuo)</td>
+        <td>#(x.station_name)</td>
+        <td>
+            <!-- 修改按钮添加点击事件，弹出编辑模态框，结构和功能与参考代码中编辑按钮类似 -->
+            <a href="#" class="edit openModal" data-title="编辑设备" data-edit-url="/managegun/edit?id=#(x.id)">修改</a>
+            <!-- 将删除按钮修改为a标签形式 -->
+            <a href="#" class="delete" onclick="confirmDelete('#(x.id)')">删除</a>
+            <!-- 为“设备维修”按钮添加点击事件，弹出对应的模态框 -->
+        </td>
+    </tr>
+    #end
+    </tbody>
+</table>
+
+<div class="pagination" style="color:#DDDDDD;">
+    #set(selectedCompanyId = "")
+    #if(companyname!= null && companyname!= "-1")
+    #set(selectedCompanyId = companyname)
+    #end
+    #@paginate(gunlist.pageNumber, gunlist.totalPage, "/managegun/gunlist?companyId=" + selectedCompanyId + "&page=")
+</div>
+<script>
+
+    var gastations = [
+        #for (x: gastations)
+    { id: "#(x.id)", name: "#(x.station_name)" },
+    #end
+    ];
+    function chooseName() {
+        var selectName = document.getElementById("selectName").value;
+        console.log("selectName: " + selectName);
+        // 查找选中的备件对象，通过name属性来查找
+        var selectedCompany = gastations.find(function (gastations) {
+            return gastations.name === selectName;
+        });
+    }
+    document.getElementById("selectName").addEventListener("change", chooseName);
+    // 为搜索按钮添加点击事件，防止默认提交行为被阻止，手动触发表单提交
+    $('#searchButton').click(function (e) {
+        e.preventDefault();
+        $('#searchForm').submit();
+    });
+
+    // 为重置按钮添加点击事件处理函数，用于清空搜索栏并提交表单，让公司名称选择框数据为空
+    $('#resetButton').click(function (e) {
+        e.preventDefault();
+        // 获取所有的输入框并设置为空
+        $('#searchForm input[type=text]').val('');
+        // 将下拉选择框（公司名称选择框）设置为空值，恢复到初始的“请选择公司”状态
+        $('#selectName').val('');
+        // 提交表单以重新查询并刷新页面
+        $('#searchForm').submit();
+    });
+    // 确认删除的函数，向后端delete函数发送删除请求，同样假设后端接收设备id作为参数
+    function confirmDelete(id) {
+        console.log("进入到了删除函数");
+        console.log("id: " + id);
+        if (confirm("确定要删除该设备记录吗？")) {
+            window.location.href = "/managegun/delete?id=" + id;
+        }
+    }
+    $(document).ready(function () {
+        $('.openModal').click(function (e) {
+            e.preventDefault();
+            var editUrl = $(this).data('edit-url');
+            var that = this;
+
+            $.get(editUrl, function (data) {
+                var title = $(that).data('title');
+                $('#myModalLabel').text(title);
+
+                // Clear old content
+                $('#modalBody').html(data);
+                $('#myModal').modal('show');
+            });
+        });
+    });
+</script>
+<!-- 模态框结构 -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">模态窗口标题</h4>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- 这里将会加载你的表单内容，此处暂时为空，后续可以根据从后端获取的数据来填充 -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="saveButton">保存</button>
+                <script>
+                    document.getElementById('saveButton').addEventListener('click', function () {
+                        console.log("josqb`1");
+                        // 如果验证通过，则提交表单
+                        document.getElementById('myForm').submit();
+                        // 如果验证失败，不提交表单（validateForm内部已经显示了错误消息）
+                    });
+                </script>
+            </div>
+
+        </div>
+    </div>
+</div>
