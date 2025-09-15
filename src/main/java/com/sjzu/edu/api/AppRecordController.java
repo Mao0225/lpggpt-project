@@ -395,12 +395,39 @@ public class AppRecordController extends Controller {
         // 排序
         sqlExceptSelect.append("ORDER BY frc.id DESC");
 
+        // 准备SQL相关信息用于打印
+        String selectPart = "SELECT frc.*, gf.*";
+        String fromWherePart = sqlExceptSelect.toString();
+
+        // 打印SQL构建信息
+        System.out.println("===== SQL Debug Info =====");
+        System.out.println("Select Part: " + selectPart);
+        System.out.println("From & Where Part: " + fromWherePart);
+        System.out.println("Parameters Count: " + params.size());
+        System.out.println("Parameters List: ");
+        for (int i = 0; i < params.size(); i++) {
+            System.out.println("  Param " + (i+1) + ": [" + params.get(i) + "] (Type: " + params.get(i).getClass().getSimpleName() + ")");
+        }
+
+        // 构建完整SQL（用于调试，实际执行还是用参数化查询）
+        String fullSql = selectPart + " " + fromWherePart;
+        for (Object param : params) {
+            if (param instanceof String) {
+                // 字符串类型参数添加单引号
+                fullSql = fullSql.replaceFirst("\\?", "'" + escapeSql((String) param) + "'");
+            } else {
+                fullSql = fullSql.replaceFirst("\\?", param.toString());
+            }
+        }
+        System.out.println("Final Executed SQL: " + fullSql);
+        System.out.println("==========================");
+
         // 分页查询
         Page<FillRecordCheck1> recordPage = dao.paginate(
                 pageNum,
                 pageSize,
-                "SELECT frc.*, gf.*", // 选择所有字段
-                sqlExceptSelect.toString(),
+                selectPart,
+                fromWherePart,
                 params.toArray() // 动态参数
         );
 
@@ -410,19 +437,24 @@ public class AppRecordController extends Controller {
             json.put("flag", "200");
             json.put("record", recordPage.getList()); // 返回查询结果
             json.put("page", pageNum);
-
             json.put("totalPage", recordPage.getTotalPage()); // 总页数
             json.put("totalRow", recordPage.getTotalRow());   // 总记录数
-            System.out.println("Total Pages: " + recordPage.getTotalPage());
-            System.out.println("Total Rows: " + recordPage.getTotalRow());
+            System.out.println("查询结果 - 总页数: " + recordPage.getTotalPage() + ", 总记录数: " + recordPage.getTotalRow());
         } else {
             json.put("flag", "300");
             json.put("record", new ArrayList<>()); // 返回空数组
             json.put("totalPage", 0);
             json.put("totalRow", 0);
+            System.out.println("查询结果 - 未找到匹配数据");
         }
         renderJson(json);
     }
+
+    // 简单的SQL转义方法，防止打印时出现单引号问题
+    private String escapeSql(String value) {
+        return value.replace("'", "''");
+    }
+
 
     public void recordsd() {
         // 获取前端传递的分页参数
