@@ -27,8 +27,10 @@ public class AppTransportController extends Controller {
         addCorsHeaders(); // 添加这一行来允许跨域请求
 
         String telephone = getPara("telephone");
-        int pageNum = getParaToInt("pageNum"); // 第二个参数是默认值
-        int pageSize = getParaToInt("pageSize"); // 第二个参数是默认值
+
+        int pageNum = getParaToInt("pageNum", 1);
+        int pageSize = getParaToInt("pageSize", 10);
+
         System.out.println("手机号："+telephone);
 //        LocalDate currentDate = LocalDate.now();
 //        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -71,18 +73,24 @@ public class AppTransportController extends Controller {
         String telephone = getPara("telephone");
         String code = getPara("qipingid");
         String time = getPara("riqi");
-        int pageNum = getParaToInt("pageNum"); // 第二个参数是默认值
-        int pageSize = getParaToInt("pageSize"); // 第二个参数是默认值
+
+
+
+        int pageNum = getParaToInt("pageNum", 1);
+        int pageSize = getParaToInt("pageSize", 10);
+
+
+
         System.out.println(code+"\n"+time+"\n"+pageNum+"\n"+pageSize+"\n");
         try {
             String fromSql = "from gas_bottle where 1=1 ";
             if(code!=null){
                 fromSql += "and bottle_id like '%" + code+"%'" ;
             }
-            if (time!=null){
-                fromSql += " AND end_time >= '" + time + " 00:00:00' AND end_time < '" + time + " 23:59:59'";
-
-            }
+//            if (time!=null){
+//                fromSql += " AND end_time >= '" + time + " 00:00:00' AND end_time < '" + time + " 23:59:59'";
+//
+//            }
             fromSql += " and tel = " + telephone +" order by id desc";
             System.out.println(fromSql);
             // 获取总记录数
