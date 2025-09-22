@@ -18,27 +18,48 @@ import java.util.List;
 public class AppshexiangtoubaojingController extends Controller {
     public void shexiangtoulist() {
         addCorsHeaders();
-//这个应该是给手机端返回摄像头列表 功能
+        // 接收参数
         String camerid = getPara("camerid", "");
-        int pageNum = Integer.parseInt(getPara("pageNum"));  // 接收pageNum
-        int pageSize = Integer.parseInt(getPara("pageSize"));  // 接收pageSize
-        int offset = (pageNum - 1) * pageSize;  // 计算offset
+        String fire = getPara("fire", ""); // 接收fire参数，默认为空
+        int pageNum = Integer.parseInt(getPara("pageNum"));
+        int pageSize = Integer.parseInt(getPara("pageSize"));
+        int offset = (pageNum - 1) * pageSize;
 
+        // 构建查询条件
+        StringBuilder whereClause = new StringBuilder();
+        whereClause.append("WHERE shexiangtouno LIKE '%").append(camerid).append("%'");
+
+        // 如果fire参数为10，则添加额外条件
+        if ("10".equals(fire)) {
+            whereClause.append(" AND shexiangtou.alarmmes LIKE '%fire%'");
+        }
+
+        // 构建SQL语句
+        String sql = "SELECT shexiangtou.*, basshexiangtouinfo.restaurantname, basshexiangtouinfo.restaurantid, " +
+                "basshexiangtouinfo.restaurantphone, basshexiangtouinfo.restaurantaddress " +
+                "FROM shexiangtou LEFT JOIN basshexiangtouinfo " +
+                "ON shexiangtou.shexiangtouno = basshexiangtouinfo.shexiangtoubianhao " +
+                whereClause.toString() +
+                " ORDER BY shexiangtou.id DESC LIMIT " + pageSize + " OFFSET " + offset;
+
+        // 执行查询
         List<Record> cameraNames = Db.use().find("SELECT DISTINCT shexiangtouno FROM shexiangtou");
-        List<Record> records = Db.use().find("SELECT shexiangtou.*, basshexiangtouinfo.restaurantname, basshexiangtouinfo.restaurantid, basshexiangtouinfo.restaurantphone, basshexiangtouinfo.restaurantaddress " +
-                "FROM shexiangtou LEFT JOIN basshexiangtouinfo ON shexiangtou.shexiangtouno = basshexiangtouinfo.shexiangtoubianhao WHERE shexiangtouno LIKE '%"+camerid+"%' order by shexiangtou.id desc LIMIT "+ pageSize + " OFFSET " + offset);
+        List<Record> records = Db.use().find(sql);
 
-        System.out.println("asdsdasdasda"+records);
+        System.out.println("查询结果：" + records);
 
+        // 构建返回JSON
         JSONObject json = new JSONObject();
-
         if (records != null) {
-            json.put("flag","200" );
-            json.put("shexiangtoulist",records );
+            // 构建总记录数查询SQL
+            String countSql = "SELECT COUNT(*) FROM shexiangtou " + whereClause.toString();
+
+            json.put("flag", "200");
+            json.put("shexiangtoulist", records);
             json.put("cameraNames", cameraNames);
-            json.put("total", Db.use().queryInt("SELECT COUNT(*) FROM shexiangtou WHERE shexiangtouno LIKE '%"+camerid+"%'"));  // 返回总记录数
+            json.put("total", Db.use().queryInt(countSql));
         } else {
-            json.put("flag","300" );
+            json.put("flag", "300");
         }
 
         renderJson(json);
