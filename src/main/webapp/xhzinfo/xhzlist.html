@@ -3,39 +3,38 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- 修复viewport语法错误 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>设备列表</title>
     <script src="../css/jquery-3.3.1.min.js"></script>
     <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css">
     <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
     <link rel="stylesheet" type="text/css" href="/css/lpg.css">
 
-    <style> <!-- 移除scoped属性（普通HTML不支持） -->
-    .container {
-        padding: 50px 20px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
+    <style>
+        .container {
+            padding: 50px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-    input {
-        padding: 15px;
-        font-size: 18px;
-        border: 2px solid #a3bffa;
-        border-radius: 10px;
-        width: 100%;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        transition: border-color 0.3s ease;
-    }
+        input {
+            padding: 15px;
+            font-size: 18px;
+            border: 2px solid #a3bffa;
+            border-radius: 10px;
+            width: 100%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: border-color 0.3s ease;
+        }
 
-    input:focus {
-        outline: none;
-        border-color: #4c87c9;
-    }
+        input:focus {
+            outline: none;
+            border-color: #4c87c9;
+        }
     </style>
 
     <style>
-        /* 设置 #pagediv 的样式 */
         #pagediv {
             background-color: #f0f0f0;
             color: black;
@@ -43,13 +42,11 @@
             margin-bottom: 15px;
         }
 
-        /* 设置表格样式 */
         table.list {
             width: 100%;
             border-collapse: collapse;
         }
 
-        /* 设置表格表头样式 */
         table.list th {
             background-color: #add8e6;
             color: black;
@@ -58,13 +55,11 @@
             border: 1px solid #ddd;
         }
 
-        /* 设置表格单元格样式 */
         table.list td {
             padding: 8px;
             border: 1px solid #ddd;
         }
 
-        /* 设置表格隔行颜色 */
         table.list tr:nth-child(even) {
             background-color: #f2f2f2;
         }
@@ -73,28 +68,23 @@
             background-color: #e0e0e0;
         }
 
-        /* 设置鼠标悬停时表格行的颜色 */
         table.list tr:hover {
             background-color: #d3d3d3;
         }
 
-        /* 设置新建链接样式 */
         #pagediv .add {
             color: black;
             margin-right: 15px;
         }
 
-        /* 设置输入框背景色为淡灰色 */
         #pagediv input[type="text"] {
             background-color: #f0f0f0;
         }
 
-        /* 设置 label 文字颜色为黑色 */
         #pagediv label {
             color: black;
         }
 
-        /* 操作按钮样式 */
         .operation-btn {
             margin-right: 10px;
             text-decoration: none;
@@ -104,29 +94,26 @@
 
 <body>
 <div id="pagediv">
-    <!-- 补全添加设备按钮 -->
     <a href="/xhzinfo/add" class="add operation-btn">添加设备</a>
 
-    <!-- 搜索表单 -->
     <form id="searchForm" action="/xhzinfo/xhzlist" method="post">
         <label>饭店名称：</label>
-        <select name="companyId" id="companySelect">
-            <option value="" #if(companyId == "") selected #end>全部公司</option>
+        <select name="restaurantId" id="companySelect">
+            <option value="" #if(restaurantId == "") selected #end>全部公司</option>
             #for(x : restaurants)
-            <option value="#(x.id)" #if(companyId == (x.id + "")) selected #end>#(x.name)</option>
+            <option value="#(x.id)" #if(restaurantId == (x.id + "")) selected #end>#(x.name)</option>
             #end
         </select>
 
         &nbsp;&nbsp;
-        <select name="alarm" id="alarmSelect">
-            <!-- 统一模板语法，使用#if替代${} -->
-            <option value="" #if(alarm == "") selected #end>请选择报警类型</option>
-            <option value="0" #if(alarm == "0") selected #end>无报警</option>
-            <option value="1" #if(alarm == "1") selected #end>操作间燃气报警</option>
-            <option value="2" #if(alarm == "2") selected #end>气瓶间燃气报警</option>
-            <option value="3" #if(alarm == "3") selected #end>摄像头监控报警</option>
-            <option value="4" #if(alarm == "4") selected #end>烟感报警</option>
-            <option value="5" #if(alarm == "5") selected #end>管道压力超压报警</option>
+        <select name="alarm" onchange="this.form.submit()" id="alarmSelect">
+            <option value="" #if(alarm == null || alarm == "") selected #end>请选择报警类型</option>
+            <option value="0" #if(alarm != null && alarm.toString() == "0") selected #end>无报警</option>
+            <option value="1" #if(alarm != null && alarm.toString() == "1") selected #end>操作间燃气报警</option>
+            <option value="2" #if(alarm != null && alarm.toString() == "2") selected #end>气瓶间燃气报警</option>
+            <option value="3" #if(alarm != null && alarm.toString() == "3") selected #end>摄像头监控报警</option>
+            <option value="4" #if(alarm != null && alarm.toString() == "4") selected #end>烟感报警</option>
+            <option value="5" #if(alarm != null && alarm.toString() == "5") selected #end>管道压力超压报警</option>
         </select>
 
         <button type="submit" value="查询" id="searchButton">查询</button>
@@ -166,7 +153,7 @@
     #for(x : recordlist.getList())
     <tr>
         <td>#(startIndex++)</td>
-        <td>#(x.iotId)</td> <!-- 修复变量名错误 iotld -> x.iotId -->
+        <td>#(x.iotId)</td>
         <td>#(x.productKey)</td>
         <td>#(x.devicename)</td>
         <td class="created-time">#(x.created_time)</td>
@@ -267,27 +254,28 @@
     </tbody>
 </table>
 
-<div class="pagination" style="color:#333;"> <!-- 修改分页颜色为深色，提高可读性 -->
-    #set(selectedCompanyId = "")
-    #if(companyname!= null && companyname!= "-1")
-    #set(selectedCompanyId = companyname)
+<div class="pagination" style="color:#333;">
+    #set(selectedRestaurantId = "")
+    #if(restaurantId!= null && restaurantId!= "")
+    #set(selectedRestaurantId = restaurantId)
     #end
-    #@paginate(recordlist.pageNumber, recordlist.totalPage, "/xhzinfo/xhzlist?companyId=" + selectedCompanyId + "&page=")
+    #set(selectedAlarm = "")
+    #if(alarm != null)
+    #set(selectedAlarm = alarm)
+    #end
+    #@paginate(recordlist.pageNumber, recordlist.totalPage, "/xhzinfo/xhzlist?restaurantId=" + selectedRestaurantId + "&alarm=" + selectedAlarm + "&page=")
 </div>
 
-<!-- 模态框结构（修正标签匹配问题） -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document"> <!-- 补充role属性 -->
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" id="myModalLabel">模态窗口标题</h4>
-                <!-- 补充关闭按钮，修复模态框结构 -->
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body" id="modalBody">
-                <!-- 表单内容将通过AJAX加载 -->
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
@@ -298,34 +286,30 @@
 </div>
 
 <script>
-    // 修复restaurants数组语法错误（最后一个元素后无逗号）
     var restaurants = [
         #for (x: restaurants)
     {
-        id: "#(x.id ? x.id : '')",  // 增加id属性，修复查找不到的问题
+        id: "#(x.id ? x.id : '')",
             xiaohezi: "#(x.xiaohezi ? x.xiaohezi : '')",
         name: "#(x.name ? x.name : '')"
-    }#if(x_has_next),#end  // 仅在非最后一个元素后添加逗号
+    }#if(x_has_next),#end
     #end
     ];
 
     function chooseName() {
         var selectName = document.getElementById("companySelect").value;
         console.log("companySelect: " + selectName);
-        // 查找选中的公司对象（现在能正确找到id）
         var selectedCompany = restaurants.find(function (r) {
             return r.id === selectName;
         });
     }
     document.getElementById("companySelect").addEventListener("change", chooseName);
 
-    // 搜索按钮点击事件
     $('#searchButton').click(function (e) {
         e.preventDefault();
         $('#searchForm').submit();
     });
 
-    // 重置按钮点击事件
     $(document).ready(function () {
         $('#resetButton').click(function (e) {
             e.preventDefault();
@@ -335,7 +319,6 @@
             $('#searchForm').submit();
         });
 
-        // 打开模态框事件
         $('.openModal').click(function (e) {
             e.preventDefault();
             var editUrl = $(this).data('edit-url');
@@ -352,7 +335,6 @@
         });
     });
 
-    // 时间戳转换函数（增加错误处理）
     function formatDate(timestamp) {
         if (isNaN(timestamp)) return '无效时间';
         var date = new Date(timestamp);
@@ -367,16 +349,13 @@
         return year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds;
     }
 
-    // 处理时间显示
     var createdTimeElements = document.querySelectorAll('.created-time');
     createdTimeElements.forEach(function(element) {
         var timestamp = parseInt(element.textContent);
         element.textContent = formatDate(timestamp);
     });
 
-    // RFID转换方法（增加容错处理）
     function convertRfid(rfidStr) {
-        // 处理空值和非字符串情况
         if (!rfidStr || typeof rfidStr !== 'string') {
             return '';
         }
@@ -409,7 +388,6 @@
         return hexArray.join('');
     }
 
-    // 页面加载后处理RFID数据
     window.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.rfid-data').forEach(td => {
             const originalData = td.dataset.rfid;
@@ -417,14 +395,18 @@
         });
     });
 
-    // 确认删除函数
     function confirmDelete(id) {
         if (confirm("确定要删除该设备记录吗？此操作不可恢复！")) {
-            window.location.href = "/xhzinfo/delete?id=" + id;
+            // 删除时携带当前筛选条件，保持分页状态
+            const restaurantId = document.getElementById('companySelect').value;
+            const alarm = document.getElementById('alarmSelect').value;
+            let url = "/xhzinfo/delete?id=" + id;
+            if (restaurantId) url += "&restaurantId=" + restaurantId;
+            if (alarm) url += "&alarm=" + alarm;
+            window.location.href = url;
         }
     }
 
-    // 保存按钮事件（移到外部，避免重复定义）
     document.getElementById('saveButton').addEventListener('click', function () {
         const form = document.getElementById('myForm');
         if (form) {

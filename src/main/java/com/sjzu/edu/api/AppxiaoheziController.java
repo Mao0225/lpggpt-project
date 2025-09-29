@@ -245,7 +245,7 @@ public class AppxiaoheziController extends Controller {
         System.out.println("telephone " + telephone);
         System.out.println("password " + password);
         // 根据前端传回来的账号和密码在user表中查找对应的stationid
-       Bangdingren bangdingren = dao.findFirst("SELECT * FROM bangdingren WHERE telphone =? AND psw =?", telephone, password);
+        Bangdingren bangdingren = dao.findFirst("SELECT * FROM bangdingren WHERE telphone =? AND psw =?", telephone, password);
         JSONObject json = new JSONObject();
         if (bangdingren != null) {
             setSessionAttr("telephone", telephone);
@@ -338,7 +338,7 @@ public class AppxiaoheziController extends Controller {
                     .set("weidu", weidu)
                     .set("address", address)
                     .set("xiaohezi_number", xiaoheziNumber)
-                     .set("uuid", uuid)
+                    .set("uuid", uuid)
                     .set("telephone", telephone);
 
 

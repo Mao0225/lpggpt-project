@@ -19,13 +19,30 @@ public class XhzinfoController  extends Controller {
     public void xhzlist(){
         int pageNumber=getParaToInt("page",1);
         int pageSize=getParaToInt("size",10);
-        String xiaohezi=getPara("companyId");
+        // 将接收的参数名从companyId改为restaurantId，与前端保持一致
+        String restaurantId=getPara("restaurantId");
         Integer alarm = getParaToInt("alarm");
         System.out.println("alarm: "+alarm);
-        System.out.println("xiaohezi: "+xiaohezi);
-        setAttr("xiaohezi",xiaohezi);
+        System.out.println("restaurantId: "+restaurantId);
+
+        // 根据restaurantId查询对应的xiaohezi
+        String xiaoheziid = null;
+        if (restaurantId != null && !restaurantId.isEmpty()) {
+            // 查询restaurant表中对应id的记录的xiaohezi字段
+            Restaurant restaurantObj = restaurant.findById(restaurantId);
+            if (restaurantObj != null) {
+                xiaoheziid = restaurantObj.getXiaohezi();
+                System.out.println("查询到的xiaoheziid: " + xiaoheziid);
+            } else {
+                System.out.println("未找到id为" + restaurantId + "的restaurant记录");
+            }
+        }
+
+        // 传递到页面的参数名保持restaurantId（前端显示用）
+        setAttr("restaurantId",restaurantId);
         setAttr("alarm",alarm);
-        Page<Record> recordPage = service.paginate(pageNumber, pageSize,xiaohezi,alarm);
+        // 调用service时使用查询到的xiaoheziid
+        Page<Record> recordPage = service.paginate(pageNumber, pageSize, xiaoheziid, alarm);
         List<Restaurant> restaurants = restaurant.find("SELECT * FROM restaurant");
         setAttr("recordlist",recordPage);
         setAttr("restaurants",restaurants);
