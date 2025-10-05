@@ -103,6 +103,7 @@ public class DemoConfig extends JFinalConfig {
 		me.add("/appbillinfo",AppbillInforController.class);
 		me.add("/appversion", AppVersionController.class);
 		me.add("/appxhzinfo",AppXhzinfoController.class);
+		me.add("/appplcxinhao",AppplcxinhaoController.class);
 
 
 		//手机接口结束  AppbangdingController
@@ -161,6 +162,8 @@ public class DemoConfig extends JFinalConfig {
 		me.add("/oorderinfo",OorderInfoController.class);
 		me.add("/appmanage",AppManageController.class);
 		me.add("/ipaddress",IpaddressController.class);
+		me.add("/plcxinhao",PlcxinhaoController.class); //plc信号显示，显示从树莓派查出的数据
+		me.add("/plckongzhi",PlckongzhiController.class);//plc控制信号管理
 		//测试连接Github
 	}
 	

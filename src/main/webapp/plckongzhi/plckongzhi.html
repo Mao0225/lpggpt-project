@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PLC控制列表</title>
+  <script src="../css/jquery-3.3.1.min.js"></script>
+  <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css">
+  <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="/css/lpg.css">
+
+  <style>
+    .container {
+      padding: 50px 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    input {
+      padding: 15px;
+      font-size: 18px;
+      border: 2px solid #a3bffa;
+      border-radius: 10px;
+      width: 100%;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: border-color 0.3s ease;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #4c87c9;
+    }
+  </style>
+
+  <style>
+    #pagediv {
+      background-color: #f0f0f0;
+      color: black;
+      padding: 10px;
+      margin-bottom: 15px;
+    }
+
+    table.list {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    table.list th {
+      background-color: #add8e6;
+      color: black;
+      padding: 8px;
+      text-align: left;
+      border: 1px solid #ddd;
+    }
+
+    table.list td {
+      padding: 8px;
+      border: 1px solid #ddd;
+    }
+
+    table.list tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    table.list tr:nth-child(odd) {
+      background-color: #e0e0e0;
+    }
+
+    table.list tr:hover {
+      background-color: #d3d3d3;
+    }
+
+    #pagediv .add {
+      color: black;
+      margin-right: 15px;
+    }
+
+    #pagediv input[type="text"] {
+      background-color: #f0f0f0;
+    }
+
+    #pagediv label {
+      color: black;
+    }
+
+    .operation-btn {
+      margin-right: 10px;
+      text-decoration: none;
+    }
+  </style>
+</head>
+
+<body>
+<div id="pagediv">
+  <a href="/plckongzhi/add" class="add operation-btn">添加PLC控制记录</a>
+
+  <form id="searchForm" action="/plckongzhi" method="post">
+    <label>PLC编号：</label>
+    <input type="text" name="plcno" value="#(plcno ?? '')" placeholder="请输入PLC编号查询">
+    <button type="submit" value="查询" id="searchButton">查询</button>
+    <button type="button" value="重置" id="resetButton">重置</button>
+  </form>
+</div>
+
+<table class="list">
+  <tbody>
+  <tr>
+    <th>序号</th>
+    <th>切断阀控制</th>
+    <th>风机控制</th>
+    <th>PLC编号</th>
+    <th>饭店</th>
+    <th>标志位</th>
+    <th>类型</th>
+    <th>备注</th>
+    <th>操作</th>
+  </tr>
+  #set(startIndex = (plcList.pageNumber - 1) * plcList.pageSize + 1)
+  #for(x : plcList.getList())
+  <tr>
+    <td>#(startIndex++)</td>
+    <td>
+      #if(x.qieduanfakongzhi == "0")
+      关闭
+      #else if(x.qieduanfakongzhi == "10")
+      打开
+      #else
+      #(x.qieduanfakongzhi ?? '未知')
+      #end
+    </td>
+    <td>
+      #if(x.fengjikongzhi == "0")
+      关闭
+      #else if(x.fengjikongzhi == "10")
+      打开
+      #else
+      #(x.fengjikongzhi ?? '未知')
+      #end
+    </td>
+    <td>#(x.plcno ?? '')</td>
+    <td>#(x.fandian ?? '')</td>
+    <td>#(x.flag ?? '')</td>
+    <td>#(x.type ?? '')</td>
+    <td>#(x.memo ?? '')</td>
+    <td>
+      <a href="/plckongzhi/edit?id=#(x.id)" class="edit operation-btn">修改</a>
+      <a href="#" class="delete operation-btn" onclick="confirmDelete('#(x.id)')">删除</a>
+    </td>
+  </tr>
+  #end
+  </tbody>
+</table>
+
+<div class="pagination" style="color:#333;">
+  #set(selectedPlcno = "")
+  #if(plcno != null && plcno != "")
+  #set(selectedPlcno = plcno)
+  #end
+  #@paginate(plcList.pageNumber, plcList.totalPage, "/plckongzhi?plcno=" + selectedPlcno + "&page=")
+</div>
+
+<script>
+  $(document).ready(function () {
+    $('#resetButton').click(function (e) {
+      e.preventDefault();
+      $('#searchForm input[type="text"]').val('');
+      $('#searchForm').submit();
+    });
+
+    $('#searchButton').click(function (e) {
+      e.preventDefault();
+      $('#searchForm').submit();
+    });
+  });
+
+  function confirmDelete(id) {
+    if (confirm("确定要删除该记录吗？此操作不可恢复！")) {
+      // 携带当前查询参数进行删除
+      const plcno = document.querySelector('input[name="plcno"]').value;
+      let url = "/plckongzhi/delete?id=" + id;
+      if (plcno) {
+        url += "&plcno=" + encodeURIComponent(plcno);
+      }
+      window.location.href = url;
+    }
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PLC信号列表</title>
+  <script src="../css/jquery-3.3.1.min.js"></script>
+  <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css">
+  <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="/css/lpg.css">
+
+  <style>
+    /* 重置页面默认边距 */
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #pagediv {
+      background-color: #f0f0f0;
+      color: black;
+      padding: 10px;
+      width: 100%;
+      box-sizing: border-box; /* 确保内边距不会增加总宽度 */
+    }
+
+    .container {
+      padding: 0 20px; /* 仅保留左右内边距，移除上下内边距的影响 */
+      width: 100%;
+      max-width: none; /* 取消最大宽度限制 */
+      box-sizing: border-box;
+    }
+
+    .table-responsive {
+      width: 100%;
+      overflow-x: auto;
+      padding: 0;
+      margin: 0;
+    }
+
+    table.list {
+      width: 100%;
+      min-width: 1000px; /* 确保表格有足够宽度展示内容 */
+      border-collapse: collapse;
+      margin: 0;
+    }
+
+    table.list th {
+      background-color: #add8e6;
+      color: black;
+      padding: 8px;
+      text-align: left;
+      border: 1px solid #ddd;
+      /* 平均分配列宽 */
+      width: calc(100% / 13); /* 13列，平均分配宽度 */
+    }
+
+    table.list td {
+      padding: 8px;
+      border: 1px solid #ddd;
+      word-wrap: break-word; /* 内容过长时自动换行 */
+    }
+
+    table.list tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    table.list tr:nth-child(odd) {
+      background-color: #e0e0e0;
+    }
+
+    table.list tr:hover {
+      background-color: #d3d3d3;
+    }
+
+    #pagediv .add {
+      color: black;
+    }
+
+    #searchForm input[type="text"] {
+      background-color: #f0f0f0;
+    }
+
+    #pagediv label {
+      color: black;
+    }
+
+    .hint-text {
+      color: #666;
+      font-size: 0.8em;
+      margin-left: 10px;
+    }
+
+    .pagination {
+      margin: 20px 0;
+      text-align: center;
+      color: #333;
+    }
+
+    .operation-btn {
+      margin: 0 5px;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div id="pagediv">
+    <form id="searchForm" action="/plcxinhao/list" method="get">
+      <div class="form-group">
+        <label for="plcno">PLC编号：</label>
+        <input type="text" id="plcno" name="plcno"
+               value="#(plcno ?? '')" placeholder="请输入PLC编号查询">
+        <button type="submit" class="btn btn-primary">查询</button>
+        <button type="button" class="btn btn-default" id="resetBtn">重置</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="table-responsive">
+    <table class="list">
+      <thead>
+      <tr>
+        <th>序号</th>
+        <th>PLC编号</th>
+        <th>饭店名称</th>
+        <th>气瓶间报警</th>
+        <th>厨房泄露报警</th>
+        <th>烟感报警</th>
+        <th>切断阀状态</th>
+        <th>风机状态</th>
+        <th>通道1状态</th>
+        <th>通道2状态</th>
+        <th>通道3状态</th>
+        <th>通道4状态</th>
+        <th>RFID标签</th>
+        <th>操作</th>
+      </tr>
+      </thead>
+      <tbody>
+      #set(startIndex = (plcList.pageNumber - 1) * plcList.pageSize + 1)
+      #for(plc : plcList.getList())
+      <tr>
+        <td>#(startIndex++)</td>
+        <td>#(plc.plcno ?? '')</td>
+        <td>#(plc.restaurant_name ?? '')</td>
+        <td>
+          #if(plc.qipingjianbaojing == "0") 正常
+          #else if(plc.qipingjianbaojing == "10") <span style="color:red">报警</span>
+          #else #(plc.qipingjianbaojing ?? '')
+          #end
+        </td>
+        <td>
+          #if(plc.chufangbaojing == "0") 正常
+          #else if(plc.chufangbaojing == "10") <span style="color:red">报警</span>
+          #else #(plc.chufangbaojing ?? '')
+          #end
+        </td>
+        <td>
+          #if(plc.yanganbaojing == "0") 正常
+          #else if(plc.yanganbaojing == "10") <span style="color:red">报警</span>
+          #else #(plc.yanganbaojing ?? '')
+          #end
+        </td>
+        <td>
+          #if(plc.qieduanfa == "0") 关闭
+          #else if(plc.qieduanfa == "10") 打开
+          #else #(plc.qieduanfa ?? '')
+          #end
+        </td>
+        <td>
+          #if(plc.fengji == "0") 关闭
+          #else if(plc.fengji == "10") 打开
+          #else #(plc.fengji ?? '')
+          #end
+        </td>
+        <td>
+          #if(plc.tongdaoone == "0") 关闭
+          #else if(plc.tongdaoone == "10") 打开
+          #else #(plc.tongdaoone ?? '')
+          #end
+        </td>
+        <td>
+          #if(plc.tongdaotwo == "0") 关闭
+          #else if(plc.tongdaotwo == "10") 打开
+          #else #(plc.tongdaotwo ?? '')
+          #end
+        </td>
+        <td>
+          #if(plc.tongdaothree == "0") 关闭
+          #else if(plc.tongdaothree == "10") 打开
+          #else #(plc.tongdaothree ?? '')
+          #end
+        </td>
+        <td>
+          #if(plc.tongdaofour == "0") 关闭
+          #else if(plc.tongdaofour == "10") 打开
+          #else #(plc.tongdaofour ?? '')
+          #end
+        </td>
+        <td>#(plc.rfidno ?? '')</td>
+        <td>
+          <a href="/plcxinhao/detail?id=#(plc.id)" class="operation-btn">查看</a>
+          <a href="javascript:confirmDelete(#(plc.id))" class="operation-btn" style="color:red">删除</a>
+        </td>
+      </tr>
+      #end
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 分页控件 -->
+  <div class="pagination">
+    #set(currentPlcno = plcno ?? '')
+    #@paginate(plcList.pageNumber, plcList.totalPage, "/plcxinhao/list?plcno=" + currentPlcno + "&page=")
+  </div>
+</div>
+
+<script>
+  // 重置查询条件
+  $('#resetBtn').click(function() {
+    $('#plcno').val('');
+    $('#searchForm').submit();
+  });
+
+  // 删除确认
+  function confirmDelete(id) {
+    if (confirm("确定要删除这条记录吗？此操作不可恢复！")) {
+      const plcno = $('#plcno').val();
+      let url = "/plcxinhao/delete?id=" + id;
+      if (plcno) {
+        url += "&plcno=" + encodeURIComponent(plcno);
+      }
+      window.location.href = url;
+    }
+  }
+</script>
+</body>
+</html>

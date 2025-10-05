@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>编辑PLC控制记录</title>
+  <script src="../css/jquery-3.3.1.min.js"></script>
+  <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css">
+  <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="/css/lpg.css">
+</head>
+
+<body>
+<div class="container">
+  <div class="col-md-8">
+    <form action="/plckongzhi/update" method="post" id="myForm">
+      <input type="hidden" name="plc.id" value="#(plc.id)">
+      <h3>编辑PLC控制记录</h3>
+
+      <div class="form-group">
+        <label for="plc.qieduanfakongzhi">切断阀控制：</label>
+        <select class="form-control" name="plc.qieduanfakongzhi" id="qieduanfakongzhi">
+          <option value="0" #if(plc.qieduanfakongzhi == "0") selected #end>关闭</option>
+          <option value="10" #if(plc.qieduanfakongzhi == "10") selected #end>打开</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="plc.fengjikongzhi">风机控制：</label>
+        <select class="form-control" name="plc.fengjikongzhi" id="fengjikongzhi">
+          <option value="0" #if(plc.fengjikongzhi == "0") selected #end>关闭</option>
+          <option value="10" #if(plc.fengjikongzhi == "10") selected #end>打开</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="plc.plcno">PLC编号：</label>
+        <input type="text" class="form-control" name="plc.plcno" id="plcno" value="#(plc.plcno)" required>
+      </div>
+      <div class="form-group">
+        <label for="plc.fandian">饭店：</label>
+        <input type="text" class="form-control" name="plc.plcno" id="plcno" value="#(plc.plcno)" required>
+      </div>
+      <div class="form-group">
+        <label for="plc.flag">标志位：</label>
+        <input type="number" class="form-control" name="plc.flag" id="flag" value="#(plc.flag ?? '')">
+      </div>
+
+      <div class="form-group">
+        <label for="plc.type">类型：</label>
+        <input type="number" class="form-control" name="plc.type" id="type" value="#(plc.type ?? '')">
+      </div>
+
+      <div class="form-group">
+        <label for="plc.memo">备注：</label>
+        <textarea class="form-control" name="plc.memo" id="memo" rows="3">#(plc.memo ?? '')</textarea>
+      </div>
+
+      <button type="submit" class="btn btn-primary">更新</button>
+      <a href="/plckongzhi" class="btn btn-default">返回</a>
+    </form>
+  </div>
+</div>
+</body>
+</html>
