@@ -7,45 +7,46 @@ import com.sjzu.edu.common.model.GasStation;
 import com.sjzu.edu.common.model.IotSyncRdsRecordsV3;
 import com.sjzu.edu.common.model.Restaurant;
 
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 
 public class XhzinfoController  extends Controller {
     XhzinfoService service = new XhzinfoService();
     private Restaurant restaurant = new Restaurant().dao();
-    public void xhzlist(){
-        int pageNumber=getParaToInt("page",1);
-        int pageSize=getParaToInt("size",10);
-        // 将接收的参数名从companyId改为restaurantId，与前端保持一致
-        String restaurantId=getPara("restaurantId");
+    public void xhzlist() {
+        int pageNumber = getParaToInt("page", 1);
+        int pageSize = getParaToInt("size", 10);
+        String restaurantId = getPara("restaurantId"); // 前端参数名保持一致
         Integer alarm = getParaToInt("alarm");
-        System.out.println("alarm: "+alarm);
-        System.out.println("restaurantId: "+restaurantId);
 
-        // 根据restaurantId查询对应的xiaohezi
+        System.out.println("alarm: " + alarm);
+        System.out.println("restaurantId: " + restaurantId);
+
+        // 根据restaurantId查询关联的xiaoheziid
         String xiaoheziid = null;
         if (restaurantId != null && !restaurantId.isEmpty()) {
-            // 查询restaurant表中对应id的记录的xiaohezi字段
             Restaurant restaurantObj = restaurant.findById(restaurantId);
             if (restaurantObj != null) {
                 xiaoheziid = restaurantObj.getXiaohezi();
                 System.out.println("查询到的xiaoheziid: " + xiaoheziid);
             } else {
-                System.out.println("未找到id为" + restaurantId + "的restaurant记录");
+                System.out.println("未找到id为" + restaurantId + "的餐厅记录");
             }
         }
 
-        // 传递到页面的参数名保持restaurantId（前端显示用）
-        setAttr("restaurantId",restaurantId);
-        setAttr("alarm",alarm);
-        // 调用service时使用查询到的xiaoheziid
+        // 查询分页数据（Service层已完成时间转换）
         Page<Record> recordPage = service.paginate(pageNumber, pageSize, xiaoheziid, alarm);
-        List<Restaurant> restaurants = restaurant.find("SELECT * FROM restaurant");
-        setAttr("recordlist",recordPage);
-        setAttr("restaurants",restaurants);
+
+        // 传递参数到页面（直接使用Service处理后的结果）
+        setAttr("restaurantId", restaurantId);
+        setAttr("alarm", alarm);
+        setAttr("recordlist", recordPage); // 包含Service转换后的formatted_created_time
+        setAttr("restaurants", restaurant.find("SELECT * FROM restaurant"));
         render("xhzlist.html");
     }
     public String convertTimestamp(String timestampStr) {
