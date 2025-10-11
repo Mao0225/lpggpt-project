@@ -42,6 +42,8 @@ public class APPdataController extends Controller {
         put("conduit", "louguan_video");        // 气瓶(供气合同)对应louguan_video
     }};
 
+
+
     public void upload() {
         JSONObject result = new JSONObject();
         long requestStartTime = System.currentTimeMillis();
@@ -76,32 +78,20 @@ public class APPdataController extends Controller {
             List<UploadFile> allFiles = getFiles(baseUploadDir, 100 * 1024 * 1024);
             System.out.println("[" + new Date() + "] 文件接收完成，共接收文件数: " + (allFiles != null ? allFiles.size() : 0));
 
-            // 解析请求参数
+            // 解析请求参数（移除totalFiles，因为单文件上传）
             String worker = getPara("worker");
             String uuid = getPara("uuid");
             String telephone = getPara("telephone");
-            int totalFiles = getParaToInt("totalFiles", 0);
             String fileType = getPara("fileType"); // 获取文件类型（image或video）
             String type = getPara("type"); // 获取媒体类型（doorplate等）
-            String fileId = getPara("fileId"); // 文件唯一标识，用于断点续传
 
             // 打印参数详情
             System.out.println("[" + new Date() + "] 解析请求参数:");
             System.out.println("  worker: " + worker);
             System.out.println("  uuid: " + uuid);
             System.out.println("  telephone: " + telephone);
-            System.out.println("  totalFiles: " + totalFiles);
             System.out.println("  fileType: " + fileType);
             System.out.println("  type: " + type);
-            System.out.println("  fileId: " + fileId);
-
-            // 验证文件ID
-            if (fileId == null || fileId.trim().isEmpty()) {
-                result.put("code", 400);
-                result.put("msg", "文件ID不能为空");
-                renderJson(result);
-                return;
-            }
 
             // 参数验证
             if (worker == null || worker.trim().isEmpty()) {
@@ -118,13 +108,6 @@ public class APPdataController extends Controller {
                 return;
             }
 
-            if (totalFiles <= 0) {
-                result.put("code", 400);
-                result.put("msg", "总文件数必须大于0");
-                renderJson(result);
-                return;
-            }
-
             if (type == null || type.trim().isEmpty()) {
                 result.put("code", 400);
                 result.put("msg", "媒体类型不能为空");
@@ -132,165 +115,112 @@ public class APPdataController extends Controller {
                 return;
             }
 
-            // 验证是否有文件需要上传
+            // 验证是否有文件需要上传（假设单文件，检查size==1）
             if (allFiles == null || allFiles.isEmpty()) {
                 result.put("code", 400);
                 result.put("msg", "未检测到上传的文件");
                 renderJson(result);
                 return;
             }
-
-            // 打印上传文件详情
-            for (int i = 0; i < allFiles.size(); i++) {
-                UploadFile uf = allFiles.get(i);
-                System.out.println("[" + new Date() + "] 上传文件 " + (i + 1) + ":");
-                System.out.println("  原始文件名: " + uf.getFileName());
-                System.out.println("  文件大小: " + uf.getFile().length() + " bytes");
-                System.out.println("  临时文件路径: " + uf.getFile().getAbsolutePath());
-                System.out.println("  内容类型: " + uf.getContentType());
-            }
-
-            // 初始化记录
-            Record record = tempDataMap.computeIfAbsent(uuid, k -> {
-                Record newRecord = new Record();
-                newRecord.set("worker", worker);
-                newRecord.set("uuid", uuid);
-                newRecord.set("telephone", telephone);
-                newRecord.set("create_time", new Date()); // 添加创建时间
-                System.out.println("[" + new Date() + "] 为UUID:" + uuid + " 初始化临时记录");
-                return newRecord;
-            });
-
-            // 初始化预期文件数、原子计数器和已上传文件ID集合
-            expectedFileCountMap.putIfAbsent(uuid, totalFiles);
-            fileCountMap.putIfAbsent(uuid, new AtomicInteger(0));
-            uploadedFileIdsMap.putIfAbsent(uuid, ConcurrentHashMap.newKeySet());
-            lastUpdateTimeMap.put(uuid, System.currentTimeMillis());
-
-            // 检查文件是否已上传，实现断点续传
-            Set<String> uploadedFileIds = uploadedFileIdsMap.get(uuid);
-            if (uploadedFileIds.contains(fileId)) {
-                System.out.println("[" + new Date() + "] 文件已上传，跳过处理 - UUID:" + uuid + ", 文件ID:" + fileId);
-                result.put("code", 202);
-                result.put("msg", "文件已上传");
-                result.put("uploadedCount", fileCountMap.get(uuid).get());
-                result.put("expectedCount", totalFiles);
+            if (allFiles.size() > 1) {
+                result.put("code", 400);
+                result.put("msg", "本次上传仅支持单个文件");
                 renderJson(result);
                 return;
             }
 
-            // 处理上传文件
-            Map<String, List<String>> filePaths = new HashMap<>();
-            for (UploadFile uf : allFiles) {
-                String dbField = FIELD_MAPPING.get(type);
-                if (dbField == null) {
-                    String errorMsg = "未知的媒体类型: " + type + "，可用类型: " + FIELD_MAPPING.keySet();
-                    System.err.println("[" + new Date() + "] " + errorMsg);
-                    result.put("code", 400);
-                    result.put("msg", errorMsg);
-                    renderJson(result);
-                    return;
-                }
-                System.out.println("[" + new Date() + "] 媒体类型映射 - type:" + type + " -> dbField:" + dbField);
+            // 打印上传文件详情（单文件）
+            UploadFile uf = allFiles.get(0);
+            System.out.println("[" + new Date() + "] 上传文件:");
+            System.out.println("  原始文件名: " + uf.getFileName());
+            System.out.println("  文件大小: " + uf.getFile().length() + " bytes");
+            System.out.println("  临时文件路径: " + uf.getFile().getAbsolutePath());
+            System.out.println("  内容类型: " + uf.getContentType());
 
-                // 根据文件类型保存到不同目录
-                String filePath = saveUploadFile(uf, "video".equals(fileType), webRootPath);
-                filePaths.computeIfAbsent(dbField, k -> new ArrayList<>()).add(filePath);
-                System.out.println("[" + new Date() + "] 文件保存路径: " + filePath);
+            // 处理上传文件（单文件）
+            String dbField = FIELD_MAPPING.get(type);
+            if (dbField == null) {
+                String errorMsg = "未知的媒体类型: " + type + "，可用类型: " + FIELD_MAPPING.keySet();
+                System.err.println("[" + new Date() + "] " + errorMsg);
+                result.put("code", 400);
+                result.put("msg", errorMsg);
+                renderJson(result);
+                return;
             }
+            System.out.println("[" + new Date() + "] 媒体类型映射 - type:" + type + " -> dbField:" + dbField);
 
-            // 更新记录中的文件路径
-            filePaths.forEach((dbField, paths) -> {
-                String existingPaths = record.getStr(dbField);
-                String newPaths = existingPaths == null ?
-                        String.join(",", paths) :
-                        existingPaths + "," + String.join(",", paths);
-                record.set(dbField, newPaths);
-                System.out.println("[" + new Date() + "] 更新字段 " + dbField + " 的文件路径: " + newPaths);
-            });
+            // 根据文件类型保存到不同目录
+            String filePath = saveUploadFile(uf, "video".equals(fileType), webRootPath);
+            System.out.println("[" + new Date() + "] 文件保存路径: " + filePath);
 
-            // 标记文件已上传
-            uploadedFileIds.add(fileId);
-            System.out.println("[" + new Date() + "] 标记文件为已上传 - fileId:" + fileId + ", 当前已上传文件ID列表: " + uploadedFileIds);
-
-            // 原子方式更新计数
-            AtomicInteger counter = fileCountMap.get(uuid);
-            int currentFileCount = counter.addAndGet(allFiles.size());
-            System.out.println("[" + new Date() + "] UUID:" + uuid + " 累计上传进度: " + currentFileCount + "/" + totalFiles);
-
-            // 检查是否所有文件都已上传
-            boolean allFilesUploaded = currentFileCount >= totalFiles;
-            System.out.println("[" + new Date() + "] UUID:" + uuid + " 是否完成所有文件上传: " + allFilesUploaded);
-
-            if (allFilesUploaded) {
-                // 表存在性测试
-                try {
-                    Db.query("SELECT 1 FROM bse_data LIMIT 1");
-                    System.out.println("[" + new Date() + "] 表 bse_data 存在，开始准备保存数据");
-                } catch (Exception e) {
-                    String errorMsg = "表 bse_data 访问失败: " + e.getMessage();
-                    System.err.println("[" + new Date() + "] " + errorMsg);
-                    result.put("code", 500);
-                    result.put("msg", "数据库表访问失败");
-                    renderJson(result);
-                    return;
-                }
-
-                // 保存到数据库
-                System.out.println("[" + new Date() + "] 开始保存数据到 bse_data 表 - UUID:" + uuid);
-                boolean success = Db.save(TABLE_NAME, record);
-                System.out.println("[" + new Date() + "] UUID:" + uuid + " 数据保存操作返回结果: " + success);
-
-                // 保存后查询验证并打印详细信息
-                Record savedRecord = null;
-                if (success) {
-                    // 通过uuid查询刚保存的记录（假设uuid是唯一键）
-                    savedRecord = Db.findFirst("SELECT * FROM " + TABLE_NAME + " WHERE uuid = ?", uuid);
-
-                    // 重点打印保存后的数据
-                    if (savedRecord != null) {
-                        System.out.println("[" + new Date() + "] === 保存到 bse_data 表的数据是： ===");
-                        System.out.println("ID: " + savedRecord.get("id"));
-                        System.out.println("UUID: " + savedRecord.getStr("uuid"));
-                        System.out.println("操作人: " + savedRecord.getStr("worker"));
-                        System.out.println("联系电话: " + savedRecord.getStr("telephone"));
-                        System.out.println("门牌照路径: " + savedRecord.getStr("door_video"));
-                        System.out.println("气管路径: " + savedRecord.getStr("qiguan_video"));
-                        System.out.println("连接管路径: " + savedRecord.getStr("daoguan_video"));
-                        System.out.println("供气合同路径: " + savedRecord.getStr("louguan_video"));
-                        System.out.println("创建时间: " + savedRecord.getDate("create_time"));
-                        System.out.println("=================================================");
-                    } else {
-                        System.err.println("[" + new Date() + "] 数据保存返回成功，但查询不到记录 - UUID: " + uuid);
-                        success = false; // 强制标记为失败
-                    }
-                }
-
-                // 清理临时数据
-                tempDataMap.remove(uuid);
-                fileCountMap.remove(uuid);
-                expectedFileCountMap.remove(uuid);
-                lastUpdateTimeMap.remove(uuid);
-                uploadedFileIdsMap.remove(uuid);
-                System.out.println("[" + new Date() + "] UUID:" + uuid + " 临时数据清理完成");
-
-                if (success && savedRecord != null) {
-                    result.put("code", 200);
-                    result.put("msg", "所有数据保存成功");
-                    result.put("uploadedCount", currentFileCount);
-                    result.put("expectedCount", totalFiles);
-                    result.put("savedRecordId", savedRecord.get("id")); // 返回保存的记录ID
-                } else {
-                    result.put("code", 500);
-                    result.put("msg", "数据库保存失败或验证未通过");
-                }
+            // 查询数据库中是否已有该UUID的记录
+            Record existingRecord = Db.findFirst("SELECT * FROM " + TABLE_NAME + " WHERE uuid = ?", uuid);
+            Record recordToSave;
+            if (existingRecord != null) {
+                // 记录存在，加载并追加文件路径
+                System.out.println("[" + new Date() + "] UUID:" + uuid + " 记录已存在，开始更新文件路径");
+                recordToSave = existingRecord;
             } else {
-                result.put("code", 201);
-                result.put("msg", "部分文件上传成功");
-                result.put("uploadedCount", currentFileCount);
-                result.put("expectedCount", totalFiles);
-                result.put("uploadedFileIds", new ArrayList<>(uploadedFileIds));
+                // 记录不存在，创建新记录
+                System.out.println("[" + new Date() + "] UUID:" + uuid + " 记录不存在，创建新记录");
+                recordToSave = new Record();
+                recordToSave.set("worker", worker);
+                recordToSave.set("uuid", uuid);
+                recordToSave.set("telephone", telephone);
+                recordToSave.set("create_time", new Date());
             }
+
+            // 更新记录中的文件路径（追加本次路径）
+            String existingPaths = recordToSave.getStr(dbField);
+            String newPaths = existingPaths == null ?
+                    filePath :
+                    existingPaths + "," + filePath;
+            recordToSave.set(dbField, newPaths);
+            System.out.println("[" + new Date() + "] 更新字段 " + dbField + " 的文件路径: " + newPaths);
+
+            // 保存或更新到数据库
+            boolean success;
+            if (existingRecord != null) {
+                // 更新（假设id是主键）
+                success = Db.update(TABLE_NAME, "id", recordToSave);
+                System.out.println("[" + new Date() + "] UUID:" + uuid + " 记录更新操作返回结果: " + success);
+            } else {
+                // 插入
+                success = Db.save(TABLE_NAME, recordToSave);
+                System.out.println("[" + new Date() + "] UUID:" + uuid + " 记录插入操作返回结果: " + success);
+            }
+
+            // 保存/更新后查询验证并打印详细信息
+            Record savedRecord = null;
+            if (success) {
+                savedRecord = Db.findFirst("SELECT * FROM " + TABLE_NAME + " WHERE uuid = ?", uuid);
+                if (savedRecord != null) {
+                    System.out.println("[" + new Date() + "] === 保存/更新到 bse_data 表的数据是： ===");
+                    System.out.println("ID: " + savedRecord.get("id"));
+                    System.out.println("UUID: " + savedRecord.getStr("uuid"));
+                    System.out.println("操作人: " + savedRecord.getStr("worker"));
+                    System.out.println("联系电话: " + savedRecord.getStr("telephone"));
+                    System.out.println("门牌照路径: " + savedRecord.getStr("door_video"));
+                    System.out.println("气管路径: " + savedRecord.getStr("qiguan_video"));
+                    System.out.println("连接管路径: " + savedRecord.getStr("daoguan_video"));
+                    System.out.println("供气合同路径: " + savedRecord.getStr("louguan_video"));
+                    System.out.println("创建时间: " + savedRecord.getDate("create_time"));
+                    System.out.println("=================================================");
+                } else {
+                    System.err.println("[" + new Date() + "] 保存/更新返回成功，但查询不到记录 - UUID: " + uuid);
+                    success = false; // 强制标记为失败
+                }
+            }
+
+            if (success && savedRecord != null) {
+                result.put("code", 200);
+                result.put("msg", existingRecord != null ? "文件上传并更新记录成功" : "文件上传并新增记录成功");
+                result.put("savedRecordId", savedRecord.get("id")); // 返回保存/更新的记录ID
+            } else {
+                result.put("code", 500);
+                result.put("msg", "数据库保存/更新失败或验证未通过");
+            }
+
         } catch (Exception e) {
             String errorMsg = "服务器处理异常: " + e.getMessage();
             System.err.println("[" + new Date() + "] " + errorMsg);
@@ -303,6 +233,9 @@ public class APPdataController extends Controller {
         System.out.println("[" + new Date() + "] === 文件上传请求处理完成，耗时: " + (requestEndTime - requestStartTime) + "ms ===");
         renderJson(result);
     }
+
+
+
 
     // 检查上传状态接口（也增加详细日志）
     public void checkUploadStatus() {
