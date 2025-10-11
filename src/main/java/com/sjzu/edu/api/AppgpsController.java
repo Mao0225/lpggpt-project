@@ -99,36 +99,63 @@ public class AppgpsController extends Controller {
 		renderJson(json);
 	}
 	public void endtrans() {
-	//结束运输
-//测试接口地址：http://localhost:8099/appgps/endtrans
-		//int drivercarid = Integer.parseInt(getPara("drivercarid"));
-		String bottle_id = getPara("bottleId");
-		String transstate = "结束运输";
+		/* ---------- 1. 取参 ---------- */
+		String bottleId   = getPara("bottleId");
+		String jingDu     = getPara("jieshujingdu");
+		String weiDu      = getPara("jieshuweidu");
+		String address    = getPara("jieshuaddress");
 
-		String jingDu = getPara("jingdu");
-		String weiDu = getPara("weidu");
-		String address = getPara("address");
+		System.out.println("[ENDTRANS] bottleId=" + bottleId);
+		System.out.println("[ENDTRANS] jieshujingdu=" + jingDu);
+		System.out.println("[ENDTRANS] jieshuweidu=" + weiDu);
+		System.out.println("[ENDTRANS] jieshuaddress=" + address);
 
-		GasBottle endtransToUpdate = dao.findFirst("SELECT * FROM gas_bottle WHERE bottle_id = ? AND trans_state = \"运输中\" order by id desc", bottle_id);
-		if (endtransToUpdate != null) {
-			// 对找到的记录进行更新
-			endtransToUpdate.setTransState("结束运输");
-			endtransToUpdate.setJieshujingdu(jingDu);
-			endtransToUpdate.setJieshuweidu(weiDu);
-			endtransToUpdate.setJieshuaddress(address);
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			Date now = new Date();
-			String formattedDate = sdf.format(now);
-			endtransToUpdate.setEndTime(formattedDate);
-			boolean result = endtransToUpdate.update();
-
+		/* ---------- 2. 查记录 ---------- */
+		GasBottle g = dao.findFirst(
+				"SELECT * FROM gas_bottle " +
+						"WHERE bottle_id = ? AND trans_state = '运输中' " +
+						"ORDER BY id DESC LIMIT 1",
+				bottleId
+		);
+		if (g == null) {
+			System.out.println("[ENDTRANS] 未找到运输中的记录");
+			renderJson(new JSONObject().fluentPut("flag", "400")
+					.fluentPut("mes", "未找到运输中的记录"));
+			return;
 		}
 
+		/* ---------- 3. 打印更新前 ---------- */
+		System.out.println("[ENDTRANS] 更新前：trans_state=" + g.getTransState() +
+				", jieshujingdu=" + g.getJieshujingdu() +
+				", jieshuweidu=" + g.getJieshuweidu() +
+				", jieshuaddress=" + g.getJieshuaddress());
 
-		// 返回JSON响应
-		JSONObject json = new JSONObject();
-		json.put("flag", "200");
-		renderJson(json);
+		/* ---------- 4. 赋值 ---------- */
+		g.setTransState("结束运输");
+		g.setJieshujingdu(jingDu);
+		g.setJieshuweidu(weiDu);
+		g.setJieshuaddress(address);
+		g.setEndTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+
+		/* ---------- 5. 打印更新后 ---------- */
+		System.out.println("[ENDTRANS] 更新后：trans_state=" + g.getTransState() +
+				", jieshujingdu=" + g.getJieshujingdu() +
+				", jieshuweidu=" + g.getJieshuweidu() +
+				", jieshuaddress=" + g.getJieshuaddress());
+
+		/* ---------- 6. 持久化 ---------- */
+		boolean ok = g.update();
+		System.out.println("[ENDTRANS] g.update() 返回值=" + ok);
+
+		if (!ok) {
+			renderJson(new JSONObject().fluentPut("flag", "500")
+					.fluentPut("mes", "数据库更新失败"));
+			return;
+		}
+
+		/* ---------- 7. 返回 ---------- */
+		renderJson(new JSONObject().fluentPut("flag", "200")
+				.fluentPut("mes", "下车成功"));
 	}
 }
 

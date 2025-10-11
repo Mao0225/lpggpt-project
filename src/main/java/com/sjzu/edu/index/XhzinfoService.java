@@ -85,20 +85,20 @@ public class XhzinfoService {
         sdfThreadLocal.remove(); // 清除线程局部变量，避免内存泄漏
 
 
-        System.out.println("\n===== 本次查询的所有记录详情 =====");
-        int index = 1;
-        for (Record record : recordList) {
-            System.out.println("\n----- 第 " + index + " 条记录 -----");
-            // 获取记录中所有字段名（String[]数组类型）
-            String[] columnNames = record.getColumnNames();
-            // 遍历字段名数组
-            for (String column : columnNames) {
-                // 输出字段名和对应的值
-                System.out.println(column + ": " + record.get(column));
-            }
-            index++;
-        }
-        System.out.println("\n===== 记录打印结束 =====");
+//        System.out.println("\n===== 本次查询的所有记录详情 =====");
+//        int index = 1;
+//        for (Record record : recordList) {
+//            System.out.println("\n----- 第 " + index + " 条记录 -----");
+//            // 获取记录中所有字段名（String[]数组类型）
+//            String[] columnNames = record.getColumnNames();
+//            // 遍历字段名数组
+//            for (String column : columnNames) {
+//                // 输出字段名和对应的值
+//                System.out.println(column + ": " + record.get(column));
+//            }
+//            index++;
+//        }
+//        System.out.println("\n===== 记录打印结束 =====");
 
         return recordPage;
     }
