@@ -108,8 +108,9 @@
   <tbody>
   <tr>
     <th>序号</th>
-    <th>切断阀控制</th>
-    <th>风机控制</th>
+    <th>切断阀1状态</th>
+    <th>切断阀2状态</th>
+    <th>风机状态</th>
     <th>PLC编号</th>
     <th>饭店</th>
     <th>标志位</th>
@@ -122,21 +123,30 @@
   <tr>
     <td>#(startIndex++)</td>
     <td>
-      #if(x.qieduanfakongzhi == "0")
-      关闭
-      #else if(x.qieduanfakongzhi == "10")
+      #if(x.qieduanfa1 == "0")
       打开
+      #else if(x.qieduanfa1 == "1")
+      关闭
       #else
-      #(x.qieduanfakongzhi ?? '未知')
+      #(x.qieduanfa1 ?? '未知')
       #end
     </td>
     <td>
-      #if(x.fengjikongzhi == "0")
+      #if(x.qieduanfa2 == "0")
+      打开
+      #else if(x.qieduanfa2 == "1")
       关闭
-      #else if(x.fengjikongzhi == "10")
+      #else
+      #(x.qieduanfa2 ?? '未知')
+      #end
+    </td>
+    <td>
+      #if(x.fengji == "0")
+      关闭
+      #else if(x.fengji == "1")
       打开
       #else
-      #(x.fengjikongzhi ?? '未知')
+      #(x.fengji ?? '未知')
       #end
     </td>
     <td>#(x.plcno ?? '')</td>
