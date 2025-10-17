@@ -33,7 +33,8 @@ public class AppplcxinhaoController extends Controller {
 		String qipingjianbaojing = getPara("qipingjianbaojing");
 		String chufangbaojing = getPara("chufangbaojing");
 		String yanganbaojing = getPara("yanganbaojing");
-		String qieduanfa = getPara("qieduanfa");
+		String qieduanfa1 = getPara("qieduanfa1");
+		String qieduanfa2 = getPara("qieduanfa2");
 		String fengji = getPara("fengji");
 		String tongdaoone = getPara("tongdaoone");
 		String tongdaotwo = getPara("tongdaotwo");
@@ -44,13 +45,18 @@ public class AppplcxinhaoController extends Controller {
 		String memo = getPara("memo");
 		String plcno = getPara("plcno");
 		String rfidno = getPara("rfidno");
+		String uploadtime = getPara("uploadtime");
+
+		String keranqitibaojingzhi600 = getPara("keranqitibaojingzhi600");
+		String keranqitibaojingzhi610 = getPara("keranqitibaojingzhi610");
 
 		// 构建PLC信号数据模型
 		Plcxinhao plcxinhao = new Plcxinhao();
 		plcxinhao.setQipingjianbaojing(qipingjianbaojing);
 		plcxinhao.setChufangbaojing(chufangbaojing);
 		plcxinhao.setYanganbaojing(yanganbaojing);
-		plcxinhao.setQieduanfa(qieduanfa);
+		plcxinhao.setQieduanfa1(qieduanfa1);
+		plcxinhao.setQieduanfa2(qieduanfa2);
 		plcxinhao.setFengji(fengji);
 		plcxinhao.setTongdaoone(tongdaoone);
 		plcxinhao.setTongdaotwo(tongdaotwo);
@@ -61,6 +67,9 @@ public class AppplcxinhaoController extends Controller {
 		plcxinhao.setMemo(memo);
 		plcxinhao.setPlcno(plcno);
 		plcxinhao.setRfidno(rfidno);
+		plcxinhao.setUploadtime(uploadtime);
+		plcxinhao.setKeranqitibaojingzhi600(keranqitibaojingzhi600);
+		plcxinhao.setKeranqitibaojingzhi610(keranqitibaojingzhi610);
 
 		// 保存数据
 		boolean result = plcxinhao.save();
@@ -112,6 +121,85 @@ public class AppplcxinhaoController extends Controller {
 		}
 		renderJson(json);
 	}
+
+
+	/**
+	 * 根据plcno获取plckongzhi表的一条数据
+	 * 测试接口示例: http://localhost:8099/appplcxinhao/getkongzhiinfobyno?plcno=xxx
+	 */
+	public void getkongzhiinfobyno() {
+		addCorsHeaders(); // 允许跨域请求
+
+		// 获取客户端传入的plcno参数
+		String plcno = getPara("plcno");
+
+		// 构建响应JSON对象
+		JSONObject json = new JSONObject();
+
+		// 参数校验
+		if (StrKit.isBlank(plcno)) {
+			json.put("flag", "400");
+			json.put("message", "plcno参数不能为空");
+			renderJson(json);
+			return;
+		}
+
+		// 查询plckongzhi表中对应plcno的记录（获取原始数据）
+		Record originalRecord = Db.use().findFirst(
+				"select * from plckongzhi where plcno = ? limit 1",
+				plcno
+		);
+
+		// 构建响应结果
+		if (originalRecord != null) {
+			// 1. 立即返回原始数据给客户端
+			json.put("flag", "200");
+			json.put("message", "查询成功");
+			json.put("data", originalRecord);
+			renderJson(json);
+
+			// 2. 启动异步线程，在后台执行数据库更新操作（不阻塞响应）
+			new Thread(() -> {
+				// 复制原始记录用于修改（避免影响已返回的对象）
+				Record updateRecord = new Record();
+				updateRecord.setColumns(originalRecord);
+
+				boolean needUpdate = false;
+
+				// 处理qieduanfakongzhi字段：值为1则改为0
+				String qieduanfa1 = updateRecord.getStr("qieduanfa1kongzhi");
+				if ("1".equals(qieduanfa1)) {
+					updateRecord.set("qieduanfa1kongzhi", "0");
+					needUpdate = true;
+				}
+				String qieduanfa2 = updateRecord.getStr("qieduanfa2kongzhi");
+				if ("1".equals(qieduanfa2)) {
+					updateRecord.set("qieduanfa2kongzhi", "0");
+					needUpdate = true;
+				}
+				// 处理fengjikongzhi字段：值为1则改为0
+				String fengji = updateRecord.getStr("fengjikongzhi");
+				if ("1".equals(fengji)) {
+					updateRecord.set("fengjikongzhi", "0");
+					needUpdate = true;
+				}
+
+				// 执行数据库更新
+				if (needUpdate) {
+					Db.use().update("plckongzhi", updateRecord);
+					// 可选：添加日志记录更新结果
+					System.out.println("后台已更新plcno=" + plcno + "的记录");
+				}
+			}).start(); // 启动线程执行异步更新
+
+		} else {
+			json.put("flag", "300");
+			json.put("message", "未找到对应plcno的记录");
+			json.put("data", null);
+			renderJson(json);
+		}
+	}
+
 
 	/**
 	 * 设置跨域响应头

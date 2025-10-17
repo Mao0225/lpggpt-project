@@ -12,19 +12,27 @@ public class PlckongzhiService {
     /**
      * 分页查询，支持plcno筛选
      */
-    public Page<Plckongzhi> paginate(int pageNumber, int pageSize, String plcno) {
-        String select = "select * ";
-        String from = "from plckongzhi ";
+    public Page<Record> paginate(int pageNumber, int pageSize, String plcno) {
+        // 构建查询字段和关联逻辑
+        String select = "SELECT pk.plcno, pk.*, px.qieduanfa1, px.qieduanfa2, px.fengji ";
+        String from = "FROM plckongzhi pk " +
+                "LEFT JOIN ( " +
+                "    SELECT plcno, MAX(id) AS max_id " +
+                "    FROM plcxinhao " +
+                "    GROUP BY plcno " +
+                ") mx ON pk.plcno = mx.plcno " +
+                "LEFT JOIN plcxinhao px ON mx.max_id = px.id ";
 
-        // 构建查询条件
+        // 添加查询条件
         if (com.jfinal.kit.StrKit.notBlank(plcno)) {
-            from += "where plcno like '%" + plcno + "%' ";
+            from += "WHERE pk.plcno LIKE '%" + plcno + "%' ";
         }
 
-        // 按id倒序排序，最新的在前面
-        from += "order by id desc";
+        // 按id倒序排序
+        from += "ORDER BY pk.id DESC";
 
-        return dao.paginate(pageNumber, pageSize, select, from);
+        // 使用Db.paginate查询，返回Record类型（因涉及多表字段）
+        return Db.paginate(pageNumber, pageSize, select, from);
     }
 
     /**

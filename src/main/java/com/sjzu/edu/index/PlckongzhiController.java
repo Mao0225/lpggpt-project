@@ -3,6 +3,7 @@ package com.sjzu.edu.index;
 import com.jfinal.core.Controller;
 import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Page;
+import com.jfinal.plugin.activerecord.Record;
 import com.sjzu.edu.common.model.Plckongzhi;
 
 public class PlckongzhiController extends Controller {
@@ -11,6 +12,7 @@ public class PlckongzhiController extends Controller {
     /**
      * 列表页展示，支持分页和plcno查询
      */
+    // 修改Controller中的代码，将返回类型统一为Page<Record>
     public void index() {
         int pageNumber = getParaToInt("page", 1);
         int pageSize = getParaToInt("size", 10);
@@ -19,8 +21,8 @@ public class PlckongzhiController extends Controller {
         // 保存查询参数用于分页跳转
         setAttr("plcno", plcno);
 
-        // 获取分页数据
-        Page<Plckongzhi> plcPage = service.paginate(pageNumber, pageSize, plcno);
+        // 修改点1：将接收类型改为Page<Record>
+        Page<Record> plcPage = service.paginate(pageNumber, pageSize, plcno);
         setAttr("plcList", plcPage);
 
         render("plckongzhi.html");

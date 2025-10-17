@@ -127,14 +127,13 @@
         <th>气瓶间报警</th>
         <th>厨房泄露报警</th>
         <th>烟感报警</th>
-        <th>切断阀状态</th>
+        <th>报警器读数 1</th>
+        <th>报警器读数 2</th>
+        <th>切断阀1状态</th>
+        <th>切断阀2状态</th>
         <th>风机状态</th>
-        <th>通道1状态</th>
-        <th>通道2状态</th>
-        <th>通道3状态</th>
-        <th>通道4状态</th>
         <th>RFID标签</th>
-        <th>操作</th>
+        <th>上传时间</th>
       </tr>
       </thead>
       <tbody>
@@ -162,10 +161,19 @@
           #else #(plc.yanganbaojing ?? '')
           #end
         </td>
+
+        <td>#(plc.keranqitibaojingzhi600 ?? '')</td>
+        <td>#(plc.keranqitibaojingzhi610 ?? '')</td>
         <td>
-          #if(plc.qieduanfa == "0") 关闭
-          #else if(plc.qieduanfa == "10") 打开
-          #else #(plc.qieduanfa ?? '')
+          #if(plc.qieduanfa1 == "0") 打开
+          #else if(plc.qieduanfa1 == "1") 关闭
+          #else #(plc.qieduanfa1 ?? '')
+          #end
+        </td>
+        <td>
+          #if(plc.qieduanfa2 == "0") 打开
+          #else if(plc.qieduanfa2 == "1") 关闭
+          #else #(plc.qieduanfa2 ?? '')
           #end
         </td>
         <td>
@@ -174,35 +182,10 @@
           #else #(plc.fengji ?? '')
           #end
         </td>
-        <td>
-          #if(plc.tongdaoone == "0") 关闭
-          #else if(plc.tongdaoone == "10") 打开
-          #else #(plc.tongdaoone ?? '')
-          #end
-        </td>
-        <td>
-          #if(plc.tongdaotwo == "0") 关闭
-          #else if(plc.tongdaotwo == "10") 打开
-          #else #(plc.tongdaotwo ?? '')
-          #end
-        </td>
-        <td>
-          #if(plc.tongdaothree == "0") 关闭
-          #else if(plc.tongdaothree == "10") 打开
-          #else #(plc.tongdaothree ?? '')
-          #end
-        </td>
-        <td>
-          #if(plc.tongdaofour == "0") 关闭
-          #else if(plc.tongdaofour == "10") 打开
-          #else #(plc.tongdaofour ?? '')
-          #end
-        </td>
+
         <td>#(plc.rfidno ?? '')</td>
-        <td>
-          <a href="/plcxinhao/detail?id=#(plc.id)" class="operation-btn">查看</a>
-          <a href="javascript:confirmDelete(#(plc.id))" class="operation-btn" style="color:red">删除</a>
-        </td>
+        <td>#(plc.uploadtime ?? '')</td>
+
       </tr>
       #end
       </tbody>
