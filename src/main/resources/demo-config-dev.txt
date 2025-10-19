@@ -1,0 +1,5 @@
+# config
+jdbcUrl = jdbc:mysql://39.98.221.201/ruoyi_lpg?characterEncoding=utf8&useSSL=false&zeroDateTimeBehavior=convertToNull&allowPublicKeyRetrieval=true
+user = root
+password =wolf1234
+devMode = true

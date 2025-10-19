@@ -1,0 +1,5 @@
+# config
+jdbcUrl = jdbc:mysql://rm-bp1atuu79e5234qj97o.mysql.rds.aliyuncs.com/lpg_cloud_prod?characterEncoding=utf8&useSSL=false&zeroDateTimeBehavior=convertToNull
+user = lpg_admin
+password = lpg_admin123
+devMode = true

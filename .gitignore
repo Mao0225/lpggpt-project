@@ -587,11 +587,6 @@
 /target/jfinal_demo_for_maven-5.0.0.jar
 /target/jfinal_demo_for_maven-release.zip
 /target/jfinal_demo_for_maven-release
-/src/main/resources/
-/src/main/resources/demo-config-dev.txt
-/src/main/resources/demo-config-jiaqi.txt
-/src/main/resources/demo-config-lpg.txt
 /target/classes/
 /target/jfinal_demo_for_maven-release/jfinal_demo_for_maven/webapp/ffilrdck/filrdck.html
-/src/main/resources
 /target
