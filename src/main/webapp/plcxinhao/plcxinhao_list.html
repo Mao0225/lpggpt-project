@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" xmlns:width="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -101,6 +101,40 @@
       margin: 0 5px;
       text-decoration: none;
     }
+      /* 新增样式：让查询条件在同一行显示 */
+    .form-group {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .query-item {
+      display: flex;
+      align-items: center;
+      white-space: nowrap;
+    }
+
+    .query-item label {
+      margin-right: 5px;
+      margin-bottom: 0;
+    }
+
+    .form-control {
+      display: inline-block;
+    }
+
+    #plcno {
+      width: 200px;
+    }
+
+    #alarmType {
+      width: 180px;
+    }
+
+    .btn {
+      margin-left: 5px;
+    }
   </style>
 </head>
 <body>
@@ -108,11 +142,25 @@
   <div id="pagediv">
     <form id="searchForm" action="/plcxinhao/list" method="get">
       <div class="form-group">
+          <div class="query-item">
         <label for="plcno">PLC编号：</label>
         <input type="text" id="plcno" name="plcno"
-               value="#(plcno ?? '')" placeholder="请输入PLC编号查询">
+               value="#(plcno ?? '')" placeholder="请输入PLC编号查询" class="form-control" >
+          </div>
+          <!--在这里添加报警类型选择框-->
+          <div class="query-item">
+              <label for="alarmType">报警类型：</label>
+              <select id="alarmType" name="alarmType" class="form-control" >
+                  <option value="" disabled hidden #if(!alarmType || alarmType =="") selected #end>全部报警状态</option>
+              <option value="gas_room" #if(alarmType =="gas_room") selected #end>气瓶间报警异常</option>
+              <option value="kitchen_leak" #if(alarmType =="kitchen_leak") selected #end>厨房泄漏报警异常</option>
+              <option value="smoke" #if(alarmType =="smoke") selected #end>烟感报警异常</option>
+              </select>
+          </div>
+          <div class="query-item">
         <button type="submit" class="btn btn-primary">查询</button>
         <button type="button" class="btn btn-default" id="resetBtn">重置</button>
+      </div>
       </div>
     </form>
   </div>
@@ -129,11 +177,16 @@
         <th>烟感报警</th>
         <th>报警器读数 1</th>
         <th>报警器读数 2</th>
-        <th>切断阀1状态</th>
-        <th>切断阀2状态</th>
+        <th>报警器读数 3</th>
+        <th>切断阀状态</th>
         <th>风机状态</th>
+        <th>通道1状态</th>
+        <th>通道2状态</th>
+        <th>通道3状态</th>
+        <th>通道4状态</th>
         <th>RFID标签</th>
         <th>上传时间</th>
+        <th>操作</th>
       </tr>
       </thead>
       <tbody>
@@ -162,18 +215,13 @@
           #end
         </td>
 
-        <td>#(plc.keranqitibaojingzhi600 ?? '')</td>
-        <td>#(plc.keranqitibaojingzhi610 ?? '')</td>
+        <td>#(plc.baoqingjidushu1 ?? '')</td>
+        <td>#(plc.baoqingjidushu2 ?? '')</td>
+        <td>#(plc.baoqingjidushu3 ?? '')</td>
         <td>
-          #if(plc.qieduanfa1 == "0") 打开
-          #else if(plc.qieduanfa1 == "1") 关闭
-          #else #(plc.qieduanfa1 ?? '')
-          #end
-        </td>
-        <td>
-          #if(plc.qieduanfa2 == "0") 打开
-          #else if(plc.qieduanfa2 == "1") 关闭
-          #else #(plc.qieduanfa2 ?? '')
+          #if(plc.qieduanfa == "0") 关闭
+          #else if(plc.qieduanfa == "1") 打开
+          #else #(plc.qieduanfa ?? '')
           #end
         </td>
         <td>
@@ -182,10 +230,36 @@
           #else #(plc.fengji ?? '')
           #end
         </td>
-
+        <td>
+          #if(plc.tongdaoone == "0") 关闭
+          #else if(plc.tongdaoone == "10") 打开
+          #else #(plc.tongdaoone ?? '')
+          #end
+        </td>
+        <td>
+          #if(plc.tongdaotwo == "0") 关闭
+          #else if(plc.tongdaotwo == "10") 打开
+          #else #(plc.tongdaotwo ?? '')
+          #end
+        </td>
+        <td>
+          #if(plc.tongdaothree == "0") 关闭
+          #else if(plc.tongdaothree == "10") 打开
+          #else #(plc.tongdaothree ?? '')
+          #end
+        </td>
+        <td>
+          #if(plc.tongdaofour == "0") 关闭
+          #else if(plc.tongdaofour == "10") 打开
+          #else #(plc.tongdaofour ?? '')
+          #end
+        </td>
         <td>#(plc.rfidno ?? '')</td>
         <td>#(plc.uploadtime ?? '')</td>
-
+        <td>
+          <a href="/plcxinhao/detail?id=#(plc.id)" class="operation-btn">查看</a>
+          <a href="javascript:confirmDelete(#(plc.id))" class="operation-btn" style="color:red">删除</a>
+        </td>
       </tr>
       #end
       </tbody>
@@ -195,14 +269,24 @@
   <!-- 分页控件 -->
   <div class="pagination">
     #set(currentPlcno = plcno ?? '')
-    #@paginate(plcList.pageNumber, plcList.totalPage, "/plcxinhao/list?plcno=" + currentPlcno + "&page=")
+    #set(currentAlarmType = alarmType ?? '')
+    #@paginate(plcList.pageNumber, plcList.totalPage, "/plcxinhao/list?plcno=" + currentPlcno + "&alarmType=" +currentAlarmType + "&page=")
   </div>
 </div>
 
 <script>
+    // 页面加载时处理选择框状态
+  $(document).ready(function() {
+    // 如果没有选择报警类型，确保显示"全部报警状态"
+    if (!$('#alarmType').val()) {
+      $('#alarmType').val('');
+    }
+  });
+
   // 重置查询条件
   $('#resetBtn').click(function() {
     $('#plcno').val('');
+    $('#alarmType').val('');
     $('#searchForm').submit();
   });
 
@@ -210,9 +294,13 @@
   function confirmDelete(id) {
     if (confirm("确定要删除这条记录吗？此操作不可恢复！")) {
       const plcno = $('#plcno').val();
+      const alarmType = $('#alarmType').val();
       let url = "/plcxinhao/delete?id=" + id;
       if (plcno) {
         url += "&plcno=" + encodeURIComponent(plcno);
+      }
+      if(alarmType){
+      url += "&alarmType=" + encodeURIComponent(alarmType);
       }
       window.location.href = url;
     }

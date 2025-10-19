@@ -16,7 +16,7 @@ public class PlcxinhaoService {
      * @param plcno PLC编号查询条件
      * @return 分页数据对象
      */
-    public Page<Record> paginate(int pageNumber, int pageSize, String plcno) {
+    public Page<Record> paginate(int pageNumber, int pageSize, String plcno,String alarmType) {
         // 构建SQL语句（关联restaurant表，查询plcxinhao所有字段和restaurant的name）
         String selectSql = "SELECT plcxinhao.*, restaurant.name AS restaurant_name ";
         String fromSql = "FROM plcxinhao " +
@@ -30,6 +30,14 @@ public class PlcxinhaoService {
             paramCount++;
         }
 
+        // 添加报警类型查询条件
+        if (alarmType != null && !alarmType.isEmpty()) {
+            String alarmCondition = getAlarmCondition(alarmType);
+            if (alarmCondition != null) {
+                fromSql += (paramCount == 0 ? " WHERE " : " AND ") + alarmCondition + " ";
+                paramCount++;
+            }
+        }
         // 按ID倒序排序
         fromSql += " ORDER BY plcxinhao.id DESC ";
 
@@ -38,9 +46,28 @@ public class PlcxinhaoService {
     }
 
     /**
-     * 根据ID查询单条记录
+     * 根据报警类型获取查询条件
+     * @param alarmType 报警类型
+     * @return SQL查询条件
+     */
+    private String getAlarmCondition(String alarmType){
+        switch(alarmType){
+            case"gas_room":
+                //气瓶间报警一场：不等于0且不等于正常
+                return"(plcxinhao.qipingjianbaojing !='0' AND plcxinhao.qipingjianbaojing !='正常')";
+            case"kitchen_leak":
+                //厨房泄露报警异常：不等于0且不等于正常
+        return"(plcxinhao.chufangbaojing !='0' AND plcxinhao.chufangbaojing !='正常')";
+            case"smoke":
+                //烟感报警异常：不等于0且不等于正常
+        return"(plcxinhao.yanganbaojing !='0' AND plcxinhao.yanganbaojing !='正常')";
+            default:
+        return null;
+        }
+    }
+    /**
+     * 根据ID删除记录
      * @param id 记录ID
-     * @return 单条记录对象
      */
     public Plcxinhao findById(Integer id) {
         return dao.findById(id);

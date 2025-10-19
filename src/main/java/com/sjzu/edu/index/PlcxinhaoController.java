@@ -19,12 +19,14 @@ public class PlcxinhaoController extends Controller {
 
         // 获取查询参数
         String plcno = getPara("plcno");
+        String alarmType =getPara("alarmType");
 
         // 保存参数到页面，用于回显
         setAttr("plcno", plcno);
+        setAttr("alarmType",alarmType);
 
         // 关键修改：接收多表查询结果（Page<Record>）
-        Page<Record> plcPage = service.paginate(pageNumber, pageSize, plcno);
+        Page<Record> plcPage = service.paginate(pageNumber, pageSize, plcno,alarmType);
         setAttr("plcList", plcPage);
 
         // 渲染页面
@@ -40,7 +42,16 @@ public class PlcxinhaoController extends Controller {
             service.deleteById(id);
         }
         // 重定向回列表页，保持筛选条件
-        redirect("/plcxinhao/list?plcno=" + getPara("plcno"));
+        String plcno = getPara("plcno");
+        String alarmType = getPara("alarmType");
+        String redirectUrl = "/plcxinhao/list?page=1";
+        if(plcno !=null && !plcno.isEmpty()){
+            redirectUrl +=  "&plcno=" + plcno;
+        }
+        if(alarmType !=null && !alarmType.isEmpty()){
+            redirectUrl +="&alarmType=" +alarmType;
+        }
+        redirect(redirectUrl);
     }
 
     /**
