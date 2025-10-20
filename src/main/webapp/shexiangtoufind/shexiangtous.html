@@ -207,6 +207,10 @@
     <form id="searchForm" action="/shexiangtoufind/shexiangtoulist" method="post">
         <label>摄像头编号:</label>
         <input type="text" name="shexiangtouno" value="#(shexiangtouno)">
+        <label>发生日期:</label>
+        <input type="date" name="searchDate" id="searchDate" value="#(searchDate)">
+        <label>发生时间:</label>
+        <input type="time" name="searchTime" id="searchTime" value="#(searchTime??)" step="1">
         <label>&nbsp;</label>
         <input value="搜索" type="submit">
         <input type="button" value="重置" name="refresh" id="resetButton" />
@@ -246,7 +250,7 @@
 </table>
 
 <div class="pagination" style="color:#000000;">
-    #set(pageUrl = "/shexiangtoufind/shexiangtoulist?shexiangtouno=" + shexiangtouno + "&page=")
+    #set(pageUrl = "/shexiangtoufind/shexiangtoulist?shexiangtouno=" + shexiangtouno + "&searchDate=" + (searchDate ??"") +"&searchTime=" +(searchTime ??"") + "&page=")
     #@paginate(shexiangtou.pageNumber, shexiangtou.totalPage, pageUrl)
 </div>
 
@@ -347,6 +351,8 @@
         e.preventDefault();
         document.getElementById('searchForm').reset();
         document.querySelector('input[name="shexiangtouno"]').value = '';
+        document.getElementById('searchDate').value = '';
+        document.getElementById('searchTime').value = '';
         document.getElementById('searchForm').submit();
     });
 </script>
