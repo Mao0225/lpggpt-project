@@ -25,4 +25,33 @@ public class JiepingService {
         return dao.paginate(pageNumber, pageSize, "select *", "from jieping order by id desc");
     }
 
+    /**
+     * 支持检索的分页查询
+     */
+    public Page<Jieping> paginate(int pageNumber, int pageSize, String shexiangtouno, String date, String time) {
+        StringBuilder whereSql = new StringBuilder("from jieping where 1=1");
+        String orderBy = "order by happendtime desc";
+
+        // 构建查询条件
+        if (shexiangtouno != null && !shexiangtouno.trim().isEmpty()) {
+            whereSql.append(" and shexiangtouno like '%").append(shexiangtouno.trim()).append("%'");
+        }
+
+        if (date != null && !date.trim().isEmpty()) {
+            whereSql.append(" and DATE(happendtime) = '").append(date).append("'");
+            orderBy = "order by happendtime asc";
+
+            if (time != null && !time.trim().isEmpty()) {
+                whereSql.append(" and TIME(happendtime) >= '").append(time).append("'");
+                orderBy = "order by happendtime asc";
+            }
+        } else if (time != null && !time.trim().isEmpty()) {
+            whereSql.append(" and TIME(happendtime) >= '").append(time).append("'");
+            orderBy = "order by happendtime asc";
+        }
+
+        whereSql.append(" ").append(orderBy);
+
+        return dao.paginate(pageNumber, pageSize, "select *", whereSql.toString());
+    }
 }

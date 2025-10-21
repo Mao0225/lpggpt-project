@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Content</title>
+    <title>截屏管理</title>
     <link rel="stylesheet" type="text/css" href="../css/lpg.css">
     <style>
         /* 弹窗样式 */
@@ -14,11 +14,11 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.8); /* 增加背景不透明度 */
+            background-color: rgba(0, 0, 0, 0.8);
             z-index: 9999;
             justify-content: center;
             align-items: center;
-            backdrop-filter: blur(5px); /* 增加模糊效果 */
+            backdrop-filter: blur(5px);
             transition: opacity 0.3s ease;
         }
 
@@ -29,7 +29,7 @@
             border-radius: 8px;
             max-width: 95%;
             max-height: 95%;
-            overflow: hidden; /* 防止内容溢出 */
+            overflow: hidden;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             transform: scale(0.95);
             transition: transform 0.3s ease;
@@ -43,7 +43,7 @@
             position: absolute;
             top: 10px;
             right: 15px;
-            font-size: 36px; /* 增大关闭按钮 */
+            font-size: 36px;
             font-weight: bold;
             color: #333;
             cursor: pointer;
@@ -57,16 +57,16 @@
 
         #popup-img {
             display: block;
-            width: auto; /* 重置宽度限制 */
-            height: auto; /* 重置高度限制 */
-            max-width: 95vw; /* 最大宽度为视口宽度的95% */
-            max-height: 90vh; /* 最大高度为视口高度的90% */
+            width: auto;
+            height: auto;
+            max-width: 95vw;
+            max-height: 90vh;
             margin: 0 auto;
             transition: opacity 0.3s ease;
-            object-fit: contain; /* 确保图片完整显示 */
+            object-fit: contain;
         }
 
-        /* 表格样式 */
+        /* 搜索表单样式 */
         .container {
             padding: 50px 20px;
             display: flex;
@@ -74,32 +74,74 @@
             align-items: center;
         }
 
-        input {
-            padding: 15px;
-            font-size: 18px;
-            border: 2px solid #a3bffa;
-            border-radius: 10px;
-            width: 100%;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: border-color 0.3s ease;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: #4c87c9;
-        }
-
         /* 设置 #pagediv 的样式 */
         #pagediv {
             background-color: #f0f0f0;
             color: black;
             padding: 10px;
+            border: 2px solid #007bff;
+            margin-bottom: 15px;
+        }
+
+        /* 搜索表单内部样式 */
+        #searchForm {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        #searchForm label {
+            color: black;
+            font-weight: bold;
+            margin-right: 5px;
+        }
+
+        #searchForm input[type="text"],
+        #searchForm input[type="date"],
+        #searchForm input[type="time"] {
+            padding: 8px 12px;
+            font-size: 14px;
+            border: 1px solid #a3bffa;
+            border-radius: 4px;
+            width: 150px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: border-color 0.3s ease;
+            background-color: #f0f0f0;
+        }
+
+        #searchForm input:focus {
+            outline: none;
+            border-color: #4c87c9;
+        }
+
+        /* 搜索和重置按钮样式 */
+        #searchForm input[type="submit"],
+        #searchForm input[type="button"] {
+            padding: 6px 12px;
+            font-size: 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            border: none;
+            width: auto;
+            margin-right: 5px;
+        }
+
+        #searchForm input[type="submit"] {
+            background-color: #007bff;
+            color: white;
+        }
+
+        #searchForm input[type="button"] {
+            background-color: #6c757d;
+            color: white;
         }
 
         /* 设置表格样式 */
         table.list {
             width: 100%;
             border-collapse: collapse;
+            margin-top: 10px;
         }
 
         /* 设置表格表头样式 */
@@ -139,26 +181,17 @@
             transition: transform 0.3s;
             border-radius: 4px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            object-fit: cover; /* 缩略图使用cover模式 */
+            object-fit: cover;
         }
 
         table.list td img:hover {
             transform: scale(1.1);
         }
 
-        /* 新增样式：设置新建司机链接为黑色 */
-        #pagediv .add {
-            color: black;
-        }
-
-        /* 新增样式：设置输入框背景色为淡灰色 */
-        #pagediv input[type="text"] {
-            background-color: #f0f0f0;
-        }
-
-        /* 新增样式：设置 label 文字颜色为黑色 */
-        #pagediv label {
-            color: black;
+        /* 分页样式 */
+        .pagination {
+            margin-top: 15px;
+            text-align: center;
         }
     </style>
 </head>
@@ -171,10 +204,22 @@
     </div>
 </div>
 
+<!-- 搜索表单 -->
 <div id="pagediv">
-    <!-- 页面内容 -->
+    <form id="searchForm" action="/jieping/jiepinglist" method="get">
+        <label>摄像头编号:</label>
+        <input type="text" name="shexiangtouno" value="#(shexiangtouno ??)" placeholder="请输入摄像头编号">
+        <label>发生日期:</label>
+        <input type="date" name="date" id="searchDate" value="#(date ??)">
+        <label>发生时间:</label>
+        <input type="time" name="time" id="searchTime" value="#(time ??)" step="1">
+        <label>&nbsp;</label>
+        <input value="搜索" type="submit">
+        <input type="button" value="重置" name="refresh" id="resetButton" />
+    </form>
 </div>
 
+<!-- 数据表格 -->
 <table class="list">
     <tbody>
     <tr>
@@ -190,15 +235,17 @@
         <td style="text-align:center">#(x.shexiangtouno)</td>
         <td style="text-align:center">#(x.happendtime)</td>
         <td style="text-align:center">
-            <img src="http://114.115.156.201:8099/upload/temp/jieping/#(x.photo)" alt="摄像头截图">
+            <img src="http://39.98.221.201:8099/upload/temp/jieping/#(x.photo)" alt="摄像头截图">
         </td>
     </tr>
     #end
     </tbody>
 </table>
 
+<!-- 分页 -->
 <div class="pagination" style="color:#000000;">
-    #@paginate(jiepinglist.pageNumber, jiepinglist.totalPage, "/jieping/jiepinglist?&page=")
+    #set(pageUrl = "/jieping/jiepinglist?shexiangtouno=" + (shexiangtouno ??"") + "&date=" + (date ??"") + "&time=" + (time ??"") + "&page=")
+    #@paginate(jiepinglist.pageNumber, jiepinglist.totalPage, pageUrl)
 </div>
 
 <script>
@@ -243,6 +290,16 @@
         if (e.key === 'Escape') {
             closePopup();
         }
+    });
+
+    // 重置按钮功能
+    document.getElementById('resetButton').addEventListener('click', function(e) {
+        e.preventDefault();
+        document.getElementById('searchForm').reset();
+        document.querySelector('input[name="shexiangtouno"]').value = '';
+        document.getElementById('searchDate').value = '';
+        document.getElementById('searchTime').value = '';
+        document.getElementById('searchForm').submit();
     });
 </script>
 </body>

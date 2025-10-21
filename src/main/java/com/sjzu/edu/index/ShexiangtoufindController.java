@@ -59,7 +59,17 @@ public class ShexiangtoufindController extends Controller {
         if(where.length() > 0){
             from += " " + where.toString();
         }
-        from += " ORDER BY shexiangtou.id DESC";
+        // 动态排序逻辑：如果有日期或时间搜索条件，按正序；否则按倒序
+        boolean hasDateOrTimeCondition = (searchDate != null && !searchDate.trim().isEmpty()) ||
+                (searchTime != null && !searchTime.trim().isEmpty());
+
+        if (hasDateOrTimeCondition) {
+            // 有日期或时间搜索条件时，按发生时间正序排列
+            from += " ORDER BY shexiangtou.happendtime ASC";
+        } else {
+            // 没有日期或时间搜索条件时，按发生时间倒序排列（最新的在前）
+            from += " ORDER BY shexiangtou.happendtime DESC";
+        }
 
         // 设置页面属性
         setAttr("shexiangtouno", shexiangtouno != null ? shexiangtouno : "");
