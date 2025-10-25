@@ -62,15 +62,15 @@ public abstract class BasePlcxinhao<M extends BasePlcxinhao<M>> extends Model<M>
 	/**
 	 * 切断阀,0是关闭，10是打开
 	 */
-	public void setQieduanfa(java.lang.String qieduanfa) {
-		set("qieduanfa", qieduanfa);
+	public void setQieduanfa1(java.lang.String qieduanfa1) {
+		set("qieduanfa1", qieduanfa1);
 	}
 	
 	/**
 	 * 切断阀,0是关闭，10是打开
 	 */
-	public java.lang.String getQieduanfa() {
-		return getStr("qieduanfa");
+	public java.lang.String getQieduanfa1() {
+		return getStr("qieduanfa1");
 	}
 	
 	/**
@@ -193,6 +193,68 @@ public abstract class BasePlcxinhao<M extends BasePlcxinhao<M>> extends Model<M>
 	 */
 	public java.lang.String getRfidno() {
 		return getStr("rfidno");
+	}
+	
+	public void setUploadtime(java.lang.String uploadtime) {
+		set("uploadtime", uploadtime);
+	}
+	
+	public java.lang.String getUploadtime() {
+		return getStr("uploadtime");
+	}
+	
+	/**
+	 * 报警器读数1
+	 */
+	public void setBaoqingjidushu1(java.lang.String baoqingjidushu1) {
+		set("baoqingjidushu1", baoqingjidushu1);
+	}
+	
+	/**
+	 * 报警器读数1
+	 */
+	public java.lang.String getBaoqingjidushu1() {
+		return getStr("baoqingjidushu1");
+	}
+	
+	public void setBaoqingjidushu2(java.lang.String baoqingjidushu2) {
+		set("baoqingjidushu2", baoqingjidushu2);
+	}
+	
+	public java.lang.String getBaoqingjidushu2() {
+		return getStr("baoqingjidushu2");
+	}
+	
+	public void setBaoqingjidushu3(java.lang.String baoqingjidushu3) {
+		set("baoqingjidushu3", baoqingjidushu3);
+	}
+	
+	public java.lang.String getBaoqingjidushu3() {
+		return getStr("baoqingjidushu3");
+	}
+	
+	public void setQieduanfa2(java.lang.String qieduanfa2) {
+		set("qieduanfa2", qieduanfa2);
+	}
+	
+	public java.lang.String getQieduanfa2() {
+		return getStr("qieduanfa2");
+	}
+	
+	public void setKeranqitibaojingzhi600(java.lang.String keranqitibaojingzhi600) {
+		set("keranqitibaojingzhi600", keranqitibaojingzhi600);
+	}
+	
+	public java.lang.String getKeranqitibaojingzhi600() {
+		return getStr("keranqitibaojingzhi600");
+	}
+	
+	public void setKeranqitibaojingzhi610(java.lang.String keranqitibaojingzhi610) {
+		set("keranqitibaojingzhi610", keranqitibaojingzhi610);
+	}
+	
+	public java.lang.String getKeranqitibaojingzhi610() {
+		return getStr("keranqitibaojingzhi610");
 	}
 	
 }

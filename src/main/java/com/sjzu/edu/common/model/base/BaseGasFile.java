@@ -297,5 +297,47 @@ public abstract class BaseGasFile<M extends BaseGasFile<M>> extends Model<M> imp
 		return getStr("shiyongzheweidu");
 	}
 	
+	/**
+	 * 上传状态：0-未上传，1-已上传
+	 */
+	public void setUploadStatus(java.lang.Integer uploadStatus) {
+		set("upload_status", uploadStatus);
+	}
+	
+	/**
+	 * 上传状态：0-未上传，1-已上传
+	 */
+	public java.lang.Integer getUploadStatus() {
+		return getInt("upload_status");
+	}
+	
+	/**
+	 * 上传信息
+	 */
+	public void setUploadMsg(java.lang.String uploadMsg) {
+		set("upload_msg", uploadMsg);
+	}
+	
+	/**
+	 * 上传信息
+	 */
+	public java.lang.String getUploadMsg() {
+		return getStr("upload_msg");
+	}
+	
+	/**
+	 * 上传时间
+	 */
+	public void setUploadTime(java.util.Date uploadTime) {
+		set("upload_time", uploadTime);
+	}
+	
+	/**
+	 * 上传时间
+	 */
+	public java.util.Date getUploadTime() {
+		return getDate("upload_time");
+	}
+	
 }
 

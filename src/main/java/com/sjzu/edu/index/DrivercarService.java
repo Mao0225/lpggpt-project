@@ -23,39 +23,56 @@ public class DrivercarService {
     public Page<Drivercar> paginate(int pageNumber, int pageSize) {
         return dao.paginate(pageNumber, pageSize, "select *", "from drivercar order by id asc");
     }
-    public Page<Drivercar> search(int pageNumber, int pageSize, String drivername, String driverphone, String drivercarno, String carname, String carshengchanriqi){
-        String baseSql = "FROM drivercar " +
-                "LEFT  JOIN ( " +
-                "   SELECT *, ROW_NUMBER() OVER (PARTITION BY drivercarid ORDER BY id ASC) AS rn " +
-                "   FROM uploaddianzibiaoqian " +
-                ") AS sub ON drivercar.id = sub.drivercarid AND sub.rn = 1 " +
-                "WHERE 1 = 1 ";
 
+    public Page<Drivercar> search(int pageNumber, int pageSize, String drivername, String driverphone, String drivercarno, String carname, String carshengchanriqi) {
+        // 1. 重构 SQL 结构：将 WHERE 1=1 移到条件拼接逻辑中，避免末尾多余空格
+        String baseSql = "FROM drivercar " +
+                "LEFT JOIN ( " +
+                "   SELECT t1.drivercarid, t1.deviceid " +
+                "   FROM uploaddianzibiaoqian t1 " +
+                "   INNER JOIN ( " +
+                "       SELECT drivercarid, MIN(id) AS min_id " +
+                "       FROM uploaddianzibiaoqian " +
+                "       GROUP BY drivercarid " +
+                "   ) t2 ON t1.drivercarid = t2.drivercarid AND t1.id = t2.min_id " +
+                ") AS sub ON drivercar.id = sub.drivercarid ";
+
+        // 2. 查询字段 SQL（保持不变）
         String selectSql = "SELECT drivercar.*, sub.deviceid AS did ";
 
-        // 动态拼接查询条件
-        StringBuilder condition = new StringBuilder();
-
+        // 3. 动态条件拼接：先加 WHERE 1=1，再拼接其他条件（避免无条件时出现多余 AND）
+        StringBuilder condition = new StringBuilder(" WHERE 1 = 1 ");
         if (drivername != null && !drivername.isEmpty()) {
-            condition.append(" AND drivername LIKE '%").append(drivername).append("%'");
+            condition.append(" AND drivercar.drivername LIKE '%").append(escapeLike(drivername)).append("%'");
         }
         if (driverphone != null && !driverphone.isEmpty()) {
-            condition.append(" AND driverphone LIKE '%").append(driverphone).append("%'");
+            condition.append(" AND drivercar.driverphone LIKE '%").append(escapeLike(driverphone)).append("%'");
         }
         if (drivercarno != null && !drivercarno.isEmpty()) {
-            condition.append(" AND drivercarno LIKE '%").append(drivercarno).append("%'");
+            condition.append(" AND drivercar.drivercarno LIKE '%").append(escapeLike(drivercarno)).append("%'");
         }
         if (carname != null && !carname.isEmpty()) {
-            condition.append(" AND carname LIKE '%").append(carname).append("%'");
+            condition.append(" AND drivercar.carname LIKE '%").append(escapeLike(carname)).append("%'");
         }
         if (carshengchanriqi != null && !carshengchanriqi.isEmpty()) {
-            condition.append(" AND carshengchanriqi LIKE '%").append(carshengchanriqi).append("%'");
+            condition.append(" AND drivercar.carshengchanriqi LIKE '%").append(escapeLike(carshengchanriqi)).append("%'");
         }
 
-        String finalSql = selectSql + baseSql + condition;
+        // 4. 拼接最终完整 SQL（用于调试，确认无语法错误）
+        String finalSql = selectSql + baseSql + condition.toString().trim(); // trim() 去除首尾空格
         System.out.println("Final SQL: " + finalSql);
 
-        return dao.paginate(pageNumber, pageSize, selectSql, baseSql + condition);
+        // 5. 关键修复：JFinal paginate 方法的第 3/4 个参数需拼接为完整的 FROM + WHERE 语句（无多余空格）
+        String fromWhereSql = baseSql + condition.toString().trim();
+        return dao.paginate(pageNumber, pageSize, selectSql, fromWhereSql);
+    }
+
+    /**
+     * 辅助方法：转义 LIKE 特殊字符（%、_），避免语法错误和查询异常
+     */
+    private String escapeLike(String str) {
+        if (str == null) return "";
+        return str.replace("%", "\\%").replace("_", "\\_");
     }
 
 

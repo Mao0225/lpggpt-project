@@ -235,7 +235,12 @@
         <td style="text-align:center">#(x.shexiangtouno)</td>
         <td style="text-align:center">#(x.happendtime)</td>
         <td style="text-align:center">
-            <img src="http://39.98.221.201:8099/upload/temp/jieping/#(x.photo)" alt="摄像头截图">
+            <img
+                    data-img-name="#(x.photo)"
+                    src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+                    alt="摄像头截图"
+                    onload="loadImage(this)"
+            >
         </td>
     </tr>
     #end
@@ -249,6 +254,58 @@
 </div>
 
 <script>
+    // 图片加载函数 - 先尝试8100端口，失败则尝试8101端口
+    function loadImage(imgElement) {
+        const imageName = imgElement.getAttribute('data-img-name');
+        // 基础路径，包含截图目录
+        const baseUrl1 = 'http://39.98.221.201:8100/upload/temp/jieping/';
+        const baseUrl2 = 'http://39.98.221.201:8101/upload/temp/jieping/';
+
+        // 先尝试加载8100端口的图片
+        const img = new Image();
+        img.src = baseUrl1 + imageName;
+
+        img.onload = function() {
+            // 8100端口图片加载成功
+            imgElement.src = img.src;
+        };
+
+        img.onerror = function() {
+            // 8100端口加载失败，尝试8101端口
+            const img2 = new Image();
+            img2.src = baseUrl2 + imageName;
+
+            img2.onload = function() {
+                imgElement.src = img2.src;
+            };
+
+            img2.onerror = function() {
+                // 两个端口都加载失败时显示默认占位图
+                imgElement.src = 'data:image/svg+xml;charset=UTF-8,%3Csvg xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22 width%3D%22120%22 height%3D%2290%22 viewBox%3D%220 0 120 90%22%3E%3Crect width%3D%22100%25%22 height%3D%22100%25%22 fill%3D%22%23f0f0f0%22%2F%3E%3Ctext x%3D%2250%25%22 y%3D%2250%25%22 dominant-baseline%3D%22middle%22 text-anchor%3D%22middle%22 fill%3D%22%23999%22%3E截图不存在%3C%2Ftext%3E%3C%2Fsvg%3E';
+            };
+        };
+    }
+
+    // 保持原有的弹窗功能代码不变
+    // 弹窗显示函数
+    function showPopup(imgSrc) {
+        var popup = document.getElementById('popup');
+        var popupImg = document.getElementById('popup-img');
+
+        // 设置图片源并显示弹窗
+        popupImg.src = imgSrc;
+        popup.style.display = 'flex';
+        popup.classList.add('active');
+
+        // 点击弹窗背景也可以关闭
+        popup.addEventListener('click', function(e) {
+            if (e.target === popup) {
+                closePopup();
+            }
+        });
+    }
+
+    // ... 其他原有脚本代码保持不变
     // 弹窗显示函数
     function showPopup(imgSrc) {
         var popup = document.getElementById('popup');

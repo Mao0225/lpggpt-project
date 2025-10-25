@@ -241,5 +241,55 @@ public abstract class BaseFillRecordCheck1<M extends BaseFillRecordCheck1<M>> ex
 		return getStr("uuid");
 	}
 	
+	/**
+	 * 上传状态（0=未上传，1=已上传，2=上传失败）
+	 */
+	public void setUploadFlag(java.lang.Integer uploadFlag) {
+		set("upload_flag", uploadFlag);
+	}
+	
+	/**
+	 * 上传状态（0=未上传，1=已上传，2=上传失败）
+	 */
+	public java.lang.Integer getUploadFlag() {
+		return getInt("upload_flag");
+	}
+	
+	/**
+	 * 上传备注（失败原因）
+	 */
+	public void setUploadMsg(java.lang.String uploadMsg) {
+		set("upload_msg", uploadMsg);
+	}
+	
+	/**
+	 * 上传备注（失败原因）
+	 */
+	public java.lang.String getUploadMsg() {
+		return getStr("upload_msg");
+	}
+	
+	/**
+	 * 上传时间
+	 */
+	public void setUploadTime(java.util.Date uploadTime) {
+		set("upload_time", uploadTime);
+	}
+	
+	/**
+	 * 上传时间
+	 */
+	public java.util.Date getUploadTime() {
+		return getDate("upload_time");
+	}
+	
+	public void setIsUploaded(java.lang.Integer isUploaded) {
+		set("is_uploaded", isUploaded);
+	}
+	
+	public java.lang.Integer getIsUploaded() {
+		return getInt("is_uploaded");
+	}
+	
 }
 

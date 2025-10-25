@@ -20,15 +20,23 @@ public abstract class BasePlckongzhi<M extends BasePlckongzhi<M>> extends Model<
 	/**
 	 * 切断阀控制，,0是关闭，10是打开
 	 */
-	public void setQieduanfakongzhi(java.lang.String qieduanfakongzhi) {
-		set("qieduanfakongzhi", qieduanfakongzhi);
+	public void setQieduanfa1kongzhi(java.lang.String qieduanfa1kongzhi) {
+		set("qieduanfa1kongzhi", qieduanfa1kongzhi);
 	}
 	
 	/**
 	 * 切断阀控制，,0是关闭，10是打开
 	 */
-	public java.lang.String getQieduanfakongzhi() {
-		return getStr("qieduanfakongzhi");
+	public java.lang.String getQieduanfa1kongzhi() {
+		return getStr("qieduanfa1kongzhi");
+	}
+	
+	public void setQieduanfa2kongzhi(java.lang.String qieduanfa2kongzhi) {
+		set("qieduanfa2kongzhi", qieduanfa2kongzhi);
+	}
+	
+	public java.lang.String getQieduanfa2kongzhi() {
+		return getStr("qieduanfa2kongzhi");
 	}
 	
 	/**

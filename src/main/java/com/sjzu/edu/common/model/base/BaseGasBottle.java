@@ -177,5 +177,33 @@ public abstract class BaseGasBottle<M extends BaseGasBottle<M>> extends Model<M>
 		return getStr("jieshuaddress");
 	}
 	
+	/**
+	 * 是否上传：0-未上传，1-已上传
+	 */
+	public void setIsUploaded(java.lang.Integer isUploaded) {
+		set("is_uploaded", isUploaded);
+	}
+	
+	/**
+	 * 是否上传：0-未上传，1-已上传
+	 */
+	public java.lang.Integer getIsUploaded() {
+		return getInt("is_uploaded");
+	}
+	
+	/**
+	 * 上传时间
+	 */
+	public void setUploadTime(java.util.Date uploadTime) {
+		set("upload_time", uploadTime);
+	}
+	
+	/**
+	 * 上传时间
+	 */
+	public java.util.Date getUploadTime() {
+		return getDate("upload_time");
+	}
+	
 }
 
