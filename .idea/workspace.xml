@@ -7,7 +7,9 @@
     <list default="true" id="bef31097-e2fd-4fd6-9377-5642cb374b1b" name="更改" comment="增加了LPG充装端的后台和对应后端">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/log/jfinal_demo_for_maven.log" beforeDir="false" afterPath="$PROJECT_DIR$/log/jfinal_demo_for_maven.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/shexiangtoufind/shexiangtous.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/shexiangtoufind/shexiangtous.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/plckongzhi/plckongzhi_add.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/plckongzhi/plckongzhi_add.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/plckongzhi/plckongzhi_edit.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/plckongzhi/plckongzhi_edit.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/plcxinhao/plcxinhao_list.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/plcxinhao/plcxinhao_list.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -263,6 +265,8 @@
       <workItem from="1761320076279" duration="1892000" />
       <workItem from="1761378448680" duration="1907000" />
       <workItem from="1761436729908" duration="1170000" />
+      <workItem from="1761547216106" duration="2052000" />
+      <workItem from="1761570790540" duration="2249000" />
     </task>
     <task id="LOCAL-00001" summary="添加了小盒子管理功能">
       <option name="closed" value="true" />

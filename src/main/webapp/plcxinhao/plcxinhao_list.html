@@ -175,18 +175,20 @@
         <th>气瓶间报警</th>
         <th>厨房泄露报警</th>
         <th>烟感报警</th>
-        <th>报警器读数 1</th>
+        <!--th>报警器读数 1</th>
         <th>报警器读数 2</th>
-        <th>报警器读数 3</th>
+        <th>报警器读数 3</th-->
         <th>切断阀状态</th>
         <th>风机状态</th>
-        <th>通道1状态</th>
+        <!--th>通道1状态</th>
         <th>通道2状态</th>
         <th>通道3状态</th>
         <th>通道4状态</th>
+        <th>通道4状态</th-->
+        <th>气体报警器数值 1</th>
+        <th>气体报警器数值 2</th>
         <th>RFID标签</th>
         <th>上传时间</th>
-        <th>操作</th>
       </tr>
       </thead>
       <tbody>
@@ -215,9 +217,9 @@
           #end
         </td>
 
-        <td>#(plc.baoqingjidushu1 ?? '')</td>
+        <!--td>#(plc.baoqingjidushu1 ?? '')</td>
         <td>#(plc.baoqingjidushu2 ?? '')</td>
-        <td>#(plc.baoqingjidushu3 ?? '')</td>
+        <td>#(plc.baoqingjidushu3 ?? '')</td-->
         <td>
           #if(plc.qieduanfa == "0") 关闭
           #else if(plc.qieduanfa == "1") 打开
@@ -230,7 +232,7 @@
           #else #(plc.fengji ?? '')
           #end
         </td>
-        <td>
+        <!--td>
           #if(plc.tongdaoone == "0") 关闭
           #else if(plc.tongdaoone == "10") 打开
           #else #(plc.tongdaoone ?? '')
@@ -253,13 +255,12 @@
           #else if(plc.tongdaofour == "10") 打开
           #else #(plc.tongdaofour ?? '')
           #end
-        </td>
+        </td-->
+        <td>#(plc.keranqitibaojingzhi600 ?? '')</td>
+        <td>#(plc.keranqitibaojingzhi610 ?? '')</td>
         <td>#(plc.rfidno ?? '')</td>
         <td>#(plc.uploadtime ?? '')</td>
-        <td>
-          <a href="/plcxinhao/detail?id=#(plc.id)" class="operation-btn">查看</a>
-          <a href="javascript:confirmDelete(#(plc.id))" class="operation-btn" style="color:red">删除</a>
-        </td>
+
       </tr>
       #end
       </tbody>
