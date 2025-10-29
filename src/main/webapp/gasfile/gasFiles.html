@@ -224,10 +224,15 @@
                 <td>#(x.shiyongzhejingdu)</td>
                 <td>#(x.shiyongzheweidu)</td>
 
-                <td style="text-align:left">
-                    &nbsp;&nbsp;<a href="#" onclick="confirmDelete('#(x.id)')">删除</a>
-                    <a href="#" class="openModal" data-title="修改档案" data-edit-url="/gasFile/edit/#(x.id)">修改</a>
-
+                <td style="text-align:left; padding: 8px;">
+                    <!-- 删除按钮 -->
+                    <a href="#" onclick="confirmDelete('#(x.id)')" style="margin-right: 10px; color: #dc3545; text-decoration: none;">
+                        <button type="button" class="btn btn-sm btn-danger">删除</button>
+                    </a>
+                    <!-- 修改按钮 -->
+                    <a href="#" class="openModal" data-title="修改档案" data-edit-url="/gasFile/edit/#(x.id)" style="text-decoration: none;">
+                        <button type="button" class="btn btn-sm btn-primary">修改</button>
+                    </a>
                 </td>
             </tr>
             #end

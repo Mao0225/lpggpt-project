@@ -265,29 +265,38 @@
         const baseUrl1 = 'http://39.98.221.201:8100/upload/temp/';
         const baseUrl2 = 'http://39.98.221.201:8101/upload/temp/';
 
-        // 先尝试加载8100端口的图片
         const img = new Image();
         img.src = baseUrl1 + imageName;
 
         img.onload = function() {
-            // 8100端口图片加载成功
             imgElement.src = img.src;
+            // 图片加载成功后，绑定点击事件（确保src已更新）
+            bindClickEvent(imgElement);
         };
 
         img.onerror = function() {
-            // 8100端口加载失败，尝试8101端口
             const img2 = new Image();
             img2.src = baseUrl2 + imageName;
 
             img2.onload = function() {
                 imgElement.src = img2.src;
+                // 备用地址加载成功后，绑定点击事件
+                bindClickEvent(imgElement);
             };
 
             img2.onerror = function() {
-                // 两个端口都加载失败时显示默认占位图
                 imgElement.src = 'data:image/svg+xml;charset=UTF-8,%3Csvg xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22 width%3D%22120%22 height%3D%2290%22 viewBox%3D%220 0 120 90%22%3E%3Crect width%3D%22100%25%22 height%3D%22100%25%22 fill%3D%22%23f0f0f0%22%2F%3E%3Ctext x%3D%2250%25%22 y%3D%2250%25%22 dominant-baseline%3D%22middle%22 text-anchor%3D%22middle%22 fill%3D%22%23999%22%3E图片不存在%3C%2Ftext%3E%3C%2Fsvg%3E';
+                // 加载失败时也绑定事件（显示错误图）
+                bindClickEvent(imgElement);
             };
         };
+    }
+
+    // 单独封装点击事件绑定函数
+    function bindClickEvent(imgElement) {
+        imgElement.addEventListener('click', () => {
+            showPopup(imgElement.src); // 此时src已确定是最终地址
+        });
     }
 
     // 保持原有的弹窗功能代码不变
