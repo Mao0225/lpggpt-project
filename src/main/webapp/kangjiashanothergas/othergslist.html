@@ -153,6 +153,7 @@
 			<th>灌装用时</th>
 			<th>单位编码</th>
 			<th>创建日期（createdate）</th>
+			<th>uuid</th>
 		</tr>
 		#set(startIndex = (othergslist.pageNumber - 1) * othergslist.pageSize + 1)
 
@@ -168,6 +169,7 @@
  			<td>#(x.addgaslong)</td>
 			<td>#(x.stationCode)</td>
 			<td>#(x.create_time)</td>
+			<td>#(x.uuid)</td>
 
 		</tr>
 		#end

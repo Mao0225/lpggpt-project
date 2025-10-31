@@ -115,6 +115,7 @@
 			<th>金额</th>
 			<th>加气站编码</th>
 			<th>交易日期</th>
+			<th>UUID</th>
 		</tr>
 		#set(startIndex = (jiaqilist.pageNumber - 1) * jiaqilist.pageSize + 1)
 
@@ -131,6 +132,7 @@
 			<td>#(x.now_money)</td>
 			<td>#(x.org_code)</td>
 			<td>#(x.trade_date)</td>
+			<td>#(x.uuid)</td>
 
 		</tr>
 		#end

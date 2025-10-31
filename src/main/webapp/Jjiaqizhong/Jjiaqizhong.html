@@ -149,6 +149,7 @@
                 <th>充装员</th>
                 <th>检查员</th>
                 <th>充装站编码</th>
+                <th>UUID</th>
                 <th>操作</th>
             </tr>
             #set(startIndex = (JrecordList.pageNumber - 1) * JrecordList.pageSize + 1)
@@ -164,8 +165,9 @@
                 <td>#(x.fillin_name)</td>
                 <td>#(x.checkin_name)</td>
                 <td>#(x.org_code)</td>
+                <td>#(x.uuid)</td>
                 <td style="text-align:left">
-                    <a href="#" class="btn btn-danger" onclick="deleteRecord('#(x.id)')">删除</a>
+                    <a href="#" class="btn btn-danger" onclick="deleteRecord('#(x.id)')">删除11</a>
                 </td>
             </tr>
             #end

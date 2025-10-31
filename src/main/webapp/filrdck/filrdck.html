@@ -325,6 +325,7 @@
     <th width="12%">充装人员</th>
     <th width="15%">检查人员</th>
     <th width="12%">所属站点</th>
+    <th width="12%">UUID</th>
   </tr>
   #set(startIndex = (filrdck.pageNumber - 1) * filrdck.pageSize + 1)
   #for(x : filrdck.getList())
@@ -369,6 +370,7 @@
       #if(!foundStation)
       #(x.gasstation)
       #end</td>
+    <td>#(x.uuid)</td>
   </tr>
   #end
   </tbody>
