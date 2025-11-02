@@ -22,6 +22,9 @@ public class FilrecordckServive {
         String selectSql = "SELECT f.*, g.* ";
         List<Object> params = new ArrayList<>();
 
+        // 新增条件：add_gas_long不为空
+        baseSql.append(" AND f.add_gas_long IS NOT NULL ");
+
         if (finditem != null) {
             baseSql.append(" AND f.fill_time >= ? AND f.fill_time < ? ");
             params.add(finditem);
@@ -29,7 +32,7 @@ public class FilrecordckServive {
         }
 
         if (gastion != null && !gastion.isEmpty()) {
-            GasStation station =dao.findFirst(
+            GasStation station = dao.findFirst(
                     "SELECT * FROM gas_station WHERE companyid = ?", gastion);
             if (station != null) {
                 baseSql.append(" AND f.gasstation = ? ");

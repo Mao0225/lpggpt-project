@@ -55,18 +55,20 @@ public class FfilrecordckServive {
         List<Object> params = new ArrayList<>();
         boolean hasCondition = false;
 
-        // 添加 now_gas IS NOT NULL 条件
-        baseSql.append(" WHERE now_gas IS NOT NULL ");
+        // 1. 新增条件：add_gas_long 不为空
+        baseSql.append(" WHERE f.add_gas_long IS NOT NULL ");
         hasCondition = true;
 
-        // 添加 after_filling 和 before_filling 都为合格的条件
-        appendCondition(baseSql, hasCondition);
-        baseSql.append("f.after_filling = ? AND f.before_filling = ? ");
+        // 2. 保留原有条件：now_gas 不为空（注意调整条件连接符）
+        baseSql.append(" AND now_gas IS NOT NULL ");
+
+        // 3. 原有条件：after_filling 和 before_filling 都为合格
+        baseSql.append(" AND f.after_filling = ? AND f.before_filling = ? ");
         params.add("合格");
         params.add("合格");
         hasCondition = true;
 
-        // 如果 finditem 为 null，使用当天日期作为查询条件
+        // 处理日期条件（finditem为null时默认查当天）
         if (finditem == null) {
             LocalDate today = LocalDate.now();
             LocalDateTime startOfDay = today.atStartOfDay();
@@ -75,53 +77,40 @@ public class FfilrecordckServive {
             Timestamp startTimestamp = Timestamp.valueOf(startOfDay);
             Timestamp endTimestamp = Timestamp.valueOf(endOfDay);
 
-            appendCondition(baseSql, hasCondition);
-            baseSql.append("f.fill_time >= ? AND f.fill_time < ? ");
+            baseSql.append(" AND f.fill_time >= ? AND f.fill_time < ? ");
             params.add(startTimestamp);
             params.add(endTimestamp);
-            hasCondition = true;
         } else {
-            // 处理传入的日期条件
-            appendCondition(baseSql, hasCondition);
-            baseSql.append("f.fill_time >= ? AND f.fill_time < ? ");
+            baseSql.append(" AND f.fill_time >= ? AND f.fill_time < ? ");
             params.add(finditem);
             params.add(new Timestamp(finditem.getTime() + 86400000));
-            hasCondition = true;
         }
-
 
         // 处理加气站条件
         if (gastion != null && !gastion.isEmpty()) {
-            appendCondition(baseSql, hasCondition);
-            baseSql.append("f.gasstation LIKE ? ");
+            baseSql.append(" AND f.gasstation LIKE ? ");
             params.add("%" + gastion + "%");
-            hasCondition = true;
         }
 
         // 处理气瓶编号条件
         if (gasnumber != null && !gasnumber.isEmpty()) {
-            appendCondition(baseSql, hasCondition);
-            baseSql.append("f.gas_number LIKE ? ");
+            baseSql.append(" AND f.gas_number LIKE ? ");
             params.add("%" + gasnumber + "%");
-            hasCondition = true;
         }
 
         // 处理 companyid 条件
         if (companyid != null && !companyid.isEmpty()) {
-            appendCondition(baseSql, hasCondition);
-            baseSql.append("f.gasstation = ? ");
+            baseSql.append(" AND f.gasstation = ? ");
             params.add(companyid);
             System.out.println("companyid:" + companyid);
-            hasCondition = true;
         }
 
         // 添加排序
-        baseSql.append("ORDER BY f.id DESC");
+        baseSql.append(" ORDER BY f.id DESC");
 
         String finalSql = selectSql + baseSql.toString();
         System.out.println("Final SQL: " + finalSql);
 
-        // 使用参数化查询分页（需根据框架调整）
         return dao.paginate(pageNumber, pageSize, selectSql, baseSql.toString(), params.toArray());
     }
 
