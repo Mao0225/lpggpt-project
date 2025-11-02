@@ -368,7 +368,7 @@
       #end
       #end
       #if(!foundStation)
-      #(x.gasstation)
+      #(x.gasstation ?? '未知站点')
       #end</td>
     <td>#(x.uuid)</td>
   </tr>
@@ -377,9 +377,7 @@
 </table>
 <div class="pagination" style="color:#DDDDDD;">
   #@paginate(filrdck.pageNumber,filrdck.totalPage, "/filrdck/filrdcklist?finditem="+(finditem != null ? finditem :'')+
-  "&gastion_select=" + (gastion_select != null ? gastion_select : '')+ "&gasid=" + (gasname != null ? gasname : '')+"&pageNum=")
-</div>
-
+  "&gastion_select=" + (gastion_select != null ? gastion_select : '')+ "&gasid=" + (gasname != null ? gasname : '')+"&pageNum=")</div>
 <script>
   // 新增检查详情显示逻辑
   $(document).ready(function() {
