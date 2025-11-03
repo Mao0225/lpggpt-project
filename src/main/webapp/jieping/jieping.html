@@ -157,6 +157,7 @@
         table.list td {
             padding: 8px;
             border: 1px solid #ddd;
+            position: relative;
         }
 
         /* 设置表格隔行颜色 */
@@ -173,7 +174,43 @@
             background-color: #d3d3d3;
         }
 
-        /* 设置图片样式 */
+        /* 图片容器和加载状态样式 */
+        .img-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .img-loading {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 120px;
+            height: 90px;
+            background-color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .loading-spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ddd;
+            border-top: 2px solid #007bff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 5px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* 图片样式 */
         table.list td img {
             max-width: 120px;
             max-height: 90px;
@@ -182,10 +219,36 @@
             border-radius: 4px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             object-fit: cover;
+            display: none; /* 初始隐藏，加载成功后显示 */
+        }
+
+        table.list td img.visible {
+            display: inline-block;
         }
 
         table.list td img:hover {
             transform: scale(1.1);
+        }
+
+        /* 图片加载失败占位图 */
+        .img-placeholder {
+            width: 120px;
+            height: 90px;
+            background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #999;
+            font-size: 12px;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            display: none;
+        }
+
+        .img-placeholder.visible {
+            display: flex;
         }
 
         /* 分页样式 */
@@ -235,12 +298,21 @@
         <td style="text-align:center">#(x.shexiangtouno)</td>
         <td style="text-align:center">#(x.happendtime)</td>
         <td style="text-align:center">
-            <img
-                    data-img-name="#(x.photo)"
-                    src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                    alt="摄像头截图"
-                    onload="loadImage(this)"
-            >
+            <div class="img-container">
+                <div class="img-loading">
+                    <div class="loading-spinner"></div>
+                    <span>加载中...</span>
+                </div>
+                <img
+                        data-img-name="#(x.photo)"
+                        src=""
+                        alt="摄像头截图"
+                >
+                <div class="img-placeholder">
+                    <span>加载失败</span>
+                    <span>点击重试</span>
+                </div>
+            </div>
         </td>
     </tr>
     #end
@@ -254,69 +326,126 @@
 </div>
 
 <script>
-    // 图片加载函数 - 先尝试8100端口，失败则尝试8101端口
+    // 页面加载完成后初始化所有图片加载
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.img-container img').forEach(img => {
+            loadImage(img);
+        });
+    });
+
+    // 图片加载函数 - 带重试机制和缓存控制
     function loadImage(imgElement) {
         const imageName = imgElement.getAttribute('data-img-name');
-        // 基础路径，包含截图目录
-        const baseUrl1 = 'http://39.98.221.201:8100/upload/temp/jieping/';
-        const baseUrl2 = 'http://39.98.221.201:8101/upload/temp/jieping/';
+        if (!imageName) {
+            handleLoadError(imgElement);
+            return;
+        }
 
-        // 先尝试加载8100端口的图片
-        const img = new Image();
-        img.src = baseUrl1 + imageName;
+        const container = imgElement.parentElement;
+        const loading = container.querySelector('.img-loading');
+        const placeholder = container.querySelector('.img-placeholder');
 
-        img.onload = function() {
-            // 8100端口图片加载成功
-            imgElement.src = img.src;
-        };
+        // 重置状态
+        imgElement.classList.remove('visible');
+        placeholder.classList.remove('visible');
+        loading.style.display = 'flex';
 
-        img.onerror = function() {
-            // 8100端口加载失败，尝试8101端口
-            const img2 = new Image();
-            img2.src = baseUrl2 + imageName;
+        // 端口列表和重试参数
+        const ports = [8100, 8101];
+        const maxRetriesPerPort = 2; // 每个端口重试次数
+        let currentPortIndex = 0;
+        let currentRetry = 0;
 
-            img2.onload = function() {
-                imgElement.src = img2.src;
+        // 生成带时间戳的URL，避免缓存
+        function getImageUrl(port) {
+            return `http://39.98.221.201:${port}/upload/temp/jieping/${imageName}?t=${new Date().getTime()}`;
+        }
+
+        // 尝试加载图片
+        function tryLoad() {
+            const img = new Image();
+            const currentPort = ports[currentPortIndex];
+            img.src = getImageUrl(currentPort);
+
+            img.onload = function() {
+                // 加载成功
+                imgElement.src = img.src;
+                imgElement.classList.add('visible');
+                loading.style.display = 'none';
+                bindClickEvent(imgElement); // 绑定点击事件
             };
 
-            img2.onerror = function() {
-                // 两个端口都加载失败时显示默认占位图
-                imgElement.src = 'data:image/svg+xml;charset=UTF-8,%3Csvg xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22 width%3D%22120%22 height%3D%2290%22 viewBox%3D%220 0 120 90%22%3E%3Crect width%3D%22100%25%22 height%3D%22100%25%22 fill%3D%22%23f0f0f0%22%2F%3E%3Ctext x%3D%2250%25%22 y%3D%2250%25%22 dominant-baseline%3D%22middle%22 text-anchor%3D%22middle%22 fill%3D%22%23999%22%3E截图不存在%3C%2Ftext%3E%3C%2Fsvg%3E';
+            img.onerror = function() {
+                currentRetry++;
+                // 当前端口重试次数未满，继续重试
+                if (currentRetry < maxRetriesPerPort) {
+                    setTimeout(tryLoad, 800); // 800ms后重试
+                } else {
+                    // 切换到下一个端口
+                    currentPortIndex++;
+                    currentRetry = 0;
+                    if (currentPortIndex < ports.length) {
+                        tryLoad(); // 尝试下一个端口
+                    } else {
+                        // 所有端口都失败
+                        handleLoadError(imgElement);
+                    }
+                }
             };
+        }
+
+        // 开始加载
+        tryLoad();
+    }
+
+    // 处理加载失败
+    function handleLoadError(imgElement) {
+        const container = imgElement.parentElement;
+        const loading = container.querySelector('.img-loading');
+        const placeholder = container.querySelector('.img-placeholder');
+
+        loading.style.display = 'none';
+        placeholder.classList.add('visible');
+
+        // 绑定点击重试事件
+        placeholder.onclick = function() {
+            loadImage(imgElement);
         };
     }
 
-    // 保持原有的弹窗功能代码不变
-    // 弹窗显示函数
-    function showPopup(imgSrc) {
-        var popup = document.getElementById('popup');
-        var popupImg = document.getElementById('popup-img');
-
-        // 设置图片源并显示弹窗
-        popupImg.src = imgSrc;
-        popup.style.display = 'flex';
-        popup.classList.add('active');
-
-        // 点击弹窗背景也可以关闭
-        popup.addEventListener('click', function(e) {
-            if (e.target === popup) {
-                closePopup();
-            }
-        });
+    // 绑定图片点击事件（确保图片加载完成后才绑定）
+    function bindClickEvent(imgElement) {
+        // 移除可能存在的旧事件
+        imgElement.onclick = null;
+        imgElement.onclick = () => {
+            showPopup(imgElement.src);
+        };
     }
 
-    // ... 其他原有脚本代码保持不变
     // 弹窗显示函数
     function showPopup(imgSrc) {
-        var popup = document.getElementById('popup');
-        var popupImg = document.getElementById('popup-img');
+        const popup = document.getElementById('popup');
+        const popupImg = document.getElementById('popup-img');
 
-        // 设置图片源并显示弹窗
-        popupImg.src = imgSrc;
+        // 显示弹窗并加载图片
         popup.style.display = 'flex';
         popup.classList.add('active');
+        popupImg.src = ''; // 清空旧图片
 
-        // 点击弹窗背景也可以关闭
+        // 先显示加载状态
+        const tempImg = new Image();
+        tempImg.src = imgSrc;
+
+        tempImg.onload = function() {
+            popupImg.src = imgSrc;
+        };
+
+        tempImg.onerror = function() {
+            // 弹窗图片加载失败时尝试重新加载
+            popupImg.src = 'data:image/svg+xml;charset=UTF-8,%3Csvg xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22 width%3D%22200%22 height%3D%22150%22 viewBox%3D%220 0 200 150%22%3E%3Crect width%3D%22100%25%22 height%3D%22100%25%22 fill%3D%22%23f0f0f0%22%2F%3E%3Ctext x%3D%2250%25%22 y%3D%2250%25%22 dominant-baseline%3D%22middle%22 text-anchor%3D%22middle%22 fill%3D%22%23999%22%3E图片加载失败%3C%2Ftext%3E%3C%2Fsvg%3E';
+        };
+
+        // 点击背景关闭
         popup.addEventListener('click', function(e) {
             if (e.target === popup) {
                 closePopup();
@@ -326,18 +455,13 @@
 
     // 关闭弹窗函数
     function closePopup() {
-        var popup = document.getElementById('popup');
+        const popup = document.getElementById('popup');
         popup.classList.remove('active');
 
         setTimeout(() => {
             popup.style.display = 'none';
         }, 300);
     }
-
-    // 绑定图片点击事件
-    document.querySelectorAll('td img').forEach(img => {
-        img.addEventListener('click', () => showPopup(img.src));
-    });
 
     // 关闭按钮事件
     document.getElementById('close-btn').addEventListener('click', closePopup);

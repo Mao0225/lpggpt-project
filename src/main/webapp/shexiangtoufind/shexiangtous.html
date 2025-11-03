@@ -30,7 +30,6 @@
             border-color: #4c87c9;
         }
 
-        /* 调整搜索和重置按钮样式 */
         input[type="submit"],
         input[type="button"] {
             padding: 6px 12px;
@@ -54,7 +53,6 @@
     </style>
 
     <style>
-        /* 设置 #pagediv 的样式 */
         #pagediv {
             background-color: #f0f0f0;
             color: black;
@@ -62,13 +60,11 @@
             border: 2px solid #007bff;
         }
 
-        /* 设置表格样式 */
         table.list {
             width: 100%;
             border-collapse: collapse;
         }
 
-        /* 设置表格表头样式 */
         table.list th {
             background-color: #add8e6;
             color: black;
@@ -77,13 +73,12 @@
             border: 1px solid #ddd;
         }
 
-        /* 设置表格单元格样式 */
         table.list td {
             padding: 8px;
             border: 1px solid #ddd;
+            position: relative; /* 新增：为加载指示器提供定位容器 */
         }
 
-        /* 设置表格隔行颜色 */
         table.list tr:nth-child(even) {
             background-color: #f2f2f2;
         }
@@ -92,24 +87,8 @@
             background-color: #e0e0e0;
         }
 
-        /* 设置鼠标悬停时表格行的颜色 */
         table.list tr:hover {
             background-color: #d3d3d3;
-        }
-
-        /* 新增样式：设置新建司机链接为黑色 */
-        #pagediv .add {
-            color: black;
-        }
-
-        /* 新增样式：设置输入框背景色为淡灰色 */
-        #pagediv input[type="text"] {
-            background-color: #f0f0f0;
-        }
-
-        /* 新增样式：设置 label 文字颜色为黑色 */
-        #pagediv label {
-            color: black;
         }
 
         #pagediv .add {
@@ -119,6 +98,51 @@
             text-decoration: none;
             display: inline-block;
             border-radius: 4px;
+        }
+
+        #pagediv input[type="text"] {
+            background-color: #f0f0f0;
+        }
+
+        #pagediv label {
+            color: black;
+        }
+
+        /* 图片加载相关样式 */
+        .img-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .img-loading {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1;
+            font-size: 12px;
+            color: #666;
+        }
+
+        /* 加载动画 */
+        .loading-spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ddd;
+            border-top: 2px solid #007bff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 5px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         /* 弹窗样式 */
@@ -178,7 +202,6 @@
             object-fit: contain;
         }
 
-        /* 表格中的图片样式 */
         table.list td img {
             max-width: 120px;
             max-height: 90px;
@@ -186,10 +209,35 @@
             transition: transform 0.3s;
             border-radius: 4px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: none; /* 初始隐藏，加载成功后显示 */
+        }
+
+        table.list td img.visible {
+            display: inline-block;
         }
 
         table.list td img:hover {
             transform: scale(1.1);
+        }
+
+        /* 图片加载失败占位图样式 */
+        .img-placeholder {
+            width: 120px;
+            height: 90px;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #999;
+            font-size: 12px;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            display: none;
+        }
+
+        .img-placeholder.visible {
+            display: flex;
         }
     </style>
 
@@ -237,13 +285,22 @@
         <td style="text-align:center">#(x.shexiangtouno)</td>
         <td style="text-align:center">#(x.happendtime)</td>
         <td style="text-align:center">
-            <img
-                    data-img-name="#(x.Alarmpic)"
-                    src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                    alt="报警图片"
-                    onload="loadImage(this)"
-            >
-        </td>        <td style="text-align:center">#(x.alarmmes)</td>
+            <!-- 图片容器：包含加载指示器、实际图片和失败占位图 -->
+            <div class="img-container">
+                <div class="img-loading">
+                    <div class="loading-spinner"></div>
+                    <span>加载中...</span>
+                </div>
+                <img
+                        data-img-name="#(x.Alarmpic)"
+                        src=""
+                        alt="报警图片"
+                        onload="this.classList.add('visible')"
+                >
+                <div class="img-placeholder">图片加载失败<br>点击重试</div>
+            </div>
+        </td>
+        <td style="text-align:center">#(x.alarmmes)</td>
         <td style="text-align:center">#(x.restaurantname)</td>
         <td style="text-align:center">#(x.restaurantphone)</td>
         <td style="text-align:center">#(x.restaurantaddress)</td>
@@ -259,59 +316,121 @@
 </div>
 
 <script>
-    // 图片加载函数 - 先尝试8100端口，失败则尝试8101端口
+    // 页面加载完成后初始化所有图片加载
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.img-container img').forEach(img => {
+            loadImage(img);
+        });
+    });
+
+    // 图片加载函数 - 带重试机制和缓存控制
     function loadImage(imgElement) {
         const imageName = imgElement.getAttribute('data-img-name');
-        const baseUrl1 = 'http://39.98.221.201:8100/upload/temp/';
-        const baseUrl2 = 'http://39.98.221.201:8101/upload/temp/';
+        if (!imageName) {
+            handleLoadError(imgElement);
+            return;
+        }
 
-        const img = new Image();
-        img.src = baseUrl1 + imageName;
+        const container = imgElement.parentElement;
+        const loading = container.querySelector('.img-loading');
+        const placeholder = container.querySelector('.img-placeholder');
 
-        img.onload = function() {
-            imgElement.src = img.src;
-            // 图片加载成功后，绑定点击事件（确保src已更新）
-            bindClickEvent(imgElement);
-        };
+        // 重置状态
+        imgElement.classList.remove('visible');
+        placeholder.classList.remove('visible');
+        loading.style.display = 'flex';
 
-        img.onerror = function() {
-            const img2 = new Image();
-            img2.src = baseUrl2 + imageName;
+        // 端口列表和重试次数设置
+        const ports = [8100, 8101];
+        const maxRetries = 2; // 每个端口最多重试2次
+        let currentPortIndex = 0;
+        let currentRetry = 0;
 
-            img2.onload = function() {
-                imgElement.src = img2.src;
-                // 备用地址加载成功后，绑定点击事件
-                bindClickEvent(imgElement);
+        // 生成带时间戳的URL，避免缓存问题
+        function getImageUrl(port) {
+            return `http://39.98.221.201:${port}/upload/temp/${imageName}?t=${new Date().getTime()}`;
+        }
+
+        // 尝试加载图片
+        function tryLoad() {
+            const img = new Image();
+            const currentPort = ports[currentPortIndex];
+            img.src = getImageUrl(currentPort);
+
+            img.onload = function() {
+                // 加载成功，更新图片源并显示
+                imgElement.src = img.src;
+                loading.style.display = 'none';
+                bindClickEvent(imgElement); // 绑定点击事件
             };
 
-            img2.onerror = function() {
-                imgElement.src = 'data:image/svg+xml;charset=UTF-8,%3Csvg xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22 width%3D%22120%22 height%3D%2290%22 viewBox%3D%220 0 120 90%22%3E%3Crect width%3D%22100%25%22 height%3D%22100%25%22 fill%3D%22%23f0f0f0%22%2F%3E%3Ctext x%3D%2250%25%22 y%3D%2250%25%22 dominant-baseline%3D%22middle%22 text-anchor%3D%22middle%22 fill%3D%22%23999%22%3E图片不存在%3C%2Ftext%3E%3C%2Fsvg%3E';
-                // 加载失败时也绑定事件（显示错误图）
-                bindClickEvent(imgElement);
+            img.onerror = function() {
+                currentRetry++;
+                // 如果当前端口重试次数未达上限，继续重试
+                if (currentRetry < maxRetries) {
+                    setTimeout(tryLoad, 500); // 500ms后重试
+                } else {
+                    // 当前端口重试完毕，切换到下一个端口
+                    currentPortIndex++;
+                    currentRetry = 0;
+                    if (currentPortIndex < ports.length) {
+                        tryLoad(); // 尝试下一个端口
+                    } else {
+                        // 所有端口都尝试失败
+                        handleLoadError(imgElement);
+                    }
+                }
             };
+        }
+
+        // 开始加载
+        tryLoad();
+    }
+
+    // 处理加载失败
+    function handleLoadError(imgElement) {
+        const container = imgElement.parentElement;
+        const loading = container.querySelector('.img-loading');
+        const placeholder = container.querySelector('.img-placeholder');
+
+        loading.style.display = 'none';
+        placeholder.classList.add('visible');
+
+        // 绑定点击重试事件
+        placeholder.onclick = function() {
+            loadImage(imgElement);
         };
     }
 
-    // 单独封装点击事件绑定函数
-    function bindClickEvent(imgElement) {
-        imgElement.addEventListener('click', () => {
-            showPopup(imgElement.src); // 此时src已确定是最终地址
-        });
+    // 绑定图片点击事件
+    function bindClickEvent(element) {
+        // 先移除已有的事件监听，避免重复绑定
+        element.onclick = null;
+        element.onclick = () => {
+            showPopup(element.src);
+        };
     }
 
-    // 保持原有的弹窗功能代码不变
-    // ...（此处省略原有的弹窗相关JavaScript代码）
     // 弹窗显示函数
     function showPopup(imgSrc) {
         var popup = document.getElementById('popup');
         var popupImg = document.getElementById('popup-img');
 
-        // 设置图片源并显示弹窗
-        popupImg.src = imgSrc;
+        // 显示加载状态
+        popupImg.src = '';
+        popupImg.style.display = 'none';
         popup.style.display = 'flex';
         popup.classList.add('active');
 
-        // 点击弹窗背景也可以关闭
+        // 加载弹窗图片
+        const tempImg = new Image();
+        tempImg.src = imgSrc;
+        tempImg.onload = function() {
+            popupImg.src = imgSrc;
+            popupImg.style.display = 'block';
+        };
+
+        // 点击弹窗背景关闭
         popup.addEventListener('click', function(e) {
             if (e.target === popup) {
                 closePopup();
@@ -329,11 +448,6 @@
         }, 300);
     }
 
-    // 绑定图片点击事件
-    document.querySelectorAll('td img').forEach(img => {
-        img.addEventListener('click', () => showPopup(img.src));
-    });
-
     // 关闭按钮事件
     document.getElementById('close-btn').addEventListener('click', closePopup);
 
@@ -344,15 +458,13 @@
         }
     });
 
-    // 拖拽功能
+    // 弹窗拖拽功能
     let isDragging = false;
     let offsetX, offsetY;
-
     const popupContent = document.getElementById('popup-content');
 
     popupContent.addEventListener('mousedown', (e) => {
-        // 只有点击弹窗标题栏区域才能拖拽
-        if (e.button === 0 && e.target === popupContent || e.target === document.getElementById('popup-img')) {
+        if (e.button === 0 && (e.target === popupContent || e.target === document.getElementById('popup-img'))) {
             isDragging = true;
             offsetX = e.clientX - popupContent.offsetLeft;
             offsetY = e.clientY - popupContent.offsetTop;
@@ -367,23 +479,14 @@
 
     document.addEventListener('mousemove', (e) => {
         if (isDragging) {
-            // 防止弹窗被拖出视口
             const x = e.clientX - offsetX;
             const y = e.clientY - offsetY;
-
-            // 获取视口尺寸
             const viewportWidth = window.innerWidth;
             const viewportHeight = window.innerHeight;
-
-            // 获取弹窗尺寸
             const popupWidth = popupContent.offsetWidth;
             const popupHeight = popupContent.offsetHeight;
-
-            // 计算边界位置
             const maxX = viewportWidth - popupWidth;
             const maxY = viewportHeight - popupHeight;
-
-            // 限制在视口范围内
             const constrainedX = Math.max(0, Math.min(x, maxX));
             const constrainedY = Math.max(0, Math.min(y, maxY));
 
