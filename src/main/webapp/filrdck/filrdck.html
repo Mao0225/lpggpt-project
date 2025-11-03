@@ -212,7 +212,7 @@
 <div id="pagediv">
   <form id="searchForm" action="/filrdck/filrdcklist" method="get">
     <label> 时间查找：</label>
-    <input type="date" name="finditem" value="#(finditem)">
+    <input type="date" name="finditem" id="dateInput" value="#(finditem ?? '')">
     <label> 加气站查找：</label>
     <select id="selectName" name="gastion_select" onchange="chooseName()">
       <option value="" selected>请选择加气站</option>
@@ -225,6 +225,26 @@
     <input value="提交" type="submit">
     <input type="submit" value="重置" name="refresh"/>
     <script>
+
+      // 设置默认日期为当天
+      document.addEventListener('DOMContentLoaded', function() {
+        const dateInput = document.getElementById('dateInput');
+        const form = document.getElementById('searchForm');
+
+        // 检查是否有日期参数，没有则设置为当天并自动提交
+        if (!dateInput.value) {
+          // 设置当天日期
+          const today = new Date();
+          const year = today.getFullYear();
+          const month = String(today.getMonth() + 1).padStart(2, '0');
+          const day = String(today.getDate()).padStart(2, '0');
+          dateInput.value = `${year}-${month}-${day}`;
+
+          // 自动提交表单获取当天数据
+          form.submit();
+        }
+      });
+
       var stations = [
         #for ( x: stations)
       { id: "#(x.id)", station_name: "#(x.station_name)" },
@@ -268,6 +288,14 @@
               input.value = "";
             }
           });
+
+          // 重置时设置日期为当天
+          const today = new Date();
+          const year = today.getFullYear();
+          const month = String(today.getMonth() + 1).padStart(2, '0');
+          const day = String(today.getDate()).padStart(2, '0');
+          document.getElementById('dateInput').value = `${year}-${month}-${day}`;
+
 
           // 重置选择框为默认选项
           document.getElementById("selectName").selectedIndex = 0;
@@ -325,10 +353,13 @@
     <th width="12%">充装人员</th>
     <th width="15%">检查人员</th>
     <th width="12%">所属站点</th>
-    <th width="12%">UUID</th>
+      <th width="12%">上传标识</th>
+      <th width="12%">上传处理次数</th>
+      <th width="12%">上传返回信息</th>
   </tr>
   #set(startIndex = (filrdck.pageNumber - 1) * filrdck.pageSize + 1)
   #for(x : filrdck.getList())
+  #if(x.add_gas_long != null && x.add_gas_long != "" && x.add_gas_long != "0" && x.add_gas_long != 0)
   <tr>
     <td>#(startIndex++)</td> <!-- 显示序号并递增 -->
     <td>#(x.gas_number)</td>
@@ -368,16 +399,41 @@
       #end
       #end
       #if(!foundStation)
-      #(x.gasstation ?? '未知站点')
+      #(x.gasstation)
       #end</td>
-    <td>#(x.uuid)</td>
+      <td>
+          #if(x.upload_flag == 1)
+          <span style="color:green">已上传</span>
+          #elseif(x.upload_flag == 2)
+          <span style="color:red">上传失败</span>
+          #else
+          <span style="color:orange">未上传</span>
+          #end
+      </td>
+      <td>
+        #if(x.upload_flag == 1)
+        #(x.is_uploaded != null && x.is_uploaded > 0 ? x.is_uploaded : "1")
+        #else
+        #(x.is_uploaded != null && x.is_uploaded > 0 ? x.is_uploaded : "0")
+        #end
+      </td>
+      <td>
+          #if(x.upload_flag == 1)
+          #(x.upload_msg ?? "气瓶上传成功")
+          #else
+          -
+          #end
+      </td>
   </tr>
+  #end
   #end
   </tbody>
 </table>
 <div class="pagination" style="color:#DDDDDD;">
   #@paginate(filrdck.pageNumber,filrdck.totalPage, "/filrdck/filrdcklist?finditem="+(finditem != null ? finditem :'')+
-  "&gastion_select=" + (gastion_select != null ? gastion_select : '')+ "&gasid=" + (gasname != null ? gasname : '')+"&pageNum=")</div>
+  "&gastion_select=" + (gastion_select != null ? gastion_select : '')+ "&gasid=" + (gasname != null ? gasname : '')+"&pageNum=")
+</div>
+
 <script>
   // 新增检查详情显示逻辑
   $(document).ready(function() {

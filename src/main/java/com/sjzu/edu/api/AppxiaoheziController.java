@@ -668,5 +668,37 @@ public class AppxiaoheziController extends Controller {
         }
         renderNull();
     }
+    /**
+     * 查询restaurant表所有数据（不分页，返回所有字段）
+     * 接口路径：/appxiaohezi/getrestaurant
+     */
+    public void getrestaurant() {
+        // 添加跨域响应头
+        addCorsHeaders();
 
+        try {
+            // 查询restaurant表所有记录（返回所有字段）
+            List<Record> restaurantList = Db.find("SELECT * FROM restaurant");
+
+            // 构建返回结果
+            JSONObject result = new JSONObject();
+            if (restaurantList != null && !restaurantList.isEmpty()) {
+                result.put("flag", 200); // 成功标识
+                result.put("restaurantList", restaurantList); // 所有餐厅数据
+                result.put("total", restaurantList.size()); // 总记录数
+            } else {
+                result.put("flag", 300); // 无数据标识
+                result.put("message", "未查询到餐厅数据");
+            }
+
+            renderJson(result);
+        } catch (Exception e) {
+            // 异常处理
+            JSONObject errorResult = new JSONObject();
+            errorResult.put("flag", 500); // 服务器错误标识
+            errorResult.put("message", "查询失败：" + e.getMessage());
+            renderJson(errorResult);
+            e.printStackTrace();
+        }
+    }
 }
