@@ -277,6 +277,7 @@
         <th width="10%">饭店电话</th>
         <th width="10%">饭店地址</th>
         <th width="10%">cpu 温度</th>
+        <th width="10%">系统错误信息</th>
     </tr>
     #set(startIndex = (shexiangtou.pageNumber - 1) * shexiangtou.pageSize + 1)
     #for(x : shexiangtou.getList())
@@ -305,6 +306,7 @@
         <td style="text-align:center">#(x.restaurantphone)</td>
         <td style="text-align:center">#(x.restaurantaddress)</td>
         <td style="text-align:center">#(x.memo)</td>
+        <td style="text-align:center">#(x.alarmtype)</td>
     </tr>
     #end
     </tbody>
