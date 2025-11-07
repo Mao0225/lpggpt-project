@@ -112,6 +112,7 @@
     <th>切断阀2状态</th>
     <th>风机状态</th>
     <th>PLC编号</th>
+    <th>树莓派开关</th>
     <th>饭店</th>
     <th>标志位</th>
     <th>类型</th>
@@ -123,18 +124,18 @@
   <tr>
     <td>#(startIndex++)</td>
     <td>
-      #if(x.qieduanfa1 == "0")
+      #if(x.qieduanfa1 == "1")
       打开
-      #else if(x.qieduanfa1 == "1")
+      #else if(x.qieduanfa1 == "0")
       关闭
       #else
       #(x.qieduanfa1 ?? '未知')
       #end
     </td>
     <td>
-      #if(x.qieduanfa2 == "0")
+      #if(x.qieduanfa2 == "1")
       打开
-      #else if(x.qieduanfa2 == "1")
+      #else if(x.qieduanfa2 == "0")
       关闭
       #else
       #(x.qieduanfa2 ?? '未知')
@@ -150,6 +151,13 @@
       #end
     </td>
     <td>#(x.plcno ?? '')</td>
+    <td>#if(x.shumeipaikz == "0")
+      通电
+      #else if(x.shumeipaikz == "1")
+      断电
+      #else
+      #(x.shumeipaikz ?? '未知')
+      #end</td>
     <td>#(x.fandian ?? '')</td>
     <td>#(x.flag ?? '')</td>
     <td>#(x.type ?? '')</td>

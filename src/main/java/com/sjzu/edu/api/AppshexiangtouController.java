@@ -74,74 +74,75 @@ public class AppshexiangtouController extends Controller {
 	}
 	//王念写的
 	public void saveshexiangtoubaojing() {
-		// jason，2023-03-20，接受摄像头上传的照片和报警信息
-		//测试接口地址：http://localhost:8099/shexiangtou/saveshexiangtoubaojing 参数：qipingbianma  FT00000010
-		//云数据库测试接口：http://114.115.156.201:8099/shexiangtou/saveshexiangtoubaojing
-
-
 		System.out.println("开始接收摄像头发射的数据...");
 
-		// 获取请求参数
-
-		addCorsHeaders();  // 允许跨域请求
+		// 允许跨域请求
+		addCorsHeaders();
 		JSONObject json = new JSONObject();
 
-		// 处理文件上传
-		UploadFile file = getFile("photo");
+		// 关键：判断请求是否为multipart/form-data类型（文件上传类型）
+		String contentType = getRequest().getContentType();
+		boolean isMultipart = contentType != null && contentType.contains("multipart/form-data");
+
+		UploadFile file = null;
+		// 只有当是文件上传类型时，才尝试获取文件
+		if (isMultipart) {
+			try {
+				file = getFile("photo"); // 此时调用getFile才安全
+			} catch (Exception e) {
+				System.out.println("文件解析异常（可能没有文件）：" + e.getMessage());
+				file = null; // 明确标记无文件
+			}
+		}
+
+		// 获取请求参数（无论是否有文件，都需要获取这些参数）
 		String shexiangtouno = getPara("shexiangtouno");
-		//System.out.println("shexiangtouno: " + shexiangtouno);
-
 		String baojingtype = getPara("baojingtype");
-		//System.out.println("baojingtype: " + baojingtype);
-
 		String happendtime = getPara("happendtime");
-		//System.out.println("happendtime: " + happendtime);
-
 		String alarmmes = getPara("alarmmes");
 		String memo = getPara("memo");
-		//System.out.println("happendtime: " + happendtime);
+
+		// 打印调试信息
 		if (file != null) {
 			System.out.println("接收到摄像头文件: " + file.getFileName());
 		} else {
-			System.out.println("未接收到摄像头文件");
+			System.out.println("未接收到摄像头文件（或非文件上传请求）");
 		}
-		if (file != null && shexiangtouno != null && baojingtype != null && happendtime != null) {
-			// 获取文件名并保存文件到/upload目录下（JFinal已自动完成文件保存工作）
-			//http://114.115.156.201:8099/upload/temp/2024-03-21_20-45-55.jpg
+
+		// 验证核心参数（即使没有文件，只要核心参数存在就继续处理）
+		if (shexiangtouno != null && baojingtype != null && happendtime != null) {
 			System.out.println("test888");
 
-			String fileName = file.getFileName();
-			System.out.println("fileName:"+fileName);
+			String fileName = null;
+			if (file != null) {
+				fileName = file.getFileName();
+				System.out.println("fileName:" + fileName);
+				String filePath = file.getUploadPath() + File.separator + fileName;
+				System.out.println("filePath:" + filePath);
+			}
 
-			String filePath = file.getUploadPath() + File.separator + fileName;
-			System.out.println("filePath:"+filePath);
-
-			// 使用模型保存信息到数据库
+			// 保存信息到数据库
 			Shexiangtou shexiangtou = new Shexiangtou();
 			shexiangtou.set("shexiangtouno", shexiangtouno)
 					.set("happendtime", happendtime)
 					.set("alarmtype", baojingtype)
 					.set("alarmmes", alarmmes)
 					.set("memo", memo)
-					.set("Alarmpic", fileName);  // 保存文件名
-			System.out.println("test3");
+					.set("Alarmpic", fileName); // 无文件时fileName为null，数据库字段允许为null即可
 
-			// 保存模型到数据库
 			boolean saveResult = shexiangtou.save();
 
 			if (saveResult) {
-				// 构造成功的响应
 				json.put("flag", 200);
 				json.put("message", "成功");
 			} else {
-				// 数据保存失败
 				json.put("flag", 500);
 				json.put("message", "数据保存失败");
 			}
 		} else {
-			// 参数错误或文件上传失败
+			// 核心参数缺失
 			json.put("flag", 400);
-			json.put("message", "参数错误或文件上传失败");
+			json.put("message", "参数错误（shexiangtouno、baojingtype、happendtime为必填）");
 		}
 
 		// 返回响应
@@ -162,6 +163,7 @@ public class AppshexiangtouController extends Controller {
 			// 处理文件上传
 			UploadFile file = getFile("photo");
 			String shexiangtouno = getPara("shexiangtouno");
+			String memo = getPara("memo");
 			System.out.println("shexiangtouno: " + shexiangtouno);
 
 			String happendTime = getPara("happendtime");
@@ -187,6 +189,7 @@ public class AppshexiangtouController extends Controller {
 				Jieping jieping = new Jieping();
 				jieping.set("shexiangtouno", shexiangtouno)
 						.set("happendtime", happendTime)
+						.set("memo", memo)
 						.set("photo", fileName);  // 保存文件的新位置
 				System.out.println("准备保存截屏数据");
 

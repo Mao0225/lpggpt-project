@@ -290,6 +290,7 @@
         <th width="12%">摄像头编号</th>
         <th width="12%">时间</th>
         <th width="12%">截屏</th>
+        <th width="12%">信息</th>
     </tr>
     #set(startIndex = (jiepinglist.pageNumber - 1) * jiepinglist.pageSize + 1)
     #for(x : jiepinglist.getList())
@@ -314,6 +315,7 @@
                 </div>
             </div>
         </td>
+        <td style="text-align:center">#(x.memo)</td>
     </tr>
     #end
     </tbody>

@@ -40,7 +40,13 @@
           <option value="1" #if(plc.fengjikongzhi == "1") selected #end>打开</option>
         </select>
       </div>
-
+      <div class="form-group">
+        <label for="plc.shumeipaikz">树莓派电源控制：</label>
+        <select class="form-control" name="plc.shumeipaikz" id="shumeipaikz">
+          <option value="0" #if(plc.shumeipaikz == "0") selected #end>通电</option>
+          <option value="1" #if(plc.shumeipaikz == "1") selected #end>打开</option>
+        </select>
+      </div>
       <div class="form-group">
         <label for="plc.plcno">PLC编号：</label>
         <input type="text" class="form-control" name="plc.plcno" id="plcno" value="#(plc.plcno)" required>

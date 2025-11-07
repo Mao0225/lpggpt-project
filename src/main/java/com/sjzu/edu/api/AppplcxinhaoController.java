@@ -166,12 +166,20 @@ public class AppplcxinhaoController extends Controller {
 
 				boolean needUpdate = false;
 
-				// 处理qieduanfakongzhi字段：值为1则改为0
+				// 处理shumeipaikz字段：值为1则改为0，1是断电树莓派，0是默认，树莓派开
+				String shumeipaikz = updateRecord.getStr("shumeipaikz");
+				if ("1".equals(shumeipaikz)) {
+					updateRecord.set("shumeipaikz", "0");
+					needUpdate = true;
+				}
+
+
 				String qieduanfa1 = updateRecord.getStr("qieduanfa1kongzhi");
 				if ("1".equals(qieduanfa1)) {
 					updateRecord.set("qieduanfa1kongzhi", "0");
 					needUpdate = true;
 				}
+
 				String qieduanfa2 = updateRecord.getStr("qieduanfa2kongzhi");
 				if ("1".equals(qieduanfa2)) {
 					updateRecord.set("qieduanfa2kongzhi", "0");

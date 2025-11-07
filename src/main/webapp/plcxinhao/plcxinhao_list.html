@@ -178,7 +178,8 @@
         <!--th>报警器读数 1</th>
         <th>报警器读数 2</th>
         <th>报警器读数 3</th-->
-        <th>切断阀状态</th>
+        <th>切断阀1状态</th>
+        <th>切断阀2状态</th>
         <th>风机状态</th>
         <!--th>通道1状态</th>
         <th>通道2状态</th>
@@ -220,10 +221,17 @@
         <!--td>#(plc.baoqingjidushu1 ?? '')</td>
         <td>#(plc.baoqingjidushu2 ?? '')</td>
         <td>#(plc.baoqingjidushu3 ?? '')</td-->
+
         <td>
-          #if(plc.qieduanfa == "0") 关闭
-          #else if(plc.qieduanfa == "1") 打开
-          #else #(plc.qieduanfa ?? '')
+          #if(plc.qieduanfa1 == "0") 关闭
+          #else if(plc.qieduanfa1 == "1") 打开
+          #else #(plc.qieduanfa1 ?? '')
+          #end
+        </td>
+        <td>
+          #if(plc.qieduanfa2 == "0") 关闭
+          #else if(plc.qieduanfa2 == "1") 打开
+          #else #(plc.qieduanfa2 ?? '')
           #end
         </td>
         <td>

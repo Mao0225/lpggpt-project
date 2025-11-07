@@ -46,13 +46,6 @@ public class AppranqibiaoController extends Controller {
 		String shengyujine = getPara("shengyujine");//剩余金额
 
 
-
-
-
-
-
-
-
 		LocalDateTime currentTime = LocalDateTime.now();
 		// 格式化当前时间为字符串
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
