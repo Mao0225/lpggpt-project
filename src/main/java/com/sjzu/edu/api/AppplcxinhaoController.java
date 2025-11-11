@@ -101,8 +101,8 @@ public class AppplcxinhaoController extends Controller {
 		Page<Record> page = Db.use().paginate(
 				pageNum,
 				pageSize,
-				"select *",
-				"from plcxinhao order by id desc"
+				"select f.*, r.name as restaurant_name",
+				"from plcxinhao f  left join restaurant r on f.plcno = r.xiaohezi order by f.id desc"
 		);
 
 		// 构建响应JSON

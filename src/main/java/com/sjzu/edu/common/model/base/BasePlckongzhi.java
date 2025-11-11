@@ -93,5 +93,19 @@ public abstract class BasePlckongzhi<M extends BasePlckongzhi<M>> extends Model<
 		return getStr("fandian");
 	}
 	
+	/**
+	 * 树莓派开关控制，0 是开，1 是关。
+	 */
+	public void setShumeipaikz(java.lang.String shumeipaikz) {
+		set("shumeipaikz", shumeipaikz);
+	}
+	
+	/**
+	 * 树莓派开关控制，0 是开，1 是关。
+	 */
+	public java.lang.String getShumeipaikz() {
+		return getStr("shumeipaikz");
+	}
+	
 }
 
