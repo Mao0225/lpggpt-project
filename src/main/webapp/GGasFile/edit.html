@@ -5,94 +5,95 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Content</title>
     <style>
-        /* 以下是保留你原来的样式部分 */
+        /* 保留原有样式 */
         ::-webkit-input-placeholder {
-            /* Chrome/Opera/Safari */
             color: #8A8A8A;
             font-size: 12px;
         }
-
         ::-moz-placeholder {
-            /* Firefox 19+ */
             color: #8A8A8A;
             font-size: 12px;
         }
-
         :-ms-input-placeholder {
-            /* IE 10+ */
             color: #8A8A8A;
             font-size: 12px;
         }
-
         :-moz-placeholder {
-            /* Firefox 18- */
             color: #8A8A8A;
             font-size: 12px;
         }
-
-        /* 统一输入框和选择框样式 */
         input[type="text"],
         select {
             border: 1px solid #ccc;
             border-radius: 5px;
             padding: 5px;
             box-sizing: border-box;
-            color: black; /* 设置字体颜色为黑色 */
-            /* 让选择框宽度根据内容自适应 */
+            color: black;
             width: auto;
-            min-width: 100px; /* 设置一个最小宽度，避免内容过少时选择框过窄 */
-            background-color: white; /* 添加背景颜色 */
+            min-width: 100px;
+            background-color: white;
         }
-
-        /* 去除下拉选择框的默认样式 */
         select {
             appearance: none;
             -webkit-appearance: none;
             -moz-appearance: none;
-            background-image: none; /* 去除背景图片（如果有） */
+            background-image: none;
         }
-
-        /* 调整只读选择框样式 */
         select:disabled {
             background-color: #f5f5f5;
             color: #8A8A8A;
         }
-
-        /* 为表单中的 label 设置样式，让布局更整齐 */
         label {
             display: inline-block;
             width: 100px;
             text-align: right;
             margin-right: 10px;
         }
+        /* 新增校验提示样式 */
+        #gasNumberTip {
+            font-size: 12px;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
     </style>
 </head>
 <body>
 <div class="form_box">
     <form id="myForm" action="/GGasFile/update" method="post">
-        <input type="hidden" name="gas_file.id" value="#(gas_file.id??)" />
+        <!-- 隐藏域：当前编辑记录ID（用于校验时排除自身） -->
+        <input type="hidden" name="gas_file.id" value="#(gas_file.id??)" id="gasFileId" />
         <div>
             <label for="gas_file.gas_number">气瓶编号</label>
-            <input type="text" id="gas_file.gas_number" name="gas_file.gas_number"  value="#(gas_file.gas_number)" />
+            <!-- 1. 绑定失焦校验事件 -->
+            <input type="text" id="gas_file.gas_number" name="gas_file.gas_number"
+                   value="#(gas_file.gas_number)" onblur="checkGasNumberDuplicate()" />
+            <!-- 新增校验提示标签 -->
+            <span id="gasNumberTip"></span>
         </div>
         <div>
             <label >奉天编码</label>
-            <input type="text" id="gas_file.fengtiangasno" name="gas_file.fengtiangasno"  value="#(gas_file.fengtiangasno)" />
+            <input type="text" id="gas_file.fengtiangasno" name="gas_file.fengtiangasno"
+                   value="#(gas_file.fengtiangasno)" />
         </div>
         <div>
             <label >镂空码</label>
-            <input type="text" id="gas_file.loukongno" name="gas_file.loukongno"  value="#(gas_file.loukongno)" />
+            <input type="text" id="gas_file.loukongno" name="gas_file.loukongno"
+                   value="#(gas_file.loukongno)" />
         </div>
         <div>
-            <input type="hidden" id="gas_file.gasstationid" name="gas_file.gasstationid"  value="#(gas_file.gasstationid)" readonly/>
+            <input type="hidden" id="gas_file.gasstationid" name="gas_file.gasstationid"
+                   value="#(gas_file.gasstationid)" readonly/>
         </div>
         <div>
             <label>加气站名字</label>
-            <!-- 新增隐藏输入框用于传递 gas_file.stationid -->
-            <input type="hidden" id="gas_file.stationid" name="gas_file.stationid" value="" readonly/>
-            <input type="hidden" id="gas_file.filing_gas_station" name="gas_file.filing_gas_station" readonly>
-            <select id="selectName" name="gas_file.filing_gas_station" style="border-radius: 5px;height:50px;text-align: center;" disabled>
-                <!-- 这里不再需要动态生成选项，因为只显示一条数据 -->
+            <!-- 2. 修复：优先回显当前记录的stationid（从gas_file取值） -->
+            <input type="hidden" id="gas_file.stationid" name="gas_file.stationid"
+                   value="#(gas_file.stationid?? gas_file.gasstationid??)" readonly/>
+            <!-- 修复：回显当前记录的加气站名称 -->
+            <input type="hidden" id="gas_file.filing_gas_station" name="gas_file.filing_gas_station"
+                   value="#(gas_file.filing_gas_station)" readonly>
+            <select id="selectName" name="gas_file.filing_gas_station"
+                    style="border-radius: 5px;height:50px;text-align: center;" disabled>
             </select>
         </div>
         <div>
@@ -193,37 +194,104 @@
         </div>
     </form>
 </div>
-<script>
-    // 假设这是服务器端渲染到页面中的JSON数据
-    var jsonData = '#(com.alibaba.fastjson.JSONArray::toJSON(gasstations))';
-    try {
-        // 解析JSON数据
-        var context = JSON.parse(jsonData.replace(/#/g, ""));
 
+<script>
+    // ========== 修复1：加气站信息回显 ==========
+    try {
+        var jsonData = '#(com.alibaba.fastjson.JSONArray::toJSON(gasstations))';
         console.log('原始 jsonData:', jsonData);
+        var context = JSON.parse(jsonData.replace(/#/g, ""));
         console.log('解析后的 context:', context);
-        console.log('context 数组长度:', context.length);
 
         var selectElement = document.getElementById("selectName");
-        console.log('获取到的 select 元素:', selectElement);
+        var stationIdInput = document.getElementById("gas_file.stationid");
+        var filingGasStationInput = document.getElementById("gas_file.filing_gas_station");
 
-        if (context && context.length === 1) {
-            console.log("YESSS");
+        // 优先使用当前编辑记录的加气站信息（核心修复）
+        var currentStationId = stationIdInput.value.trim();
+        var currentStationName = filingGasStationInput.value.trim();
+
+        // 场景1：当前记录已有加气站信息 → 直接回显
+        if (currentStationId && currentStationName) {
+            var option = document.createElement('option');
+            option.value = currentStationId;
+            option.textContent = currentStationName;
+            option.selected = true;
+            selectElement.appendChild(option);
+        }
+        // 场景2：从gasstations列表回显（兼容原有逻辑）
+        else if (context && context.length === 1) {
             var station = context[0];
-            document.getElementById("gas_file.stationid").value = station.id;
-            // 修改为正确的属性名
-            document.getElementById("gas_file.filing_gas_station").value = station.stationName;
+            stationIdInput.value = station.id;
+            filingGasStationInput.value = station.stationName || station.station_name;
 
-            // 动态创建一个选项并添加到选择框中
             var option = document.createElement('option');
             option.value = station.id;
-            // 修改为正确的属性名
-            option.textContent = station.stationName;
+            option.textContent = station.stationName || station.station_name;
             option.selected = true;
             selectElement.appendChild(option);
         }
     } catch (error) {
-        console.error('JSON 解析出错:', error);
+        console.error('加气站数据解析/回显出错:', error);
+    }
+
+    // ========== 修复2：集成气瓶编号重复校验（适配编辑场景） ==========
+    function checkGasNumberDuplicate() {
+        var tip = document.getElementById("gasNumberTip");
+        // 获取核心参数（新增当前编辑ID，排除自身）
+        var gasNumber = document.getElementById("gas_file.gas_number").value.trim();
+        var stationId = document.getElementById("gas_file.stationid").value.trim();
+        var currentId = document.getElementById("gasFileId").value.trim(); // 当前编辑记录ID
+
+        // 1. 空值校验
+        if (!gasNumber) {
+            tip.innerText = "气瓶编号不能为空！";
+            tip.style.color = "#dc3545";
+            return;
+        }
+        // 2. 加气站校验（适配编辑场景）
+        if (!stationId || stationId === "-1") {
+            tip.innerText = "加气站信息异常，请刷新重试！";
+            tip.style.color = "#dc3545";
+            return;
+        }
+
+        // 3. 异步请求校验（基础XMLHttpRequest）
+        var xhr = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
+        // 拼接参数：新增currentId排除当前编辑记录
+        var requestUrl = "/gasFile/checkGasNumber" +
+            "?gasNumber=" + encodeURIComponent(gasNumber) +
+            "&stationId=" + encodeURIComponent(stationId) +
+            "&currentId=" + encodeURIComponent(currentId || "");
+
+        xhr.open("GET", requestUrl, true);
+        // 处理请求状态变化
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    if (xhr.responseText === "duplicate") {
+                        // 重复提示（编辑场景专属文案）
+                        alert("当前加气站下该气瓶编号已存在（排除自身），请更换！");
+                        tip.innerText = "当前加气站下该气瓶编号已存在！";
+                        tip.style.color = "#dc3545";
+                    } else {
+                        // 可用提示
+                        tip.innerText = "气瓶编号可用";
+                        tip.style.color = "#28a745";
+                    }
+                } else {
+                    // 请求失败
+                    tip.innerText = "验证失败，请重试（状态码：" + xhr.status + "）";
+                    tip.style.color = "#dc3545";
+                }
+            }
+        };
+        // 补充网络异常处理
+        xhr.onerror = function() {
+            tip.innerText = "网络异常，校验失败";
+            tip.style.color = "#dc3545";
+        };
+        xhr.send();
     }
 </script>
 </body>

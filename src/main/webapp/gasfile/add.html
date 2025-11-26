@@ -10,7 +10,10 @@
     <form id="myForm" action="/gasFile/save" method="post">
         <div>
             <label for="gas_file.gas_number">气瓶编号 </label>
-            <input type="text" id="gas_file.gas_number" name="gas_file.gas_number"  value="" />
+            <input type="text" id="gas_file.gas_number" name="gas_file.gas_number"
+                   value="#(gas_file?.gas_number)"
+                   onblur="checkGasNumberDuplicate()" />
+            <span id="gasNumberTip" style="color: #dc3545; font-size: 12px;"></span>
         </div>
         <div>
             <label >奉天编码 </label>
@@ -25,7 +28,7 @@
             <label >加气站名字</label>
             <input type="hidden" id="gas_file.filing_gas_station" name="gas_file.filing_gas_station" readonly>
             <input type="hidden" id="gas_file.stationid" name="gas_file.stationid" value="" readonly>
-            <select id="selectName" name="gas_file.filing_gas_station" onchange="chooseName()" style="border-radius: 5px;background-color: white; width: 200px;height:30px;text-align: center;">
+            <select id="selectName" name="gas_file.filing_gas_station" onchange="chooseName(); checkGasNumberDuplicate()" style="border-radius: 5px;background-color: white; width: 200px;height:30px;text-align: center;">
                 <option value="-1" selected>请选择加气站名字</option>
                 #for ( x: gasstations)
                 <option value="#(x.id)">#(x.station_name)</option>
@@ -130,55 +133,115 @@
         </div>
     </form>
 </div>
+
 <script>
-    // 创建一个新的Date对象，表示当前日期和时间
+    // 初始化建档时间为当前日期
     var currentDate = new Date();
-    console.log("11111");
-    // 获取年、月、日
     var year = currentDate.getFullYear();
-    var month = ('0' + (currentDate.getMonth() + 1)).slice(-2); // 加1是因为月份从0开始，slice(-2)是确保月份为两位数
-    var day = ('0' + currentDate.getDate()).slice(-2); // 获取日期，确保日期为两位数
-
-    // 将年、月、日组合成"yyyy-mm-dd"的形式
+    var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+    var day = ('0' + currentDate.getDate()).slice(-2);
     var formattedDate = year + '-' + month + '-' + day;
-    document.getElementById("gas_file.jiandangshijian").value = formattedDate;
+    var jiandangInput = document.getElementById("gas_file.jiandangshijian");
+    if (jiandangInput) {
+        jiandangInput.value = formattedDate;
+    }
 
-    // 假设这是服务器端渲染到页面中的JSON数据
-    var jsonData = '#(com.alibaba.fastjson.JSONArray::toJSON(gasstations))';
-    // 解析JSON数据
-    var context = JSON.parse(jsonData.replace(/#/g, ""));
+    // 加气站数据（使用控制器传递的JSON字符串，避免模板解析错误）
+    var gasstationsData = #(gasstationsJson); // 依赖Controller传递的gasstationsJson属性
 
+    // 选择加气站逻辑
     function chooseName() {
         var selectId = document.getElementById("selectName").value;
+        var gasstationIdInput = document.getElementById("gas_file.gasstationid");
+        var filingGasStationInput = document.getElementById("gas_file.filing_gas_station");
+        var stationIdInput = document.getElementById("gas_file.stationid");
 
-        if (selectId == "-1") {
-            document.getElementById("gas_file.gasstationid").value = "";
-            document.getElementById("gas_file.filing_gas_station").value = "";
-            document.getElementById("gas_file.stationid").value = "";
+        if (selectId === "-1") {
+            gasstationIdInput.value = "";
+            filingGasStationInput.value = "";
+            stationIdInput.value = "";
             return;
         }
 
-        // 查找选中的加气站对象
-        var selectedGasStation = context.find(function(gasstation) {
+        // 查找选中的加气站
+        var selectedGasStation = gasstationsData.find(function(gasstation) {
             return gasstation.id == selectId;
         });
 
         if (selectedGasStation) {
-            console.log(selectedGasStation); // 输出选中的加气站对象，检查其属性名称
-            document.getElementById("gas_file.gasstationid").value = selectedGasStation.id;
-            document.getElementById("gas_file.filing_gas_station").value = selectedGasStation.stationName;
-            document.getElementById("gas_file.stationid").value = selectedGasStation.id;
-            console.log("stationid: "+selectedGasStation.id);
-            console.log("name: "+selectedGasStation.stationName);
+            gasstationIdInput.value = selectedGasStation.id;
+            filingGasStationInput.value = selectedGasStation.station_name || selectedGasStation.stationName; // 兼容不同属性名
+            stationIdInput.value = selectedGasStation.id;
         } else {
-            document.getElementById("gas_file.gasstationid").value = "";
-            document.getElementById("gas_file.filing_gas_station").value = "";
-            document.getElementById("gas_file.stationid").value = "";
+            gasstationIdInput.value = "";
+            filingGasStationInput.value = "";
+            stationIdInput.value = "";
             alert('找不到对应的加气站！');
         }
     }
 
-    document.getElementById("selectName").addEventListener("change", chooseName);
+    // 校验气瓶编号（同加气站下唯一）
+    function checkGasNumberDuplicate() {
+        var tip = document.getElementById("gasNumberTip");
+        // 获取气瓶编号和加气站ID
+        var gasNumber = document.getElementById("gas_file.gas_number").value.trim();
+        var stationId = document.getElementById("gas_file.stationid").value.trim();
+
+        // 1. 空值校验
+        if (!gasNumber) {
+            tip.innerText = "气瓶编号不能为空！";
+            return;
+        }
+        // 2. 未选择加气站校验
+        if (!stationId || stationId === "-1") {
+            tip.innerText = "请先选择加气站！";
+            tip.style.color = "#dc3545";
+            return;
+        }
+
+        // 3. 异步请求校验（基础XMLHttpRequest）
+        var xhr = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
+        // 拼接参数：gasNumber + stationId
+        var requestUrl = "/gasFile/checkGasNumber" +
+            "?gasNumber=" + encodeURIComponent(gasNumber) +
+            "&stationId=" + encodeURIComponent(stationId);
+
+        xhr.open("GET", requestUrl, true);
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    if (xhr.responseText === "duplicate") {
+                        alert("当前加气站下该气瓶编号已存在，请更换！");
+                        tip.innerText = "当前加气站下该气瓶编号已存在！";
+                        tip.style.color = "#dc3545";
+                    } else {
+                        tip.innerText = "气瓶编号可用";
+                        tip.style.color = "#28a745";
+                    }
+                } else {
+                    tip.innerText = "验证失败，请重试";
+                    tip.style.color = "#dc3545";
+                }
+            }
+        };
+        // 处理网络异常
+        xhr.onerror = function() {
+            tip.innerText = "网络异常，校验失败";
+            tip.style.color = "#dc3545";
+        };
+        xhr.send();
+    }
+
+    // 初始化事件绑定
+    document.addEventListener("DOMContentLoaded", function() {
+        // 绑定加气站选择事件
+        var selectName = document.getElementById("selectName");
+        if (selectName) {
+            selectName.addEventListener("change", chooseName);
+        }
+        // 初始化建档时间
+        chooseName(); // 初始化加气站默认值
+    });
 </script>
 </body>
 </html>

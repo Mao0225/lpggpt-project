@@ -3,67 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* 新增校验提示样式 */
+        #gasNumberTip {
+            font-size: 12px;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+    </style>
 </head>
 <title>Content</title>
 <body>
 <div class="form_box">
     <form id="myForm" action="/gasFile/update" method="post">
-        <input type="hidden" name="gas_file.id" value="#(gas_file.id??)" />
+        <input type="hidden" name="gas_file.id" value="#(gas_file.id??)" id="gasFileId" />
         <div>
             <label for="gas_file.gas_number">气瓶编号</label>
-            <input type="text" id="gas_file.gas_number" name="gas_file.gas_number"  value="#(gas_file.gas_number)" />
+            <input type="text" id="gas_file.gas_number" name="gas_file.gas_number"
+                   value="#(gas_file.gas_number)" onblur="checkGasNumberDuplicate()" />
+            <!-- 新增校验提示标签 -->
+            <span id="gasNumberTip"></span>
         </div>
         <div>
             <label >奉天编码</label>
             <input type="text" id="gas_file.fengtiangasno" name="gas_file.fengtiangasno"  value="#(gas_file.fengtiangasno)" />
         </div>
-
         <div>
             <label >镂空码</label>
             <input type="text" id="gas_file.loukongno" name="gas_file.loukongno"  value="#(gas_file.loukongno)" />
         </div>
-
         <div>
-<!--            <label >气站id</label>-->
+            <!-- 保留原始气站ID作为兜底 -->
+            <input type="hidden" id="original_gasstationid" value="#(gas_file.gasstationid??)" />
+            <input type="hidden" id="original_filing_gas_station" value="#(gas_file.filing_gas_station??)" />
             <input type="hidden" id="gas_file.gasstationid" name="gas_file.gasstationid"  value="#(gas_file.gasstationid)" readonly/>
         </div>
         <div>
             <label >加气站名字</label>
-            <input type="hidden" id="gas_file.filing_gas_station" name="gas_file.filing_gas_station" readonly>
-            <input type="hidden" id="gas_file.station_id" name="gas_file.stationid" readonly>
-            <select id="selectName" name="gas_file.filing_gas_station" onchange="chooseName()" style="border-radius: 5px;background-color: white; width: 200px;height:30px;text-align: center;">
-                <option value="-#(gas_file.gasstationid)" selected>#(gas_file.filing_gas_station)</option>
+            <input type="hidden" id="gas_file.filing_gas_station" name="gas_file.filing_gas_station"  value="#(gas_file.filing_gas_station)" readonly>
+            <input type="hidden" id="gas_file.stationid" name="gas_file.stationid" value="#(gas_file.stationid?? gas_file.gasstationid??)"  readonly>
+            <select id="selectName" name="gas_file.filing_gas_station"
+                    onchange="chooseName(); checkGasNumberDuplicate()"
+                    style="border-radius: 5px;background-color: white; width: 200px;height:30px;text-align: center;">
+                <option value="#(gas_file.gasstationid??)" selected>#(gas_file.filing_gas_station?? '请选择加气站')</option>
                 #for ( x: gasstations)
                 <option value="#(x.id)">#(x.station_name)</option>
                 #end
             </select>
         </div>
-
         <div>
             <label>制造单位</label>
             <input type="text" name="gas_file.manufacture_unit"  value="#(gas_file.manufacture_unit)" />
         </div>
-
         <div>
             <label>阀体编码</label>
             <input type="text" name="gas_file.valve_body_code" value="#(gas_file.valve_body_code)" />
         </div>
-
         <div>
             <label>气瓶使用登记证编号</label>
             <input type="text" name="gas_file.qpsydjzbh"  value="#(gas_file.qpsydjzbh)" />
         </div>
-
         <div>
             <label>制造日期</label>
             <input type="text" name="gas_file.manufacture_date"   value="#(gas_file.manufacture_date)" />
         </div>
-
         <div>
             <label>检验日期</label>
             <input type="text" name="gas_file.inspect_date"  value="#(gas_file.inspect_date)" />
         </div>
-
         <div>
             <label>定检日期</label>
             <input type="text" name="gas_file.regular_check_date"  value="#(gas_file.regular_check_date)" />
@@ -92,8 +99,6 @@
             <label>充装介质</label>
             <input type="text" name="gas_file.filling_medium" value="#(gas_file.filling_medium)" />
         </div>
-
-
         <div>
             <label>许可证号</label>
             <input type="text" name="gas_file.xukezhenghao"  value="#(gas_file.xukezhenghao)" />
@@ -104,11 +109,11 @@
         </div>
         <div>
             <label>水试验压</label>
-                <input type="text" name="gas_file.shuishiyanya"   value="#(gas_file.shuishiyanya)" />
+            <input type="text" name="gas_file.shuishiyanya"   value="#(gas_file.shuishiyanya)" />
         </div>
         <div>
             <label>容积</label>
-                <input type="text" name="gas_file.rongji"   value="#(gas_file.rongji)" />
+            <input type="text" name="gas_file.rongji"   value="#(gas_file.rongji)" />
         </div>
         <div>
             <label>壁厚</label>
@@ -122,8 +127,6 @@
             <label>是否专用</label>
             <input type="text" name="gas_file.shifouzhuanyong"  value="#(gas_file.shifouzhuanyong)" />
         </div>
-
-
         <div>
             <label>使用者名称</label>
             <input type="text" name="gas_file.shiyongzhemingcheng"  value="#(gas_file.shiyongzhemingcheng)" />
@@ -146,43 +149,141 @@
         </div>
     </form>
 </div>
-</body>
+
 <script>
+    // 解析加气站数据
+    var context = [];
+    try {
+        var jsonData = '#(com.alibaba.fastjson.JSONArray::toJSON(gasstations))';
+        var pureJson = jsonData.replace(/^#/, "").replace(/#$/, "");
+        context = JSON.parse(pureJson);
+    } catch (error) {
+        console.error("解析加气站数据失败:", error);
+        context = [];
+    }
 
-
-    // 假设这是服务器端渲染到页面中的JSON数据
-    var jsonData = '#(com.alibaba.fastjson.JSONArray::toJSON(gasstations))';
-    // 解析JSON数据
-    var context = JSON.parse(jsonData.replace(/#/g, ""));
-
+    // 加气站选择逻辑（修复初始值问题）
     function chooseName() {
         var selectId = document.getElementById("selectName").value;
-   // alert("test");
-        if (selectId == "-1") {
-            // document.getElementById("dianzicheng_shiyongfandianmingzi").value = "";
-            // document.getElementById("dianzicheng_shiyongfangphone").value = "";
+        var originalGasStationId = document.getElementById("original_gasstationid").value;
+        var originalFilingName = document.getElementById("original_filing_gas_station").value;
+
+        // 未选择/无效选择 → 恢复原始值
+        if (!selectId || selectId === "-1" || selectId === "") {
+            document.getElementById("gas_file.gasstationid").value = originalGasStationId;
+            document.getElementById("gas_file.filing_gas_station").value = originalFilingName;
+            document.getElementById("gas_file.stationid").value = originalGasStationId;
             return;
         }
 
-        // 查找选中的饭店对象
+        // 选择有效加气站
         var selectedGasStation = context.find(function(gasstation) {
-          //  alert("selectId"+selectId);
-            return gasstation.id == selectId;
+            return String(gasstation.id) === String(selectId);
         });
 
         if (selectedGasStation) {
-            //alert(JSON.stringify(selectedGasStation));
+            var stationName = selectedGasStation.station_name || selectedGasStation.stationName;
             document.getElementById("gas_file.gasstationid").value = selectedGasStation.id;
-            document.getElementById("gas_file.filing_gas_station").value = selectedGasStation.stationName;
-            document.getElementById("gas_file.station_id").value = selectedGasStation.id;
+            document.getElementById("gas_file.filing_gas_station").value = stationName;
+            document.getElementById("gas_file.stationid").value = selectedGasStation.id;
         } else {
-            document.getElementById("dianzicheng_shiyongfandianmingzi").value = "";
-            document.getElementById("gas_file.filing_gas_station").value = "";
-            document.getElementById("gas_file.station_id").value = "";
-            alert('找不到对应的加气站！');
+            // 找不到对应加气站 → 兜底原始值
+            document.getElementById("gas_file.gasstationid").value = originalGasStationId;
+            document.getElementById("gas_file.filing_gas_station").value = originalFilingName;
+            document.getElementById("gas_file.stationid").value = originalGasStationId;
+            alert('找不到对应的加气站，已恢复原始值！');
+        }
+    }
+
+    // 校验气瓶编号重复（适配编辑场景）
+    function checkGasNumberDuplicate() {
+        var tip = document.getElementById("gasNumberTip");
+        var gasNumber = document.getElementById("gas_file.gas_number").value.trim();
+        var stationId = document.getElementById("gas_file.stationid").value.trim();
+        var currentId = document.getElementById("gasFileId").value.trim(); // 当前编辑ID，排除自身
+
+        // 1. 空值校验
+        if (!gasNumber) {
+            tip.innerText = "气瓶编号不能为空！";
+            tip.style.color = "#dc3545";
+            return;
+        }
+        // 2. 加气站校验
+        if (!stationId || stationId === "-1") {
+            tip.innerText = "请先选择有效的加气站！";
+            tip.style.color = "#dc3545";
+            return;
         }
 
+        // 3. 异步请求校验（排除当前编辑记录）
+        var xhr = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
+        var requestUrl = "/gasFile/checkGasNumber" +
+            "?gasNumber=" + encodeURIComponent(gasNumber) +
+            "&stationId=" + encodeURIComponent(stationId) +
+            "&currentId=" + encodeURIComponent(currentId || ""); // 新增当前ID参数
+
+        xhr.open("GET", requestUrl, true);
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    if (xhr.responseText === "duplicate") {
+                        alert("当前加气站下该气瓶编号已存在，请更换！");
+                        tip.innerText = "当前加气站下该气瓶编号已存在！";
+                        tip.style.color = "#dc3545";
+                    } else {
+                        tip.innerText = "气瓶编号可用";
+                        tip.style.color = "#28a745";
+                    }
+                } else {
+                    tip.innerText = "验证失败，请重试（状态码：" + xhr.status + "）";
+                    tip.style.color = "#dc3545";
+                }
+            }
+        };
+        // 网络异常处理
+        xhr.onerror = function() {
+            tip.innerText = "网络异常，校验失败";
+            tip.style.color = "#dc3545";
+        };
+        xhr.send();
     }
-    document.getElementById("selectName").addEventListener("change", chooseName);
-    </script>
+
+    // 页面初始化
+    window.onload = function() {
+        // 绑定加气站选择事件
+        document.getElementById("selectName").addEventListener("change", chooseName);
+        // 初始化加气站值
+        chooseName();
+
+        // 表单提交前最后校验
+        document.getElementById("myForm").addEventListener("submit", function(e) {
+            var gasNumber = document.getElementById("gas_file.gas_number").value.trim();
+            var stationId = document.getElementById("gas_file.stationid").value.trim();
+            var tip = document.getElementById("gasNumberTip");
+
+            // 基础校验
+            if (!gasNumber) {
+                e.preventDefault();
+                tip.innerText = "气瓶编号不能为空！";
+                tip.style.color = "#dc3545";
+                alert("气瓶编号不能为空，请填写！");
+                return false;
+            }
+            if (!stationId || stationId === "-1") {
+                e.preventDefault();
+                tip.innerText = "请选择有效的加气站！";
+                tip.style.color = "#dc3545";
+                alert("请选择有效的加气站！");
+                return false;
+            }
+            // 若已校验过且重复 → 阻止提交
+            if (tip.innerText.includes("已存在")) {
+                e.preventDefault();
+                alert("气瓶编号重复，请更换后再提交！");
+                return false;
+            }
+        });
+    };
+</script>
+</body>
 </html>
