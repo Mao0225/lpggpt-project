@@ -62,6 +62,7 @@ public class _MappingKit {
 		arp.addMapping("ipaddress", "id", Ipaddress.class);
 		arp.addMapping("jiebangding", "id", Jiebangding.class);
 		arp.addMapping("jieping", "id", Jieping.class);
+		arp.addMapping("kongqianghardware", "id", Kongqianghardware.class);
 		arp.addMapping("manage_xiaohezi", "id", ManageXiaohezi.class);
 		arp.addMapping("plckongzhi", "id", Plckongzhi.class);
 		arp.addMapping("plcxinhao", "id", Plcxinhao.class);

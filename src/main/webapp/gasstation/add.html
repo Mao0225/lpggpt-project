@@ -39,7 +39,14 @@
             <label >加气站密码</label>
             <input type="text" name="gasStation.password" value=""  />
         </div>
-
+        <!-- 在现有字段后添加状态选择 -->
+        <div>
+            <label>状态</label>
+            <select name="gasStation.status" value="10">  <!-- 默认正常上传 -->
+                <option value="10" selected>正常上传</option>
+                <option value="0">不上传</option>
+            </select>
+        </div>
 
     </form>
 </div>

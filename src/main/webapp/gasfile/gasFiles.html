@@ -17,23 +17,22 @@
             align-items: center;
         }
 
-        input {
-            padding: 8px 12px; /* 减小内边距 */
-            font-size: 14px;   /* 减小字体大小 */
-            border: 1px solid #a3bffa; /* 减小边框宽度 */
-            border-radius: 4px; /* 调整圆角 */
-            width: 150px; /* 设置固定宽度 */
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* 减小阴影 */
+        input, select {
+            padding: 8px 12px;
+            font-size: 14px;
+            border: 1px solid #a3bffa;
+            border-radius: 4px;
+            width: 150px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
             transition: border-color 0.3s ease;
-            margin-right: 10px; /* 添加右侧间距 */
+            margin-right: 10px;
         }
 
-        input:focus {
+        input:focus, select:focus {
             outline: none;
             border-color: #4c87c9;
         }
 
-        /* 调整搜索和重置按钮样式 */
         input[type="submit"],
         input[type="button"] {
             padding: 6px 12px;
@@ -57,7 +56,6 @@
     </style>
 
     <style>
-        /* 设置 #pagediv 的样式 */
         #pagediv {
             background-color: #f0f0f0;
             color: black;
@@ -65,28 +63,24 @@
             border: 2px solid #007bff;
         }
 
-        /* 设置表格样式 */
         table.list {
             width: 100%;
             border-collapse: collapse;
         }
 
-        /* 设置表格表头样式 */
         table.list th {
             background-color: #add8e6;
             color: black;
             padding: 8px;
             text-align: left;
-            border: 1px solid #ddd; /* 新增：添加边框 */
+            border: 1px solid #ddd;
         }
 
-        /* 设置表格单元格样式 */
         table.list td {
             padding: 8px;
-            border: 1px solid #ddd; /* 修改：添加边框 */
+            border: 1px solid #ddd;
         }
 
-        /* 设置表格隔行颜色 */
         table.list tr:nth-child(even) {
             background-color: #f2f2f2;
         }
@@ -95,24 +89,22 @@
             background-color: #e0e0e0;
         }
 
-        /* 设置鼠标悬停时表格行的颜色 */
         table.list tr:hover {
             background-color: #d3d3d3;
         }
 
-        /* 新增样式：设置新建司机链接为黑色 */
         #pagediv .add {
             color: black;
         }
 
-        /* 新增样式：设置输入框背景色为淡灰色 */
-        #pagediv input[type="text"] {
+        #pagediv input[type="text"], #pagediv select {
             background-color: #f0f0f0;
         }
-        /* 新增样式：设置 label 文字颜色为黑色 */
+
         #pagediv label {
             color: black;
         }
+
         #pagediv .add {
             color: white;
             background-color: #007bff;
@@ -121,166 +113,193 @@
             display: inline-block;
             border-radius: 4px;
         }
+
+        /* 过期数据样式 */
+        .expired {
+            color: red;
+        }
     </style>
 
 </head>
 <body>
-    <div id="pagediv">
-        <form id="searchForm" action="/gasFile/gasFilelist" method="get">
-            <a href="#" class="add openModal" data-title="添加档案" data-edit-url="/gasFile/add"><b>+</b>新建档案</a>
-            <label>气瓶编号:</label>
-            <input type="text" name="gasNumber" placeholder="输入气瓶编号" value="#(gasNumber)" />
-            <input type="text" name="fentiancode" placeholder="输入奉天码" value="#(fentiancode)" />
-            <input type="text" name="filling_specification" placeholder="输入充装规格" value="#(filling_specification)" />
-            <label></label>
-            <input type="submit" value="搜索"/>
-            <input type="submit" value="重置" name="refresh"/>
-            <script>
-                var buttons = document.getElementsByName("refresh");
-                for (var i = 0; i < buttons.length; i++) {
-                    buttons[i].addEventListener('click', function() {
-                        // 获取所有的输入框并设置为空
-                        var inputs = document.querySelectorAll('#searchForm input[type=text]');
-                        for (var j = 0; j < inputs.length; j++) {
-                            inputs[j].value = "";
-                        }
+<div id="pagediv">
+    <form id="searchForm" action="/gasFile/gasFilelist" method="get">
+        <a href="#" class="add openModal" data-title="添加档案" data-edit-url="/gasFile/add"><b>+</b>新建档案</a>
+        <label>气瓶编号:</label>
+        <input type="text" name="gasNumber" placeholder="输入气瓶编号" value="#(gasNumber)" />
+        <input type="text" name="fentiancode" placeholder="输入奉天码" value="#(fentiancode)" />
+        <input type="text" name="filling_specification" placeholder="输入充装规格" value="#(filling_specification)" />
 
-                        // 提交表单以重新查询并刷新页面
-                        document.getElementById('searchForm').submit();
-                    });
-                }
-            </script>
-        </form>
-    </div>
-        <table class="list">
-            <tbody>
-            <tr>
-                <th width="10%">序号</th>
-                <th width="10%">气瓶编号</th>
-                <th width="10%">奉天编码</th>
-                <th width="10%">镂空码</th>
-                <th width="10%">充气站名</th>
-                <th width="10%">制造单位</th>
-                <th width="10%">阀体编码</th>
-                <th width="10%">气瓶使用登记证</th>
-                <th width="10%">制造日期</th>
-                <th width="10%">检验日期</th>
-                <th width="10%">定检日期</th>
-                <th width="10%">终止使用日期</th>
-                <th width="10%">设备品种</th>
-                <th width="10%">充装规格</th>
-                <th width="10%">气瓶规格</th>
-                <th width="10%">充装介质</th>
-                <th width="10%">气瓶自重KG</th>
-                <th width="10%">许可证号</th>
-                <th width="10%">公称压力</th>
-                <th width="10%">水试验压</th>
-                <th width="10%">容积</th>
-                <th width="10%">壁厚</th>
+        <label>过期状态:</label>
+        <select name="expiredStatus">
+            <option value="all" #if(expiredStatus == null || expiredStatus == "all")selected#end>全部</option>
+            <option value="expired" #if(expiredStatus == "expired")selected#end>已过期</option>
+        </select>
 
-                <th width="10%">建档时间</th>
-                <th width="10%">是否专用</th>
+        <!-- 新增：上传状态筛选下拉框 -->
+        <label>上传状态:</label>
+        <select name="uploadStatus">
+            <option value="all" #if(uploadStatus == null || uploadStatus == "all")selected#end>全部</option>
+            <option value="1" #if(uploadStatus == "1")selected#end>已上传</option>
+            <option value="0" #if(uploadStatus == "0")selected#end>未上传</option>
+        </select>
 
-                <th width="10%">使用者名称</th>
-                <th width="10%">使用者地址</th>
-                <th width="10%">电话</th>
-                <th width="10%">经度</th>
-                <th width="10%">纬度</th>
-
-
-                <th width="10%">操作</th>
-            </tr>
-            #set(startIndex = (gasFiles.pageNumber - 1) * gasFiles.pageSize + 1)
-
-            #for(x : gasFiles.getList())
-            <tr>
-                <td style="text-align:center">#(startIndex++)</td> <!-- 显示序号并递增 -->
-                <td>#(x.gas_number)</td>
-                <td>#(x.fengtiangasno)</td>
-                <td>#(x.loukongno)</td>
-                <td>#(x.filing_gas_station)</td>
-                <td>#(x.manufacture_unit)</td>
-                <td>#(x.valve_body_code)</td>
-                <td>#(x.qpsydjzbh)</td>
-                <td>#(x.manufacture_date)</td>
-                <td>#(x.inspect_date)</td>
-                <td>#(x.regular_check_date)</td>
-                <td>#(x.terminate_use_date)</td>
-                <td>#(x.monitoring_station)</td>
-                <td>#(x.filling_specification)</td>
-                <td>#(x.gas_specification)</td>
-                <td>#(x.filling_medium)</td>
-                <td>#(x.gas_suttle)</td>
-                <td>#(x.xukezhenghao)</td>
-                <td>#(x.gongchengyali)</td>
-                <td>#(x.shuishiyanya)</td>
-                <td>#(x.rongji)</td>
-                <td>#(x.bihou)</td>
-                <td>#(x.jiandangshijian)</td>
-                <td>#(x.shifouzhuanyong)</td>
-                <td>#(x.shiyongzhemingcheng)</td>
-                <td>#(x.shiyongzhedizhi)</td>
-                <td>#(x.shiyongzhedianhua)</td>
-                <td>#(x.shiyongzhejingdu)</td>
-                <td>#(x.shiyongzheweidu)</td>
-
-                <td style="text-align:left; padding: 8px;">
-                    <!-- 删除按钮 -->
-                    <a href="#" onclick="confirmDelete('#(x.id)')" style="margin-right: 10px; color: #dc3545; text-decoration: none;">
-                        <button type="button" class="btn btn-sm btn-danger">删除</button>
-                    </a>
-                    <!-- 修改按钮 -->
-                    <a href="#" class="openModal" data-title="修改档案" data-edit-url="/gasFile/edit/#(x.id)" style="text-decoration: none;">
-                        <button type="button" class="btn btn-sm btn-primary">修改</button>
-                    </a>
-                </td>
-            </tr>
-            #end
-            </tbody>
-        </table>
-    <!-- 修改分页部分 -->
-    <div class="pagination">
-        #@paginate(gasFiles.pageNumber, gasFiles.totalPage,
-        "/gasFile/gasFilelist?gasNumber=" + (gasNumber != null ? gasNumber : "")
-        + "&fentiancode=" + (fentiancode != null ? fentiancode : "")
-        + "&filling_specification=" + (filling_specification != null ? filling_specification : "")
-        + "&page=")
-    </div>
-
-
-    <script>
-        function confirmDelete(id) {
-            // 获取当前搜索条件
-            var gasNumber = document.querySelector('input[name="gasNumber"]').value;
-            var fentiancode = document.querySelector('input[name="fentiancode"]').value;
-            var filling_specification = document.querySelector('input[name="filling_specification"]').value;
-
-            var result = confirm("确定要删除吗？");
-            if (result) {
-                // 构造带参数的删除URL
-                var deleteUrl = "/gasFile/delete/" + id
-                    + "?gasNumber=" + encodeURIComponent(gasNumber)
-                    + "&fentiancode=" + encodeURIComponent(fentiancode)
-                    + "&filling_specification=" + encodeURIComponent(filling_specification);
-
-                window.location.href = deleteUrl;
+        <label></label>
+        <input type="submit" value="搜索"/>
+        <input type="submit" value="重置" name="refresh"/>
+        <script>
+            var buttons = document.getElementsByName("refresh");
+            for (var i = 0; i < buttons.length; i++) {
+                buttons[i].addEventListener('click', function() {
+                    var inputs = document.querySelectorAll('#searchForm input[type=text]');
+                    for (var j = 0; j < inputs.length; j++) {
+                        inputs[j].value = "";
+                    }
+                    // 重置下拉框为"全部"
+                    document.querySelector('select[name="expiredStatus"]').value = "all";
+                    document.querySelector('select[name="uploadStatus"]').value = "all";
+                    document.getElementById('searchForm').submit();
+                });
             }
+        </script>
+    </form>
+</div>
+<table class="list">
+    <tbody>
+    <tr>
+        <th width="10%">序号</th>
+        <th width="10%">气瓶编号</th>
+        <th width="10%">奉天编码</th>
+        <th width="10%">镂空码</th>
+        <th width="10%">充气站名</th>
+        <th width="10%">制造单位</th>
+        <th width="10%">阀体编码</th>
+        <th width="10%">气瓶使用登记证</th>
+        <th width="10%">制造日期</th>
+        <th width="10%">检验日期</th>
+        <th width="10%">定检日期</th>
+        <th width="10%">终止使用日期</th>
+        <th width="10%">设备品种</th>
+        <th width="10%">充装规格</th>
+        <th width="10%">气瓶规格</th>
+        <th width="10%">充装介质</th>
+        <th width="10%">气瓶自重KG</th>
+        <th width="10%">许可证号</th>
+        <th width="10%">公称压力</th>
+        <th width="10%">水试验压</th>
+        <th width="10%">容积</th>
+        <th width="10%">壁厚</th>
+
+        <th width="10%">建档时间</th>
+        <th width="10%">是否专用</th>
+
+        <th width="10%">使用者名称</th>
+        <th width="10%">使用者地址</th>
+        <th width="10%">电话</th>
+        <th width="10%">经度</th>
+        <th width="10%">纬度</th>
+        <th width="10%">是否上传</th>
+
+
+        <th width="10%">操作</th>
+    </tr>
+    #set(startIndex = (gasFiles.pageNumber - 1) * gasFiles.pageSize + 1)
+
+    #for(x : gasFiles.getList())
+    <tr>
+        <td style="text-align:center">#(startIndex++)</td>
+        <td #if(x.terminate_use_date != null && x.terminate_use_date.toString() < currentDate) class="expired"#end>#(x.gas_number)</td>
+        <td #if(x.terminate_use_date != null && x.terminate_use_date.toString() < currentDate) class="expired"#end>#(x.fengtiangasno)</td>
+        <td #if(x.terminate_use_date != null && x.terminate_use_date.toString() < currentDate) class="expired"#end>#(x.loukongno)</td>
+        <td #if(x.terminate_use_date != null && x.terminate_use_date.toString() < currentDate) class="expired"#end>#(x.filing_gas_station)</td>
+        <td #if(x.terminate_use_date != null && x.terminate_use_date.toString() < currentDate) class="expired"#end>#(x.manufacture_unit)</td>
+        <td #if(x.terminate_use_date != null && x.terminate_use_date.toString() < currentDate) class="expired"#end>#(x.valve_body_code)</td>
+        <td #if(x.terminate_use_date != null && x.terminate_use_date.toString() < currentDate) class="expired"#end>#(x.qpsydjzbh)</td>
+        <td #if(x.terminate_use_date != null && x.terminate_use_date.toString() < currentDate) class="expired"#end>#(x.manufacture_date)</td>
+        <td #if(x.terminate_use_date != null && x.terminate_use_date.toString() < currentDate) class="expired"#end>#(x.inspect_date)</td>
+        <td #if(x.terminate_use_date != null && x.terminate_use_date.toString() < currentDate) class="expired"#end>#(x.regular_check_date)</td>
+        <td #if(x.terminate_use_date != null && x.terminate_use_date.toString() < currentDate) class="expired"#end>#(x.terminate_use_date)</td>
+        <td #if(x.terminate_use_date != null && x.terminate_use_date.toString() < currentDate) class="expired"#end>#(x.monitoring_station)</td>
+        <td #if(x.terminate_use_date != null && x.terminate_use_date.toString() < currentDate) class="expired"#end>#(x.filling_specification)</td>
+        <td #if(x.terminate_use_date != null && x.terminate_use_date.toString() < currentDate) class="expired"#end>#(x.gas_specification)</td>
+        <td #if(x.terminate_use_date != null && x.terminate_use_date.toString() < currentDate) class="expired"#end>#(x.filling_medium)</td>
+        <td #if(x.terminate_use_date != null && x.terminate_use_date.toString() < currentDate) class="expired"#end>#(x.gas_suttle)</td>
+        <td #if(x.terminate_use_date != null && x.terminate_use_date.toString() < currentDate) class="expired"#end>#(x.xukezhenghao)</td>
+        <td #if(x.terminate_use_date != null && x.terminate_use_date.toString() < currentDate) class="expired"#end>#(x.gongchengyali)</td>
+        <td #if(x.terminate_use_date != null && x.terminate_use_date.toString() < currentDate) class="expired"#end>#(x.shuishiyanya)</td>
+        <td #if(x.terminate_use_date != null && x.terminate_use_date.toString() < currentDate) class="expired"#end>#(x.rongji)</td>
+        <td #if(x.terminate_use_date != null && x.terminate_use_date.toString() < currentDate) class="expired"#end>#(x.bihou)</td>
+        <td #if(x.terminate_use_date != null && x.terminate_use_date.toString() < currentDate) class="expired"#end>#(x.jiandangshijian)</td>
+        <td #if(x.terminate_use_date != null && x.terminate_use_date.toString() < currentDate) class="expired"#end>#(x.shifouzhuanyong)</td>
+        <td #if(x.terminate_use_date != null && x.terminate_use_date.toString() < currentDate) class="expired"#end>#(x.shiyongzhemingcheng)</td>
+        <td #if(x.terminate_use_date != null && x.terminate_use_date.toString() < currentDate) class="expired"#end>#(x.shiyongzhedizhi)</td>
+        <td #if(x.terminate_use_date != null && x.terminate_use_date.toString() < currentDate) class="expired"#end>#(x.shiyongzhedianhua)</td>
+        <td #if(x.terminate_use_date != null && x.terminate_use_date.toString() < currentDate) class="expired"#end>#(x.shiyongzhejingdu)</td>
+        <td #if(x.terminate_use_date != null && x.terminate_use_date.toString() < currentDate) class="expired"#end>#(x.shiyongzheweidu)</td>
+        <!-- 修改：显示上传状态文字 -->
+        <td #if(x.terminate_use_date != null && x.terminate_use_date.toString() < currentDate) class="expired"#end>
+        #if(x.upload_status == 1)已上传#else未上传#end
+        </td>
+
+        <td style="text-align:left; padding: 8px;">
+            <a href="#" onclick="confirmDelete('#(x.id)')" style="margin-right: 10px; color: #dc3545; text-decoration: none;">
+                <button type="button" class="btn btn-sm btn-danger">删除</button>
+            </a>
+            <a href="#" class="openModal" data-title="修改档案" data-edit-url="/gasFile/edit/#(x.id)" style="text-decoration: none;">
+                <button type="button" class="btn btn-sm btn-primary">修改</button>
+            </a>
+        </td>
+    </tr>
+    #end
+    </tbody>
+</table>
+<!-- 修改分页部分，添加上传状态参数 -->
+<div class="pagination">
+    #@paginate(gasFiles.pageNumber, gasFiles.totalPage,
+    "/gasFile/gasFilelist?gasNumber=" + (gasNumber != null ? gasNumber : "")
+    + "&fentiancode=" + (fentiancode != null ? fentiancode : "")
+    + "&filling_specification=" + (filling_specification != null ? filling_specification : "")
+    + "&expiredStatus=" + (expiredStatus != null ? expiredStatus : "all")
+    + "&uploadStatus=" + (uploadStatus != null ? uploadStatus : "all")
+    + "&page=")
+</div>
+
+
+<script>
+    function confirmDelete(id) {
+        // 获取当前搜索条件，包括上传状态
+        var gasNumber = document.querySelector('input[name="gasNumber"]').value;
+        var fentiancode = document.querySelector('input[name="fentiancode"]').value;
+        var filling_specification = document.querySelector('input[name="filling_specification"]').value;
+        var expiredStatus = document.querySelector('select[name="expiredStatus"]').value;
+        var uploadStatus = document.querySelector('select[name="uploadStatus"]').value;
+
+        var result = confirm("确定要删除吗？");
+        if (result) {
+            // 构造带参数的删除URL，包含上传状态
+            var deleteUrl = "/gasFile/delete/" + id
+                + "?gasNumber=" + encodeURIComponent(gasNumber)
+                + "&fentiancode=" + encodeURIComponent(fentiancode)
+                + "&filling_specification=" + encodeURIComponent(filling_specification)
+                + "&expiredStatus=" + encodeURIComponent(expiredStatus)
+                + "&uploadStatus=" + encodeURIComponent(uploadStatus);
+
+            window.location.href = deleteUrl;
         }
-    </script>
+    }
+</script>
 
 <script>
     $('.openModal').click(function(e) {
         console.log("askl;jdilasjdiowjdiojaiwdjiowa");
         e.preventDefault();
         var editUrl = $(this).data('edit-url');
-        var that = this; // 保存正确的上下文
+        var that = this;
         $.get(editUrl, function(data) {
             var title = $(that).data('title');
-            $('#myModalLabel').text(title); // 修改模态窗口标题
-
-            // 清除旧内容
-            $('#modalBody').html(data); // 加载编辑内容到模态窗口
-            $('#myModal').modal('show'); // 显示模态窗口
+            $('#myModalLabel').text(title);
+            $('#modalBody').html(data);
+            $('#myModal').modal('show');
         });
     });
 
@@ -292,38 +311,29 @@
                 <h4 class="modal-title" id="myModalLabel">模态窗口标题</h4>
             </div>
             <div class="modal-body" id="modalBody">
-                <!-- 这里将会加载你的表单内容 -->
+                <!-- 表单内容 -->
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                 <button type="button" class="btn btn-primary"  id="saveButton" >保存</button>
                 <script>
                     function validateForm() {
-                        // 正确的日期格式 yyyy-mm-dd
                         const dateFormat = /^\d{4}-\d{2}-\d{2}$/;
-
-                        // 获取所有需要验证的输入框
                         const inputs = document.querySelectorAll('input[type="text"][name^="gas_file."]');
 
                         for (let i = 0; i < inputs.length; i++) {
-                            // 如果是日期输入框，且不为空，检查日期格式
                             if (inputs[i].name.includes("date") && inputs[i].value.trim() !== "" && !dateFormat.test(inputs[i].value)) {
                                 alert('日期格式不正确，无法保存,正确格式为xxxx-xx-xx');
-                                return false; // 如果有任何一个日期格式不正确，直接返回false
+                                return false;
                             }
                         }
-
-                        return true; // 如果所有字段验证通过，返回true
+                        return true;
                     }
 
-
                     document.getElementById('saveButton').addEventListener('click', function() {
-                        // 验证表单数据
                         if (validateForm()) {
-                            // 如果验证通过，则提交表单
                             document.getElementById('myForm').submit();
                         }
-                        // 如果验证失败，不提交表单（validateForm内部已经显示了错误消息）
                     });
                 </script>
             </div>

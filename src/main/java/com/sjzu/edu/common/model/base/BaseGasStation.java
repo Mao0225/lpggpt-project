@@ -107,5 +107,35 @@ public abstract class BaseGasStation<M extends BaseGasStation<M>> extends Model<
 		return getStr("password");
 	}
 	
+	public void setFlag(java.lang.Integer flag) {
+		set("flag", flag);
+	}
+	
+	public java.lang.Integer getFlag() {
+		return getInt("flag");
+	}
+	
+	public void setType(java.lang.Integer type) {
+		set("type", type);
+	}
+	
+	public java.lang.Integer getType() {
+		return getInt("type");
+	}
+	
+	/**
+	 * 状态未 10 的为正常上传；状态未 0 的为不上传
+	 */
+	public void setStatus(java.lang.Integer status) {
+		set("status", status);
+	}
+	
+	/**
+	 * 状态未 10 的为正常上传；状态未 0 的为不上传
+	 */
+	public java.lang.Integer getStatus() {
+		return getInt("status");
+	}
+	
 }
 

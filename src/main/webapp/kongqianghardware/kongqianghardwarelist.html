@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" width="device-width, initial-scale=1.0">
+    <title>控枪硬件列表</title>
+    <script src="../css/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css">
+    <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/css/lpg.css">
+
+    <style scoped>
+        .container {
+            padding: 50px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        input {
+            padding: 15px;
+            font-size: 18px;
+            border: 2px solid #a3bffa;
+            border-radius: 10px;
+            width: 100%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #4c87c9;
+        }
+    </style>
+
+    <style>
+        #pagediv {
+            background-color: #f0f0f0;
+            color: black;
+            padding: 10px;
+        }
+
+        table.list {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table.list th {
+            background-color: #add8e6;
+            color: black;
+            padding: 8px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        table.list td {
+            padding: 8px;
+            border: 1px solid #ddd;
+        }
+
+        table.list tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        table.list tr:nth-child(odd) {
+            background-color: #e0e0e0;
+        }
+
+        table.list tr:hover {
+            background-color: #d3d3d3;
+        }
+
+        #pagediv .add {
+            color: black;
+        }
+
+        #pagediv input[type="text"] {
+            background-color: #f0f0f0;
+        }
+
+        #pagediv label {
+            color: black;
+        }
+
+        /* 控枪命令弹窗样式优化 */
+        #gunCommandModal .modal-body {
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        #gunCommandModal .command-item {
+            margin: 8px 0;
+            padding: 6px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            word-break: break-all;
+        }
+    </style>
+</head>
+
+<body>
+<div id="pagediv">
+    <form id="searchForm" action="/kongqianghardware/list" method="post">
+        <a href="#" class="add openModal" data-title="添加控枪硬件" data-edit-url="/kongqianghardware/add"><b> + </b>添加控枪硬件</a>
+        <label>公司名称：</label>
+        <input type="text" id="stationName" name="stationName" placeholder="请输入公司名称关键字"
+               value="#(stationName ?? '')" />
+        <button type="button" id="searchButton">查询</button>
+        <button type="button" id="resetButton">重置</button>
+    </form>
+</div>
+
+<table class="list">
+    <tbody>
+    <tr>
+        <th width="6%">序号</th>
+        <th width="12%">硬件编号*</th>
+        <th width="12%">加气站名称</th>
+        <th width="12%">创建时间</th>
+        <th width="8%">创建人</th>
+        <th width="8%">状态</th>
+        <th width="8%">类型</th>
+        <th width="8%">备注</th>
+        <th width="12%">控枪命令</th> <!-- 新增控枪命令列 -->
+        <th width="8%">操作</th>
+    </tr>
+    #set(startIndex = (hardwareList.pageNumber - 1) * hardwareList.pageSize + 1)
+    #for(x : hardwareList.getList())
+    <tr>
+        <td>#(startIndex++)</td>
+        <td>#(x.hardwareno)</td>
+        <td>#(x.station_name)</td>
+        <td>#(x.createtime)</td>
+        <td>#(x.creater)</td>
+        <td>#(x.status)</td>
+        <td>#(x.type)</td>
+        <td>#(x.memo)</td>
+        <!-- 新增控枪命令列内容 -->
+        <td>
+            <a href="#" class="view-command" onclick="showGunCommands('#(x.hardwareno)')">查看控枪命令</a>
+        </td>
+        <td>
+            <a href="#" class="edit openModal" data-title="编辑控枪硬件" data-edit-url="/kongqianghardware/edit?id=#(x.id)">修改</a>
+            <a href="#" class="delete" onclick="confirmDelete('#(x.id)')">删除</a>
+        </td>
+    </tr>
+    #end
+    </tbody>
+</table>
+
+<div class="pagination" style="color:#DDDDDD;">
+    #set(selectedStationName = "")
+    #if(stationName != null && stationName != "")
+    #set(selectedStationName = stationName)
+    #end
+    #@paginate(hardwareList.pageNumber, hardwareList.totalPage, "/kongqianghardware/list?stationName=" + selectedStationName + "&page=")
+</div>
+
+<!-- 原有编辑/添加模态框 -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">模态窗口标题</h4>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- 表单内容将在这里加载 -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="saveButton">保存</button>
+                <script>
+                    document.getElementById('saveButton').addEventListener('click', function () {
+                        document.getElementById('myForm').submit();
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 新增控枪命令模态框 -->
+<div class="modal fade" id="gunCommandModal" tabindex="-1" role="dialog" aria-labelledby="gunCommandModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="gunCommandModalLabel">控枪命令列表</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="gunCommandContent">
+                <!-- 控枪命令内容将动态生成在这里 -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 搜索和重置按钮逻辑
+    $('#searchButton').click(function (e) {
+        e.preventDefault();
+        $('#searchForm').submit();
+    });
+
+    $('#resetButton').click(function (e) {
+        e.preventDefault();
+        $('#stationName').val('');
+        $('#searchForm').submit();
+    });
+
+    // 删除确认逻辑
+    function confirmDelete(id) {
+        console.log("进入删除函数，id: " + id);
+        if (confirm("确定要删除该控枪硬件记录吗？")) {
+            window.location.href = "/kongqianghardware/delete?id=" + id;
+        }
+    }
+
+    // 编辑/添加弹窗逻辑
+    $(document).ready(function () {
+        $('.openModal').click(function (e) {
+            e.preventDefault();
+            var editUrl = $(this).data('edit-url');
+            var that = this;
+
+            $.get(editUrl, function (data) {
+                var title = $(that).data('title');
+                $('#myModalLabel').text(title);
+                $('#modalBody').html(data);
+                $('#myModal').modal('show');
+            });
+        });
+    });
+
+    // 显示控枪命令弹窗逻辑
+    function showGunCommands(hardwareNo) {
+        // 基础URL模板
+        const baseUrl = 'http://39.98.221.201:9010/relay/control?device={device}&module={module}&channel={channel}&action={action}';
+        // 生成8条控枪命令的参数组合
+        const commandConfigs = [
+            { module: 'module1', channel: 1, action: 'on' },
+            { module: 'module1', channel: 1, action: 'off' },
+            { module: 'module1', channel: 2, action: 'on' },
+            { module: 'module1', channel: 2, action: 'off' },
+            { module: 'module2', channel: 1, action: 'on' },
+            { module: 'module2', channel: 1, action: 'off' },
+            { module: 'module2', channel: 2, action: 'on' },
+            { module: 'module2', channel: 2, action: 'off' }
+        ];
+
+        // 生成命令HTML
+        let commandHtml = '';
+        commandConfigs.forEach((config, index) => {
+            const commandUrl = baseUrl
+                .replace('{device}', hardwareNo)
+                .replace('{module}', config.module)
+                .replace('{channel}', config.channel)
+                .replace('{action}', config.action);
+            commandHtml += `<div class="command-item">${index + 1}. ${commandUrl}</div>`;
+        });
+
+        // 填充弹窗内容并显示
+        $('#gunCommandContent').html(commandHtml);
+        $('#gunCommandModalLabel').text(`控枪命令列表 - 硬件编号：${hardwareNo}`);
+        $('#gunCommandModal').modal('show');
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>编辑控枪硬件</title>
+    <link rel="stylesheet" type="text/css" href="/css/lpg.css">
+    <style>
+        .form_box {
+            padding: 20px;
+        }
+        .form_box div {
+            margin-bottom: 15px;
+        }
+        label {
+            display: inline-block;
+            width: 100px;
+            text-align: right;
+            margin-right: 10px;
+        }
+        input, select, textarea {
+            padding: 5px;
+            width: 300px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="form_box">
+    <form id="myForm" action="/kongqianghardware/update" method="post">
+        <input type="hidden" name="hardware.id" value="#(record.id)" />
+        <div>
+            <label>硬件名称</label>
+            <input type="text" name="hardware.hardwareno" value="#(record.hardwareno)" required />
+        </div>
+        <div>
+            <label>公司名称</label>
+            <select id="selectName" name="hardware.stationid" onchange="chooseName()" required>
+                #for (x: gastations)
+                <option value="#(x.id)" #if(record.stationid == x.id)selected#end>#(x.station_name)</option>
+                #end
+            </select>
+        </div>
+        <div>
+            <label>创建时间</label>
+            <input type="text" name="hardware.createtime" value="#(record.createtime)" />
+        </div>
+        <div>
+            <label>创建人</label>
+            <input type="text" name="hardware.creater" value="#(record.creater)" />
+        </div>
+        <div>
+            <label>状态</label>
+            <input type="text" name="hardware.status" value="#(record.status)" />
+        </div>
+        <div>
+            <label>类型</label>
+            <input type="text" name="hardware.type" value="#(record.type)" />
+        </div>
+        <div>
+            <label>备注</label>
+            <textarea name="hardware.memo">#(record.memo)</textarea>
+        </div>
+    </form>
+</div>
+</body>
+<script>
+    var gastations = [
+        #for (x: gastations)
+    { id: "#(x.id)", name: "#(x.station_name)" },
+    #end
+    ];
+    function chooseName() {
+        var selectName = document.getElementById("selectName").value;
+        console.log("selectName: " + selectName);
+        var selectedCompany = gastations.find(function (gastations) {
+            return gastations.name === selectName;
+        });
+    }
+</script>
+
+</html>

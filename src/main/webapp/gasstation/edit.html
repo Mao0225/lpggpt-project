@@ -40,7 +40,14 @@
             <label >加气站密码</label>
             <input type="text" name="gasStation.password" value="#(GasStation.password)" />#(password)
         </div>
-
+        <div>
+            <label>状态</label>
+            <select name="gasStation.status">
+                <!-- 用 #(GasStation.status) 获取当前状态值，判断是否选中 -->
+                <option value="10" #(GasStation.status == 10 ? "selected" : "")>正常上传</option>
+                <option value="0" #(GasStation.status == 0 ? "selected" : "")>不上传</option>
+            </select>
+        </div>
     </form>
 </div>
 </body>

@@ -161,6 +161,7 @@
             <th width="12%">法人姓名</th>
             <th width="12%">加气站联系方式</th>
             <th width="12%">加气站密码</th>
+            <th width="12%">状态</th>
             <th width="12%">操作</th>
         </tr>
         #set(startIndex = (GasStation.pageNumber - 1) * GasStation.pageSize + 1)
@@ -173,6 +174,9 @@
             <td>#(x.legal_person)</td>
             <td>#(x.telephone)</td>
             <td>#(x.password)</td>
+            <td>  <!-- 新增状态显示逻辑 -->
+                #(x.status == 10 ? "正常上传" : "不上传")
+            </td>
             <td style="text-align:left">
                 &nbsp;&nbsp;<a href="#" onclick="confirmDelete('#(x.id)')">删除</a>
                 &nbsp;&nbsp; <a href="#" class="edit openModal" data-title="编辑气站" data-edit-url="/GasStation/edit/#(x.id)">修改</a>

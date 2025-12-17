@@ -25,10 +25,16 @@ public abstract class BaseBseGun<M extends BaseBseGun<M>> extends Model<M> imple
 		return getStr("gunno");
 	}
 	
+	/**
+	 * 打开抢的接口
+	 */
 	public void setCaozuo(java.lang.String caozuo) {
 		set("caozuo", caozuo);
 	}
 	
+	/**
+	 * 打开抢的接口
+	 */
 	public java.lang.String getCaozuo() {
 		return getStr("caozuo");
 	}
@@ -73,10 +79,16 @@ public abstract class BaseBseGun<M extends BaseBseGun<M>> extends Model<M> imple
 		return getStr("memo");
 	}
 	
+	/**
+	 * 关闭强的接口
+	 */
 	public void setYuliu1(java.lang.String yuliu1) {
 		set("yuliu1", yuliu1);
 	}
 	
+	/**
+	 * 关闭强的接口
+	 */
 	public java.lang.String getYuliu1() {
 		return getStr("yuliu1");
 	}

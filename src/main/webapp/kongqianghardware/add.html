@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>添加控枪硬件</title>
+    <link rel="stylesheet" type="text/css" href="/css/lpg.css">
+    <style>
+        .form_box {
+            padding: 20px;
+        }
+        .form_box div {
+            margin-bottom: 15px;
+        }
+        label {
+            display: inline-block;
+            width: 100px;
+            text-align: right;
+            margin-right: 10px;
+        }
+        input, select, textarea {
+            padding: 5px;
+            width: 300px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="form_box">
+    <form id="myForm" action="/kongqianghardware/save" method="post">
+        <div>
+            <label>硬件名称</label>
+            <input type="text" name="hardware.hardwareno" value="" required />
+        </div>
+        <div>
+            <label>公司名称</label>
+            <select id="selectName" name="hardware.stationid" onchange="chooseName()" required>
+                <option value="-1" selected>请选择公司</option>
+                #for (x: gastations)
+                <option value="#(x.id)">#(x.station_name)</option>
+                #end
+            </select>
+        </div>
+        <div>
+            <label>创建时间</label>
+            <input type="text" name="hardware.createtime" value="" />
+        </div>
+        <div>
+            <label>创建人</label>
+            <input type="text" name="hardware.creater" value="" />
+        </div>
+        <div>
+            <label>状态</label>
+            <input type="text" name="hardware.status" value="" />
+        </div>
+        <div>
+            <label>类型</label>
+            <input type="text" name="hardware.type" value="" />
+        </div>
+        <div>
+            <label>备注</label>
+            <textarea name="hardware.memo"></textarea>
+        </div>
+    </form>
+</div>
+</body>
+<script>
+    var gastations = [
+        #for (x: gastations)
+    { id: "#(x.id)", name: "#(x.station_name)" },
+    #end
+    ];
+    function chooseName() {
+        var selectName = document.getElementById("selectName").value;
+        console.log("selectName: " + selectName);
+        var selectedCompany = gastations.find(function (gastations) {
+            return gastations.name === selectName;
+        });
+    }
+</script>
+
+</html>

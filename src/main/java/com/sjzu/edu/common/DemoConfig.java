@@ -164,6 +164,7 @@ public class DemoConfig extends JFinalConfig {
 		me.add("/ipaddress",IpaddressController.class);
 		me.add("/plcxinhao",PlcxinhaoController.class); //plc信号显示，显示从树莓派查出的数据
 		me.add("/plckongzhi",PlckongzhiController.class);//plc控制信号管理
+		me.add("/kongqianghardware",KongqianghardwareController.class);//控枪硬件管理
 		//测试连接Github
 	}
 	
