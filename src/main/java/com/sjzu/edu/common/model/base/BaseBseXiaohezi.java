@@ -243,5 +243,61 @@ public abstract class BaseBseXiaohezi<M extends BaseBseXiaohezi<M>> extends Mode
 		return getStr("telephone");
 	}
 	
+	/**
+	 * 是否上传；0-未上传，1-已上传；2-上传错误
+	 */
+	public void setIsupload(java.lang.Integer isupload) {
+		set("isupload", isupload);
+	}
+	
+	/**
+	 * 是否上传；0-未上传，1-已上传；2-上传错误
+	 */
+	public java.lang.Integer getIsupload() {
+		return getInt("isupload");
+	}
+	
+	/**
+	 * 上传时间
+	 */
+	public void setUploadtime(java.util.Date uploadtime) {
+		set("uploadtime", uploadtime);
+	}
+	
+	/**
+	 * 上传时间
+	 */
+	public java.util.Date getUploadtime() {
+		return getDate("uploadtime");
+	}
+	
+	/**
+	 * 最后一次服务器返回的消息
+	 */
+	public void setUploadmsg(java.lang.String uploadmsg) {
+		set("uploadmsg", uploadmsg);
+	}
+	
+	/**
+	 * 最后一次服务器返回的消息
+	 */
+	public java.lang.String getUploadmsg() {
+		return getStr("uploadmsg");
+	}
+	
+	/**
+	 * 上传次数
+	 */
+	public void setUploadtimes(java.lang.Integer uploadtimes) {
+		set("uploadtimes", uploadtimes);
+	}
+	
+	/**
+	 * 上传次数
+	 */
+	public java.lang.Integer getUploadtimes() {
+		return getInt("uploadtimes");
+	}
+	
 }
 

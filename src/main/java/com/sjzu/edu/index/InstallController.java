@@ -10,7 +10,7 @@ public class InstallController  extends Controller {
 
     public void installlist(){
         int pageNumber = getParaToInt("page", 1);
-        int pageSize = getParaToInt("pageSize", 10);  // 注意你写错了 pageSzie
+        int pageSize = getParaToInt("pageSize", 10);
         String xiaohezibianma= getPara("xiaohezibianma");
         String time = getPara("time");
         String restaurantname = getPara("restaurantname");

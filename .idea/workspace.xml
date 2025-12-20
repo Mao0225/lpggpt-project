@@ -5,25 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bef31097-e2fd-4fd6-9377-5642cb374b1b" name="更改" comment="增加了LPG充装端的后台和对应后端">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/index/KongqianghardwareController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/index/KongqianghardwareService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/kongqianghardware/add.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/kongqianghardware/edit.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/log/jfinal_demo_for_maven.log" beforeDir="false" afterPath="$PROJECT_DIR$/log/jfinal_demo_for_maven.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/common/DemoConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/common/DemoConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/common/model/_MappingKit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/common/model/_MappingKit.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/common/model/base/BaseBseGun.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/common/model/base/BaseBseGun.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/common/model/base/BaseBseXiaohezi.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/common/model/base/BaseBseXiaohezi.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/common/model/base/BaseGasStation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/common/model/base/BaseGasStation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/index/GasfileController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/index/GasfileController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/index/GasfileService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/index/GasfileService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/gasfile/gasFiles.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/gasfile/gasFiles.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/gasstation/GasStation.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/gasstation/GasStation.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/gasstation/add.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/gasstation/add.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/gasstation/edit.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/gasstation/edit.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/managegun/add.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/managegun/add.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/managegun/edit.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/managegun/edit.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/managegun/gunlist.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/managegun/gunlist.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/index/InstallController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/index/InstallController.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -111,7 +97,7 @@
       <recent name="com.sjzu.edu.index" />
     </key>
   </component>
-  <component name="RunManager" selected="应用程序.DemoConfig">
+  <component name="RunManager" selected="应用程序._JFinalDemoGenerator">
     <configuration name="DemoConfig" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.sjzu.edu.common.DemoConfig" />
       <module name="jfinal_demo_for_maven" />
@@ -153,8 +139,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="应用程序.DemoConfig" />
         <item itemvalue="应用程序._JFinalDemoGenerator" />
+        <item itemvalue="应用程序.DemoConfig" />
       </list>
     </recent_temporary>
   </component>
@@ -309,6 +295,7 @@
       <workItem from="1764041404174" duration="3214000" />
       <workItem from="1764074104299" duration="15895000" />
       <workItem from="1765875135827" duration="13996000" />
+      <workItem from="1766013106486" duration="4259000" />
     </task>
     <task id="LOCAL-00001" summary="添加了小盒子管理功能">
       <option name="closed" value="true" />

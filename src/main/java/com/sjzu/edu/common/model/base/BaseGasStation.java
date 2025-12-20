@@ -137,5 +137,47 @@ public abstract class BaseGasStation<M extends BaseGasStation<M>> extends Model<
 		return getInt("status");
 	}
 	
+	/**
+	 * 经度
+	 */
+	public void setLONGITUDE(java.lang.String LONGITUDE) {
+		set("LONGITUDE", LONGITUDE);
+	}
+	
+	/**
+	 * 经度
+	 */
+	public java.lang.String getLONGITUDE() {
+		return getStr("LONGITUDE");
+	}
+	
+	/**
+	 * 维度
+	 */
+	public void setLATITUDE(java.lang.String LATITUDE) {
+		set("LATITUDE", LATITUDE);
+	}
+	
+	/**
+	 * 维度
+	 */
+	public java.lang.String getLATITUDE() {
+		return getStr("LATITUDE");
+	}
+	
+	/**
+	 * 高度
+	 */
+	public void setHEIGHT(java.lang.String HEIGHT) {
+		set("HEIGHT", HEIGHT);
+	}
+	
+	/**
+	 * 高度
+	 */
+	public java.lang.String getHEIGHT() {
+		return getStr("HEIGHT");
+	}
+	
 }
 
