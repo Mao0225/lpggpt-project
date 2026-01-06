@@ -36,39 +36,33 @@ public class FfilrecordckServive {
         return daos.find("select * from gas_station order by id asc");
     }
 
+
     public Page<FillRecordCheck1> search(int pageNumber, int pageSize, Timestamp finditem, String gastion, String gasnumber, String companyid) {
+        // 核心修改1：简化LEFT JOIN，直接关联gas_file（无重复gas_number，移除子查询）
         StringBuilder baseSql = new StringBuilder(
                 "FROM fill_record_check1 f " +
-                        "LEFT JOIN (" +
-                        "    SELECT g.* " +
-                        "    FROM gas_file g " +
-                        "    WHERE g.id = (" +
-                        "        SELECT g2.id " +
-                        "        FROM gas_file g2 " +
-                        "        WHERE g2.gas_number = g.gas_number " +
-                        "        ORDER BY g2.id " +
-                        "        LIMIT 1 " +
-                        "    )" +
-                        ") g " +
-                        "ON g.gas_number = f.gas_number ");
-        String selectSql = "SELECT f.*, g.* ";
+                        "LEFT JOIN gas_file g ON f.gas_number = g.gas_number ");
+
+        // 核心修改2：指定查询g的字段（含terminate_use_date，filing_gas_station别名gasstation）
+        String selectSql = "SELECT f.*, g.filling_medium, g.filling_specification, g.filing_gas_station as gasstation, g.terminate_use_date ";
+
         List<Object> params = new ArrayList<>();
         boolean hasCondition = false;
 
-        // 1. 新增条件：add_gas_long 不为空
+        // 1. 保留原有条件：add_gas_long 不为空
         baseSql.append(" WHERE f.add_gas_long IS NOT NULL ");
         hasCondition = true;
 
-        // 2. 保留原有条件：now_gas 不为空（注意调整条件连接符）
-        baseSql.append(" AND now_gas IS NOT NULL ");
+        // 2. 保留原有条件：now_gas 不为空（补充f.别名，避免字段歧义）
+        baseSql.append(" AND f.now_gas IS NOT NULL ");
 
-        // 3. 原有条件：after_filling 和 before_filling 都为合格
+        // 3. 保留原有条件：after_filling 和 before_filling 都为合格
         baseSql.append(" AND f.after_filling = ? AND f.before_filling = ? ");
         params.add("合格");
         params.add("合格");
         hasCondition = true;
 
-        // 处理日期条件（finditem为null时默认查当天）
+        // 处理日期条件（finditem为null时默认查当天）—— 逻辑完全保留
         if (finditem == null) {
             LocalDate today = LocalDate.now();
             LocalDateTime startOfDay = today.atStartOfDay();
@@ -86,31 +80,33 @@ public class FfilrecordckServive {
             params.add(new Timestamp(finditem.getTime() + 86400000));
         }
 
-        // 处理加气站条件
+        // 处理加气站条件 —— 逻辑完全保留
         if (gastion != null && !gastion.isEmpty()) {
             baseSql.append(" AND f.gasstation LIKE ? ");
             params.add("%" + gastion + "%");
         }
 
-        // 处理气瓶编号条件
+        // 处理气瓶编号条件 —— 逻辑完全保留
         if (gasnumber != null && !gasnumber.isEmpty()) {
             baseSql.append(" AND f.gas_number LIKE ? ");
             params.add("%" + gasnumber + "%");
         }
 
-        // 处理 companyid 条件
+        // 处理 companyid 条件 —— 逻辑完全保留（含打印日志）
         if (companyid != null && !companyid.isEmpty()) {
             baseSql.append(" AND f.gasstation = ? ");
             params.add(companyid);
             System.out.println("companyid:" + companyid);
         }
 
-        // 添加排序
+        // 添加排序 —— 逻辑完全保留（按f.id降序）
         baseSql.append(" ORDER BY f.id DESC");
 
+        // 打印最终SQL（便于调试）
         String finalSql = selectSql + baseSql.toString();
         System.out.println("Final SQL: " + finalSql);
 
+        // 分页查询（参数、分页逻辑完全保留）
         return dao.paginate(pageNumber, pageSize, selectSql, baseSql.toString(), params.toArray());
     }
 

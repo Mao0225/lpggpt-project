@@ -358,17 +358,29 @@
     <td>#(x.gun_no)</td>
     <td>#(x.filling_staff_name)</td>
     <td>#(x.filling_check_staff_name)</td>
-    <td> #set(foundStation = false)
+    <td>
+      #set(foundStation = false)
+      #set(displayValue = "")
+      <!-- 1. 遍历站点列表匹配station_id，获取站点名称 -->
       #for(g : gastiond)
       #if(x.gasstation == g.station_id)
-      #(g.station_name)
+      #set(displayValue = g.station_name)
       #set(foundStation = true)
       #end
       #end
+      <!-- 2. 未匹配到则使用x.gasstation原始值 -->
       #if(!foundStation)
-      #(x.gasstation)
-      #end</td>
-    <td>
+      #set(displayValue = x.gasstation ?? "")
+      #end
+      <!-- 3. 判断是否为空，为空则整行变红 + 显示红色"无"，否则显示正常值 -->
+      #set(isEmpty = (displayValue == null || displayValue.trim() == ""))
+      #if(isEmpty)
+      <script>$(this).closest('tr').css('color', 'red');</script>
+      <span style="color:red;">该气瓶不在加气站气瓶信息库中</span>
+      #else
+      #(displayValue)
+      #end
+    </td><td>
       #if(x.upload_flag == 1)
       <span style="color:green">已上传</span>
       #elseif(x.upload_flag == 2)
