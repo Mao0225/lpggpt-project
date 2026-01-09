@@ -74,33 +74,40 @@ public class AppTransportController extends Controller {
         String code = getPara("qipingid");
         String time = getPara("riqi");
 
-
-
         int pageNum = getParaToInt("pageNum", 1);
         int pageSize = getParaToInt("pageSize", 10);
-
-
 
         System.out.println(code+"\n"+time+"\n"+pageNum+"\n"+pageSize+"\n");
         try {
             String fromSql = "from gas_bottle where 1=1 ";
-            if(code!=null){
-                fromSql += "and bottle_id like '%" + code+"%'" ;
+            String countWhere = "where 1=1 ";  // 用于统计总数的条件，与分页保持一致
+
+            if(code!=null && !code.trim().isEmpty()){
+                fromSql += "and bottle_id like '%" + code.trim() + "%' ";
+                countWhere += "and bottle_id like '%" + code.trim() + "%' ";
             }
-//            if (time!=null){
-//                fromSql += " AND end_time >= '" + time + " 00:00:00' AND end_time < '" + time + " 23:59:59'";
-//
-//            }
-            fromSql += " and tel = " + telephone +" order by id desc";
-            System.out.println(fromSql);
-            // 获取总记录数
-            GasBottle totalRecord = dao.findFirst("SELECT COUNT(*) AS total FROM gas_bottle WHERE tel = " + telephone +" ");
+
+            if (time != null && !time.trim().isEmpty()) {
+                fromSql += "AND end_time >= '" + time + " 00:00:00' AND end_time <= '" + time + " 23:59:59' ";
+                countWhere += "AND end_time >= '" + time + " 00:00:00' AND end_time <= '" + time + " 23:59:59' ";
+            }
+
+            fromSql += " and tel = '" + telephone + "' order by id desc";  // 建议加上单引号防止注入（原代码已有类似做法）
+            countWhere += " and tel = '" + telephone + "'";
+
+            System.out.println("分页SQL的from部分: " + fromSql);
+            System.out.println("统计SQL的where部分: " + countWhere);
+
+            // 获取总记录数（现在包含日期和编码条件）
+            GasBottle totalRecord = dao.findFirst("SELECT COUNT(*) AS total FROM gas_bottle " + countWhere);
+
             if (totalRecord != null) {
                 int total = totalRecord.getInt("total");
-                System.out.println(total);
+                System.out.println("总记录数: " + total);
+
                 // 获取当前页的记录
-                Page<GasBottle> records = dao.paginate(pageNum,pageSize,"select *",fromSql);
-//                System.out.println(records.toString());
+                Page<GasBottle> records = dao.paginate(pageNum, pageSize, "select *", fromSql);
+
                 JSONObject json = new JSONObject();
                 json.put("total", total);
                 json.put("rows", records);
@@ -108,16 +115,15 @@ public class AppTransportController extends Controller {
                 renderJson(json);
             } else {
                 System.out.println(fromSql);
-                // 如果没有找到记录，可以返回一个空的JSON对象
+                // 如果没有找到记录，返回空结果
                 JSONObject json = new JSONObject();
                 json.put("total", 0);
-                json.put("rows", new ArrayList<GasBottle>()); // 使用 ArrayList 而不是数组
+                json.put("rows", new ArrayList<GasBottle>());
                 renderJson(json);
             }
         } catch (Exception e) {
-            // 这里可以添加更详细的错误处理，比如记录日志
             e.printStackTrace();
-            renderError(500); // 返回服务器内部错误
+            renderError(500);
         }
     }
 

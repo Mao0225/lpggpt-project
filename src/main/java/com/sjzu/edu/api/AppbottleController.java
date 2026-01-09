@@ -61,6 +61,9 @@ public class AppbottleController extends Controller {
 
 	}
 
+
+
+
 	public void getBottleinfobyfengtian() {
 		String bottlenumber = getPara("bottlenumber");
 		System.out.println("test bottlenumber:"+bottlenumber);

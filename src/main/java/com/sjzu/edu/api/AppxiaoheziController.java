@@ -398,7 +398,7 @@ public class AppxiaoheziController extends Controller {
         String restaurantName = getPara("restaurantname");
         String gasNumber = getPara("gas_number");
         String telephone = getPara("telephone");
-        String baseUrl = "http://114.115.156.201:8099/";
+        String baseUrl = "http://39.98.221.201:8099/";
         System.out.println("telephone " + telephone);
         System.out.println("startTime " + startTime);
         System.out.println("endTime " + endTime);
@@ -449,8 +449,13 @@ public class AppxiaoheziController extends Controller {
             if (hasWhere) {
                 whereClause.append(" AND ");
             }
-            whereClause.append("(x.gas_number1 = ? OR x.gas_number2 = ? OR x.gas_number3 = ?) ");
-            Collections.addAll(params, gasNumber, gasNumber, gasNumber);
+            // 使用 LIKE 进行模糊查询，任意一个气瓶号字段包含 gasNumber 即可
+            whereClause.append(
+                    "(x.gas_number1 LIKE ? OR x.gas_number2 LIKE ? OR x.gas_number3 LIKE ? OR x.gas_number4 LIKE ?) "
+            );
+            // %通配符表示任意字符
+            String likeParam = "%" + gasNumber.trim() + "%";
+            Collections.addAll(params, likeParam, likeParam, likeParam, likeParam);
             hasWhere = true;
         }
 
@@ -541,7 +546,7 @@ public class AppxiaoheziController extends Controller {
 
     public void updateAccountInfo() {
         //保存手机端的上传的绑定人信息
-        // 测试接口：http://114.115.156.201:8099/appxiaohezi/updateAccountInfo
+        // 测试接口：http://39.98.221.201:8099/appxiaohezi/updateAccountInfo
         // 测试接口：http://localhost:8099/appxiaohezi/updateAccountInfo，
         //http://192.168.0.102:8099/appxiaohezi/updateAccountInfo
         try {
