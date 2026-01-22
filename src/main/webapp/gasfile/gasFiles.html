@@ -129,6 +129,8 @@
         <input type="text" name="gasNumber" placeholder="输入气瓶编号" value="#(gasNumber)" />
         <input type="text" name="fentiancode" placeholder="输入奉天码" value="#(fentiancode)" />
         <input type="text" name="filling_specification" placeholder="输入充装规格" value="#(filling_specification)" />
+        <label>充气站名:</label>
+        <input type="text" name="filing_gas_station" placeholder="输入充气站名称" value="#(filing_gas_station)" />
 
         <label>过期状态:</label>
         <select name="expiredStatus">
@@ -143,6 +145,7 @@
             <option value="1" #if(uploadStatus == "1")selected#end>已上传</option>
             <option value="0" #if(uploadStatus == "0")selected#end>未上传</option>
         </select>
+
 
         <label></label>
         <input type="submit" value="搜索"/>
@@ -177,6 +180,7 @@
         <th width="10%">气瓶使用登记证</th>
         <th width="10%">制造日期</th>
         <th width="10%">检验日期</th>
+        <th width="10%">检验机构</th>
         <th width="10%">定检日期</th>
         <th width="10%">终止使用日期</th>
         <th width="10%">设备品种</th>
@@ -217,6 +221,7 @@
         <td #if(x.terminate_use_date != null && x.terminate_use_date.toString() < currentDate) class="expired"#end>#(x.qpsydjzbh)</td>
         <td #if(x.terminate_use_date != null && x.terminate_use_date.toString() < currentDate) class="expired"#end>#(x.manufacture_date)</td>
         <td #if(x.terminate_use_date != null && x.terminate_use_date.toString() < currentDate) class="expired"#end>#(x.inspect_date)</td>
+        <td #if(x.terminate_use_date != null && x.terminate_use_date.toString() < currentDate) class="expired"#end>#(x.inspect_unit)</td>
         <td #if(x.terminate_use_date != null && x.terminate_use_date.toString() < currentDate) class="expired"#end>#(x.regular_check_date)</td>
         <td #if(x.terminate_use_date != null && x.terminate_use_date.toString() < currentDate) class="expired"#end>#(x.terminate_use_date)</td>
         <td #if(x.terminate_use_date != null && x.terminate_use_date.toString() < currentDate) class="expired"#end>#(x.monitoring_station)</td>

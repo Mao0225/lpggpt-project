@@ -60,7 +60,7 @@ public class GasfileService {
     }
 
     // 修改：添加uploadStatus参数，用于筛选上传状态
-    public Page<GasFile> search(int pageNumber, int pageSize, String searchKey, String fentiancode, String filling_specification, String expiredStatus, String uploadStatus) {
+    public Page<GasFile> search(int pageNumber, int pageSize,String filing_gas_station, String searchKey, String fentiancode, String filling_specification, String expiredStatus, String uploadStatus) {
         StringBuilder addsql = new StringBuilder("WHERE 1=1");
 
         if (searchKey != null && !searchKey.isEmpty()) {
@@ -71,6 +71,10 @@ public class GasfileService {
         }
         if (filling_specification != null && !filling_specification.isEmpty()) {
             addsql.append(" AND filling_specification LIKE '%").append(filling_specification).append("%'");
+        }
+
+        if (filing_gas_station != null && !filing_gas_station.isEmpty()) {
+            addsql.append(" AND filing_gas_station LIKE '%").append(filing_gas_station).append("%'");
         }
 
         // 处理过期状态筛选

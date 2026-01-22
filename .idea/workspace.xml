@@ -6,9 +6,15 @@
   <component name="ChangeListManager">
     <list default="true" id="bef31097-e2fd-4fd6-9377-5642cb374b1b" name="更改" comment="增加了LPG充装端的后台和对应后端">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/api/AppTransportController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/api/AppTransportController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/api/AppbottleController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/api/AppbottleController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/api/AppxiaoheziController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/api/AppxiaoheziController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/log/jfinal_demo_for_maven.log" beforeDir="false" afterPath="$PROJECT_DIR$/log/jfinal_demo_for_maven.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/common/model/base/BaseGasFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/common/model/base/BaseGasFile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/index/GasfileController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/index/GasfileController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/index/GasfileService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sjzu/edu/index/GasfileService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/drivercar/add.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/drivercar/add.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/drivercar/edit.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/drivercar/edit.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/gasfile/add.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/gasfile/add.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/gasfile/edit.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/gasfile/edit.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/gasfile/gasFiles.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/gasfile/gasFiles.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -291,6 +297,10 @@
       <workItem from="1766814408794" duration="4040000" />
       <workItem from="1767752020710" duration="1373000" />
       <workItem from="1767925100114" duration="7288000" />
+      <workItem from="1768995125122" duration="306000" />
+      <workItem from="1769001020846" duration="3466000" />
+      <workItem from="1769057151700" duration="4000" />
+      <workItem from="1769059338520" duration="24000" />
     </task>
     <task id="LOCAL-00001" summary="添加了小盒子管理功能">
       <option name="closed" value="true" />

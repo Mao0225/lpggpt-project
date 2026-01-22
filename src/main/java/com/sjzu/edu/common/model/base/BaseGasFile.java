@@ -150,6 +150,21 @@ public abstract class BaseGasFile<M extends BaseGasFile<M>> extends Model<M> imp
 	public java.util.Date getInspectDate() {
 		return getDate("inspect_date");
 	}
+
+
+	/**
+	 * 检验机构
+	 */
+	public void setInspectUnit(java.lang.String inspectUnit) {
+		set("inspect_unit", inspectUnit);
+	}
+
+	/**
+	 * 检验机构
+	 */
+	public java.lang.String getInspectUnit() {
+		return getStr("inspect_unit");
+	}
 	
 	/**
 	 * 定检日期

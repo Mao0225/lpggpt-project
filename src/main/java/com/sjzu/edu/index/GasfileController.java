@@ -26,6 +26,7 @@ public class GasfileController extends Controller {
         String gasNumber = getPara("gasNumber");
         String fentiancode = getPara("fentiancode");
         String filling_specification = getPara("filling_specification");
+        String filing_gas_station = getPara("filing_gas_station");
         String expiredStatus = getPara("expiredStatus", "all");
         // 新增：获取上传状态参数
         String uploadStatus = getPara("uploadStatus", "all");
@@ -38,11 +39,12 @@ public class GasfileController extends Controller {
         setAttr("gasNumber",gasNumber);
         setAttr("fentiancode",fentiancode);
         setAttr("filling_specification",filling_specification);
+        setAttr("filing_gas_station",filing_gas_station);
         setAttr("expiredStatus", expiredStatus);
         // 新增：传递上传状态参数
         setAttr("uploadStatus", uploadStatus);
         // 传递所有参数到service
-        setAttr("gasFiles", service.search(pageNumber, 10, gasNumber, fentiancode, filling_specification, expiredStatus, uploadStatus));
+        setAttr("gasFiles", service.search(pageNumber, 10, filing_gas_station,gasNumber, fentiancode, filling_specification, expiredStatus, uploadStatus));
         render("gasFiles.html");
     }
 
@@ -220,6 +222,8 @@ public class GasfileController extends Controller {
         String gasNumber = getPara("gasNumber");
         String valve_body_code = getPara("valve_body_code");
         String filling_specification = getPara("filling_specification");
+        String filing_gas_station = getPara("filing_gas_station");
+
         String expiredStatus = getPara("expiredStatus", "all");
         // 新增：获取上传状态参数
         String uploadStatus = getPara("uploadStatus", "all");
@@ -233,9 +237,11 @@ public class GasfileController extends Controller {
         setAttr("valve_body_code",valve_body_code);
         setAttr("filling_specification",filling_specification);
         setAttr("expiredStatus", expiredStatus);
+        setAttr("filing_gas_station",filing_gas_station);
+
         // 新增：传递上传状态参数
         setAttr("uploadStatus", uploadStatus);
-        setAttr("gasFiles", service.search(pageNumber, 10, gasNumber, valve_body_code, filling_specification, expiredStatus, uploadStatus));
+        setAttr("gasFiles", service.search(pageNumber, 10,filing_gas_station, gasNumber, valve_body_code, filling_specification, expiredStatus, uploadStatus));
         render("gasFiles.html");
     }
 
