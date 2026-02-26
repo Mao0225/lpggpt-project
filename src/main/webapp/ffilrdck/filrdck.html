@@ -211,8 +211,10 @@
 <body>
 <div id="pagediv">
   <form id="searchForm" action="/Ffilrdck/filrdcklist" method="get">
-    <label> 时间查找：</label>
-    <input type="date" name="finditem" id="dateInput" value="#(finditem ?? '')">
+    <label> 时间范围：</label>
+    <input type="date" name="finditem_start" id="dateStart" value="#(finditem_start ?? '')">
+    <span> 至 </span>
+    <input type="date" name="finditem_end" id="dateEnd" value="#(finditem_end ?? '')">
     <!--    <label> 加气站查找：</label>-->
     <!--    <input type="text" name="gastion" value="#(gastion)">-->
     <label> 编号查找：</label>
@@ -221,21 +223,21 @@
     <input type="submit" value="重置" name="refresh"/>
     <script>
 
-      // 设置默认日期为当天
+      // 设置默认日期范围为当天
       document.addEventListener('DOMContentLoaded', function() {
-        const dateInput = document.getElementById('dateInput');
+        const dateStart = document.getElementById('dateStart');
+        const dateEnd = document.getElementById('dateEnd');
         const form = document.getElementById('searchForm');
 
-        // 检查是否有日期参数，没有则设置为当天并自动提交
-        if (!dateInput.value) {
-          // 设置当天日期
+        // 两个都为空时设置为当天并自动提交
+        if (!dateStart.value && !dateEnd.value) {
           const today = new Date();
           const year = today.getFullYear();
           const month = String(today.getMonth() + 1).padStart(2, '0');
           const day = String(today.getDate()).padStart(2, '0');
-          dateInput.value = `${year}-${month}-${day}`;
-
-          // 自动提交表单获取当天数据
+          const dateStr = `${year}-${month}-${day}`;
+          dateStart.value = dateStr;
+          dateEnd.value = dateStr;
           form.submit();
         }
       });
@@ -259,12 +261,14 @@
             select.selectedIndex = 0;
           });
 
-          // 重置时设置日期为当天
+          // 重置时设置日期范围为当天
           const today = new Date();
           const year = today.getFullYear();
           const month = String(today.getMonth() + 1).padStart(2, '0');
           const day = String(today.getDate()).padStart(2, '0');
-          document.getElementById('dateInput').value = `${year}-${month}-${day}`;
+          const dateStr = `${year}-${month}-${day}`;
+          document.getElementById('dateStart').value = dateStr;
+          document.getElementById('dateEnd').value = dateStr;
 
 
           // 提交表单
@@ -410,8 +414,8 @@
   </tbody>
 </table>
 <div class="pagination" style="color:#DDDDDD;">
-  #@paginate(filrdck.pageNumber,filrdck.totalPage, "/Ffilrdck/filrdcklist?finditem="+(finditem != null ? finditem :'')+
-  "&gastion=" + (gastion != null ? gastion : '')+ "&gasid=" + (gasname != null ? gasname : '')+"&pageNum=")
+  #@paginate(filrdck.pageNumber,filrdck.totalPage, "/Ffilrdck/filrdcklist?finditem_start="+(finditem_start != null ? finditem_start : '')+"&finditem_end="+(finditem_end != null ? finditem_end : '')+
+  "&gastion=" + (gastion != null ? gastion : '')+ "&gasname=" + (gasname != null ? gasname : '')+"&pageNum=")
 </div>
 
 <script>

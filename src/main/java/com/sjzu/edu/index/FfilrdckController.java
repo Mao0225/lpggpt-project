@@ -25,38 +25,40 @@ public class FfilrdckController extends Controller {
         int pageNumber = getParaToInt("pageNum", 1); // 默认为第 1 页
         int pageSize = getParaToInt("size", 10); // 默认每页 10 条记录
 
-        // 获取前端传递的日期字符串
-        String finditemStr = getPara("finditem");
-        Timestamp finditem = null;
+        // 获取前端传递的时间范围
+        String finditemStartStr = getPara("finditem_start");
+        String finditemEndStr = getPara("finditem_end");
+        Timestamp finditemStart = null;
+        Timestamp finditemEnd = null;
 
         String gastion = getPara("gastion");
         System.out.println(gastion);
         String gasname = getPara("gasname");
         String companyid = getSessionAttr("companyid");
         System.out.println(companyid);
-        // 解析日期时间字符串
-        if (finditemStr!= null &&!finditemStr.isEmpty()) {
-            try {
-                LocalDate parsedDate = LocalDate.parse(finditemStr);
-                LocalDateTime startOfDay = parsedDate.atStartOfDay();
-                finditem = Timestamp.valueOf(startOfDay);
-            } catch (DateTimeParseException e) {
-                // 处理解析失败的情况
-                System.err.println("Invalid datetime format: " + finditemStr);
-                // 这里可以添加更友好的错误提示返回给前端
-                setAttr("errorMessage", "Invalid datetime format. Please check the date and time input.");
-                render("errorPage.html");
-                return;
+        // 解析日期时间字符串（时间范围）
+        try {
+            if (finditemStartStr != null && !finditemStartStr.isEmpty()) {
+                LocalDate parsed = LocalDate.parse(finditemStartStr);
+                finditemStart = Timestamp.valueOf(parsed.atStartOfDay());
             }
+            if (finditemEndStr != null && !finditemEndStr.isEmpty()) {
+                LocalDate parsed = LocalDate.parse(finditemEndStr);
+                finditemEnd = Timestamp.valueOf(parsed.atStartOfDay());
+            }
+        } catch (DateTimeParseException e) {
+            System.err.println("Invalid datetime format: " + finditemStartStr + " / " + finditemEndStr);
+            setAttr("errorMessage", "日期格式错误，请检查输入。");
+            render("errorPage.html");
+            return;
         }
 
-
-
         // 调用 service 进行查询
-        Page<FillRecordCheck1> result = service.search(pageNumber, pageSize, finditem, gastion, gasname,companyid);
+        Page<FillRecordCheck1> result = service.search(pageNumber, pageSize, finditemStart, finditemEnd, gastion, gasname, companyid);
         System.out.println("获取到的充装信息为"+result.getList());
         List<GasStation> resultd = service.pagdetail(companyid);
-        setAttr("finditem", finditemStr);
+        setAttr("finditem_start", finditemStartStr);
+        setAttr("finditem_end", finditemEndStr);
         setAttr("gastion", gastion);
         setAttr("gasname", gasname);
         setAttr("filrdck", result);

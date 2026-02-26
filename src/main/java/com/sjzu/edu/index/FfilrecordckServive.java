@@ -7,7 +7,6 @@ import com.sjzu.edu.common.model.GasStation;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 public class FfilrecordckServive {
@@ -37,7 +36,12 @@ public class FfilrecordckServive {
     }
 
 
-    public Page<FillRecordCheck1> search(int pageNumber, int pageSize, Timestamp finditem, String gastion, String gasnumber, String companyid) {
+    /**
+     * 分页查询充装记录，支持时间范围。
+     * @param finditemStart 开始日期（含），为 null 时与 finditemEnd 一起参与默认逻辑
+     * @param finditemEnd   结束日期（含），为 null 时与 finditemStart 一起参与默认逻辑
+     */
+    public Page<FillRecordCheck1> search(int pageNumber, int pageSize, Timestamp finditemStart, Timestamp finditemEnd, String gastion, String gasnumber, String companyid) {
         // 核心修改1：简化LEFT JOIN，直接关联gas_file（无重复gas_number，移除子查询）
         StringBuilder baseSql = new StringBuilder(
                 "FROM fill_record_check1 f " +
@@ -62,11 +66,11 @@ public class FfilrecordckServive {
         params.add("合格");
         hasCondition = true;
 
-        // 处理日期条件（finditem为null时默认查当天）—— 逻辑完全保留
-        if (finditem == null) {
+        // 处理时间范围条件：两参数都为空时默认查当天；否则 [finditemStart 0:00, finditemEnd 当日结束+1天)
+        if (finditemStart == null && finditemEnd == null) {
             LocalDate today = LocalDate.now();
             LocalDateTime startOfDay = today.atStartOfDay();
-            LocalDateTime endOfDay = today.atTime(LocalTime.MAX);
+            LocalDateTime endOfDay = today.plusDays(1).atStartOfDay();
 
             Timestamp startTimestamp = Timestamp.valueOf(startOfDay);
             Timestamp endTimestamp = Timestamp.valueOf(endOfDay);
@@ -75,9 +79,21 @@ public class FfilrecordckServive {
             params.add(startTimestamp);
             params.add(endTimestamp);
         } else {
+            LocalDateTime rangeStart;
+            LocalDateTime rangeEnd;
+            if (finditemStart != null && finditemEnd != null) {
+                rangeStart = finditemStart.toLocalDateTime().toLocalDate().atStartOfDay();
+                rangeEnd = finditemEnd.toLocalDateTime().toLocalDate().plusDays(1).atStartOfDay();
+            } else if (finditemStart != null) {
+                rangeStart = finditemStart.toLocalDateTime().toLocalDate().atStartOfDay();
+                rangeEnd = rangeStart.plusDays(1);
+            } else {
+                rangeEnd = finditemEnd.toLocalDateTime().toLocalDate().plusDays(1).atStartOfDay();
+                rangeStart = rangeEnd.minusDays(1);
+            }
             baseSql.append(" AND f.fill_time >= ? AND f.fill_time < ? ");
-            params.add(finditem);
-            params.add(new Timestamp(finditem.getTime() + 86400000));
+            params.add(Timestamp.valueOf(rangeStart));
+            params.add(Timestamp.valueOf(rangeEnd));
         }
 
         // 处理加气站条件 —— 逻辑完全保留

@@ -9,9 +9,20 @@ import com.jfinal.core.Path;
 public class LoginController extends Controller {
 
 	/**
-	 * 渲染 index.html 页面
+	 * 渲染登录页
 	 */
 	public void index() {
 		render("index/login.html");
+	}
+
+	/**
+	 * 退出登录：清除 session 并跳转到登录页
+	 */
+	public void logout() {
+		javax.servlet.http.HttpSession session = getSession(false);
+		if (session != null) {
+			session.invalidate();
+		}
+		redirect("/");
 	}
 }

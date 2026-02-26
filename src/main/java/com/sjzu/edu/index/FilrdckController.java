@@ -27,26 +27,32 @@ public class FilrdckController extends Controller {
         int pageNumber = getParaToInt("pageNum", 1);
         int pageSize = getParaToInt("size", 10);
 
-        String finditemStr = getPara("finditem");
-        Timestamp finditem = null;
+        String finditemStartStr = getPara("finditem_start");
+        String finditemEndStr = getPara("finditem_end");
+        Timestamp finditemStart = null;
+        Timestamp finditemEnd = null;
 
         String gastion = getPara("gastion_select");
         String gasname = getPara("gasname");
 
-        // 日期解析
-        if (finditemStr != null && !finditemStr.isEmpty()) {
-            try {
-                LocalDate parsedDate = LocalDate.parse(finditemStr);
-                finditem = Timestamp.valueOf(parsedDate.atStartOfDay());
-            } catch (DateTimeParseException e) {
-                setAttr("errorMessage", "日期格式错误，请检查输入。");
-                render("errorPage.html");
-                return;
+        // 日期解析（时间范围）
+        try {
+            if (finditemStartStr != null && !finditemStartStr.isEmpty()) {
+                LocalDate parsed = LocalDate.parse(finditemStartStr);
+                finditemStart = Timestamp.valueOf(parsed.atStartOfDay());
             }
+            if (finditemEndStr != null && !finditemEndStr.isEmpty()) {
+                LocalDate parsed = LocalDate.parse(finditemEndStr);
+                finditemEnd = Timestamp.valueOf(parsed.atStartOfDay());
+            }
+        } catch (DateTimeParseException e) {
+            setAttr("errorMessage", "日期格式错误，请检查输入。");
+            render("errorPage.html");
+            return;
         }
 
         // 查询数据
-        Page<FillRecordCheck1> result = service.search(pageNumber, pageSize, finditem, gastion, gasname);
+        Page<FillRecordCheck1> result = service.search(pageNumber, pageSize, finditemStart, finditemEnd, gastion, gasname);
         if (result == null) {
             result = new Page<>(new ArrayList<>(), 0, pageNumber, pageSize, 0);
         }
@@ -61,7 +67,8 @@ public class FilrdckController extends Controller {
         setAttr("filrdck", result);
         setAttr("stations", stations);
         setAttr("gastiond", gastiond);
-        setAttr("finditem", finditemStr);
+        setAttr("finditem_start", finditemStartStr);
+        setAttr("finditem_end", finditemEndStr);
         setAttr("gastion", gastion);
         setAttr("gasname", gasname);
 

@@ -5,8 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>LPG运营平台</title>
-	<!-- Include head.html -->
-	<link rel="stylesheet" href="head.html">
+	<!-- 导航栏通过下方 iframe 引入 head.html -->
 	<!-- Add your custom stylesheets here -->
 	<link href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css" rel="stylesheet">
 	<link href="../css/font-awesome.css" rel="stylesheet">
@@ -124,6 +123,8 @@
 
 <body>
 <div id="container">
+	<!-- 顶部导航栏（含退出登录） -->
+	<iframe id="headerFrame" src="head.html" frameborder="0" scrolling="no" style="width:100%; height:75px; display:block; border:none;"></iframe>
 	<div id="main">
 		<div id="left" class="menu-container">
 			<ul class="menu">
