@@ -27,7 +27,7 @@ public class GasBottleController extends Controller {
         setAttr("starttime",startTime);
         setAttr("endtime",endTime);
         setAttr("tel",tel);
-
+        System.out.println("bottleid:这个方法 " + bottleId);
         // 调用服务层的方法进行搜索
         Page<GasBottle> gasBottlePage = service.search(pageNumber, pageSize, bottleId, transState, carId, startTime, endTime, tel);
 

@@ -16,12 +16,15 @@ public class KangjiashanothergasController extends Controller {
     public void othergslist() {
         Integer pageNumber = getParaToInt("page",1);
         String stationcode = getPara("stationcode");
-        String tradedate = getPara("tradedate");
-        System.out.println("tradedate: " + tradedate);
+        String tradedateStart = getPara("tradedateStart");
+        String tradedateEnd = getPara("tradedateEnd");
+        System.out.println("tradedateStart: " + tradedateStart);
+        System.out.println("tradedateEnd: " + tradedateEnd);
         System.out.println("stationcode: " + stationcode);
         setAttr("stationcode",stationcode);
-        setAttr("tradecode",tradedate);
-         setAttr("othergslist", service.search(pageNumber,20,stationcode,tradedate));
+        setAttr("tradedateStart", tradedateStart);
+        setAttr("tradedateEnd", tradedateEnd);
+         setAttr("othergslist", service.search(pageNumber,20,stationcode,tradedateStart,tradedateEnd));
         render("othergslist.html");
     }
 }

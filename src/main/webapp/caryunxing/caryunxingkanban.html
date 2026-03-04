@@ -124,12 +124,50 @@
 				console.log('返回的数据:', data);
 
 				if (data.length > 0) {
-					const path = data.map(location => [location.jingdu, location.weidu]);
+					const path = data.map(location => normalizePathPoint(location)).filter(point => point !== null);
 					console.log('路径数据:', path);
+					if (path.length === 0) {
+						alert('轨迹坐标无效，无法绘制地图路径');
+						return;
+					}
 					drawRouteOnMap(path);
 				} else {
 					alert('未找到相关数据');
 				}
+			}
+
+			// 坐标归一化：兼容 jingdu/weidu 反置以及 lng/lat 字段
+			function normalizePathPoint(location) {
+				let a = parseFloat(location.jingdu != null ? location.jingdu : location.lng);
+				let b = parseFloat(location.weidu != null ? location.weidu : location.lat);
+
+				if (!Number.isFinite(a) || !Number.isFinite(b)) {
+					return null;
+				}
+
+				let lng = a;
+				let lat = b;
+
+				// 若纬度超出范围，优先判定为经纬度反置
+				if (Math.abs(lat) > 90 && Math.abs(lng) <= 90) {
+					const temp = lng;
+					lng = lat;
+					lat = temp;
+				}
+
+				// 中国常见坐标场景兜底：经度应大致在 [70,140]，纬度应在 [0,55]
+				if (lng >= 0 && lng <= 55 && lat >= 70 && lat <= 140) {
+					const temp = lng;
+					lng = lat;
+					lat = temp;
+				}
+
+				// 最终合法性校验
+				if (!(lng >= -180 && lng <= 180 && lat >= -90 && lat <= 90)) {
+					return null;
+				}
+
+				return [lng, lat];
 			}
 
 			// 绘制路径

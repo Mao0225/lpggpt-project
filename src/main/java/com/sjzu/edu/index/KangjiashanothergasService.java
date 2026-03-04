@@ -3,7 +3,6 @@ package com.sjzu.edu.index;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
-import com.sjzu.edu.common.model.AutoGasFillingRecord;
 import com.sjzu.edu.common.model.Othergas;
 
 import java.util.ArrayList;
@@ -37,7 +36,7 @@ public class KangjiashanothergasService {
 
         return pageOfModels;
     }
-    public Page<Othergas> search(int pageNumber, int pageSize, String stationcode, String tradedate) {
+    public Page<Othergas> search(int pageNumber, int pageSize, String stationcode, String tradedateStart, String tradedateEnd) {
         String select = "SELECT *";
         String sqlExceptSelect = "FROM othergas";
         List<Object> params = new ArrayList<>(); // 用于参数化查询
@@ -50,12 +49,17 @@ public class KangjiashanothergasService {
             conditionCount++;
         }
 
-        if (tradedate != null && !tradedate.isEmpty()) {
-            System.out.println("tradedate:" + tradedate);
-            sqlExceptSelect += (conditionCount == 0 ? " WHERE " : " AND ") +
-                    "TradeDate >= ? AND TradeDate < ?";
-            params.add(tradedate + " 00:00:00"); // 开始时间
-            params.add(tradedate + " 23:59:59"); // 结束时间
+        if (tradedateStart != null && !tradedateStart.isEmpty()) {
+            System.out.println("tradedateStart:" + tradedateStart);
+            sqlExceptSelect += (conditionCount == 0 ? " WHERE " : " AND ") + "TradeDate >= ?";
+            params.add(tradedateStart);
+            conditionCount++;
+        }
+
+        if (tradedateEnd != null && !tradedateEnd.isEmpty()) {
+            System.out.println("tradedateEnd:" + tradedateEnd);
+            sqlExceptSelect += (conditionCount == 0 ? " WHERE " : " AND ") + "TradeDate <= ?";
+            params.add(tradedateEnd);
             conditionCount++;
         }
 

@@ -63,9 +63,23 @@
             border: 2px solid #007bff;
         }
 
+        /* 表格横向滚动：超出用滚动条，内容不换行 */
+        .table-scroll-wrapper {
+            overflow-x: auto;
+            overflow-y: visible;
+            margin-top: 10px;
+            -webkit-overflow-scrolling: touch;
+        }
+
         table.list {
             width: 100%;
             border-collapse: collapse;
+            min-width: max-content;
+        }
+
+        table.list th,
+        table.list td {
+            white-space: nowrap;
         }
 
         table.list th {
@@ -167,6 +181,7 @@
         </script>
     </form>
 </div>
+<div class="table-scroll-wrapper">
 <table class="list">
     <tbody>
     <tr>
@@ -174,10 +189,10 @@
         <th width="10%">气瓶编号</th>
         <th width="10%">奉天编码</th>
         <th width="10%">镂空码</th>
-        <th width="10%">充气站名</th>
-        <th width="10%">制造单位</th>
+        <th width="20%">充气站名</th>
+        <th width="20%">制造单位</th>
         <th width="10%">阀体编码</th>
-        <th width="10%">气瓶使用登记证</th>
+        <th width="16%">气瓶使用登记证</th>
         <th width="10%">制造日期</th>
         <th width="10%">检验日期</th>
         <th width="10%">检验机构</th>
@@ -198,10 +213,10 @@
         <th width="10%">是否专用</th>
 
         <th width="10%">使用者名称</th>
-        <th width="10%">使用者地址</th>
+        <!-- <th width="10%">使用者地址</th>
         <th width="10%">电话</th>
         <th width="10%">经度</th>
-        <th width="10%">纬度</th>
+        <th width="10%">纬度</th> -->
         <th width="10%">是否上传</th>
 
 
@@ -237,10 +252,10 @@
         <td #if(x.terminate_use_date != null && x.terminate_use_date.toString() < currentDate) class="expired"#end>#(x.jiandangshijian)</td>
         <td #if(x.terminate_use_date != null && x.terminate_use_date.toString() < currentDate) class="expired"#end>#(x.shifouzhuanyong)</td>
         <td #if(x.terminate_use_date != null && x.terminate_use_date.toString() < currentDate) class="expired"#end>#(x.shiyongzhemingcheng)</td>
-        <td #if(x.terminate_use_date != null && x.terminate_use_date.toString() < currentDate) class="expired"#end>#(x.shiyongzhedizhi)</td>
+        <!-- <td #if(x.terminate_use_date != null && x.terminate_use_date.toString() < currentDate) class="expired"#end>#(x.shiyongzhedizhi)</td>
         <td #if(x.terminate_use_date != null && x.terminate_use_date.toString() < currentDate) class="expired"#end>#(x.shiyongzhedianhua)</td>
         <td #if(x.terminate_use_date != null && x.terminate_use_date.toString() < currentDate) class="expired"#end>#(x.shiyongzhejingdu)</td>
-        <td #if(x.terminate_use_date != null && x.terminate_use_date.toString() < currentDate) class="expired"#end>#(x.shiyongzheweidu)</td>
+        <td #if(x.terminate_use_date != null && x.terminate_use_date.toString() < currentDate) class="expired"#end>#(x.shiyongzheweidu)</td> -->
         <!-- 修改：显示上传状态文字 -->
         <td #if(x.terminate_use_date != null && x.terminate_use_date.toString() < currentDate) class="expired"#end>
         #if(x.upload_status == 1)已上传#else未上传#end
@@ -258,6 +273,7 @@
     #end
     </tbody>
 </table>
+</div>
 <!-- 修改分页部分，添加上传状态参数 -->
 <div class="pagination">
     #@paginate(gasFiles.pageNumber, gasFiles.totalPage,

@@ -26,10 +26,13 @@
 			font-size: 14px;   /* 减小字体大小 */
 			border: 1px solid #a3bffa; /* 减小边框宽度 */
 			border-radius: 4px; /* 调整圆角 */
-			width: 150px; /* 设置固定宽度 */
 			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* 减小阴影 */
 			transition: border-color 0.3s ease;
 			margin-right: 10px; /* 添加右侧间距 */
+		}
+
+		input[type="date"] {
+			max-width: 180px;
 		}
 
 		input:focus {
@@ -133,8 +136,12 @@
 		<form id="searchForm" action="/kangjiashanothergas/othergslist" method="post">
 			<label for="stationcode">请输入单位编码：</label>
 			<input type="text" id="stationcode" name="stationcode" placeholder="请输入单位编码" value="#(stationcode)"/>
-			<label>时间搜索</label>
-			<input type="date" id="tradedate" name="tradedate" value="#(tradedate)"/>
+			<label>时间范围：</label>
+			<input type="date" id="dateStart" />
+			<span> 至 </span>
+			<input type="date" id="dateEnd" />
+			<input type="hidden" name="tradedateStart" id="tradedateStart" value="#(tradedateStart ?? '')"/>
+			<input type="hidden" name="tradedateEnd" id="tradedateEnd" value="#(tradedateEnd ?? '')"/>
 			&nbsp;&nbsp;<button type="submit">查询</button>
 			<input type="button" value="重置" name="refresh" id="resetButton" />
 		</form>
@@ -176,7 +183,7 @@
 		</tbody>
 	</table>
 	<div class="pagination" style="color:#f0f0f0; font-size: 15px">
-		#@paginate(othergslist.pageNumber, othergslist.totalPage, "/kangjiashanothergas/othergslist?stationcode=" + (stationcode != null ? stationcode : "") +"&tradedate=" + (tradedate != null ? tradedate : "")   + "&page=")
+		#@paginate(othergslist.pageNumber, othergslist.totalPage, "/kangjiashanothergas/othergslist?stationcode=" + (stationcode != null ? stationcode : "") +"&tradedateStart=" + (tradedateStart != null ? tradedateStart : "") + "&tradedateEnd=" + (tradedateEnd != null ? tradedateEnd : "") + "&page=")
 	</div>
 	<script>
 		$('.openModal').click(function(e) {
@@ -217,15 +224,62 @@
 		</div>
 	</div>
 <script>
+	// 时间范围：与 filrdck 一致的日期选择器逻辑
+	document.addEventListener('DOMContentLoaded', function() {
+		var dateStart = document.getElementById('dateStart');
+		var dateEnd = document.getElementById('dateEnd');
+		var tradedateStartHidden = document.getElementById('tradedateStart');
+		var tradedateEndHidden = document.getElementById('tradedateEnd');
+		var form = document.getElementById('searchForm');
+
+		// 从后端回显的 hidden 值同步到日期选择器（取前 10 位 yyyy-MM-dd）
+		if (tradedateStartHidden.value && tradedateStartHidden.value.length >= 10) {
+			dateStart.value = tradedateStartHidden.value.substring(0, 10);
+		}
+		if (tradedateEndHidden.value && tradedateEndHidden.value.length >= 10) {
+			dateEnd.value = tradedateEndHidden.value.substring(0, 10);
+		}
+
+		// 两个都为空时设置为当天并自动提交（与 filrdck 一致）
+		if (!dateStart.value && !dateEnd.value) {
+			var today = new Date();
+			var year = today.getFullYear();
+			var month = String(today.getMonth() + 1).padStart(2, '0');
+			var day = String(today.getDate()).padStart(2, '0');
+			var dateStr = year + '-' + month + '-' + day;
+			dateStart.value = dateStr;
+			dateEnd.value = dateStr;
+			tradedateStartHidden.value = dateStr + ' 00:00:00.0';
+			tradedateEndHidden.value = dateStr + ' 23:59:59.0';
+			form.submit();
+		}
+	});
+
+	// 提交前把日期选择器转成后端需要的格式 yyyy-MM-dd HH:mm:ss.0
+	document.getElementById('searchForm').addEventListener('submit', function() {
+		var dateStart = document.getElementById('dateStart');
+		var dateEnd = document.getElementById('dateEnd');
+		var tradedateStartHidden = document.getElementById('tradedateStart');
+		var tradedateEndHidden = document.getElementById('tradedateEnd');
+		tradedateStartHidden.value = dateStart.value ? dateStart.value + ' 00:00:00.0' : '';
+		tradedateEndHidden.value = dateEnd.value ? dateEnd.value + ' 23:59:59.0' : '';
+	});
+
 	document.getElementById("resetButton").addEventListener("click", function(e) {
-		// 阻止默认行为
 		e.preventDefault();
-		// 清空所有输入框和下拉框的值
-		document.getElementById("searchForm").reset();
-		// 手动设置表单字段为空值
 		document.querySelector('input[name="stationcode"]').value = '';
-		document.querySelector('input[name="tradedate"]').value = '';
-		// 提交表单以刷新页面
+		document.getElementById('tradedateStart').value = '';
+		document.getElementById('tradedateEnd').value = '';
+		// 重置时设置日期范围为当天（与 filrdck 一致）
+		var today = new Date();
+		var year = today.getFullYear();
+		var month = String(today.getMonth() + 1).padStart(2, '0');
+		var day = String(today.getDate()).padStart(2, '0');
+		var dateStr = year + '-' + month + '-' + day;
+		document.getElementById('dateStart').value = dateStr;
+		document.getElementById('dateEnd').value = dateStr;
+		document.getElementById('tradedateStart').value = dateStr + ' 00:00:00.0';
+		document.getElementById('tradedateEnd').value = dateStr + ' 23:59:59.0';
 		document.getElementById("searchForm").submit();
 	});
 </script>
