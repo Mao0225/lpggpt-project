@@ -1,318 +1,424 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Content</title>
-    <script src="../css/jquery-3.3.1.min.js"></script>
-    <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css" >
-    <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="../css/lpg.css">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>饭店管理</title>
+	<script src="../css/jquery-3.3.1.min.js"></script>
+	<link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css">
+	<script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="../css/index.css">
 
-    <!-- Add your custom stylesheets and scripts here -->
-    <script>
-        document.getElementById('showFormButton').addEventListener('click', function() {
-            var form = document.getElementById('searchForm');
-            if (form.style.display === 'none') {
-                form.style.display = 'block'; // 显示表单
-            } else {
-                form.style.display = 'none'; // 再次点击按钮隐藏表单
-            }
-        });
-    </script>
+	<style>
+		body {
+			background: #F8FAFC;
+			color: #1E293B;
+			font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+			margin: 0;
+		}
 
-    <style scoped>
-        .container {
-            padding: 50px 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+		.page-shell {
+			margin: 20px;
+		}
 
-        input {
-            padding: 15px;
-            font-size: 18px;
-            border: 2px solid #a3bffa;
-            border-radius: 10px;
-            width: auto; /* 修改宽度为自动适应内容 */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: border-color 0.3s ease;
-        }
+		.search-area {
+			background: #FFFFFF;
+			border: 1px solid #E2E8F0;
+			border-radius: 8px;
+			padding: 16px 20px;
+			margin-bottom: 20px;
+			display: flex;
+			align-items: center;
+			flex-wrap: wrap;
+			gap: 12px;
+		}
 
-        input:focus {
-            outline: none;
-            border-color: #4c87c9;
-        }
+		.table-scroll-wrapper {
+			overflow-x: auto;
+			overflow-y: visible;
+			-webkit-overflow-scrolling: touch;
+		}
 
-        /* 设置提交和重置按钮样式 */
-        #searchForm input[type="submit"],
-        #searchForm input[type="button"] {
-            width: auto;
-            padding: 8px 16px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            cursor: pointer;
-            background-color: #f0f0f0;
-            margin-right: 10px;
-        }
+		.search-area label {
+			font-size: 14px;
+			font-weight: 500;
+			color: #475569;
+			white-space: nowrap;
+		}
 
-        #searchForm input[type="submit"]:hover,
-        #searchForm input[type="button"]:hover {
-            background-color: #e0e0e0;
-        }
+		.search-area input[type="text"],
+		.search-area select {
+			padding: 8px 12px;
+			font-size: 14px;
+			border: 1px solid #CBD5E1;
+			border-radius: 6px;
+			background: #FFFFFF;
+			color: #1E293B;
+			min-width: 180px;
+			transition: all 0.15s ease;
+		}
 
-        /* 设置日期输入框样式 */
-        #searchForm input[type="date"] {
-            width: auto;
-            padding: 8px 16px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background-color: #f0f0f0;
-            margin-right: 10px;
-        }
+		.search-area input:focus,
+		.search-area select:focus {
+			outline: none;
+			border-color: #3B82F6;
+			box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+		}
 
-        /* 设置下拉框样式 */
-        #searchForm select {
-            width: auto;
-            padding: 8px 16px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background-color: #f0f0f0;
-            margin-right: 10px;
-        }
-    </style>
+		.search-area .btn-search {
+			background: #3B82F6;
+			color: #FFFFFF;
+			border: none;
+			padding: 8px 20px;
+			border-radius: 6px;
+			font-size: 14px;
+			font-weight: 500;
+			cursor: pointer;
+			transition: all 0.15s ease;
+		}
 
-    <style>
-        /* 设置 #pagediv 的样式 */
-        #pagediv {
-            background-color: #f0f0f0;
-            color: black;
-            padding: 10px;
-        }
+		.search-area .btn-search:hover {
+			background: #2563EB;
+		}
 
-        /* 设置表格样式 */
-        table.list {
-            width: 100%;
-            border-collapse: collapse;
-        }
+		.search-area .btn-reset {
+			background: #FFFFFF;
+			color: #475569;
+			border: 1px solid #CBD5E1;
+			padding: 8px 20px;
+			border-radius: 6px;
+			font-size: 14px;
+			font-weight: 500;
+			cursor: pointer;
+			transition: all 0.15s ease;
+		}
 
-        /* 设置表格表头样式 */
-        table.list th {
-            background-color: #add8e6;
-            color: black;
-            padding: 8px;
-            text-align: left;
-            border: 1px solid #ddd; /* 新增：添加边框 */
-        }
+		.search-area .btn-reset:hover {
+			background: #F8FAFC;
+			border-color: #94A3B8;
+		}
 
-        /* 设置表格单元格样式 */
-        table.list td {
-            padding: 8px;
-            border: 1px solid #ddd; /* 修改：添加边框 */
-        }
+		.data-table {
+			width: max-content;
+			min-width: 100%;
+			border-collapse: collapse;
+			background: #FFFFFF;
+			border: 1px solid #E2E8F0;
+			border-radius: 8px;
+			overflow: hidden;
+			table-layout: auto;
+		}
 
-        /* 设置表格隔行颜色 */
-        table.list tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
+		.data-table thead th {
+			background: #F8FAFC;
+			color: #475569;
+			font-size: 13px;
+			font-weight: 600;
+			text-align: left;
+			padding: 14px 16px;
+			border-bottom: 1px solid #E2E8F0;
+			text-transform: uppercase;
+			letter-spacing: 0.3px;
+			white-space: nowrap;
+		}
 
-        table.list tr:nth-child(odd) {
-            background-color: #e0e0e0;
-        }
+		.data-table tbody td {
+			padding: 14px 16px;
+			font-size: 14px;
+			color: #1E293B;
+			border-bottom: 1px solid #F1F5F9;
+			vertical-align: middle;
+			white-space: nowrap;
+		}
 
-        /* 设置鼠标悬停时表格行的颜色 */
-        table.list tr:hover {
-            background-color: #d3d3d3;
-        }
+		.data-table tbody tr {
+			background: #FFFFFF;
+			transition: background 0.15s ease;
+		}
 
-        /* 新增样式：设置新建司机链接为黑色 */
-        #pagediv .add {
-            color: black;
-        }
+		.data-table tbody tr:nth-child(even) {
+			background: #F8FAFC;
+		}
 
-        /* 新增样式：设置输入框背景色为淡灰色 */
-        #pagediv input[type="text"] {
-            background-color: #f0f0f0;
-        }
+		.data-table tbody tr:hover {
+			background: #F1F5F9;
+		}
 
-        /* 新增样式：设置 label 文字颜色为黑色 */
-        #pagediv label {
-            color: black;
-        }
-    </style>
+		.data-table tbody tr:last-child td {
+			border-bottom: none;
+		}
+
+		.data-table a {
+			color: #3B82F6;
+			text-decoration: none;
+			margin-right: 12px;
+			transition: color 0.15s ease;
+		}
+
+		.data-table .delete-link {
+			color: #EF4444;
+		}
+
+		.data-table .delete-link:hover {
+			color: #DC2626;
+		}
+
+		.data-table a:hover {
+			color: #2563EB;
+		}
+
+		.pagination {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 8px;
+			margin-top: 20px;
+		}
+
+		.pagination a,
+		.pagination span {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			min-width: 36px;
+			height: 36px;
+			padding: 0 8px;
+			font-size: 14px;
+			border: 1px solid #E2E8F0;
+			border-radius: 6px;
+			color: #475569;
+			background: #FFFFFF;
+			text-decoration: none;
+			transition: all 0.15s ease;
+		}
+
+		.pagination a:hover {
+			background: #F8FAFC;
+			border-color: #CBD5E1;
+		}
+
+		.pagination .current-page {
+			background: #3B82F6;
+			color: #FFFFFF;
+			border-color: #3B82F6;
+		}
+
+		.pagination .disabled {
+			color: #94A3B8;
+			background: #F8FAFC;
+			cursor: not-allowed;
+		}
+
+		.btn-add {
+			background: #3B82F6;
+			color: #FFFFFF;
+			border: none;
+			padding: 8px 16px;
+			border-radius: 6px;
+			font-size: 14px;
+			font-weight: 500;
+			cursor: pointer;
+			text-decoration: none;
+			display: inline-flex;
+			align-items: center;
+			gap: 6px;
+			transition: all 0.15s ease;
+		}
+
+		.btn-add:hover {
+			background: #2563EB;
+			color: #FFFFFF;
+		}
+
+		#pagediv {
+			margin-bottom: 20px;
+		}
+
+		.modal-content {
+			border-radius: 12px;
+			border: none;
+			background: #FFFFFF;
+			box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+		}
+
+		.modal-header {
+			background: #F8FAFC;
+			border-bottom: 1px solid #E2E8F0;
+			padding: 16px 20px;
+			border-top-left-radius: 12px;
+			border-top-right-radius: 12px;
+		}
+
+		.modal-title {
+			font-size: 16px;
+			font-weight: 600;
+			color: #1E293B;
+		}
+
+		.modal-body {
+			padding: 20px;
+			max-height: 70vh;
+			overflow-y: auto;
+		}
+
+		.modal-footer {
+			padding: 16px 20px;
+			background: #F8FAFC;
+			border-top: 1px solid #E2E8F0;
+			border-bottom-left-radius: 12px;
+			border-bottom-right-radius: 12px;
+		}
+
+		.modal-footer .btn {
+			padding: 8px 18px;
+			font-size: 14px;
+			border-radius: 6px;
+		}
+
+		.modal-footer .btn-default {
+			background: #FFFFFF;
+			color: #475569;
+			border: 1px solid #CBD5E1;
+		}
+
+		.modal-footer .btn-default:hover {
+			background: #F8FAFC;
+		}
+
+		.modal-footer .btn-primary {
+			background: #3B82F6;
+			border: none;
+		}
+
+		.modal-footer .btn-primary:hover {
+			background: #2563EB;
+		}
+
+		@media (max-width: 768px) {
+			.page-shell {
+				margin: 10px;
+			}
+
+			.search-area {
+				padding: 12px;
+				gap: 10px;
+			}
+
+			.data-table th,
+			.data-table td {
+				padding: 10px 12px;
+				font-size: 12px;
+			}
+		}
+	</style>
 </head>
 <body>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-</head>
-<body>
-<div id="pagediv">
-    <form id="searchForm" action="/restaurant/reslist" method="post">
-        <a href="#" class="add openModal" data-title="新建用户" data-edit-url="add"><b> + </b>新建饭店</a>
+	<div class="page-shell">
+		<div id="pagediv">
+			<div class="search-area">
+				<a href="#" class="btn-add openModal" data-title="新建饭店" data-edit-url="add">+ 新建饭店</a>
+			</div>
+		</div>
 
-<!--        <label>饭店编号:</label>-->
-<!--        <input type="text" name="restaurantno" value="#(restaurantno)">-->
+		<div class="table-scroll-wrapper">
+			<table class="data-table">
+				<thead>
+				<tr>
+					<th width="8%">序号</th>
+					<th width="12%">饭店名称</th>
+					<th width="10%">饭店店长</th>
+					<th width="12%">饭店地址</th>
+					<th width="10%">联系电话</th>
+					<th width="10%">密码</th>
+					<th width="8%">备注</th>
+					<th width="8%">小盒子</th>
+					<th width="10%">报警人</th>
+					<th width="12%">称/表编码</th>
+					<th width="15%">操作</th>
+				</tr>
+				</thead>
+				<tbody>
+				#set(startIndex = (restaurant.pageNumber - 1) * restaurant.pageSize + 1)
+				#for(x : restaurant.getList())
+				<tr>
+					<td>#(startIndex++)</td>
+					<td>#(x.name)</td>
+					<td>#(x.leader)</td>
+					<td>#(x.address)</td>
+					<td>#(x.telephone)</td>
+					<td>#(x.pwd)</td>
+					<td>#(x.memo)</td>
+					<td>#(x.xiaohezi)</td>
+					<td>#(x.baojingren)</td>
+					<td>#(x.chengno)</td>
+					<td>
+						<a href="#" class="edit openModal" data-title="编辑饭店" data-edit-url="/restaurant/edit/#(x.id)">修改</a>
+						<a href="#" class="delete-link" onclick="confirmDelete('#(x.id)')">删除</a>
+					</td>
+				</tr>
+				#end
+				</tbody>
+			</table>
+		</div>
 
-        <label>饭店名称:</label>
-        <input type="text" name="name" value="#(name)">
+		<div class="pagination">
+			#@paginate(restaurant.pageNumber, restaurant.totalPage, "/restaurant/reslist?restaurantno=" + (restaurantno != null ? restaurantno : "") + "&name=" + (name != null ? name : "") + "&address=" + (address != null ? address : "") + "&leader=" + (leader != null ? leader : "") + "&telephone=" + (telephone != null ? telephone : "") + "&chengno=" + (chengno != null ? chengno : "") + "&page=")
+		</div>
+	</div>
 
-        <label>饭店店长:</label>
-        <input type="text" name="leader" value="#(leader)">
+	<script>
+		function confirmDelete(id) {
+			var result = confirm("确定要删除吗？");
+			if (result) {
+				window.location.href = "/restaurant/delete/" + id;
+			} else {
+				return false;
+			}
+		}
+	</script>
 
-        <label>饭店地址:</label>
-        <input type="text" name="address" value="#(address)">
+	<script>
+		$(function() {
+			$('.openModal').click(function(e) {
+				e.preventDefault();
+				var editUrl = $(this).data('edit-url');
+				var that = this;
 
-        <label>联系电话:</label>
-        <input type="text" name="telephone" value="#(telephone)">
+				$.get(editUrl, function(data) {
+					var title = $(that).data('title');
+					$('#myModalLabel').text(title);
+					$('#modalBody').html(data);
+					$('#myModal').modal('show');
+				});
+			});
 
-        <label>称/流量表编码:</label>
-        <input type="text" name="chengno" value="#(chengno)">
+			$('#saveButton').on('click', function() {
+				var form = document.getElementById('myForm');
+				if (form) {
+					form.submit();
+				}
+			});
+		});
+	</script>
 
-        <label>&nbsp;</label>
-        <input value="搜索" type="submit">
-        <input type="submit" value="重置" name="refresh">
-    </form>
-
-
-</div>
-
-<table class="list">
-    <div>
-        <button id="showFormButton" style="width: 30px; height: 30px; border: 2px solid transparent; border-radius: 50%; background-color: transparent; position: relative; float: right;">
-            <img src="/img/find.png" alt="搜索" style="width: 30px; height: 30px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-        </button>
-
-        <button id="fresh" name = "refresh" style="width: 30px; height: 30px; border: 2px solid transparent; border-radius: 50%; background-color: transparent; position: relative;  margin-right: 10px;float: right;">
-            <img src="/img/refresh2.png" alt="刷新" style="width: 25px; height: 25px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-        </button>
-
-        <script>
-            var buttons = document.getElementsByName("refresh");
-            for (var i = 0; i < buttons.length; i++) {
-                buttons[i].addEventListener('click', function() {
-                    // 获取所有的输入框并设置为空
-                    var inputs = document.querySelectorAll('#searchForm input[type=text]');
-                    for (var j = 0; j < inputs.length; j++) {
-                        inputs[j].value = "";
-                    }
-
-                    // 提交表单以重新查询并刷新页面
-                    document.getElementById('searchForm').submit();
-                });
-            }
-        </script>
-        <script>
-            document.getElementById('showFormButton').addEventListener('click', function() {
-                var form = document.getElementById('searchForm');
-                if (form.style.display === 'none') {
-                    form.style.display = 'block'; // 显示表单
-                } else {
-                    form.style.display = 'none'; // 再次点击按钮隐藏表单
-                }
-            });
-        </script>
-    </div>
-
-
-    <tbody>
-    <tr>
-        <th width="10%">序号</th>
-<!--        <th width="12%">饭店编号</th>-->
-        <th width="12%">饭店名称</th>
-        <th width="5%">饭店店长</th>
-        <th width="12%">饭店地址</th>
-        <th width="5%">联系电话</th>
-        <th width="12%">密码</th>
-        <th width="5%">备注</th>
-        <th width="5%">小盒子</th>
-        <th width="5%">报警信息接收人</th>
-        <!--            <th width="5%">标记</th>-->
-        <th width="12%">称/表编码</th>
-        <th width="12%">操作</th>
-    </tr>
-    #set(startIndex = (restaurant.pageNumber - 1) * restaurant.pageSize + 1)
-    #for(x : restaurant.getList())
-    <tr>
-        <td style="text-align:center">#(startIndex++)</td> <!-- 显示序号并递增 -->
-<!--        <td style="text-align:center">#(x.restaurantno)</td>-->
-        <td style="text-align:center">#(x.name)</td>
-        <td style="text-align:center">#(x.leader)</td>
-        <td style="text-align:center">#(x.address)</td>
-        <td style="text-align:center">#(x.telephone)</td>
-        <td style="text-align:center">#(x.pwd)</td>
-        <td style="text-align:center">#(x.memo)</td>
-        <td style="text-align:center">#(x.xiaohezi)</td>
-        <td style="text-align:center">#(x.baojingren)</td>
-        <!--            <td style="text-align:center">#(x.biaoji)</td>-->
-        <td style="text-align:center">#(x.chengno)</td>
-
-        <td style="text-align:left">
-            <!--        -->
-            &nbsp;&nbsp;<a href="#" onclick="confirmDelete('#(x.id)')">删除</a>
-            <a href="#" class="edit openModal" data-title="编辑用户" data-edit-url="/restaurant/edit/#(x.id)">修改</a>
-        </td>
-    </tr>
-    #end
-    </tbody>
-</table>
-<div class="pagination" style="color:#000000;">
-    #@paginate(restaurant.pageNumber, restaurant.totalPage, "/restaurant/reslist?restaurantno=" + (restaurantno != null ? restaurantno : "") + "&name=" + (name != null ? name : "") + "&address=" + (address != null ? address : "") + "&leader=" + (leader != null ? leader : "") + "&telephone=" + (telephone != null ? telephone : "") + "&chengno=" + (chengno != null ? chengno : "") + "&page=")
-</div>
-<script>
-    function confirmDelete(id) {
-        var result = confirm("确定要删除吗？");
-        if (result) {
-            // 如果用户点击了确定，则执行删除操作
-            window.location.href = "/restaurant/delete/" + id;
-        } else {
-            // 如果用户点击了取消，则不执行任何操作
-            return false;
-        }
-    }
-</script>
-<script>
-    $('.openModal').click(function(e) {
-        e.preventDefault();
-        var editUrl = $(this).data('edit-url');
-        var that = this; // 保存正确的上下文
-
-        $.get(editUrl, function(data) {
-            var title = $(that).data('title');
-            $('#myModalLabel').text(title); // 修改模态窗口标题
-
-            // 清除旧内容
-            $('#modalBody').html(data); // 加载编辑内容到模态窗口
-            $('#myModal').modal('show'); // 显示模态窗口
-        });
-    });
-
-</script>
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="myModalLabel">模态窗口标题</h4>
-            </div>
-            <div class="modal-body" id="modalBody">
-                <!-- 这里将会加载你的表单内容 -->
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary"  id="saveButton" >保存</button>
-                <script>
-                    document.getElementById('saveButton').addEventListener('click', function() {
-                        document.getElementById('myForm').submit();
-                    });
-                </script>
-            </div>
-        </div>
-    </div>
-</div>
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog" style="max-width: 720px;">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="myModalLabel">模态窗口标题</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body" id="modalBody">
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					<button type="button" class="btn btn-primary" id="saveButton">保存</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
 </body>
 </html>

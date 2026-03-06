@@ -1,295 +1,243 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Content</title>
+    <title>编辑气瓶档案（G）</title>
     <style>
-        /* 保留原有样式 */
-        ::-webkit-input-placeholder {
-            color: #8A8A8A;
-            font-size: 12px;
+        body {
+            margin: 0;
+            padding: 0;
+            background: #F8FAFC;
+            color: #1E293B;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
         }
-        ::-moz-placeholder {
-            color: #8A8A8A;
-            font-size: 12px;
+
+        .form-container {
+            background: #FFFFFF;
+            padding: 24px;
         }
-        :-ms-input-placeholder {
-            color: #8A8A8A;
-            font-size: 12px;
+
+        .form-section {
+            margin-bottom: 24px;
         }
-        :-moz-placeholder {
-            color: #8A8A8A;
-            font-size: 12px;
+
+        .form-section-title {
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #E2E8F0;
+            font-size: 14px;
+            font-weight: 600;
+            color: #1E293B;
         }
-        input[type="text"],
-        select {
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            padding: 5px;
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 0;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #475569;
+        }
+
+        .form-group label .required {
+            color: #EF4444;
+            margin-right: 4px;
+        }
+
+        .form-group input[type="text"],
+        .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            font-size: 14px;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            background: #FFFFFF;
+            color: #1E293B;
             box-sizing: border-box;
-            color: black;
-            width: auto;
-            min-width: 100px;
-            background-color: white;
+            transition: all 0.15s ease;
         }
-        select {
-            appearance: none;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            background-image: none;
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
         }
-        select:disabled {
-            background-color: #f5f5f5;
-            color: #8A8A8A;
+
+        .form-group input::placeholder {
+            color: #94A3B8;
         }
-        label {
-            display: inline-block;
-            width: 100px;
-            text-align: right;
-            margin-right: 10px;
-        }
-        /* 新增校验提示样式 */
-        #gasNumberTip {
+
+        .tip-text {
+            margin-top: 6px;
             font-size: 12px;
-            margin-left: 10px;
-            vertical-align: middle;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
-<div class="form_box">
+<div class="form-container">
     <form id="myForm" action="/GGasFile/update" method="post">
-        <!-- 隐藏域：当前编辑记录ID（用于校验时排除自身） -->
-        <input type="hidden" name="gas_file.id" value="#(gas_file.id??)" id="gasFileId" />
-        <div>
-            <label for="gas_file.gas_number">气瓶编号</label>
-            <!-- 1. 绑定失焦校验事件 -->
-            <input type="text" id="gas_file.gas_number" name="gas_file.gas_number"
-                   value="#(gas_file.gas_number)" onblur="checkGasNumberDuplicate()" />
-            <!-- 新增校验提示标签 -->
-            <span id="gasNumberTip"></span>
+        <input type="hidden" name="gas_file.id" value="#(gas_file.id??)" id="gasFileId">
+
+        <div class="form-section">
+            <div class="form-section-title">基本信息</div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="gas_file.gas_number"><span class="required">*</span>气瓶编号</label>
+                    <input type="text" id="gas_file.gas_number" name="gas_file.gas_number" value="#(gas_file.gas_number)" onblur="checkGasNumberDuplicate()" required>
+                    <span id="gasNumberTip" class="tip-text"></span>
+                </div>
+                <div class="form-group">
+                    <label>奉天编码</label>
+                    <input type="text" id="gas_file.fengtiangasno" name="gas_file.fengtiangasno" value="#(gas_file.fengtiangasno)">
+                </div>
+                <div class="form-group">
+                    <label>镂空码</label>
+                    <input type="text" id="gas_file.loukongno" name="gas_file.loukongno" value="#(gas_file.loukongno)">
+                </div>
+                <div class="form-group">
+                    <label><span class="required">*</span>加气站名字</label>
+                    <input type="hidden" id="gas_file.gasstationid" name="gas_file.gasstationid" value="#(gas_file.gasstationid??)" readonly>
+                    <input type="hidden" id="gas_file.stationid" name="gas_file.stationid" value="#(gas_file.stationid?? gas_file.gasstationid??)" readonly>
+                    <input type="hidden" id="gas_file.filing_gas_station" name="gas_file.filing_gas_station" value="#(gas_file.filing_gas_station??)" readonly>
+                    <select id="selectName" name="station_selector" onchange="chooseName()" disabled>
+                        <option value="#(gas_file.stationid?? gas_file.gasstationid??)" selected>#(gas_file.filing_gas_station?? '未配置加气站')</option>
+                    </select>
+                </div>
+            </div>
         </div>
-        <div>
-            <label >奉天编码</label>
-            <input type="text" id="gas_file.fengtiangasno" name="gas_file.fengtiangasno"
-                   value="#(gas_file.fengtiangasno)" />
+
+        <div class="form-section">
+            <div class="form-section-title">制造与检验信息</div>
+            <div class="form-grid">
+                <div class="form-group"><label>制造单位</label><input type="text" name="gas_file.manufacture_unit" value="#(gas_file.manufacture_unit)"></div>
+                <div class="form-group"><label>阀体编码</label><input type="text" name="gas_file.valve_body_code" value="#(gas_file.valve_body_code)"></div>
+                <div class="form-group"><label>气瓶使用登记证编号</label><input type="text" name="gas_file.qpsydjzbh" value="#(gas_file.qpsydjzbh)"></div>
+                <div class="form-group"><label>制造日期</label><input type="text" name="gas_file.manufacture_date" value="#(gas_file.manufacture_date)" placeholder="YYYY-MM-DD"></div>
+                <div class="form-group"><label>检验日期</label><input type="text" name="gas_file.inspect_date" value="#(gas_file.inspect_date)" placeholder="YYYY-MM-DD"></div>
+                <div class="form-group"><label>定检日期</label><input type="text" name="gas_file.regular_check_date" value="#(gas_file.regular_check_date)" placeholder="YYYY-MM-DD"></div>
+                <div class="form-group"><label>终止使用日期</label><input type="text" name="gas_file.terminate_use_date" value="#(gas_file.terminate_use_date)" placeholder="YYYY-MM-DD"></div>
+                <div class="form-group"><label>建档时间</label><input type="text" name="gas_file.jiandangshijian" value="#(gas_file.jiandangshijian)" placeholder="YYYY-MM-DD"></div>
+            </div>
         </div>
-        <div>
-            <label >镂空码</label>
-            <input type="text" id="gas_file.loukongno" name="gas_file.loukongno"
-                   value="#(gas_file.loukongno)" />
+
+        <div class="form-section">
+            <div class="form-section-title">规格参数</div>
+            <div class="form-grid">
+                <div class="form-group"><label>设备品种</label><input type="text" name="gas_file.monitoring_station" value="#(gas_file.monitoring_station)"></div>
+                <div class="form-group"><label>充装规格</label><input type="text" name="gas_file.filling_specification" value="#(gas_file.filling_specification)"></div>
+                <div class="form-group"><label>气瓶规格</label><input type="text" name="gas_file.gas_specification" value="#(gas_file.gas_specification)"></div>
+                <div class="form-group"><label>充装介质</label><input type="text" name="gas_file.filling_medium" value="#(gas_file.filling_medium)"></div>
+                <div class="form-group"><label>许可证号</label><input type="text" name="gas_file.xukezhenghao" value="#(gas_file.xukezhenghao)"></div>
+                <div class="form-group"><label>公称压力</label><input type="text" name="gas_file.gongchengyali" value="#(gas_file.gongchengyali)"></div>
+                <div class="form-group"><label>水试验压</label><input type="text" name="gas_file.shuishiyanya" value="#(gas_file.shuishiyanya)"></div>
+                <div class="form-group"><label>容积</label><input type="text" name="gas_file.rongji" value="#(gas_file.rongji)"></div>
+                <div class="form-group"><label>壁厚</label><input type="text" name="gas_file.bihou" value="#(gas_file.bihou)"></div>
+                <div class="form-group"><label>气瓶自重</label><input type="text" name="gas_file.gas_suttle" value="#(gas_file.gas_suttle)"></div>
+                <div class="form-group"><label>是否专用</label><input type="text" name="gas_file.shifouzhuanyong" value="#(gas_file.shifouzhuanyong)"></div>
+            </div>
         </div>
-        <div>
-            <input type="hidden" id="gas_file.gasstationid" name="gas_file.gasstationid"
-                   value="#(gas_file.gasstationid)" readonly/>
-        </div>
-        <div>
-            <label>加气站名字</label>
-            <!-- 2. 修复：优先回显当前记录的stationid（从gas_file取值） -->
-            <input type="hidden" id="gas_file.stationid" name="gas_file.stationid"
-                   value="#(gas_file.stationid?? gas_file.gasstationid??)" readonly/>
-            <!-- 修复：回显当前记录的加气站名称 -->
-            <input type="hidden" id="gas_file.filing_gas_station" name="gas_file.filing_gas_station"
-                   value="#(gas_file.filing_gas_station)" readonly>
-            <select id="selectName" name="gas_file.filing_gas_station"
-                    style="border-radius: 5px;height:50px;text-align: center;" disabled>
-            </select>
-        </div>
-        <div>
-            <label>制造单位</label>
-            <input type="text" name="gas_file.manufacture_unit"  value="#(gas_file.manufacture_unit)" />
-        </div>
-        <div>
-            <label>阀体编码</label>
-            <input type="text" name="gas_file.valve_body_code" value="#(gas_file.valve_body_code)" />
-        </div>
-        <div>
-            <label>气瓶使用登记证编号</label>
-            <input type="text" name="gas_file.qpsydjzbh"  value="#(gas_file.qpsydjzbh)" />
-        </div>
-        <div>
-            <label>制造日期</label>
-            <input type="text" name="gas_file.manufacture_date"   value="#(gas_file.manufacture_date)" />
-        </div>
-        <div>
-            <label>检验日期</label>
-            <input type="text" name="gas_file.inspect_date"  value="#(gas_file.inspect_date)" />
-        </div>
-        <div>
-            <label>定检日期</label>
-            <input type="text" name="gas_file.regular_check_date"  value="#(gas_file.regular_check_date)" />
-        </div>
-        <div>
-            <label>终止使用日期</label>
-            <input type="text" name="gas_file.terminate_use_date" value="#(gas_file.terminate_use_date)" />
-        </div>
-        <div>
-            <label>建档时间</label>
-            <input type="text" name="gas_file.jiandangshijian" value="#(gas_file.jiandangshijian)" />
-        </div>
-        <div>
-            <label>设备品种</label>
-            <input type="text" name="gas_file.monitoring_station"  value="#(gas_file.monitoring_station)" />
-        </div>
-        <div>
-            <label>充装规格</label>
-            <input type="text" name="gas_file.filling_specification"  value="#(gas_file.filling_specification)" />
-        </div>
-        <div>
-            <label>气瓶规格</label>
-            <input type="text" name="gas_file.gas_specification" value="#(gas_file.gas_specification)" />
-        </div>
-        <div>
-            <label>充装介质</label>
-            <input type="text" name="gas_file.filling_medium" value="#(gas_file.filling_medium)" />
-        </div>
-        <div>
-            <label>许可证号</label>
-            <input type="text" name="gas_file.xukezhenghao"  value="#(gas_file.xukezhenghao)" />
-        </div>
-        <div>
-            <label>公称压力</label>
-            <input type="text" name="gas_file.gongchengyali"   value="#(gas_file.gongchengyali)" />
-        </div>
-        <div>
-            <label>水试验压</label>
-            <input type="text" name="gas_file.shuishiyanya"   value="#(gas_file.shuishiyanya)" />
-        </div>
-        <div>
-            <label>容积</label>
-            <input type="text" name="gas_file.rongji"   value="#(gas_file.rongji)" />
-        </div>
-        <div>
-            <label>壁厚</label>
-            <input type="text" name="gas_file.bihou"   value="#(gas_file.bihou)" />
-        </div>
-        <div>
-            <label>气瓶自重</label>
-            <input type="text" name="gas_file.gas_suttle"   value="#(gas_file.gas_suttle)" />
-        </div>
-        <div>
-            <label>是否专用</label>
-            <input type="text" name="gas_file.shifouzhuanyong"  value="#(gas_file.shifouzhuanyong)" />
-        </div>
-        <div>
-            <label>使用者名称</label>
-            <input type="text" name="gas_file.shiyongzhemingcheng"  value="#(gas_file.shiyongzhemingcheng)" />
-        </div>
-        <div>
-            <label>使用者地址</label>
-            <input type="text" name="gas_file.shiyongzhedizhi"  value="#(gas_file.shiyongzhedizhi)" />
-        </div>
-        <div>
-            <label>电话</label>
-            <input type="text" name="gas_file.shiyongzhedianhua"  value="#(gas_file.shiyongzhedianhua)" />
-        </div>
-        <div>
-            <label>经度</label>
-            <input type="text" name="gas_file.shiyongzhejingdu"  value="#(gas_file.shiyongzhejingdu)" />
-        </div>
-        <div>
-            <label>纬度</label>
-            <input type="text" name="gas_file.shiyongzheweidu"  value="#(gas_file.shiyongzheweidu)" />
+
+        <div class="form-section">
+            <div class="form-section-title">使用者信息</div>
+            <div class="form-grid">
+                <div class="form-group"><label>使用者名称</label><input type="text" name="gas_file.shiyongzhemingcheng" value="#(gas_file.shiyongzhemingcheng)"></div>
+                <div class="form-group"><label>使用者地址</label><input type="text" name="gas_file.shiyongzhedizhi" value="#(gas_file.shiyongzhedizhi)"></div>
+                <div class="form-group"><label>电话</label><input type="text" name="gas_file.shiyongzhedianhua" value="#(gas_file.shiyongzhedianhua)"></div>
+                <div class="form-group"><label>经度</label><input type="text" name="gas_file.shiyongzhejingdu" value="#(gas_file.shiyongzhejingdu)"></div>
+                <div class="form-group"><label>纬度</label><input type="text" name="gas_file.shiyongzheweidu" value="#(gas_file.shiyongzheweidu)"></div>
+            </div>
         </div>
     </form>
 </div>
 
 <script>
-    // ========== 修复1：加气站信息回显 ==========
+    var context = [];
     try {
         var jsonData = '#(com.alibaba.fastjson.JSONArray::toJSON(gasstations))';
-        console.log('原始 jsonData:', jsonData);
-        var context = JSON.parse(jsonData.replace(/#/g, ""));
-        console.log('解析后的 context:', context);
-
-        var selectElement = document.getElementById("selectName");
-        var stationIdInput = document.getElementById("gas_file.stationid");
-        var filingGasStationInput = document.getElementById("gas_file.filing_gas_station");
-
-        // 优先使用当前编辑记录的加气站信息（核心修复）
-        var currentStationId = stationIdInput.value.trim();
-        var currentStationName = filingGasStationInput.value.trim();
-
-        // 场景1：当前记录已有加气站信息 → 直接回显
-        if (currentStationId && currentStationName) {
-            var option = document.createElement('option');
-            option.value = currentStationId;
-            option.textContent = currentStationName;
-            option.selected = true;
-            selectElement.appendChild(option);
-        }
-        // 场景2：从gasstations列表回显（兼容原有逻辑）
-        else if (context && context.length === 1) {
-            var station = context[0];
-            stationIdInput.value = station.id;
-            filingGasStationInput.value = station.stationName || station.station_name;
-
-            var option = document.createElement('option');
-            option.value = station.id;
-            option.textContent = station.stationName || station.station_name;
-            option.selected = true;
-            selectElement.appendChild(option);
-        }
+        context = JSON.parse(jsonData.replace(/#/g, ''));
     } catch (error) {
-        console.error('加气站数据解析/回显出错:', error);
+        context = [];
     }
 
-    // ========== 修复2：集成气瓶编号重复校验（适配编辑场景） ==========
+    function chooseName() {
+        var selectValue = document.getElementById('selectName').value;
+        var selectedStation = context.find(function (station) {
+            return String(station.id) === String(selectValue);
+        });
+
+        if (selectedStation) {
+            document.getElementById('gas_file.gasstationid').value = selectedStation.id;
+            document.getElementById('gas_file.stationid').value = selectedStation.id;
+            document.getElementById('gas_file.filing_gas_station').value = selectedStation.stationName || selectedStation.station_name;
+        }
+
+        checkGasNumberDuplicate();
+    }
+
     function checkGasNumberDuplicate() {
-        var tip = document.getElementById("gasNumberTip");
-        // 获取核心参数（新增当前编辑ID，排除自身）
-        var gasNumber = document.getElementById("gas_file.gas_number").value.trim();
-        var stationId = document.getElementById("gas_file.stationid").value.trim();
-        var currentId = document.getElementById("gasFileId").value.trim(); // 当前编辑记录ID
+        var tip = document.getElementById('gasNumberTip');
+        var gasNumber = document.getElementById('gas_file.gas_number').value.trim();
+        var stationId = document.getElementById('gas_file.stationid').value.trim();
+        var currentId = document.getElementById('gasFileId').value.trim();
+        var xhr;
+        var requestUrl;
 
-        // 1. 空值校验
+        if (!tip) {
+            return;
+        }
+
         if (!gasNumber) {
-            tip.innerText = "气瓶编号不能为空！";
-            tip.style.color = "#dc3545";
-            return;
-        }
-        // 2. 加气站校验（适配编辑场景）
-        if (!stationId || stationId === "-1") {
-            tip.innerText = "加气站信息异常，请刷新重试！";
-            tip.style.color = "#dc3545";
+            tip.innerText = '气瓶编号不能为空！';
+            tip.style.color = '#EF4444';
             return;
         }
 
-        // 3. 异步请求校验（基础XMLHttpRequest）
-        var xhr = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
-        // 拼接参数：新增currentId排除当前编辑记录
-        var requestUrl = "/gasFile/checkGasNumber" +
-            "?gasNumber=" + encodeURIComponent(gasNumber) +
-            "&stationId=" + encodeURIComponent(stationId) +
-            "&currentId=" + encodeURIComponent(currentId || "");
+        if (!stationId || stationId === '-1') {
+            tip.innerText = '加气站信息异常，请刷新后重试';
+            tip.style.color = '#EF4444';
+            return;
+        }
 
-        xhr.open("GET", requestUrl, true);
-        // 处理请求状态变化
-        xhr.onreadystatechange = function() {
+        xhr = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+        requestUrl = '/gasFile/checkGasNumber?gasNumber=' + encodeURIComponent(gasNumber) + '&stationId=' + encodeURIComponent(stationId) + '&currentId=' + encodeURIComponent(currentId || '');
+
+        xhr.open('GET', requestUrl, true);
+        xhr.onreadystatechange = function () {
             if (xhr.readyState === 4) {
                 if (xhr.status === 200) {
-                    if (xhr.responseText === "duplicate") {
-                        // 重复提示（编辑场景专属文案）
-                        alert("当前加气站下该气瓶编号已存在（排除自身），请更换！");
-                        tip.innerText = "当前加气站下该气瓶编号已存在！";
-                        tip.style.color = "#dc3545";
+                    if (xhr.responseText === 'duplicate') {
+                        tip.innerText = '当前加气站下该气瓶编号已存在！';
+                        tip.style.color = '#EF4444';
                     } else {
-                        // 可用提示
-                        tip.innerText = "气瓶编号可用";
-                        tip.style.color = "#28a745";
+                        tip.innerText = '气瓶编号可用';
+                        tip.style.color = '#10B981';
                     }
                 } else {
-                    // 请求失败
-                    tip.innerText = "验证失败，请重试（状态码：" + xhr.status + "）";
-                    tip.style.color = "#dc3545";
+                    tip.innerText = '验证失败，请重试';
+                    tip.style.color = '#EF4444';
                 }
             }
         };
-        // 补充网络异常处理
-        xhr.onerror = function() {
-            tip.innerText = "网络异常，校验失败";
-            tip.style.color = "#dc3545";
+        xhr.onerror = function () {
+            tip.innerText = '网络异常，校验失败';
+            tip.style.color = '#EF4444';
         };
         xhr.send();
     }

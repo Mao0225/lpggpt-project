@@ -1,0 +1,80 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>编辑气瓶检验报告</title>
+    <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css">
+    <script src="../css/jquery-3.3.1.min.js"></script>
+    <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+    <style>
+        body { margin: 0; padding: 0; background: #F8FAFC; color: #1E293B; font-family: -apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif; }
+        .form-container { background: #FFFFFF; padding: 24px; }
+        .form-section { margin-bottom: 24px; }
+        .form-section-title { margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #E2E8F0; font-size: 14px; font-weight: 600; color: #1E293B; }
+        .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+        .form-group { margin-bottom: 0; }
+        .form-group label { display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500; color: #475569; }
+        .form-group label .required { color: #EF4444; margin-right: 4px; }
+        .form-group input[type="text"], .form-group input[type="date"], .form-group input[type="file"] {
+            width: 100%; padding: 10px 14px; font-size: 14px; border: 1px solid #CBD5E1; border-radius: 6px; background: #FFFFFF; color: #1E293B; box-sizing: border-box; transition: all .15s ease; }
+        .form-group input:focus { outline: none; border-color: #3B82F6; box-shadow: 0 0 0 3px rgba(59,130,246,.1); }
+        .tip-text { margin-top: 6px; font-size: 12px; color: #64748B; }
+        @media (max-width: 768px) { .form-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+<div class="form-container">
+    <form id="myForm" action="/gasDocs/update" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="gas_docs.id" value="#(gas_docs.id??)">
+
+        <div class="form-section">
+            <div class="form-section-title">基础信息</div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label><span class="required">*</span>检验机构</label>
+                    <input type="text" name="gas_docs.insp_org" value="#(gas_docs.insp_org??)" required>
+                </div>
+                <div class="form-group">
+                    <label><span class="required">*</span>检验日期</label>
+                    <input type="date" name="gas_docs.insp_data" value="#(gas_docs.insp_data??)" required>
+                </div>
+                <div class="form-group">
+                    <label>报告编号</label>
+                    <input type="text" name="gas_docs.report_no" value="#(gas_docs.report_no??)">
+                </div>
+                <div class="form-group">
+                    <label>合格瓶数</label>
+                    <input type="text" name="gas_docs.qualified_bottles" value="#(gas_docs.qualified_bottles??)">
+                </div>
+                <div class="form-group">
+                    <label>报废瓶数</label>
+                    <input type="text" name="gas_docs.scrap_bottles" value="#(gas_docs.scrap_bottles??)">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <div class="form-section-title">检验报告文件</div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>当前文件</label>
+                    #if(gas_docs.file_url??)
+                    <div class="tip-text">
+                        <a href="http://39.98.221.201:8099#(gas_docs.file_url)" target="_blank">点击查看当前报告</a>
+                    </div>
+                    #else
+                    <div class="tip-text">当前无已上传文件</div>
+                    #end
+                </div>
+                <div class="form-group">
+                    <label>重新上传报告文件（可选）</label>
+                    <input type="file" name="file" accept=".pdf,.jpg,.jpeg,.png">
+                    <div class="tip-text">如不选择文件，则保留原有 file_url。</div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>

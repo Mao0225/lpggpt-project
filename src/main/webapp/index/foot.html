@@ -1,29 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Footer</title>
+	<title>页脚</title>
 	<!-- Add your custom stylesheets and scripts here -->
 	<style>
-		/* Add your custom CSS styles here */
+		/* 工业极简主义风格 - 页脚 */
 		body {
 			margin: 0;
 			padding: 0;
-			background-image: url(../img/footbg.png);
-			background-size: cover; /* 添加这一行 */
-			background-position: center; /* 保证背景图在页面中心 */
-			border-top: 1px solid #f0bf00;
+			background-color: #111827; /* 主背景色 */
+			font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+			border-top: 1px solid #374151; /* 顶部边框 */
 		}
 		html, body {
-			min-height: 100vh; /* 使body至少和视口一样高 */
+			min-height: 100vh;
 		}
 
 		#footer {
-			padding: 20px;
+			padding: 24px 20px;
 			text-align: center;
 			font-size: 12px;
-			color: #fff;
+			font-weight: 500;
+			color: #6B7280; /* 弱化文字色 */
+			letter-spacing: 0.5px;
+		}
+		#footer a {
+			color: #9CA3AF; /* 次要文字色 */
+			text-decoration: none;
+			transition: color 0.15s ease;
+		}
+		#footer a:hover {
+			color: #3B82F6; /* 安全蓝 */
 		}
 	</style>
 </head>

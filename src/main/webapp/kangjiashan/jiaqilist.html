@@ -1,185 +1,287 @@
- <!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Content</title>
-	<!-- Add your custom stylesheets and scripts here -->
-	<script src="../css/jquery-3.3.1.min.js"></script>
-	<link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css" >
-	<script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="../css/lpg.css">
-	<script src="../css/jquery-3.3.1.min.js"></script>
-	<link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css" >
-	<script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="../css/lpg.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>康佳山加气记录</title>
+    <script src="../css/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css">
+    <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/index.css">
 
+    <style>
+        body {
+            margin: 0;
+            background: #F8FAFC;
+            color: #1E293B;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+        }
 
-	<style scoped>
-		.container {
-			padding: 50px 20px;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-		}
+        .page-container {
+            min-height: 100vh;
+            padding: 20px;
+            background: #F8FAFC;
+        }
 
-		input {
-			padding: 15px;
-			font-size: 18px;
-			border: 2px solid #a3bffa;
-			border-radius: 10px;
-			width: 100%;
-			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-			transition: border-color 0.3s ease;
-		}
+        #pagediv {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            padding: 14px 20px;
+            margin-bottom: 20px;
+        }
 
-		input:focus {
-			outline: none;
-			border-color: #4c87c9;
-		}
-	</style>
+        .header-title {
+            margin: 0;
+            color: #1E293B;
+            font-size: 16px;
+            font-weight: 600;
+        }
 
-	<style>
-		/* 设置 #pagediv 的样式 */
-		#pagediv {
-			background-color: #f0f0f0;
-			color: black;
-			padding: 10px;
-		}
+        .table-wrapper {
+            overflow-x: auto;
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+        }
 
-		/* 设置表格样式 */
-		table.list {
-			width: 100%;
-			border-collapse: collapse;
-		}
+        table.list {
+            width: 100%;
+            min-width: 1300px;
+            border-collapse: collapse;
+            background: #FFFFFF;
+        }
 
-		/* 设置表格表头样式 */
-		table.list th {
-			background-color: #add8e6;
-			color: black;
-			padding: 8px;
-			text-align: left;
-			border: 1px solid #ddd; /* 新增：添加边框 */
-		}
+        table.list th {
+            background: #F8FAFC;
+            color: #475569;
+            font-size: 13px;
+            font-weight: 600;
+            text-align: left;
+            padding: 14px 16px;
+            border-bottom: 1px solid #E2E8F0;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+        }
 
-		/* 设置表格单元格样式 */
-		table.list td {
-			padding: 8px;
-			border: 1px solid #ddd; /* 修改：添加边框 */
-		}
+        table.list td {
+            padding: 14px 16px;
+            font-size: 14px;
+            color: #1E293B;
+            border-bottom: 1px solid #F1F5F9;
+            vertical-align: middle;
+            white-space: nowrap;
+        }
 
-		/* 设置表格隔行颜色 */
-		table.list tr:nth-child(even) {
-			background-color: #f2f2f2;
-		}
+        table.list tbody tr {
+            background: #FFFFFF;
+            transition: background 0.15s ease;
+        }
 
-		table.list tr:nth-child(odd) {
-			background-color: #e0e0e0;
-		}
+        table.list tbody tr:nth-child(even) {
+            background: #F8FAFC;
+        }
 
-		/* 设置鼠标悬停时表格行的颜色 */
-		table.list tr:hover {
-			background-color: #d3d3d3;
-		}
+        table.list tbody tr:hover {
+            background: #F1F5F9;
+        }
 
-		/* 新增样式：设置新建司机链接为黑色 */
-		#pagediv .add {
-			color: black;
-		}
+        table.list tbody tr:last-child td {
+            border-bottom: none;
+        }
 
-		/* 新增样式：设置输入框背景色为淡灰色 */
-		#pagediv input[type="text"] {
-			background-color: #f0f0f0;
-		}
-		/* 新增样式：设置 label 文字颜色为黑色 */
-		#pagediv label {
-			color: black;
-		}
-	</style>
+        .page-container .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 20px;
+            color: #475569;
+            flex-wrap: wrap;
+        }
+
+        .page-container .pagination a,
+        .page-container .pagination span:not(.page-info):not(.gap):not(.current) {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 36px;
+            height: 36px;
+            padding: 0 8px;
+            font-size: 14px;
+            border: 1px solid #E2E8F0;
+            border-radius: 6px;
+            color: #475569;
+            background: #FFFFFF;
+            text-decoration: none;
+            transition: all 0.15s ease;
+        }
+
+        .page-container .pagination a:hover {
+            background: #F8FAFC;
+            border-color: #CBD5E1;
+        }
+
+        .page-container .pagination .current {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 36px;
+            height: 36px;
+            padding: 0 8px;
+            background: #3B82F6;
+            color: #FFFFFF;
+            border: 1px solid #3B82F6;
+            border-radius: 6px;
+        }
+
+        .page-container .pagination .disabled {
+            color: #94A3B8;
+            background: #F8FAFC;
+            cursor: not-allowed;
+        }
+
+        .page-container .pagination .gap {
+            border: none;
+            background: transparent;
+            color: #64748B;
+            min-width: auto;
+        }
+
+        .page-container .pagination .page-input {
+            width: 44px;
+            height: 36px;
+            text-align: center;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            color: #1E293B;
+        }
+
+        .page-container .pagination .page-input:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .page-container .pagination .page-info {
+            color: #475569;
+        }
+
+        .modal-content {
+            border: 1px solid #E2E8F0;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.15);
+            overflow: hidden;
+        }
+
+        .modal-header {
+            background: #F8FAFC;
+            border-bottom: 1px solid #E2E8F0;
+            padding: 16px 20px;
+        }
+
+        .modal-body {
+            background: #FFFFFF;
+            padding: 20px;
+        }
+
+        .modal-footer {
+            background: #F8FAFC;
+            border-top: 1px solid #E2E8F0;
+            padding: 16px 20px;
+        }
+
+        @media (max-width: 768px) {
+            .page-container {
+                padding: 12px;
+            }
+        }
+    </style>
 </head>
 <body>
- 	<div id="pagediv">
-<!--		<a href="#" class="add openModal" data-title="新建加气记录" data-edit-url="add"><b> + </b>新建加气记录</a>-->
-	</div>
-	<table class="list">
-		<tbody>
-		<tr>
-			<th>序号</th>
-			<th>license_plate</th>
-			<th>气瓶编码</th>
-			<th>valid_time</th>
-			<th>real_time</th>
-			<th>枪号</th>
-			<th>加气量</th>
-			<th>单位编码</th>
-			<th>金额</th>
-			<th>加气站编码</th>
-			<th>交易日期</th>
-			<th>UUID</th>
-		</tr>
-		#set(startIndex = (jiaqilist.pageNumber - 1) * jiaqilist.pageSize + 1)
+<div class="page-container">
+    <div id="pagediv">
+        <h1 class="header-title">康佳山加气记录列表</h1>
+    </div>
 
-		#for(x : jiaqilist.getList())
-		<tr>
-			<td>#(startIndex++)</td> <!-- 显示序号并递增 -->
-			<td>#(x.license_plate)</td>
-			<td>#(x.gas_bottle_no)</td>
-			<td>#(x.valid_time)</td>
-			<td>#(x.real_time)</td>
-			<td>#(x.gun_no)</td>
-			<td>#(x.now_gas)</td>
-			<td>#(x.gas_unit)</td>
-			<td>#(x.now_money)</td>
-			<td>#(x.org_code)</td>
-			<td>#(x.trade_date)</td>
-			<td>#(x.uuid)</td>
+    <div class="table-wrapper">
+        <table class="list">
+            <thead>
+            <tr>
+                <th>序号</th>
+                <th>license_plate</th>
+                <th>气瓶编码</th>
+                <th>valid_time</th>
+                <th>real_time</th>
+                <th>枪号</th>
+                <th>加气量</th>
+                <th>单位编码</th>
+                <th>金额</th>
+                <th>加气站编码</th>
+                <th>交易日期</th>
+                <th>UUID</th>
+            </tr>
+            </thead>
+            <tbody>
+            #set(startIndex = (jiaqilist.pageNumber - 1) * jiaqilist.pageSize + 1)
+            #for(x : jiaqilist.getList())
+            <tr>
+                <td>#(startIndex++)</td>
+                <td>#(x.license_plate)</td>
+                <td>#(x.gas_bottle_no)</td>
+                <td>#(x.valid_time)</td>
+                <td>#(x.real_time)</td>
+                <td>#(x.gun_no)</td>
+                <td>#(x.now_gas)</td>
+                <td>#(x.gas_unit)</td>
+                <td>#(x.now_money)</td>
+                <td>#(x.org_code)</td>
+                <td>#(x.trade_date)</td>
+                <td>#(x.uuid)</td>
+            </tr>
+            #end
+            </tbody>
+        </table>
+    </div>
 
-		</tr>
-		#end
-		</tbody>
-	</table>
-	<div class="pagination" style="color:#f0f0f0; font-size: 15px">
-		#@paginate(jiaqilist.pageNumber, jiaqilist.totalPage, "/kangjiashan/jiaqilist?page=")
-	</div>
-	<script>
-		$('.openModal').click(function(e) {
-			e.preventDefault();
-			var editUrl = $(this).data('edit-url');
-			var that = this; // 保存正确的上下文
+    #@paginate(jiaqilist.pageNumber, jiaqilist.totalPage, "/kangjiashan/jiaqilist?page=")
+</div>
 
-			$.get(editUrl, function(data) {
-				var title = $(that).data('title');
-				$('#myModalLabel').text(title); // 修改模态窗口标题
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">模态窗口标题</h4>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="saveButton">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-				// 清除旧内容
-				$('#modalBody').html(data); // 加载编辑内容到模态窗口
-				$('#myModal').modal('show'); // 显示模态窗口
-			});
-		});
+<script>
+    $(".openModal").click(function (e) {
+        e.preventDefault();
+        var editUrl = $(this).data("edit-url");
+        var that = this;
 
-	</script>
-	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h4 class="modal-title" id="myModalLabel">模态窗口标题</h4>
-				</div>
-				<div class="modal-body" id="modalBody">
-					<!-- 这里将会加载你的表单内容 -->
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-					<button type="button" class="btn btn-primary"  id="saveButton" >保存</button>
-					<script>
-						document.getElementById('saveButton').addEventListener('click', function() {
-							document.getElementById('myForm').submit();
-						});
-					</script>
-				</div>
-			</div>
-		</div>
-	</div>
+        $.get(editUrl, function (data) {
+            $("#myModalLabel").text($(that).data("title"));
+            $("#modalBody").html(data);
+            $("#myModal").modal("show");
+        });
+    });
 
-
+    document.getElementById("saveButton").addEventListener("click", function () {
+        var form = document.getElementById("myForm");
+        if (form) {
+            form.submit();
+        }
+    });
+</script>
 </body>
 </html>

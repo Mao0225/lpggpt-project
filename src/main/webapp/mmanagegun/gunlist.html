@@ -35,60 +35,175 @@
     </style>
 
     <style>
-        /* 设置 #pagediv 的样式 */
+        /* 浅色商务风格 - 加气枪管理列表 */
+        body {
+            background: #F8FAFC;
+            color: #1E293B;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+        }
+
+        .page-container {
+            background: #F8FAFC;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        /* 搜索区域 */
         #pagediv {
-            background-color: #f0f0f0;
-            color: black;
-            padding: 10px;
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
         }
 
-        /* 设置表格样式 */
-        table.list {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        /* 设置表格表头样式 */
-        table.list th {
-            background-color: #add8e6;
-            color: black;
-            padding: 8px;
-            text-align: left;
-            border: 1px solid #ddd; /* 新增：添加边框 */
-        }
-
-        /* 设置表格单元格样式 */
-        table.list td {
-            padding: 8px;
-            border: 1px solid #ddd; /* 修改：添加边框 */
-        }
-
-        /* 设置表格隔行颜色 */
-        table.list tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-
-        table.list tr:nth-child(odd) {
-            background-color: #e0e0e0;
-        }
-
-        /* 设置鼠标悬停时表格行的颜色 */
-        table.list tr:hover {
-            background-color: #d3d3d3;
-        }
-
-        /* 新增样式：设置新建司机链接为黑色 */
-        #pagediv .add {
-            color: black;
-        }
-
-        /* 新增样式：设置输入框背景色为淡灰色 */
-        #pagediv input[type="text"] {
-            background-color: #f0f0f0;
-        }
-        /* 新增样式：设置 label 文字颜色为黑色 */
         #pagediv label {
-            color: black;
+            font-size: 14px;
+            font-weight: 500;
+            color: #475569;
+            white-space: nowrap;
+            margin: 0;
+        }
+
+        #pagediv input[type="text"],
+        #pagediv select {
+            padding: 8px 12px;
+            font-size: 14px;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            background: #FFFFFF;
+            color: #1E293B;
+            min-width: 160px;
+            transition: all 0.15s ease;
+        }
+
+        #pagediv input[type="text"]:focus,
+        #pagediv select:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        #pagediv input[type="submit"],
+        #pagediv input[type="button"] {
+            background: #3B82F6;
+            color: #FFFFFF;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        #pagediv input[type="submit"]:hover,
+        #pagediv input[type="button"]:hover {
+            background: #2563EB;
+        }
+
+        #pagediv .add {
+            background: #3B82F6;
+            color: #FFFFFF;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        #pagediv .add:hover {
+            background: #2563EB;
+            color: #FFFFFF;
+        }
+
+        /* 表格样式 */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        table th {
+            background: #F8FAFC;
+            color: #475569;
+            font-weight: 600;
+            font-size: 14px;
+            padding: 14px 16px;
+            text-align: center;
+            border-bottom: 1px solid #E2E8F0;
+        }
+
+        table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid #E2E8F0;
+            text-align: center;
+            color: #1E293B;
+            font-size: 14px;
+        }
+
+        table tbody tr:hover {
+            background: #F1F5F9;
+        }
+
+        table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* 操作链接 */
+        table a {
+            color: #3B82F6;
+            text-decoration: none;
+            margin: 0 6px;
+            transition: all 0.15s ease;
+        }
+
+        table a:hover {
+            color: #2563EB;
+            text-decoration: underline;
+        }
+
+        /* 分页 */
+        .pagination {
+            margin-top: 20px;
+            text-align: center;
+            color: #475569;
+        }
+
+        .pagination a,
+        .pagination span {
+            display: inline-block;
+            padding: 8px 12px;
+            margin: 0 4px;
+            border: 1px solid #E2E8F0;
+            border-radius: 6px;
+            color: #3B82F6;
+            text-decoration: none;
+            transition: all 0.15s ease;
+        }
+
+        .pagination a:hover {
+            background: #F1F5F9;
+            border-color: #3B82F6;
+        }
+
+        .pagination .active {
+            background: #3B82F6;
+            color: #FFFFFF;
+            border-color: #3B82F6;
         }
     </style>
 </head>

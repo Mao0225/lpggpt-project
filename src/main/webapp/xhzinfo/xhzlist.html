@@ -1,262 +1,490 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>设备列表</title>
+    <title>小盒子相关信息</title>
     <script src="../css/jquery-3.3.1.min.js"></script>
     <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css">
     <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="/css/lpg.css">
+    <link rel="stylesheet" type="text/css" href="../css/index.css">
 
     <style>
-        .container {
-            padding: 50px 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        body {
+            margin: 0;
+            background: #F8FAFC;
+            color: #1E293B;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
         }
 
-        input {
-            padding: 15px;
-            font-size: 18px;
-            border: 2px solid #a3bffa;
-            border-radius: 10px;
-            width: 100%;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: border-color 0.3s ease;
+        .page-container {
+            min-height: 100vh;
+            padding: 20px;
+            background: #F8FAFC;
         }
 
-        input:focus {
-            outline: none;
-            border-color: #4c87c9;
-        }
-    </style>
-
-    <style>
         #pagediv {
-            background-color: #f0f0f0;
-            color: black;
-            padding: 10px;
-            margin-bottom: 15px;
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+        }
+
+        #searchForm {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            width: 100%;
+        }
+
+        #searchForm label {
+            margin: 0;
+            white-space: nowrap;
+            font-size: 14px;
+            font-weight: 500;
+            color: #475569;
+        }
+
+        #searchForm select {
+            min-width: 180px;
+            height: 38px;
+            padding: 8px 12px;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            background: #FFFFFF;
+            color: #1E293B;
+            font-size: 14px;
+            transition: all 0.15s ease;
+        }
+
+        #searchForm select:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        #searchForm button,
+        #searchForm .add-btn {
+            height: 38px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 16px;
+            border-radius: 6px;
+            border: none;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            text-decoration: none;
+        }
+
+        #searchForm .add-btn,
+        #searchForm #searchButton {
+            background: #3B82F6;
+            color: #FFFFFF;
+        }
+
+        #searchForm .add-btn:hover,
+        #searchForm #searchButton:hover {
+            background: #2563EB;
+            color: #FFFFFF;
+        }
+
+        #searchForm #resetButton {
+            border: 1px solid #CBD5E1;
+            background: #FFFFFF;
+            color: #475569;
+        }
+
+        #searchForm #resetButton:hover {
+            background: #F8FAFC;
+            border-color: #94A3B8;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
         }
 
         table.list {
             width: 100%;
+            min-width: 2300px;
             border-collapse: collapse;
+            background: #FFFFFF;
         }
 
         table.list th {
-            background-color: #add8e6;
-            color: black;
-            padding: 8px;
+            background: #F8FAFC;
+            color: #475569;
+            font-size: 13px;
+            font-weight: 600;
             text-align: left;
-            border: 1px solid #ddd;
+            padding: 14px 16px;
+            border-bottom: 1px solid #E2E8F0;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
         }
 
         table.list td {
-            padding: 8px;
-            border: 1px solid #ddd;
+            padding: 14px 16px;
+            font-size: 14px;
+            color: #1E293B;
+            border-bottom: 1px solid #F1F5F9;
+            vertical-align: middle;
+            white-space: nowrap;
         }
 
-        table.list tr:nth-child(even) {
-            background-color: #f2f2f2;
+        table.list tbody tr {
+            background: #FFFFFF;
+            transition: background 0.15s ease;
         }
 
-        table.list tr:nth-child(odd) {
-            background-color: #e0e0e0;
+        table.list tbody tr:nth-child(even) {
+            background: #F8FAFC;
         }
 
-        table.list tr:hover {
-            background-color: #d3d3d3;
+        table.list tbody tr:hover {
+            background: #F1F5F9;
         }
 
-        #pagediv .add {
-            color: black;
-            margin-right: 15px;
+        table.list tbody tr:last-child td {
+            border-bottom: none;
         }
 
-        #pagediv input[type="text"] {
-            background-color: #f0f0f0;
-        }
-
-        #pagediv label {
-            color: black;
-        }
-
-        .operation-btn {
-            margin-right: 10px;
+        .operation-link {
+            color: #3B82F6;
             text-decoration: none;
+            margin-right: 12px;
+            transition: color 0.15s ease;
+        }
+
+        .operation-link:hover {
+            color: #2563EB;
+            text-decoration: underline;
+        }
+
+        .status-alert {
+            color: #DC2626;
+            font-weight: 600;
+        }
+
+        .page-container .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 20px;
+            color: #475569;
+            flex-wrap: wrap;
+        }
+
+        .page-container .pagination a,
+        .page-container .pagination span:not(.page-info):not(.gap):not(.current) {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 36px;
+            height: 36px;
+            padding: 0 8px;
+            font-size: 14px;
+            border: 1px solid #E2E8F0;
+            border-radius: 6px;
+            color: #475569;
+            background: #FFFFFF;
+            text-decoration: none;
+            transition: all 0.15s ease;
+        }
+
+        .page-container .pagination a:hover {
+            background: #F8FAFC;
+            border-color: #CBD5E1;
+        }
+
+        .page-container .pagination .current {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 36px;
+            height: 36px;
+            padding: 0 8px;
+            background: #3B82F6;
+            color: #FFFFFF;
+            border: 1px solid #3B82F6;
+            border-radius: 6px;
+        }
+
+        .page-container .pagination .disabled {
+            color: #94A3B8;
+            background: #F8FAFC;
+            cursor: not-allowed;
+        }
+
+        .page-container .pagination .gap {
+            border: none;
+            background: transparent;
+            color: #64748B;
+            min-width: auto;
+        }
+
+        .page-container .pagination .page-input {
+            width: 44px;
+            height: 36px;
+            text-align: center;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            color: #1E293B;
+        }
+
+        .page-container .pagination .page-input:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .page-container .pagination .page-info {
+            color: #475569;
+        }
+
+        .modal-content {
+            border: 1px solid #E2E8F0;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.15);
+            overflow: hidden;
+        }
+
+        .modal-header {
+            background: #F8FAFC;
+            border-bottom: 1px solid #E2E8F0;
+            padding: 16px 20px;
+        }
+
+        .modal-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E293B;
+        }
+
+        .modal-body {
+            background: #FFFFFF;
+            padding: 20px;
+        }
+
+        .modal-footer {
+            background: #F8FAFC;
+            border-top: 1px solid #E2E8F0;
+            padding: 16px 20px;
+        }
+
+        .btn-default {
+            border: 1px solid #CBD5E1;
+            background: #FFFFFF;
+            color: #475569;
+        }
+
+        .btn-default:hover {
+            background: #F8FAFC;
+            border-color: #94A3B8;
+        }
+
+        .btn-primary {
+            background: #3B82F6;
+            border: 1px solid #3B82F6;
+            color: #FFFFFF;
+        }
+
+        .btn-primary:hover {
+            background: #2563EB;
+            border-color: #2563EB;
+        }
+
+        @media (max-width: 768px) {
+            .page-container {
+                padding: 12px;
+            }
+
+            #searchForm {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            #searchForm select,
+            #searchForm button,
+            #searchForm .add-btn {
+                width: 100%;
+            }
         }
     </style>
 </head>
-
 <body>
-<div id="pagediv">
-    <a href="/xhzinfo/add" class="add operation-btn">添加设备</a>
+<div class="page-container">
+    <div id="pagediv">
+        <form id="searchForm" action="/xhzinfo/xhzlist" method="post">
+            <a href="/xhzinfo/add" class="add-btn">添加设备</a>
 
-    <form id="searchForm" action="/xhzinfo/xhzlist" method="post">
-        <label>饭店名称：</label>
-        <select name="restaurantId" id="companySelect">
-            <option value="" #if(restaurantId == "") selected #end>全部公司</option>
-            #for(x : restaurants)
-            <option value="#(x.id)" #if(restaurantId == (x.id + "")) selected #end>#(x.name)</option>
-            #end
-        </select>
+            <label>饭店名称：</label>
+            <select name="restaurantId" id="companySelect">
+                <option value="" #if(restaurantId == "") selected #end>全部公司</option>
+                #for(x : restaurants)
+                <option value="#(x.id)" #if(restaurantId == (x.id + "")) selected #end>#(x.name)</option>
+                #end
+            </select>
 
-        &nbsp;&nbsp;
-        <select name="alarm" onchange="this.form.submit()" id="alarmSelect">
-            <option value="" #if(alarm == null || alarm == "") selected #end>请选择报警类型</option>
-            <option value="0" #if(alarm != null && alarm.toString() == "0") selected #end>无报警</option>
-            <option value="1" #if(alarm != null && alarm.toString() == "1") selected #end>操作间燃气报警</option>
-            <option value="2" #if(alarm != null && alarm.toString() == "2") selected #end>气瓶间燃气报警</option>
-            <option value="3" #if(alarm != null && alarm.toString() == "3") selected #end>摄像头监控报警</option>
-            <option value="4" #if(alarm != null && alarm.toString() == "4") selected #end>烟感报警</option>
-            <option value="5" #if(alarm != null && alarm.toString() == "5") selected #end>管道压力超压报警</option>
-        </select>
+            <select name="alarm" onchange="this.form.submit()" id="alarmSelect">
+                <option value="" #if(alarm == null || alarm == "") selected #end>请选择报警类型</option>
+                <option value="0" #if(alarm != null && alarm.toString() == "0") selected #end>无报警</option>
+                <option value="1" #if(alarm != null && alarm.toString() == "1") selected #end>操作间燃气报警</option>
+                <option value="2" #if(alarm != null && alarm.toString() == "2") selected #end>气瓶间燃气报警</option>
+                <option value="3" #if(alarm != null && alarm.toString() == "3") selected #end>摄像头监控报警</option>
+                <option value="4" #if(alarm != null && alarm.toString() == "4") selected #end>烟感报警</option>
+                <option value="5" #if(alarm != null && alarm.toString() == "5") selected #end>管道压力超压报警</option>
+            </select>
 
-        <button type="submit" value="查询" id="searchButton">查询</button>
-        <button type="button" value="重置" id="resetButton">重置</button>
-    </form>
+            <button type="submit" id="searchButton">查询</button>
+            <button type="button" id="resetButton">重置</button>
+        </form>
+    </div>
 
-</div>
+    <div class="table-wrapper">
+        <table class="list">
+            <thead>
+            <tr>
+                <th>序号</th>
+                <th>iot实例id</th>
+                <th>产品key</th>
+                <th>设备名称</th>
+                <th>创建时间</th>
+                <th>请求编码</th>
+                <th>1号电机阀状态</th>
+                <th>2号电机阀状态</th>
+                <th>3号电机阀状态</th>
+                <th>4号电机阀状态</th>
+                <th>切断阀状态</th>
+                <th>报警信息</th>
+                <th>气体压力状态</th>
+                <th>系统供电状态</th>
+                <th>电子标签1</th>
+                <th>电子标签2</th>
+                <th>电子标签3</th>
+                <th>电子标签4</th>
+                <th>电子标签5</th>
+                <th>电子标签6</th>
+                <th>电子标签7</th>
+                <th>电子标签8</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            #set(startIndex = (recordlist.pageNumber - 1) * recordlist.pageSize + 1)
+            #for(x : recordlist.getList())
+            <tr>
+                <td>#(startIndex++)</td>
+                <td>#(x.iotId)</td>
+                <td>#(x.productKey)</td>
+                <td>#(x.devicename)</td>
+                <td class="created-time">#(x.formatted_created_time)</td>
+                <td>#(x.requestid)</td>
+                <td>
+                    #if(x.get("ValveStatus1") == null)
+                    #else if(x.get("ValveStatus1") == 0)
+                    关
+                    #else if(x.get("ValveStatus1") == 1)
+                    开
+                    #else
+                    <span class="status-alert">未知值</span>
+                    #end
+                </td>
+                <td>
+                    #if(x.get("ValveStatus2") == null)
+                    #else if(x.get("ValveStatus2") == 0)
+                    关
+                    #else if(x.get("ValveStatus2") == 1)
+                    开
+                    #end
+                </td>
+                <td>
+                    #if(x.get("ValveStatus3") == null)
+                    #else if(x.get("ValveStatus3") == 0)
+                    关
+                    #else if(x.get("ValveStatus3") == 1)
+                    开
+                    #end
+                </td>
+                <td>
+                    #if(x.get("ValveStatus4") == null)
+                    #else if(x.get("ValveStatus4") == 0)
+                    关
+                    #else if(x.get("ValveStatus4") == 1)
+                    开
+                    #end
+                </td>
+                <td>
+                    #if(x.get("M_ValStat") == null)
+                    #else if(x.get("M_ValStat") ==1)
+                    开
+                    #else if(x.get("M_ValStat") ==0)
+                    关
+                    #end
+                </td>
+                <td>
+                    #if(x.get("Alarm") == null)
+                    #else if(x.get("Alarm") == 0)
+                    无报警
+                    #else if(x.get("Alarm") == 1)
+                    厨房警报
+                    #else if(x.get("Alarm") == 2)
+                    气瓶间报警
+                    #else if(x.get("Alarm") == 3)
+                    摄像头报警
+                    #else if(x.get("Alarm") == 4)
+                    烟感报警
+                    #else if(x.get("Alarm") == 5)
+                    防拆卸警报
+                    #end
+                </td>
+                <td>
+                    #if(x.get("Gas_Pg") == null)
+                    #else if(x.get("Gas_Pg") ==0)
+                    正常
+                    #else if(x.get("Gas_Pg") ==1)
+                    压力低于下限
+                    #else if(x.get("Gas_Pg") ==2)
+                    超压
+                    #end
+                </td>
+                <td>
+                    #if(x.get("PowerStatus") == null)
+                    #else if(x.get("PowerStatus") ==0)
+                    正常
+                    #else if(x.get("PowerStatus") ==1)
+                    故障
+                    #end
+                </td>
+                <td class="rfid-data" data-rfid="#(x.Rfid1)"></td>
+                <td class="rfid-data" data-rfid="#(x.Rfid2)"></td>
+                <td class="rfid-data" data-rfid="#(x.Rfid3)"></td>
+                <td class="rfid-data" data-rfid="#(x.Rfid4)"></td>
+                <td class="rfid-data" data-rfid="#(x.Rfid5)"></td>
+                <td class="rfid-data" data-rfid="#(x.Rfid6)"></td>
+                <td class="rfid-data" data-rfid="#(x.Rfid7)"></td>
+                <td class="rfid-data" data-rfid="#(x.Rfid8)"></td>
+                <td>
+                    <a href="#" class="openModal operation-link" data-title="编辑设备" data-edit-url="/xhzinfo/edit?id=#(x.id)">修改</a>
+                    <a href="#" class="operation-link" onclick="confirmDelete('#(x.id)'); return false;">删除</a>
+                </td>
+            </tr>
+            #end
+            </tbody>
+        </table>
+    </div>
 
-<table class="list">
-    <tbody>
-    <tr>
-        <th>序号</th>
-        <th>iot实例id</th>
-        <th>产品key</th>
-        <th>设备名称</th>
-        <th>创建时间</th>
-        <th>请求编码</th>
-        <th>1号电机阀状态</th>
-        <th>2号电机阀状态</th>
-        <th>3号电机阀状态</th>
-        <th>4号电机阀状态</th>
-        <th>切断阀状态</th>
-        <th>报警信息</th>
-        <th>气体压力状态</th>
-        <th>系统供电状态</th>
-        <th>电子标签1</th>
-        <th>电子标签2</th>
-        <th>电子标签3</th>
-        <th>电子标签4</th>
-        <th>电子标签5</th>
-        <th>电子标签6</th>
-        <th>电子标签7</th>
-        <th>电子标签8</th>
-        <th>操作</th>
-    </tr>
-    #set(startIndex = (recordlist.pageNumber - 1) * recordlist.pageSize + 1)
-    #for(x : recordlist.getList())
-    <tr>
-        <td>#(startIndex++)</td>
-        <td>#(x.iotId)</td>
-        <td>#(x.productKey)</td>
-        <td>#(x.devicename)</td>
-        <td class="created-time">#(x.formatted_created_time)</td>
-        <td>#(x.requestid)</td>
-        <td>
-            #if(x.get("ValveStatus1") == null)
-            #else if(x.get("ValveStatus1") == 0)
-            关
-            #else if(x.get("ValveStatus1") == 1)
-            开
-            #else
-            <span style="color: red;">未知值</span>
-            #end
-        </td>
-
-        <td>
-            #if(x.get("ValveStatus2") == null)
-            #else if(x.get("ValveStatus2") == 0)
-            关
-            #else if(x.get("ValveStatus2") == 1)
-            开
-            #end
-        </td>
-
-        <td>
-            #if(x.get("ValveStatus3") == null)
-            #else if(x.get("ValveStatus3") == 0)
-            关
-            #else if(x.get("ValveStatus3") == 1)
-            开
-            #end
-        </td>
-        <td>
-            #if(x.get("ValveStatus4") == null)
-            #else if(x.get("ValveStatus4") == 0)
-            关
-            #else if(x.get("ValveStatus4") == 1)
-            开
-            #end
-        </td>
-        <td>
-            #if(x.get("M_ValStat") == null)
-            #else if(x.get("M_ValStat") ==1)
-            开
-            #else if(x.get("M_ValStat") ==0)
-            关
-            #end
-        </td>
-        <td>
-            #if(x.get("Alarm") == null)
-            #else if(x.get("Alarm") == 0)
-            无报警
-            #else if(x.get("Alarm") == 1)
-            厨房警报
-            #else if(x.get("Alarm") == 2)
-            气瓶间报警
-            #else if(x.get("Alarm") == 3)
-            摄像头报警
-            #else if(x.get("Alarm") == 4)
-            烟感报警
-            #else if(x.get("Alarm") == 5)
-            防拆卸警报
-            #end
-        </td>
-        <td>
-            #if(x.get("Gas_Pg") == null)
-            #else if(x.get("Gas_Pg") ==0)
-            正常
-            #else if(x.get("Gas_Pg") ==1)
-            压力低于下限
-            #else if(x.get("Gas_Pg") ==2)
-            超压
-            #end
-        </td>
-        <td>
-            #if(x.get("PowerStatus") == null)
-            #else if(x.get("PowerStatus") ==0)
-            正常
-            #else if(x.get("PowerStatus") ==1)
-            故障
-            #end
-        </td>
-        <td class="rfid-data" data-rfid="#(x.Rfid1)"></td>
-        <td class="rfid-data" data-rfid="#(x.Rfid2)"></td>
-        <td class="rfid-data" data-rfid="#(x.Rfid3)"></td>
-        <td class="rfid-data" data-rfid="#(x.Rfid4)"></td>
-        <td class="rfid-data" data-rfid="#(x.Rfid5)"></td>
-        <td class="rfid-data" data-rfid="#(x.Rfid6)"></td>
-        <td class="rfid-data" data-rfid="#(x.Rfid7)"></td>
-        <td class="rfid-data" data-rfid="#(x.Rfid8)"></td>
-
-        <td>
-            <a href="#" class="edit operation-btn" data-title="编辑设备" data-edit-url="/xhzinfo/edit?id=#(x.id)">修改</a>
-            <a href="#" class="delete operation-btn" onclick="confirmDelete('#(x.id)')">删除</a>
-        </td>
-    </tr>
-    #end
-    </tbody>
-</table>
-
-<div class="pagination" style="color:#333;">
     #set(selectedRestaurantId = "")
-    #if(restaurantId!= null && restaurantId!= "")
+    #if(restaurantId != null && restaurantId != "")
     #set(selectedRestaurantId = restaurantId)
     #end
     #set(selectedAlarm = "")
@@ -275,8 +503,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body" id="modalBody">
-            </div>
+            <div class="modal-body" id="modalBody"></div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                 <button type="button" class="btn btn-primary" id="saveButton">保存</button>
@@ -286,133 +513,124 @@
 </div>
 
 <script>
-    var restaurants = [
-        #for (x: restaurants)
-    {
-        id: "#(x.id ? x.id : '')",
-            xiaohezi: "#(x.xiaohezi ? x.xiaohezi : '')",
-        name: "#(x.name ? x.name : '')"
-    }#if(x_has_next),#end
-    #end
-    ];
-
     function chooseName() {
-        var selectName = document.getElementById("companySelect").value;
-        console.log("companySelect: " + selectName);
-        var selectedCompany = restaurants.find(function (r) {
-            return r.id === selectName;
-        });
+        return document.getElementById("companySelect").value;
     }
+
     document.getElementById("companySelect").addEventListener("change", chooseName);
 
-    $('#searchButton').click(function (e) {
+    $("#searchButton").click(function (e) {
         e.preventDefault();
-        $('#searchForm').submit();
+        $("#searchForm").submit();
     });
 
     $(document).ready(function () {
-        $('#resetButton').click(function (e) {
+        $("#resetButton").click(function (e) {
             e.preventDefault();
-            $('#searchForm input[type="text"]').val('');
-            $('#companySelect').val('');
-            $('#alarmSelect').val('');
-            $('#searchForm').submit();
+            $("#companySelect").val("");
+            $("#alarmSelect").val("");
+            $("#searchForm").submit();
         });
 
-        $('.openModal').click(function (e) {
+        $(".openModal").click(function (e) {
             e.preventDefault();
-            var editUrl = $(this).data('edit-url');
+            var editUrl = $(this).data("edit-url");
             var that = this;
 
             $.get(editUrl, function (data) {
-                var title = $(that).data('title');
-                $('#myModalLabel').text(title);
-                $('#modalBody').html(data);
-                $('#myModal').modal('show');
-            }).fail(function() {
-                alert('加载编辑表单失败，请重试');
+                var title = $(that).data("title");
+                $("#myModalLabel").text(title);
+                $("#modalBody").html(data);
+                $("#myModal").modal("show");
+            }).fail(function () {
+                alert("加载编辑表单失败，请重试");
             });
         });
     });
 
-    function formatDate(timestamp) {
-        if (isNaN(timestamp)) return '无效时间';
+    function formatDate(timestampText) {
+        var timestamp = parseInt(timestampText, 10);
+        if (isNaN(timestamp)) {
+            return timestampText;
+        }
         var date = new Date(timestamp);
-        if (isNaN(date.getTime())) return '无效时间';
-
+        if (isNaN(date.getTime())) {
+            return timestampText;
+        }
         var year = date.getFullYear();
-        var month = ('0' + (date.getMonth() + 1)).slice(-2);
-        var day = ('0' + date.getDate()).slice(-2);
-        var hours = ('0' + date.getHours()).slice(-2);
-        var minutes = ('0' + date.getMinutes()).slice(-2);
-        var seconds = ('0' + date.getSeconds()).slice(-2);
-        return year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds;
+        var month = ("0" + (date.getMonth() + 1)).slice(-2);
+        var day = ("0" + date.getDate()).slice(-2);
+        var hours = ("0" + date.getHours()).slice(-2);
+        var minutes = ("0" + date.getMinutes()).slice(-2);
+        var seconds = ("0" + date.getSeconds()).slice(-2);
+        return year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds;
     }
 
-    var createdTimeElements = document.querySelectorAll('.created-time');
-    createdTimeElements.forEach(function(element) {
-        var timestamp = parseInt(element.textContent);
-        element.textContent = formatDate(timestamp);
+    var createdTimeElements = document.querySelectorAll(".created-time");
+    createdTimeElements.forEach(function (element) {
+        element.textContent = formatDate((element.textContent || "").trim());
     });
 
     function convertRfid(rfidStr) {
-        if (!rfidStr || typeof rfidStr !== 'string') {
-            return '';
+        if (!rfidStr || typeof rfidStr !== "string") {
+            return "";
         }
-
-        if (!rfidStr.includes('[')) {
-            return '';
+        if (!rfidStr.includes("[")) {
+            return "";
         }
 
         rfidStr = rfidStr.substring(1, rfidStr.length - 1);
-        const rfidArray = rfidStr.split(',').map(item => item.trim());
+        var rfidArray = rfidStr.split(",").map(function (item) {
+            return item.trim();
+        });
 
-        let firstNonZeroIndex = -1;
-        for (let i = 1; i < rfidArray.length; i++) {
-            if (rfidArray[i] !== '0' && rfidArray[i] !== '') {
+        var firstNonZeroIndex = -1;
+        for (var i = 1; i < rfidArray.length; i++) {
+            if (rfidArray[i] !== "0" && rfidArray[i] !== "") {
                 firstNonZeroIndex = i;
                 break;
             }
         }
-
         if (firstNonZeroIndex === -1) {
-            return '';
+            return "";
         }
 
-        const targetArray = rfidArray.slice(firstNonZeroIndex, firstNonZeroIndex + 7);
-        const hexArray = targetArray.map(value => {
-            const intValue = parseInt(value, 10) || 0;
-            return intValue.toString(16).padStart(2, '0').toUpperCase();
+        var targetArray = rfidArray.slice(firstNonZeroIndex, firstNonZeroIndex + 7);
+        var hexArray = targetArray.map(function (value) {
+            var intValue = parseInt(value, 10) || 0;
+            return intValue.toString(16).padStart(2, "0").toUpperCase();
         });
-
-        return hexArray.join('');
+        return hexArray.join("");
     }
 
-    window.addEventListener('DOMContentLoaded', () => {
-        document.querySelectorAll('.rfid-data').forEach(td => {
-            const originalData = td.dataset.rfid;
+    window.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".rfid-data").forEach(function (td) {
+            var originalData = td.dataset.rfid;
             td.textContent = convertRfid(originalData);
         });
     });
 
     function confirmDelete(id) {
         if (confirm("确定要删除该设备记录吗？此操作不可恢复！")) {
-            // 删除时携带当前筛选条件，保持分页状态
-            const restaurantId = document.getElementById('companySelect').value;
-            const alarm = document.getElementById('alarmSelect').value;
-            let url = "/xhzinfo/delete?id=" + id;
-            if (restaurantId) url += "&restaurantId=" + restaurantId;
-            if (alarm) url += "&alarm=" + alarm;
+            var restaurantId = document.getElementById("companySelect").value;
+            var alarm = document.getElementById("alarmSelect").value;
+            var url = "/xhzinfo/delete?id=" + id;
+            if (restaurantId) {
+                url += "&restaurantId=" + restaurantId;
+            }
+            if (alarm) {
+                url += "&alarm=" + alarm;
+            }
             window.location.href = url;
         }
     }
 
-    document.getElementById('saveButton').addEventListener('click', function () {
-        const form = document.getElementById('myForm');
+    document.getElementById("saveButton").addEventListener("click", function () {
+        var form = document.getElementById("myForm");
         if (form) {
             form.submit();
         } else {
-            alert('表单不存在，请刷新页面重试');
+            alert("表单不存在，请刷新页面重试");
         }
     });
 </script>

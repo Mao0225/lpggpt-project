@@ -1,173 +1,172 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" width="device-width, initial-scale=1.0">
-    <title>Edit Equipment</title>
-    <style scoped>
-        .container {
-            padding: 50px 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        input {
-            padding: 15px;
-            font-size: 18px;
-            border: 2px solid #a3bffa;
-            border-radius: 10px;
-            width: 100%;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: border-color 0.3s ease;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: #4c87c9;
-        }
-    </style>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>工单详情</title>
     <style>
-        /* 设置 #pagediv 的样式 */
-        #pagediv {
-            background-color: #f0f0f0;
-            color: black;
-            padding: 10px;
-            border: 2px solid #007bff;
+        body {
+            margin: 0;
+            background: #F8FAFC;
+            color: #1E293B;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
         }
 
-        /* 设置表格样式 */
-        table.list {
+        .form-container {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .form-title {
+            margin: 0 0 16px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E293B;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #E2E8F0;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px 20px;
+        }
+
+        .form-group {
+            margin: 0;
+        }
+
+        .form-group-full {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #475569;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .form-group input[type="text"],
+        .form-group select {
             width: 100%;
-            border-collapse: collapse;
+            padding: 10px 12px;
+            font-size: 14px;
+            color: #475569;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            background: #F8FAFC;
+            box-sizing: border-box;
         }
 
-        /* 设置表格表头样式 */
-        table.list th {
-            background-color: #add8e6;
-            color: black;
-            padding: 8px;
-            text-align: left;
-            border: 1px solid #ddd; /* 新增：添加边框 */
+        .form-group input[readonly],
+        .form-group select[disabled] {
+            cursor: default;
         }
 
-        /* 设置表格单元格样式 */
-        table.list td {
-            padding: 8px;
-            border: 1px solid #ddd; /* 修改：添加边框 */
-        }
+        @media (max-width: 768px) {
+            .form-container {
+                padding: 14px;
+            }
 
-        /* 设置表格隔行颜色 */
-        table.list tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-
-        table.list tr:nth-child(odd) {
-            background-color: #e0e0e0;
-        }
-
-        /* 设置鼠标悬停时表格行的颜色 */
-        table.list tr:hover {
-            background-color: #d3d3d3;
-        }
-
-        /* 新增样式：设置新建司机链接为黑色 */
-        #pagediv .add {
-            color: black;
-        }
-
-        /* 新增样式：设置输入框背景色为淡灰色 */
-        #pagediv input[type="text"] {
-            background-color: #f0f0f0;
-        }
-        /* 新增样式：设置 label 文字颜色为黑色 */
-        #pagediv label {
-            color: black;
-        }
-        #pagediv .add {
-            color: white;
-            background-color: #007bff;
-            padding: 6px 12px;
-            text-decoration: none;
-            display: inline-block;
-            border-radius: 5; /* 方方正正的边框 */
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
-
 <body>
-<div class="form_box">
-    <form id="Form">
-        <div>
-            <label>设备名称</label>
-            <input type="text" name="equipment_name" value="#(equipmentdetail.equipment_name)" />
+<div class="form-container">
+    <h1 class="form-title">工单详情</h1>
+    <form id="detailForm">
+        <div class="form-grid">
+            <div class="form-group">
+                <label>设备名称</label>
+                <input type="text" name="equipment_name" value="#(equipmentdetail.equipment_name)" readonly/>
+            </div>
+
+            <div class="form-group">
+                <label>记录类型</label>
+                <input type="text" name="kind" value="#(equipmentdetail.kind)" readonly/>
+            </div>
+
+            <div class="form-group">
+                <label>型号规格</label>
+                <input type="text" name="model" value="#(equipmentdetail.model)" readonly/>
+            </div>
+
+            <div class="form-group">
+                <label>投用日期</label>
+                <input type="text" name="useday" value="#(equipmentdetail.useday)" readonly/>
+            </div>
+
+            <div class="form-group">
+                <label>放置位置</label>
+                <input type="text" name="location" value="#(equipmentdetail.location)" readonly/>
+            </div>
+
+            <div class="form-group">
+                <label>生产厂家</label>
+                <input type="text" name="factory" value="#(equipmentdetail.factory)" readonly/>
+            </div>
+
+            <div class="form-group">
+                <label>报修时间</label>
+                <input type="text" name="reportday" value="#(equipmentdetail.reportday)" readonly/>
+            </div>
+
+            <div class="form-group">
+                <label>报修人员</label>
+                <input type="text" name="reporter" value="#(equipmentdetail.reporter)" readonly/>
+            </div>
+
+            <div class="form-group form-group-full">
+                <label>主要内容</label>
+                <input type="text" name="content" value="#(equipmentdetail.content)" readonly/>
+            </div>
+
+            <div class="form-group">
+                <label>维修人</label>
+                <input type="text" name="repairer" value="#(equipmentdetail.repairer)" readonly/>
+            </div>
+
+            <div class="form-group">
+                <label>联系电话</label>
+                <input type="text" name="phone" value="#(equipmentdetail.phone)" readonly/>
+            </div>
+
+            <div class="form-group form-group-full">
+                <label>处置过程</label>
+                <input type="text" name="process" value="#(equipmentdetail.process)" readonly/>
+            </div>
+
+            <div class="form-group">
+                <label>备件耗材</label>
+                <select id="fittOperateRecordsSelect" name="fittOperateRecords" disabled>
+                    #if(fittOperateRecords!= null && fittOperateRecords.size() > 0)
+                    #for(fittRecord : fittOperateRecords)
+                    <option value="#(fittRecord.name)--#(fittRecord.count)">#(fittRecord.name)--#(fittRecord.count)</option>
+                    #end
+                    #else
+                    <option value="">暂无备件耗材信息</option>
+                    #end
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>完成时间</label>
+                <input type="text" name="repairday" value="#(equipmentdetail.repairday)" readonly/>
+            </div>
+
+            <div class="form-group form-group-full">
+                <label>备注建议</label>
+                <input type="text" name="remark" value="#(equipmentdetail.remark)" readonly/>
+            </div>
         </div>
-        <div>
-            <label>记录类型</label>
-            <input type="text" name="kind" value="#(equipmentdetail.kind)" />
-        </div>
-        <div>
-            <label>型号规格</label>
-            <input type="text" name="model" value="#(equipmentdetail.model)" />
-        </div>
-        <div>
-            <label>投用日期</label>
-            <input type="text" name="useday" value="#(equipmentdetail.useday)" />
-        </div>
-        <div>
-            <label>放置位置</label>
-            <input type="text" name="location" value="#(equipmentdetail.location)" />
-        </div>
-        <div>
-            <label>生产厂家</label>
-            <input type="text" name="factory" value="#(equipmentdetail.factory)" />
-        </div>
-        <div>
-            <label>报修时间</label>
-            <input type="text" name="reportday" value="#(equipmentdetail.reportday)" />
-        </div>
-        <div>
-            <label>报修人员</label>
-            <input type="text" name="reporter" value="#(equipmentdetail.reporter)" />
-        </div>
-        <div>
-            <label>主要内容</label>
-            <input type="text" name="content" value="#(equipmentdetail.content)" />
-        </div>
-        <div>
-            <label>维修人</label>
-            <input type="text" name="repairer" value="#(equipmentdetail.repairer)" />
-        </div>
-        <div>
-            <label>联系电话</label>
-            <input type="text" name="phone" value="#(equipmentdetail.phone)" />
-        </div>
-        <div>
-            <label>处置过程</label>
-            <input type="text" name="process" value="#(equipmentdetail.process)" />
-        </div>
-        <!-- 新增的备件耗材展示部分，修改为下拉框形式 -->
-        <div>
-            <label>备件耗材</label>
-            <select id="fittOperateRecordsSelect" name="fittOperateRecords">
-                #if(fittOperateRecords!= null && fittOperateRecords.size() > 0)
-                #for(fittRecord : fittOperateRecords)
-                <option value="#(fittRecord.name)--#(fittRecord.count)">#(fittRecord.name)--#(fittRecord.count)</option>
-                #end
-                #else
-                <option value="">暂无备件耗材信息</option>
-                #end
-            </select>
-        </div>
-        <div>
-            <label>完成时间</label>
-            <input type="text" name="repairday" value="#(equipmentdetail.repairday)" />
-        </div>
-        <div>
-            <label>备注建议</label>
-            <input type="text" name="remark" value="#(equipmentdetail.remark)" />
-        </div>
-       </form>
+    </form>
 </div>
+</body>
+</html>

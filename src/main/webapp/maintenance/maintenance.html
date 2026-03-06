@@ -1,213 +1,362 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Equipment List</title>
+    <title>维护管理</title>
     <script src="../css/jquery-3.3.1.min.js"></script>
     <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css">
     <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="/css/lpg.css">
-
-    <style scoped>
-        .container {
-            padding: 50px 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        input {
-            padding: 15px;
-            font-size: 18px;
-            border: 2px solid #a3bffa;
-            border-radius: 10px;
-            width: 100%;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: border-color 0.3s ease;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: #4c87c9;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="../css/index.css">
 
     <style>
-        /* 设置 #pagediv 的样式 */
-        #pagediv {
-            background-color: #f0f0f0;
-            color: black;
-            padding: 10px;
+        /* 浅色商务风格 - 维护管理列表 */
+        body {
+            background: #F8FAFC;
+            color: #1E293B;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
         }
 
-        /* 设置表格样式 */
+        .page-container {
+            background: #F8FAFC;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        /* 搜索区域 */
+        #pagediv {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        #pagediv label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #475569;
+            white-space: nowrap;
+            margin: 0;
+        }
+
+        #pagediv input[type="text"],
+        #pagediv input[type="date"],
+        #pagediv select {
+            padding: 8px 12px;
+            font-size: 14px;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            background: #FFFFFF;
+            color: #1E293B;
+            min-width: 150px;
+            transition: all 0.15s ease;
+        }
+
+        #pagediv input[type="text"]:focus,
+        #pagediv input[type="date"]:focus,
+        #pagediv select:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        #pagediv input[type="submit"] {
+            background: #3B82F6;
+            color: #FFFFFF;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        #pagediv input[type="submit"]:hover {
+            background: #2563EB;
+        }
+
+        /* 表格样式 */
         table.list {
             width: 100%;
             border-collapse: collapse;
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            overflow: hidden;
         }
 
-        /* 设置表格表头样式 */
+        table.list thead tr {
+            background: #F8FAFC;
+        }
+
         table.list th {
-            background-color: #add8e6;
-            color: black;
-            padding: 8px;
+            background: #F8FAFC;
+            color: #475569;
+            font-size: 13px;
+            font-weight: 600;
             text-align: left;
-            border: 1px solid #ddd; /* 新增：添加边框 */
+            padding: 14px 16px;
+            border-bottom: 1px solid #E2E8F0;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
         }
 
-        /* 设置表格单元格样式 */
         table.list td {
-            padding: 8px;
-            border: 1px solid #ddd; /* 修改：添加边框 */
+            padding: 14px 16px;
+            font-size: 14px;
+            color: #1E293B;
+            border-bottom: 1px solid #F1F5F9;
+            vertical-align: middle;
         }
 
-        /* 设置表格隔行颜色 */
-        table.list tr:nth-child(even) {
-            background-color: #f2f2f2;
+        table.list tbody tr {
+            background: #FFFFFF;
+            transition: background 0.15s ease;
         }
 
-        table.list tr:nth-child(odd) {
-            background-color: #e0e0e0;
+        table.list tbody tr:nth-child(even) {
+            background: #F8FAFC;
         }
 
-        /* 设置鼠标悬停时表格行的颜色 */
-        table.list tr:hover {
-            background-color: #d3d3d3;
+        table.list tbody tr:hover {
+            background: #F1F5F9;
         }
 
-        /* 新增样式：设置新建司机链接为黑色 */
-        #pagediv .add {
-            color: black;
+        table.list tbody tr:last-child td {
+            border-bottom: none;
         }
 
-        /* 新增样式：设置输入框背景色为淡灰色 */
-        #pagediv input[type="text"] {
-            background-color: #f0f0f0;
+        /* 操作链接 */
+        table.list a {
+            color: #3B82F6;
+            text-decoration: none;
+            margin-right: 12px;
+            transition: color 0.15s ease;
         }
-        /* 新增样式：设置 label 文字颜色为黑色 */
-        #pagediv label {
-            color: black;
+
+        table.list a:hover {
+            color: #2563EB;
+            text-decoration: underline;
+        }
+
+        /* 分页样式 */
+        .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 20px;
+            color: #475569;
+        }
+
+        .pagination a,
+        .pagination span {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 36px;
+            height: 36px;
+            padding: 0 8px;
+            font-size: 14px;
+            border: 1px solid #E2E8F0;
+            border-radius: 6px;
+            color: #475569;
+            background: #FFFFFF;
+            text-decoration: none;
+            transition: all 0.15s ease;
+        }
+
+        .pagination a:hover {
+            background: #F8FAFC;
+            border-color: #CBD5E1;
+        }
+
+        .pagination .current-page {
+            background: #3B82F6;
+            color: #FFFFFF;
+            border-color: #3B82F6;
+        }
+
+        .pagination .disabled {
+            color: #94A3B8;
+            background: #F8FAFC;
+            cursor: not-allowed;
+        }
+
+        /* 模态框样式 */
+        .modal-content {
+            border: 1px solid #E2E8F0;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .modal-header {
+            background: #F8FAFC;
+            border-bottom: 1px solid #E2E8F0;
+            padding: 16px 20px;
+        }
+
+        .modal-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E293B;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .modal-footer {
+            background: #F8FAFC;
+            border-top: 1px solid #E2E8F0;
+            padding: 16px 20px;
+        }
+
+        .btn-default {
+            background: #FFFFFF;
+            color: #475569;
+            border: 1px solid #CBD5E1;
+        }
+
+        .btn-default:hover {
+            background: #F8FAFC;
+            border-color: #94A3B8;
+        }
+
+        .btn-primary {
+            background: #3B82F6;
+            color: #FFFFFF;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background: #2563EB;
+        }
+
+        @media (max-width: 768px) {
+            #pagediv {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            #pagediv input[type="text"],
+            #pagediv input[type="date"],
+            #pagediv select {
+                width: 100%;
+            }
+
+            table.list {
+                font-size: 13px;
+            }
+
+            table.list th,
+            table.list td {
+                padding: 10px 12px;
+            }
         }
     </style>
 </head>
 
 <body>
+<div class="page-container">
+    <div id="pagediv">
+        <form id="searchForm" action="/maintenance/maintenancelist" method="post" style="display: flex; align-items: center; flex-wrap: wrap; gap: 12px; width: 100%;">
 
-<div id="pagediv">
-    <form id="searchForm" action="/maintenance/maintenancelist" method="post">
+            <label>工单状态：</label>
+            <select id="step" name="step">
+                <option value="">--所有状态--</option>
+                <option value="提交">提交</option>
+                <option value="完成">完成</option>
+                <option value="验收">验收</option>
+                <option value="签字">签字</option>
+            </select>
 
-        <label>工单状态：</label>
-        <select id="step" name="step">
-            <option value="">--所有状态--</option>
-            <option value="提交">提交</option>
-            <option value="完成">完成</option>
-            <option value="验收">验收</option>
-            <option value="签字">签字</option>
-        </select>
+            <label>工单名称：</label>
+            <input type="text" name="maintenancename" value="#(maintenancename)" placeholder="请输入工单名称"/>
 
+            <label>工单种类：</label>
+            <select id="kind" name="kind">
+                <option value="">--所有种类--</option>
+                <option value="维修">维修</option>
+                <option value="维护">维护</option>
+            </select>
 
+            <label>报修时间：</label>
+            <input type="date" id="startTime" name="startTime" value="#(startTime)" />
 
-        <label>工单名称：</label>
-        <input type="text" name="maintenancename" value="#(maintenancename)" />
+            <label>结束时间：</label>
+            <input type="date" id="endTime" name="endTime" value="#(endTime)" />
 
-        <label>工单种类：</label>
-        <select id="kind" name="kind">
-            <option value="">--所有种类--</option>
-            <option value="维修">维修</option>
-            <option value="维护">维护</option>
-        </select>
+            <input value="搜索" type="submit">
+            <input type="submit" value="重置" name="refresh" />
+        </form>
+    </div>
 
-        <label>报修时间--开始时间：</label>
-        <input type="date" id="startTime" name="startTime" value="#(startTime)" />
+    <table class="list">
+        <thead>
+            <tr>
+                <th>序号</th>
+                <th>设备名称</th>
+                <th>记录类型</th>
+                <th>主要内容</th>
+                <th>报修时间</th>
+                <th>工单状态</th>
+                <th width="12%">操作</th>
+            </tr>
+        </thead>
+        <tbody>
+        #set(startIndex = (maintenancelist.pageNumber - 1) * maintenancelist.pageSize + 1)
+        #for(x : maintenancelist.getList())
+        <tr>
+            <td>#(startIndex++)</td>
+            <td><a href="#" class="name openModal" data-title="查看设备详情" data-edit-url="/maintenance/equipmentinfo?id=#(x.equipmentid)">#(x.name!= null? x.name : "设备数据已移除")</a></td>
+            <td>#(x.name!= null? x.kind : "设备数据已移除")</td>
+            <td>#(x.name!= null? x.content : "设备数据已移除")</td>
+            <td>#(x.name!= null? x.reportday : "设备数据已移除")</td>
+            <td>
+                #if(x.name != null)
+                #if(x.step == "提交")
+                <a href="/maintenance/complete?id=#(x.id)&eid=#(x.eid)">提交</a>
+                #else
+                #(x.step)
+                #end
+                #else
+                设备数据已移除
+                #end
+            </td>
+            <td style="text-align:center">
+                <a href="#" class="repairinfo openModal" data-title="设备维修信息" data-edit-url="/maintenance/repairinfo?id=#(x.id)&eid=#(x.eid)">完成</a>
+            </td>
+        </tr>
+        #end
+        </tbody>
+    </table>
 
-        <label>结束时间：</label>
-        <input type="date" id="endTime" name="endTime" value="#(endTime)" />
+    <div class="pagination">
+        #@paginate(maintenancelist.pageNumber, maintenancelist.totalPage, "/maintenance/maintenancelist?step=" + (step!= null? step : "") + "&equipmentname=" + (equipmentname!= null? equipmentname : "") + "&maintenancename=" + (maintenancename!= null? maintenancename : "") + "&kind=" + (kind!= null? kind : "") + "&startTime=" + (startTime!= null? startTime : "") + "&endTime=" + (endTime!= null? endTime : "") + "&page=")
+    </div>
 
-        <input value="提交" type="submit">
-        <input type="submit" value="重置" name="refresh" />
-        <script>
-            // 获取所有名为'refresh'的按钮元素
-            var buttons = document.getElementsByName("refresh");
-            for (var i = 0; i < buttons.length; i++) {
-                buttons[i].addEventListener('click', function () {
-                    // 获取搜索表单内所有的文本输入框
-                    var inputs = document.querySelectorAll('#searchForm input[type=text]');
-                    for (var j = 0; j < inputs.length; j++) {
-                        inputs[j].value = "";
-                    }
-                    // 提交表单，触发重新查询并刷新页面
-                    document.getElementById('searchForm').submit();
-                });
-            }
-        </script>
-    </form>
-</div>
-
-<table class="list">
-    <tbody>
-    <tr>
-        <th>NO</th>
-        <th>设备名称</th>
-        <th>记录类型</th>
-        <th>主要内容</th>
-        <th>报修时间</th>
-        <th>工单状态</th>
-        <th width="12%">完成</th>
-    </tr>
-    #set(startIndex = (maintenancelist.pageNumber - 1) * maintenancelist.pageSize + 1)
-    #for(x : maintenancelist.getList())
-    <tr>
-        <td>#(startIndex++)</td>
-        <!-- 判断x.name是否为空，若为空则整行对应单元格都显示"设备数据已移除" -->
-        <td><a href="#" class="name openModal" data-title="查看设备详情" data-edit-url="/maintenance/equipmentinfo?id=#(x.equipmentid)">#(x.name!= null? x.name : "设备数据已移除")</a></td>
-        <td>#(x.name!= null? x.kind : "设备数据已移除")</td>
-        <td>#(x.name!= null? x.content : "设备数据已移除")</td>
-        <td>#(x.name!= null? x.reportday : "设备数据已移除")</td>
-        <td>
-            #if(x.name != null)
-            #if(x.step == "提交")
-            <a href="/maintenance/complete?id=#(x.id)&eid=#(x.eid)">提交</a>
-            #else
-            #(x.step)
-            #end
-            #else
-            设备数据已移除
-            #end
-        </td>
-        <td style="text-align:left">
-            &nbsp;&nbsp;  <a href="#" class="repairinfo openModal" data-title="设备维修信息" data-edit-url="/maintenance/repairinfo?id=#(x.id)&eid=#(x.eid)">完成</a>
-        </td>
-    </tr>
-    #end
-
-    </tbody>
-</table>
-
-<div class="pagination" style="color:#DDDDDD;">
-    #@paginate(maintenancelist.pageNumber, maintenancelist.totalPage, "/maintenance/maintenancelist?step=" + (step!= null? step : "") + "&equipmentname=" + (equipmentname!= null? equipmentname : "") + "&maintenancename=" + (maintenancename!= null? maintenancename : "") + "&kind=" + (kind!= null? kind : "") + "&startTime=" + (startTime!= null? startTime : "") + "&endTime=" + (endTime!= null? endTime : "") + "&page=")
 </div>
 
 <script>
-    // 确认删除函数，弹出确认框让用户确认是否删除
     function confirmDelete(id) {
-        var result = confirm("确定要删除吗？");
-        if (result) {
-            // 如果用户点击确定，跳转到对应的删除链接，向后端发送删除请求（假设后端接收设备id作为参数）
+        if (confirm("确定要删除吗？")) {
             window.location.href = "/GasStationStaff/delete/" + id;
-        } else {
-            // 如果用户点击取消，不执行任何操作
-            return false;
         }
     }
+
     $('#searchButton').click(function (e) {
         e.preventDefault();
         $('#searchForm').submit();
     });
 
-
-    // 点击编辑按钮的事件处理函数，用于弹出编辑模态框
     $(document).ready(function () {
         $('.openModal').click(function (e) {
             e.preventDefault();
@@ -217,23 +366,30 @@
             $.get(editUrl, function (data) {
                 var title = $(that).data('title');
                 $('#myModalLabel').text(title);
-
-                // 清空模态框主体内容
                 $('#modalBody').html(data);
                 $('#myModal').modal('show');
             });
         });
 
-        // 修改点击“完成”按钮的事件处理逻辑，使其跳转到complete.html页面
         $('.complete').click(function (e) {
             e.preventDefault();
-            // 获取当前按钮对应的工单id（假设数据绑定在data属性中，这里取id值，你可根据实际情况调整）
             var id = $(this).data('edit-url').split('=')[1];
-            // 构建跳转到complete.html页面的URL，可根据实际情况添加更多参数传递给complete.html页面，这里示例简单跳转
             window.location.href = "complete.html?id=" + id;
         });
     });
 
+    // 重置按钮处理
+    var buttons = document.getElementsByName("refresh");
+    for (var i = 0; i < buttons.length; i++) {
+        buttons[i].addEventListener('click', function (e) {
+            e.preventDefault();
+            var inputs = document.querySelectorAll('#searchForm input[type=text], #searchForm input[type=date]');
+            for (var j = 0; j < inputs.length; j++) {
+                inputs[j].value = "";
+            }
+            document.getElementById('searchForm').submit();
+        });
+    }
 </script>
 
 <!-- 模态框结构 -->
@@ -241,23 +397,27 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="myModalLabel">模态窗口标题</h4>
+                <h4 class="modal-title" id="myModalLabel">模态窗口</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             </div>
             <div class="modal-body" id="modalBody">
-                <!-- 这里将会加载从后端获取的表单内容，用于编辑操作 -->
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                 <button type="button" class="btn btn-primary" id="saveButton">保存</button>
-                <script>
-                    document.getElementById('saveButton').addEventListener('click', function () {
-                        document.getElementById('myForm').submit();
-                    });
-                </script>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    document.getElementById('saveButton').addEventListener('click', function () {
+        var form = document.getElementById('myForm');
+        if (form) {
+            form.submit();
+        }
+    });
+</script>
 
 </body>
 

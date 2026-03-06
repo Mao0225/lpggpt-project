@@ -1,55 +1,130 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Equipment Repair</title>
+    <title>设备维修</title>
     <style>
+        body {
+            margin: 0;
+            background: #F8FAFC;
+            color: #1E293B;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+        }
+
+        .form_box {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .form_box form {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form_box label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #475569;
+            margin: 0;
+        }
+
+        .form_box input[type="text"],
+        .form_box input[type="date"],
+        .form_box select,
+        .form_box textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            background: #FFFFFF;
+            color: #1E293B;
+            font-size: 14px;
+            transition: all 0.15s ease;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+
+        .form_box textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form_box input:focus,
+        .form_box select:focus,
+        .form_box textarea:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form_box input[readonly] {
+            background: #F8FAFC;
+            color: #64748B;
+        }
+
+        @media (max-width: 768px) {
+            .form_box {
+                padding: 14px;
+            }
+
+            .form_box form {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
-
 <body>
 <div class="form_box">
-    <form id="myForm" >
-<!--        <input type="hidden" name="equipment.id" value="#(equipment.id??)" />-->
-        <!-- 添加隐藏的input元素来传递companyid -->
-        <input type="hidden" name="maintenance.companyid" value="#(maintenanceInfo.companyid)" />
-        <!-- 添加隐藏的input元素来传递equipmentid -->
-        <input type="hidden" name="maintenance.equipmentid" value="#(maintenanceInfo.id)" />
-        <!-- 将maintenance.step的值固定设置为字符串“完成” -->
-        <input type="hidden" name="maintenance.step" value="提交" />
-        <!-- 添加隐藏的input元素来传递weiter -->
-        <input type="hidden" name="maintenance.writer" value="#(maintenanceInfo.writer)" />
-        <!-- 添加隐藏的input元素来传递writetime -->
-        <input type="hidden" name="maintenance.writetime" value="#(maintenanceInfo.writetime)" />
-        <!-- 添加隐藏的input元素来传递delete_time -->
-        <input type="hidden" name="maintenance.delete_time" value="#(maintenanceInfo.delete_time)" />
-        <div>
+    <form id="myForm">
+        <input type="hidden" name="maintenance.companyid" value="#(maintenanceInfo.companyid)">
+        <input type="hidden" name="maintenance.equipmentid" value="#(maintenanceInfo.id)">
+        <input type="hidden" name="maintenance.step" value="提交">
+        <input type="hidden" name="maintenance.writer" value="#(maintenanceInfo.writer)">
+        <input type="hidden" name="maintenance.writetime" value="#(maintenanceInfo.writetime)">
+        <input type="hidden" name="maintenance.delete_time" value="#(maintenanceInfo.delete_time)">
+
+        <div class="form-group">
             <label>设备名称</label>
-            <input type="text" name="maintenance.name"  value="#(maintenanceInfo.name)" readonly />
+            <input type="text" name="maintenance.name" value="#(maintenanceInfo.name)" readonly>
         </div>
-        <div>
+
+        <div class="form-group">
             <label>记录类型</label>
             <select name="maintenance.kind">
                 <option value="维护">维护</option>
                 <option value="维修">维修</option>
             </select>
         </div>
-        <div class="text-input-div">
+
+        <div class="form-group">
             <label>报修日期</label>
-            <input type="date" name="maintenance.reportday" />
+            <input type="date" name="maintenance.reportday">
         </div>
-        <div>
+
+        <div class="form-group">
             <label>报修人员</label>
-            <input type="text" name="maintenance.reporter" value="" />
+            <input type="text" name="maintenance.reporter" value="">
         </div>
-        <div>
+
+        <div class="form-group full-width">
             <label>主要内容</label>
             <textarea name="maintenance.content"></textarea>
         </div>
     </form>
 </div>
 </body>
-
 </html>

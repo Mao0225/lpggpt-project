@@ -1,49 +1,93 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <title>员工修改</title>
+    <style>
+        body {
+            background: #F8FAFC;
+            color: #1E293B;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .form-container {
+            background: #FFFFFF;
+            padding: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #475569;
+            margin-bottom: 8px;
+        }
+
+        .form-group input[type="text"],
+        .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            font-size: 14px;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            background: #FFFFFF;
+            color: #1E293B;
+            transition: all 0.15s ease;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        ::placeholder {
+            color: #94A3B8;
+        }
+    </style>
 </head>
 <body>
-<div class="form_box">
+<div class="form-container">
     <form action="/GasStationStaff/update" method="post" id="myForm">
         <input type="hidden" name="GasStationStaff.id" value="#(GasStationStaff.id??)" />
-        <div>
-            <label >员工编号</label>
-            <input type="text" name="GasStationStaff.staff_id" value="#(GasStationStaff.staff_id)" />
+
+        <div class="form-group">
+            <label>员工编号</label>
+            <input type="text" name="GasStationStaff.staff_id" value="#(GasStationStaff.staff_id)" placeholder="请输入员工编号" />
         </div>
-        <div>
-            <label >员工名称</label>
-            <input type="text" name="GasStationStaff.staff_name" value="#(GasStationStaff.staff_name)" />
+
+        <div class="form-group">
+            <label>员工名称</label>
+            <input type="text" name="GasStationStaff.staff_name" value="#(GasStationStaff.staff_name)" placeholder="请输入员工名称" />
         </div>
-        <div>
+
+        <div class="form-group">
             <label>手机号码</label>
-            <input type="text" name="GasStationStaff.telephone" value="#(GasStationStaff.telephone)" />
+            <input type="text" name="GasStationStaff.telephone" value="#(GasStationStaff.telephone)" placeholder="请输入手机号码" />
         </div>
-        <div>
+
+        <div class="form-group">
             <label>密码</label>
-            <input type="text" name="GasStationStaff.password" value="#(GasStationStaff.password)" />
+            <input type="text" name="GasStationStaff.password" value="#(GasStationStaff.password)" placeholder="请输入密码" />
         </div>
-        <!--下拉框-->
-        <div>
-            <label >归属气站</label>
-            <select name="GasStationStaff.station_id" style="border-radius: 5px;background-color: white ">
+
+        <div class="form-group">
+            <label>归属气站</label>
+            <select name="GasStationStaff.station_id">
                 #for ( x: gasStations)
                 <option value="#(x.station_id)" #(x.station_id == GasStationStaff.station_id ? "selected" : "")>#(x.stationName)</option>
                 #end
             </select>
-
         </div>
     </form>
-    <input hidden id="stationId" value="#(GasStationStaff.stationId)">
 </div>
-</body >
-<!--下拉框的回显 获取stationid从而在option中比对-->
-<script>
-    var stationId = document.getElementById("stationId").value;
-    var elementById = document.getElementById(stationId);
-    if (elementById){
-        elementById.selected = true;
-    }
-</script>
+</body>
 </html>

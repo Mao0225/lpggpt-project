@@ -1,53 +1,100 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新增加气站</title>
+    <style>
+        body {
+            background: #F8FAFC;
+            color: #1E293B;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .form-container {
+            background: #FFFFFF;
+            padding: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #475569;
+            margin-bottom: 8px;
+        }
+
+        .form-group input[type="text"],
+        .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            font-size: 14px;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            background: #FFFFFF;
+            color: #1E293B;
+            transition: all 0.15s ease;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        ::placeholder {
+            color: #94A3B8;
+        }
+    </style>
 </head>
-<title>新增加气站</title>
 <body>
-<h1>
-</h1>
-<div class="form_box">
+<div class="form-container">
     <form action="/GasStation/save" method="post" id="myForm">
-        <div>
-            <label >加气站编号</label>
-            <input type="text" name="gasStation.stationId" value=""  />
+        <div class="form-group">
+            <label>加气站编号</label>
+            <input type="text" name="gasStation.stationId" value="" placeholder="请输入加气站编号" />
         </div>
 
-        <div>
-            <label >加气站名字</label>
-            <input type="text" name="gasStation.stationName" value=""  />
+        <div class="form-group">
+            <label>加气站名字</label>
+            <input type="text" name="gasStation.stationName" value="" placeholder="请输入加气站名字" />
         </div>
 
-        <div>
-            <label >加气站地址</label>
-            <input type="text" name="gasStation.address" value=""  />
+        <div class="form-group">
+            <label>加气站地址</label>
+            <input type="text" name="gasStation.address" value="" placeholder="请输入加气站地址" />
         </div>
 
-        <div>
-            <label >法人姓名</label>
-            <input type="text" name="gasStation.legalPerson" value=""  />
+        <div class="form-group">
+            <label>法人姓名</label>
+            <input type="text" name="gasStation.legalPerson" value="" placeholder="请输入法人姓名" />
         </div>
 
-        <div>
-            <label >加气站联系方式</label>
-            <input type="text" name="gasStation.telephone" value=""  />
+        <div class="form-group">
+            <label>加气站联系方式</label>
+            <input type="text" name="gasStation.telephone" value="" placeholder="请输入联系方式" />
         </div>
 
-        <div>
-            <label >加气站密码</label>
-            <input type="text" name="gasStation.password" value=""  />
+        <div class="form-group">
+            <label>加气站密码</label>
+            <input type="text" name="gasStation.password" value="" placeholder="请输入密码" />
         </div>
-        <!-- 在现有字段后添加状态选择 -->
-        <div>
+
+        <div class="form-group">
             <label>状态</label>
-            <select name="gasStation.status" value="10">  <!-- 默认正常上传 -->
+            <select name="gasStation.status">
                 <option value="10" selected>正常上传</option>
                 <option value="0">不上传</option>
             </select>
         </div>
-
     </form>
 </div>
 </body>

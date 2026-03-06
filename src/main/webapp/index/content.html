@@ -1,28 +1,46 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Content</title>
+	<title>内容区域</title>
 	<!-- Add your custom stylesheets and scripts here -->
 	<style>
-		/* Add your custom CSS styles here */
+		/* 工业极简主义风格 - 内容区域 */
 		body {
 			margin: 0;
 			padding: 0;
-
+			background-color: #111827; /* 主背景色 */
+			font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+			color: #F9FAFB; /* 主要文字色 */
 		}
 		#content {
-			padding: 20px;
+			padding: 80px 20px;
 			text-align: center;
-			font-size: 24px;
-			color:  #f0bf00;
+			font-size: 28px;
+			font-weight: 700;
+			line-height: 1.5;
+			max-width: 800px;
+			margin: 0 auto;
+		}
+		#content .subtitle {
+			font-size: 16px;
+			color: #9CA3AF; /* 次要文字色 */
+			margin-top: 24px;
+			font-weight: 500;
+			letter-spacing: 1px;
+		}
+		#content .highlight {
+			color: #06B6D4; /* 电光青 - 数据高亮色 */
+			font-family: 'JetBrains Mono', 'Roboto Mono', monospace;
+			font-weight: 600;
 		}
 	</style>
 </head>
 <body>
 <div id="content">
-	奉天数智科技有限公司-智慧化 LPG 运行平台
+	奉天数智科技有限公司 - <span class="highlight">智慧化 LPG 运行平台</span>
+	<div class="subtitle">安全 · 高效 · 智能 · 可靠</div>
 </div>
 </body>
 </html>

@@ -1,23 +1,114 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-<title>Content</title>
-<body>
-<h1>
-</h1>
-<div class="form_box">
+    <title>编辑绑定人</title>
+    <style>
+        body {
+            background: #F8FAFC;
+            color: #1E293B;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            margin: 0;
+        }
+
+        .form-container {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            padding: 24px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 0;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #475569;
+            margin-bottom: 8px;
+        }
+
+        .required {
+            color: #EF4444;
+            margin-right: 4px;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="file"] {
+            width: 100%;
+            padding: 10px 14px;
+            font-size: 14px;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            background: #FFFFFF;
+            color: #1E293B;
+            transition: all 0.15s ease;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .image-upload {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .image-upload img {
+            width: 96px;
+            height: 96px;
+            border-radius: 8px;
+            border: 1px solid #E2E8F0;
+            object-fit: cover;
+            cursor: pointer;
+            background: #F8FAFC;
+        }
+
+        .upload-tip {
+            font-size: 12px;
+            color: #64748B;
+        }
+
+        @media (max-width: 768px) {
+            .form-container {
+                padding: 16px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+        }
+    </style>
     <script>
         function uploadFile(event, inputElementId) {
-            event.preventDefault(); // 阻止默认的表单提交行为
+            event.preventDefault();
             var fileInput = document.getElementById(inputElementId);
             var file = fileInput.files[0];
+            if (!file) {
+                return;
+            }
+
             var formData = new FormData();
             formData.append('file', file);
 
-            // 显示选定的图片
             var preview = document.getElementById(inputElementId + 'Preview');
             preview.src = URL.createObjectURL(file);
 
@@ -27,7 +118,6 @@
             })
                 .then(response => response.json())
                 .then(data => {
-                    console.log('File uploaded successfully. Local URL is', data.url);
                     var urlInput = document.getElementById(inputElementId + 'Url');
                     urlInput.value = data.url;
                 })
@@ -35,54 +125,66 @@
                     console.error('Error:', error);
                 });
         }
-
     </script>
+</head>
+<body>
+<div class="form-container">
     <form action="/bangdingren/update" method="post" id="myForm">
-        <input type="hidden" name="bangdingren.id" value="#(bangdingren.id??)" />
-        <div>
-            <label>培训证照片</label>
-            <div class="image-upload">
-                <label for="trainImageInput">
-                    <img id="trainImageInputPreview" src="#(bangdingren.train_certificate_image_url)" alt="点击添加图片" title="点击添加图片" style="width: 100px; height: 100px" />
-                </label>
-                <input type="file" id="trainImageInput" name="train_certificate_image_url" onchange="uploadFile(event, 'trainImageInput')" accept="image/jpeg, image/png" style="display: none;" />
+        <input type="hidden" name="bangdingren.id" value="#(bangdingren.id??)">
+
+        <div class="form-grid">
+            <div class="form-group full-width">
+                <label>培训证照片</label>
+                <div class="image-upload">
+                    <label for="trainImageInput">
+                        <img id="trainImageInputPreview" src="#(bangdingren.train_certificate_image_url)" alt="点击添加图片" title="点击添加图片">
+                    </label>
+                    <input type="file" id="trainImageInput" name="train_certificate_image_url" onchange="uploadFile(event, 'trainImageInput')" accept="image/jpeg, image/png" style="display:none;">
+                    <span class="upload-tip">点击图片上传 JPG/PNG</span>
+                </div>
+                <input type="hidden" id="trainImageInputUrl" name="bangdingren.train_certificate_image_url" value="#(bangdingren.train_certificate_image_url)">
             </div>
-            <input type="hidden" id="trainImageInputUrl" name="bangdingren.train_certificate_image_url" value="#(bangdingren.train_certificate_image_url)" />
-        </div>
-        <div>
-            <label>绑定人姓名</label>
-            <input type="text" name="bangdingren.name" value="#(bangdingren.name)" />
-        </div>
-        <div>
-            <label>账号密码</label>
-            <input type="text" name="bangdingren.psw" value="#(bangdingren.psw)" />
-        </div>
-        <div>
-            <label>联系方式</label>
-            <input type="text" name="bangdingren.telphone" value="#(bangdingren.telphone)" />
-        </div>
-        <div>
-            <label>出生日期</label>
-            <input type="text" name="bangdingren.chushengriqi" value="#(bangdingren.chushengriqi)" />
-        </div>
-        <div>
-            <label>身份证号</label>
-            <input type="text" name="bangdingren.identity_card_no" value="#(bangdingren.identity_card_no)" />
-        </div>
-        <div>
-            <label>培训证号</label>
-            <input type="text" name="bangdingren.train_certificate_no" value="#(bangdingren.train_certificate_no)" />
-        </div>
-        <div>
-            <label>培训证有效期</label>
-            <input type="text" name="bangdingren.train_certificate_indate" value="#(bangdingren.train_certificate_indate)" />
-        </div>
 
-        <div>
-            <label>操作标识</label>
-            <input type="text" name="bangdingren.update_sign" value="#(bangdingren.update_sign)" />
-        </div>
+            <div class="form-group">
+                <label><span class="required">*</span>绑定人姓名</label>
+                <input type="text" name="bangdingren.name" value="#(bangdingren.name)">
+            </div>
 
+            <div class="form-group">
+                <label>账号密码</label>
+                <input type="text" name="bangdingren.psw" value="#(bangdingren.psw)">
+            </div>
+
+            <div class="form-group">
+                <label>联系方式</label>
+                <input type="text" name="bangdingren.telphone" value="#(bangdingren.telphone)">
+            </div>
+
+            <div class="form-group">
+                <label>出生日期</label>
+                <input type="text" name="bangdingren.chushengriqi" value="#(bangdingren.chushengriqi)" placeholder="yyyy-mm-dd">
+            </div>
+
+            <div class="form-group">
+                <label>身份证号</label>
+                <input type="text" name="bangdingren.identity_card_no" value="#(bangdingren.identity_card_no)">
+            </div>
+
+            <div class="form-group">
+                <label>培训证号</label>
+                <input type="text" name="bangdingren.train_certificate_no" value="#(bangdingren.train_certificate_no)">
+            </div>
+
+            <div class="form-group">
+                <label>培训证有效期</label>
+                <input type="text" name="bangdingren.train_certificate_indate" value="#(bangdingren.train_certificate_indate)" placeholder="yyyy-mm-dd">
+            </div>
+
+            <div class="form-group">
+                <label>操作标识</label>
+                <input type="text" name="bangdingren.update_sign" value="#(bangdingren.update_sign)">
+            </div>
+        </div>
     </form>
 </div>
 </body>

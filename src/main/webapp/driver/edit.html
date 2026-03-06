@@ -1,175 +1,335 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Content</title>
+    <title>编辑司机</title>
     <style>
-        .image-upload > label > img {
-            width: 150px;  /* 调整为你需要的大小 */
-            height: 100px; /* 调整为你需要的大小 */
+        body {
+            margin: 0;
+            background: #F8FAFC;
+            color: #1E293B;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+        }
+
+        .page-container {
+            padding: 20px;
+        }
+
+        .form-container {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            padding: 24px;
+        }
+
+        .form-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E293B;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #E2E8F0;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 0;
+        }
+
+        .form-group-full {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #475569;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .required {
+            color: #EF4444;
+            margin-right: 4px;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="date"] {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            background: #FFFFFF;
+            color: #1E293B;
+            font-size: 14px;
+            box-sizing: border-box;
+            transition: all 0.15s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .image-upload label {
+            width: 132px;
+            height: 88px;
+            border: 2px dashed #CBD5E1;
+            border-radius: 6px;
+            background: #F8FAFC;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
+            overflow: hidden;
+            transition: all 0.15s ease;
+        }
+
+        .image-upload label:hover {
+            border-color: #3B82F6;
+            background: #F1F5F9;
+        }
+
+        .image-upload img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .action-row {
+            margin-top: 24px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            border: none;
+            transition: all 0.15s ease;
+        }
+
+        .btn-primary {
+            background: #3B82F6;
+            color: #FFFFFF;
+        }
+
+        .btn-primary:hover {
+            background: #2563EB;
+        }
+
+        .btn-secondary {
+            background: #FFFFFF;
+            color: #475569;
+            border: 1px solid #CBD5E1;
+        }
+
+        .btn-secondary:hover {
+            background: #F8FAFC;
+            border-color: #94A3B8;
+            color: #334155;
+            text-decoration: none;
+        }
+
+        @media (max-width: 768px) {
+            .page-container {
+                padding: 12px;
+            }
+
+            .form-container {
+                padding: 16px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .action-row {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
         }
     </style>
-    <script>
-        function uploadFile(inputElementId) {
-            var fileInput = document.getElementById(inputElementId);
-            var file = fileInput.files[0];
-            var formData = new FormData();
-            formData.append('file', file);
-
-            // 显示选定的图片
-            var preview = document.getElementById(inputElementId + 'Preview');
-            preview.src = URL.createObjectURL(file);
-
-            fetch("/driver/upload", {
-                method: 'POST',
-                body: formData
-            })
-                .then(response => response.json())
-
-                .then(data => {
-                    console.log('File uploaded successfully. Local URL is', data.url);
-                    var urlInput = document.getElementById(inputElementId + 'Url');
-                    urlInput.value = data.url;
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-        }
-
-    </script>
 </head>
 <body>
-
-<div class="form_box">
-        <form action="/driver/update" method="post">
-            <input type="hidden" name="driver.id" value="#(driver.id??)" />
-            <div>
-                <label style="display: inline-block; width: 115px;">姓名:</label>
-                <input type="text" id="drivername" value="#(driver != null ? driver.drivername : '')" style="border-radius: 5px;background-color: #fbf0c5"/>#(drivername)
-            </div>
-            <div>
-                <label style="display: inline-block; width: 115px;">性别:</label>
-                <input type="text" id="driversex" value="#(driver != null ? driver.driversex : '')" style="border-radius: 5px;background-color: #fbf0c5"/>#(driversex)
-            </div>
-            <div>
-                <label style="display: inline-block; width: 115px;">出生日期:</label>
-                <input type="date" id="driverbirthday" value="#(driver != null ? driver.driverbirthday : '')" style="border-radius: 5px;background-color: #fbf0c5"/>#(driverbirthday)
-            </div>
-            <div>
-                <label style="display: inline-block; width: 115px;">手机号:</label>
-                <input type="text" id="driverphone" value="#(driver != null ? driver.driverphone : '')" style="border-radius: 5px;background-color: #fbf0c5"/>#(driverphone)
-            </div>
-            <div>
-                <label style="display: inline-block; width: 115px;">车牌号:</label>
-                <input type="text" id="identity_card_no" value="#(driver != null ? driver.identity_card_no : '')" />#(identity_card_no)
-            </div>
-            <div>
-                <label style="display: inline-block; width: 115px;">车型:</label>
-                <input type="text" id="carname" value="#(driver != null ? driver.carname : '')" style="border-radius: 5px;background-color: #fbf0c5"/>#(carname)
-            </div>
-                <label style="display: inline-block; width: 115px;">颜色:</label>
-                <input type="text" id="carcolor" value="#(driver != null ? driver.carcolor : '')" style="border-radius: 5px;background-color: #fbf0c5"/>#(carcolor)
-            <div>
-                <label style="display: inline-block; width: 115px;">生产日期:</label>
-                <input type="text" id="shengchanriqi" value="#(driver != null ? driver.shengchanriqi : '')" style="border-radius: 5px;background-color: #fbf0c5"/>#(shengchanriqi)
-            </div>
-
-            <div>
-                <label style="display: inline-block; width: 115px;">车辆照片</label>
-                <div class="image-upload">
-                    <label for="carImageInput">
-                        <img id="carImageInputPreview" src="/upload/#(driver.car_image_url)" alt="点击添加图片" title="点击添加图片" />
-                    </label>
-                    <input type="file" id="carImageInput" name="car_image_file" onchange="uploadFile('carImageInput')" accept="image/jpeg, image/png" style="display: none;" />
+<div class="page-container">
+    <div class="form-container">
+        <div class="form-title">编辑司机</div>
+        <form id="driverForm" action="/driver/update" method="post">
+            <input type="hidden" name="driver.id" value="#(driver.id??)">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label><span class="required">*</span>司机姓名</label>
+                    <input type="text" name="driver.drivername" value="#(driver.drivername??)" required>
                 </div>
-                <input type="hidden" id="carImageInputUrl" name="driver.car_image_url" />
-            </div>
-
-            <div>
-                <label style="display: inline-block; width: 115px;">驾驶证照片</label>
-                <div class="image-upload">
-                    <label for="driverLicenseImageInput">
-                        <img id="driverLicenseImageInputPreview" src="/upload/#(driver.driver_license_image_url)" alt="点击添加图片" title="点击添加图片" />
-                    </label>
-                    <input type="file" id="driverLicenseImageInput" name="driver_license_image_file" onchange="uploadFile('driverLicenseImageInput')" accept="image/jpeg, image/png" style="display: none;" />
+                <div class="form-group">
+                    <label><span class="required">*</span>联系方式</label>
+                    <input type="text" name="driver.driverphone" value="#(driver.driverphone??)" required>
                 </div>
-                <input type="hidden" id="driverLicenseImageInputUrl" name="driver.driver_license_image_url" />
-            </div>
-
-            <div>
-                <label style="display: inline-block; width: 115px;">危货证件号</label>
-                <input type="text" name="driver.risk_cargo_license_no" value="" style="border-radius: 5px;background-color: #fbf0c5"/>
-            </div>
-            <div>
-                <label style="display: inline-block; width: 115px;">危货证件有效期</label>
-                <input type="date" name="driver.risk_cargo_license_indate" value="" style="border-radius: 5px;background-color: #fbf0c5"/>
-            </div>
-
-            <div>
-                <label style="display: inline-block; width: 115px;">危货证件照片</label>
-                <div class="image-upload">
-                    <label for="riskCargoLicenseImageUrlInput">
-                        <img id="riskCargoLicenseImageUrlInputPreview" src="/upload/#(driver.risk_cargo_license_image_oss_id)" alt="点击添加图片" title="点击添加图片" />
-                    </label>
-                    <input type="file" id="riskCargoLicenseImageUrlInput" name="risk_cargo_license_image_file" onchange="uploadFile('riskCargoLicenseImageUrlInput')" accept="image/jpeg, image/png" style="display: none;" />
+                <div class="form-group">
+                    <label>性别</label>
+                    <input type="text" name="driver.driversex" value="#(driver.driversex??)">
                 </div>
-                <input type="hidden" id="riskCargoLicenseImageUrlInputUrl" name="driver.risk_cargo_license_image_url" />
+                <div class="form-group">
+                    <label>出生日期</label>
+                    <input type="date" name="driver.driverbirthday" value="#(driver.driverbirthday??)">
+                </div>
+                <div class="form-group">
+                    <label>身份证号</label>
+                    <input type="text" name="driver.identity_card_no" value="#(driver.identity_card_no??)">
+                </div>
+                <div class="form-group">
+                    <label><span class="required">*</span>车牌号</label>
+                    <input type="text" name="driver.drivercarno" value="#(driver.drivercarno??)" required>
+                </div>
+                <div class="form-group">
+                    <label>车型</label>
+                    <input type="text" name="driver.carname" value="#(driver.carname??)">
+                </div>
+                <div class="form-group">
+                    <label>车辆颜色</label>
+                    <input type="text" name="driver.carcolor" value="#(driver.carcolor??)">
+                </div>
+                <div class="form-group">
+                    <label>车辆生产日期</label>
+                    <input type="date" name="driver.carshengchanriqi" value="#(driver.carshengchanriqi??)">
+                </div>
+                <div class="form-group">
+                    <label>危货证件号</label>
+                    <input type="text" name="driver.risk_cargo_license_no" value="#(driver.risk_cargo_license_no??)">
+                </div>
+                <div class="form-group">
+                    <label>危货证件有效期</label>
+                    <input type="date" name="driver.risk_cargo_license_indate" value="#(driver.risk_cargo_license_indate??)">
+                </div>
+
+                <div class="form-group">
+                    <label><span class="required">*</span>车辆照片</label>
+                    <div class="image-upload">
+                        <label for="carImageInput">
+                            <img id="carImageInputPreview" src="/img/img_1.png" alt="点击上传车辆照片">
+                        </label>
+                        <input type="file" id="carImageInput" name="car_image_file" onchange="uploadFile('carImageInput')" accept="image/jpeg, image/png" style="display:none;">
+                    </div>
+                    <input type="hidden" id="carImageInputUrl" name="driver.car_image_url" value="#(driver.car_image_url??)">
+                </div>
+
+                <div class="form-group">
+                    <label><span class="required">*</span>驾驶证照片</label>
+                    <div class="image-upload">
+                        <label for="driverLicenseImageInput">
+                            <img id="driverLicenseImageInputPreview" src="/img/img_1.png" alt="点击上传驾驶证照片">
+                        </label>
+                        <input type="file" id="driverLicenseImageInput" name="driver_license_image_file" onchange="uploadFile('driverLicenseImageInput')" accept="image/jpeg, image/png" style="display:none;">
+                    </div>
+                    <input type="hidden" id="driverLicenseImageInputUrl" name="driver.driver_license_image_url" value="#(driver.driver_license_image_url??)">
+                </div>
+
+                <div class="form-group form-group-full">
+                    <label><span class="required">*</span>危货证件照片</label>
+                    <div class="image-upload">
+                        <label for="riskCargoLicenseImageUrlInput">
+                            <img id="riskCargoLicenseImageUrlInputPreview" src="/img/img_1.png" alt="点击上传危货证件照片">
+                        </label>
+                        <input type="file" id="riskCargoLicenseImageUrlInput" name="risk_cargo_license_image_file" onchange="uploadFile('riskCargoLicenseImageUrlInput')" accept="image/jpeg, image/png" style="display:none;">
+                    </div>
+                    <input type="hidden" id="riskCargoLicenseImageUrlInputUrl" name="driver.risk_cargo_license_image_url" value="#(driver.risk_cargo_license_image_url??)">
+                    <input type="hidden" id="riskCargoLicenseImageFallbackUrl" value="#(driver.risk_cargo_license_image_oss_id??)">
+                </div>
             </div>
-            <div>
-            <label>&nbsp;</label>
-                <input value="提交" type="submit">
-        </div>
-    </form>
-<!--    <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>-->
-<!--    <script src="/uploadify/uploadify.min.js"></script>-->
-<!--    <script type="text/javascript">-->
-<!--        $(document).ready(function() {-->
-<!--            $('#file_upload').uploadify({-->
-<!--                'auto' : false,-->
-<!--                'swf' : '/uploadify/uploadify.swf',-->
-<!--                'buttonText' : '上传图片',-->
-<!--                'uploader' : '/driver/upload',-->
-<!--                'onUploadSuccess' : function(file, data) {-->
-<!--                    var result = JSON.parse(data);-->
-<!--                    if (result.status === 'success') {-->
-<!--                        var fileUrl = result.fileUrl;-->
-<!--                        // 更新隐藏的输入框以存储上传文件的路径-->
-<!--                        $('#hidden_file_path').val(fileUrl);-->
-<!--                        // 更新图片的 src 以显示新的上传图片-->
-<!--                        $('#car_pic').attr('src', '/upload/' + fileUrl);-->
-<!--                        // 最后，提交表单-->
-<!--                        submitForm();-->
-<!--                    } else {-->
-<!--                        console.log('Image upload failed.');-->
-<!--                        alert('Failed to upload image.');-->
-<!--                    }-->
-<!--                }-->
-<!--            });-->
 
-<!--            $('#submitBtn').click(function(event) {-->
-<!--                event.preventDefault();-->
-<!--                console.log('Submit button clicked.');-->
-
-<!--                if ($('#file_upload').val()) {-->
-<!--                    console.log('Starting image upload.');-->
-<!--                    $('#file_upload').uploadify('upload', '*');-->
-<!--                } else {-->
-<!--                    console.log('No image selected, submitting form.');-->
-<!--                    submitForm();-->
-<!--                }-->
-<!--            });-->
-<!--        });-->
-<!--        function submitForm() {-->
-<!--            $('#driver_form').submit();-->
-<!--        }-->
-
-<!--        $('#driver_form').on('submit', function(event) {-->
-<!--            console.log('Form submitted.');-->
-<!--            // window.location.href = '/driver/driverlist'; // 修改这个路径以跳转到正确的页面-->
-<!--        });-->
-<!--    </script>-->
+            <div class="action-row">
+                <a class="btn btn-secondary" href="/driver/driverlist">返回列表</a>
+                <button class="btn btn-primary" type="submit">保存</button>
+            </div>
+        </form>
+    </div>
 </div>
+
+<script>
+    function normalizeImageUrl(url) {
+        if (!url) {
+            return "/img/img_1.png";
+        }
+        if (url.indexOf("http://") === 0 || url.indexOf("https://") === 0 || url.indexOf("/") === 0) {
+            return url;
+        }
+        return "/upload/" + url;
+    }
+
+    function initPreview() {
+        var carUrl = document.getElementById("carImageInputUrl").value;
+        var licenseUrl = document.getElementById("driverLicenseImageInputUrl").value;
+        var riskUrlInput = document.getElementById("riskCargoLicenseImageUrlInputUrl");
+        var riskFallback = document.getElementById("riskCargoLicenseImageFallbackUrl").value;
+        var riskUrl = riskUrlInput.value || riskFallback;
+
+        document.getElementById("carImageInputPreview").src = normalizeImageUrl(carUrl);
+        document.getElementById("driverLicenseImageInputPreview").src = normalizeImageUrl(licenseUrl);
+        document.getElementById("riskCargoLicenseImageUrlInputPreview").src = normalizeImageUrl(riskUrl);
+        riskUrlInput.value = riskUrl;
+    }
+
+    function uploadFile(inputElementId) {
+        var fileInput = document.getElementById(inputElementId);
+        var file = fileInput ? fileInput.files[0] : null;
+        if (!file) {
+            return;
+        }
+
+        var preview = document.getElementById(inputElementId + "Preview");
+        if (preview) {
+            preview.src = URL.createObjectURL(file);
+        }
+
+        var formData = new FormData();
+        formData.append("file", file);
+
+        fetch("/driver/upload", {
+            method: "POST",
+            body: formData
+        })
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+                if (!data || !data.url) {
+                    return;
+                }
+                var urlInput = document.getElementById(inputElementId + "Url");
+                if (urlInput) {
+                    urlInput.value = data.url;
+                }
+            })
+            .catch(function (error) {
+                console.error("Error:", error);
+            });
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", initPreview);
+    } else {
+        initPreview();
+    }
+</script>
 </body>
 </html>

@@ -26,6 +26,7 @@ public class CreatEquipmentService {
                             "LEFT JOIN bse_fitting f ON m.companyid  = f.companyid  AND m.fid = f.id " +  // 修改此处连接条件，直接关联
                             "WHERE m.companyid =? ORDER BY m.id DESC", stationid
             );
+            System.out.println("resultList size:"+resultList.size());
             if (resultList == null) {
                 // 如果查询结果为null（有些情况可能返回null，虽然一般返回空列表），返回空列表
                 for (Record record : resultList) {
@@ -37,6 +38,7 @@ public class CreatEquipmentService {
             return resultList;
         } catch (Exception e) {
             e.printStackTrace();
+            System.out.println("出现异常空");
             // 出现SQL异常时也返回空列表，避免向外抛出异常影响上层调用逻辑
             return Collections.emptyList();
         }
@@ -77,7 +79,6 @@ public class CreatEquipmentService {
             sqlExceptSelect.append(" AND m.step = ?");
             params.add(step);
         }
-
         // 执行分页查询，传入 select 和 sqlExceptSelect 部分，并将参数转化为数组
         return Db.paginate(pageNumber, pageSize, sql.toString(), sqlExceptSelect.toString(), params.toArray());
     }

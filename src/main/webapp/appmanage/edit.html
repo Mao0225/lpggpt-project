@@ -4,62 +4,184 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>编辑应用</title>
+    <link rel="stylesheet" type="text/css" href="../css/index.css">
     <style>
+        /* 浅色商务风格 - 编辑应用表单样式 */
+        body {
+            background-color: #F8FAFC;
+            color: #1E293B;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
         .form_box {
-            padding: 20px;
+            padding: 24px;
+            max-width: 700px;
+            margin: 0 auto;
         }
-        input, textarea, select {
-            padding: 15px;
-            font-size: 18px;
-            border: 2px solid #a3bffa;
-            border-radius: 10px;
+
+        .form_box > div {
+            margin-bottom: 20px;
+        }
+
+        .form_box label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #475569;
+            margin-bottom: 8px;
+        }
+
+        .form_box label span[style*="color: red"] {
+            color: #EF4444;
+            margin-right: 4px;
+        }
+
+        .form_box input[type="text"],
+        .form_box textarea,
+        .form_box select {
+            padding: 10px 14px;
+            font-size: 14px;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            background-color: #FFFFFF;
+            color: #1E293B;
             width: 100%;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: border-color 0.3s ease;
+            box-sizing: border-box;
+            transition: all 0.15s ease;
+            font-family: inherit;
         }
-        input:focus, textarea:focus, select:focus {
+
+        .form_box input[type="text"]:focus,
+        .form_box textarea:focus,
+        .form_box select:focus {
             outline: none;
-            border-color: #4c87c9;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
         }
+
+        .form_box input[readonly] {
+            background-color: #F8FAFC;
+            color: #64748B;
+            cursor: not-allowed;
+        }
+
+        /* 文件上传样式 */
         .file-upload {
-            margin-top: 10px;
-            position: relative;
+            margin-top: 8px;
         }
-        .file-upload label {
-            display: inline-block;
-            background-color: #4c87c9;
+
+        .file-upload-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background-color: #3B82F6;
             color: white;
-            padding: 5px 5px;
-            border-radius: 8px;
+            padding: 10px 18px;
+            border-radius: 6px;
             cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s ease;
-            margin-bottom: 0px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.15s ease;
+            border: none;
         }
-        .file-upload label:hover {
-            background-color: #3b6ca0;
+
+        .file-upload-label:hover {
+            background-color: #2563EB;
         }
+
         .file-upload input[type="file"] {
             display: none;
         }
+
         .file-name {
             margin-top: 8px;
-            font-size: 14px;
-            color: #333;
-            background-color: #f8fafc;
+            font-size: 13px;
+            color: #475569;
+            background-color: #F8FAFC;
             padding: 8px 12px;
             border-radius: 6px;
-            border: 1px solid #e2e8f0;
+            border: 1px solid #E2E8F0;
             display: inline-block;
             max-width: 100%;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
         }
-        .modal-dialog {
-            min-width: 100px;
-            max-width: 40vw;
-            width: auto;
+
+        .form_box textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .form_box select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 36px;
+        }
+
+        /* 表单底部按钮区域 */
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid #E2E8F0;
+        }
+
+        .form-actions button {
+            padding: 10px 24px;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            border: none;
+        }
+
+        .form-actions button.primary {
+            background-color: #3B82F6;
+            color: white;
+        }
+
+        .form-actions button.primary:hover {
+            background-color: #2563EB;
+        }
+
+        .form-actions button.secondary {
+            background-color: #FFFFFF;
+            color: #475569;
+            border: 1px solid #CBD5E1;
+        }
+
+        .form-actions button.secondary:hover {
+            background-color: #F8FAFC;
+            border-color: #94A3B8;
+        }
+
+        /* 必填标记 */
+        .required-mark {
+            color: #EF4444;
+            margin-right: 4px;
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .form_box {
+                padding: 16px;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .form-actions button {
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -70,7 +192,7 @@
             var fileInput = document.getElementById(inputElementId);
             var fileNameDisplay = document.getElementById(inputElementId + 'Name');
             if (fileInput.files.length > 0) {
-                fileNameDisplay.textContent = '已选择文件: ' + fileInput.files[0].name;
+                fileNameDisplay.textContent = '已选择文件：' + fileInput.files[0].name;
             } else {
                 fileNameDisplay.textContent = '';
             }
@@ -92,7 +214,7 @@
                 return false;
             }
             if (!appcode) {
-                alert('Android包名为必填项');
+                alert('Android 包名为必填项');
                 return false;
             }
             if (!content) {
@@ -107,24 +229,26 @@
     <form action="/appmanage/save" method="post" id="myForm" enctype="multipart/form-data">
         <input type="hidden" name="app.id" value="#(app.id??)" />
         <div>
-            <label><span style="color: red;">*</span>文件上传</label>
+            <label><span class="required-mark">*</span>文件上传</label>
             <div class="file-upload">
-                <label for="fileInput">选择文件</label>
+                <label for="fileInput" class="file-upload-label">
+                    <span>选择文件</span>
+                </label>
                 <input type="file" id="fileInput" name="app.file" onchange="showFileName(event, 'fileInput')" accept=".apk,.ipa" />
             </div>
         </div>
-        <div id="fileInputName" class="file-name">#(app.file ? '已上传文件: ' + app.file : '')</div>
+        <div id="fileInputName" class="file-name">#(app.file ? '已上传文件：' + app.file : '暂未上传文件')</div>
 
         <div>
-            <label><span style="color: red;">*</span>应用编码</label>
+            <label><span class="required-mark">*</span>应用编码</label>
             <input type="text" name="app.appcode" value="#(app.appcode)" readonly />
         </div>
         <div>
-            <label><span style="color: red;">*</span>应用名称</label>
+            <label><span class="required-mark">*</span>应用名称</label>
             <input type="text" name="app.name" value="#(app.name ?? '')" required />
         </div>
         <div>
-            <label><span style="color: red;">*</span>版本号</label>
+            <label><span class="required-mark">*</span>版本号</label>
             <input type="text" name="app.version" value="#(app.version ?? '')" required />
         </div>
         <div>
@@ -132,7 +256,7 @@
             <textarea name="app.memo" rows="4">#(app.memo ?? '')</textarea>
         </div>
         <div>
-            <label><span style="color: red;">*</span>更新内容</label>
+            <label><span class="required-mark">*</span>更新内容</label>
             <textarea name="app.content" rows="4" required>#(app.content ?? '')</textarea>
         </div>
         <div>
@@ -141,6 +265,10 @@
                 <option value="1" #(app.isforce == 1 ? 'selected' : '')>是</option>
                 <option value="0" #(app.isforce == 0 ? 'selected' : '')>否</option>
             </select>
+        </div>
+        <div class="form-actions">
+            <button type="button" class="primary" onclick="validateForm()">保存</button>
+            <button type="button" class="secondary" onclick="window.history.back()">取消</button>
         </div>
     </form>
 </div>

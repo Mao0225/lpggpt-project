@@ -1,313 +1,625 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Content</title>
+    <title>设备维修工单</title>
     <script src="../css/jquery-3.3.1.min.js"></script>
     <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css">
     <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/lpg.css">
 
-    <!-- Add your custom stylesheets and scripts here -->
-    <script>
-        document.getElementById('showFormButton').addEventListener('click', function () {
-            var form = document.getElementById('searchForm');
-            if (form.style.display === 'none') {
-                form.style.display = 'block'; // 显示表单
-            } else {
-                form.style.display = 'none'; // 再次点击按钮隐藏表单
-            }
-        });
-    </script>
-
-    <style scoped>
-        .container {
-            padding: 50px 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        input {
-            padding: 15px;
-            font-size: 18px;
-            border: 2px solid #a3bffa;
-            border-radius: 10px;
-            width: 100%;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: border-color 0.3s ease;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: #4c87c9;
-        }
-    </style>
-
     <style>
-        /* 设置 #pagediv 的样式 */
-        #pagediv {
-            background-color: #f0f0f0;
-            color: black;
-            padding: 10px;
-            border: 2px solid #007bff;
+        body {
+            margin: 0;
+            background: #F8FAFC;
+            color: #1E293B;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
         }
 
-        /* 设置表格样式 */
-        table.list {
+        .page-container {
+            padding: 20px;
+        }
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .page-title {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E293B;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn-add {
+            background: #3B82F6;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            transition: all 0.15s ease;
+        }
+
+        .btn-add:hover {
+            background: #2563EB;
+            color: #FFFFFF;
+            text-decoration: none;
+        }
+
+        .btn-secondary-link {
+            background: #FFFFFF;
+            color: #475569;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            padding: 8px 14px;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            transition: all 0.15s ease;
+        }
+
+        .btn-secondary-link:hover {
+            background: #F8FAFC;
+            border-color: #94A3B8;
+            color: #334155;
+            text-decoration: none;
+        }
+
+        .btn-icon {
+            background: #FFFFFF;
+            color: #475569;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 13px;
+            line-height: 1;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .btn-icon:hover {
+            background: #F8FAFC;
+            border-color: #94A3B8;
+        }
+
+        .search-area {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            padding: 18px 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+        }
+
+        .search-title {
+            margin: 0 0 14px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #334155;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .search-title::before {
+            content: "";
+            width: 4px;
+            height: 14px;
+            border-radius: 999px;
+            background: #3B82F6;
+        }
+
+        .search-form {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(220px, 1fr));
+            gap: 12px;
+        }
+
+        .search-item {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            min-width: 0;
+        }
+
+        .search-item label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #475569;
+            line-height: 1.2;
+            padding-left: 0;
+        }
+
+        .search-item input[type="text"],
+        .search-item input[type="date"],
+        .search-item select {
+            width: 100%;
+            height: 38px;
+            padding: 8px 10px;
+            font-size: 14px;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            background: #FFFFFF;
+            color: #1E293B;
+            min-width: 0;
+            transition: all 0.15s ease;
+            box-sizing: border-box;
+        }
+
+        .search-item input:focus,
+        .search-item select:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .search-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            grid-column: 1 / -1;
+            justify-content: flex-end;
+            white-space: nowrap;
+        }
+
+        #searchPanel #maintenanceSearchForm label {
+            color: #475569;
+            font-size: 14px;
+            padding-left: 0;
+        }
+
+        #searchPanel #maintenanceSearchForm input[type="text"],
+        #searchPanel #maintenanceSearchForm input[type="date"],
+        #searchPanel #maintenanceSearchForm select {
+            background: #FFFFFF;
+            color: #1E293B;
+            border: 1px solid #CBD5E1;
+            width: 100%;
+        }
+
+        .btn-search {
+            background: #3B82F6;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 6px;
+            height: 38px;
+            padding: 0 18px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .btn-search:hover {
+            background: #2563EB;
+        }
+
+        .btn-reset {
+            background: #FFFFFF;
+            color: #475569;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            height: 38px;
+            padding: 0 18px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .btn-reset:hover {
+            background: #F8FAFC;
+            border-color: #94A3B8;
+        }
+
+        .table-wrapper {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            overflow: auto;
+        }
+
+        .data-table {
             width: 100%;
             border-collapse: collapse;
+            min-width: 1120px;
         }
 
-        /* 设置表格表头样式 */
-        table.list th {
-            background-color: #add8e6;
-            color: black;
-            padding: 8px;
-            text-align: left;
-            border: 1px solid #ddd; /* 新增：添加边框 */
+        .data-table thead th {
+            background: #F8FAFC;
+            color: #475569;
+            font-size: 13px;
+            font-weight: 600;
+            text-align: center;
+            padding: 12px 14px;
+            border-bottom: 1px solid #E2E8F0;
+            white-space: nowrap;
         }
 
-        /* 设置表格单元格样式 */
-        table.list td {
-            padding: 8px;
-            border: 1px solid #ddd; /* 修改：添加边框 */
+        .data-table tbody td {
+            padding: 12px 14px;
+            font-size: 14px;
+            color: #1E293B;
+            border-bottom: 1px solid #F1F5F9;
+            text-align: center;
+            white-space: nowrap;
         }
 
-        /* 设置表格隔行颜色 */
-        table.list tr:nth-child(even) {
-            background-color: #f2f2f2;
+        .data-table tbody tr:nth-child(even) {
+            background: #F8FAFC;
         }
 
-        table.list tr:nth-child(odd) {
-            background-color: #e0e0e0;
+        .data-table tbody tr:hover {
+            background: #F1F5F9;
         }
 
-        /* 设置鼠标悬停时表格行的颜色 */
-        table.list tr:hover {
-            background-color: #d3d3d3;
+        .data-table tbody tr:last-child td {
+            border-bottom: none;
         }
 
-        /* 新增样式：设置新建司机链接为黑色 */
-        #pagediv .add {
-            color: black;
-        }
-
-        /* 新增样式：设置输入框背景色为淡灰色 */
-        #pagediv input[type="text"] {
-            background-color: #f0f0f0;
-        }
-        /* 新增样式：设置 label 文字颜色为黑色 */
-        #pagediv label {
-            color: black;
-        }
-        #pagediv .add {
-            color: white;
-            background-color: #007bff;
-            padding: 6px 12px;
+        .status-complete {
+            color: #059669;
+            font-weight: 600;
             text-decoration: none;
-            display: inline-block;
-            border-radius: 5; /* 方方正正的边框 */
+        }
+
+        .status-complete:hover {
+            color: #047857;
+            text-decoration: underline;
+        }
+
+        .status-submit {
+            color: #DC2626;
+            font-weight: 600;
+        }
+
+        .operation-col {
+            text-align: left;
+        }
+
+        .operation-col a {
+            color: #3B82F6;
+            text-decoration: none;
+            margin-right: 10px;
+        }
+
+        .operation-col a:hover {
+            color: #2563EB;
+            text-decoration: underline;
+        }
+
+        .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 20px;
+            color: #475569;
+        }
+
+        .pagination a,
+        .pagination span {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 36px;
+            height: 36px;
+            padding: 0 10px;
+            font-size: 14px;
+            border: 1px solid #E2E8F0;
+            border-radius: 6px;
+            color: #475569;
+            background: #FFFFFF;
+            text-decoration: none;
+            transition: all 0.15s ease;
+        }
+
+        .pagination a:hover {
+            background: #F8FAFC;
+            border-color: #CBD5E1;
+        }
+
+        .modal-content {
+            border-radius: 10px;
+            border: 1px solid #E2E8F0;
+        }
+
+        .modal-header {
+            background: #F8FAFC;
+            border-bottom: 1px solid #E2E8F0;
+        }
+
+        .modal-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E293B;
+        }
+
+        .modal-body {
+            background: #FFFFFF;
+            max-height: 70vh;
+            overflow: auto;
+        }
+
+        .modal-footer {
+            border-top: 1px solid #E2E8F0;
+            background: #FFFFFF;
+        }
+
+        .modal-btn-secondary {
+            background: #FFFFFF;
+            color: #475569;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            padding: 6px 14px;
+        }
+
+        .modal-btn-secondary:hover {
+            background: #F8FAFC;
+            border-color: #94A3B8;
+            color: #334155;
+        }
+
+        .modal-btn-primary {
+            background: #3B82F6;
+            border: 1px solid #3B82F6;
+            border-radius: 6px;
+            color: #FFFFFF;
+            padding: 6px 14px;
+        }
+
+        .modal-btn-primary:hover {
+            background: #2563EB;
+            border-color: #2563EB;
+            color: #FFFFFF;
+        }
+
+        @media (max-width: 768px) {
+            .page-container {
+                padding: 12px;
+            }
+
+            .page-title {
+                font-size: 18px;
+            }
+
+            .search-area {
+                padding: 14px;
+            }
+
+            .search-form {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .search-actions {
+                grid-column: 1 / -1;
+                justify-content: flex-start;
+            }
+        }
+
+        @media (max-width: 560px) {
+            .search-form {
+                grid-template-columns: 1fr;
+            }
+
+            .search-actions {
+                flex-wrap: wrap;
+            }
+
+            .search-actions .btn-search,
+            .search-actions .btn-reset {
+                flex: 1;
+                min-width: 120px;
+            }
         }
     </style>
 </head>
 
 <body>
-<div id="pagediv">
-    <form id="searchForm" action="/Cequipment/maintenanceList" method="get">
-        <label for="equipmentName">设备名称：</label>
-        <input type="text" id="equipmentName" name="equipmentName" placeholder="模糊搜索设备名称" value="#(equipmentName)" />
-
-        &nbsp;&nbsp;
-        <label for="kind">记录类型：</label>
-        <select id="kind" name="kind">
-            <option value="">全部</option>
-            <option value="维修" #(kind) == "维修"? "selected" : "")>维修</option>
-            <option value="维护" #(kind) == "维护"? "selected" : "")>维护</option>
-        </select>
-
-        &nbsp;&nbsp;
-        <label for="startDate">起始日期：</label>
-        <input type="date" id="startDate" name="startDate" value="#(startDate)" class="datepicker" placeholder="选择起始日期" />
-
-        &nbsp;&nbsp;
-        <label for="endDate">结束日期：</label>
-        <input type="date" id="endDate" name="endDate" value="#(endDate)" class="datepicker" placeholder="选择结束日期" />
-
-        &nbsp;&nbsp;
-        <label for="step">工单状态：</label>
-        <select id="step" name="step">
-            <option value="">全部</option>
-            <option value="进行中" #(step) == "进行中"? "selected" : "")>进行中</option>
-            <option value="完成" #(step) == "完成"? "selected" : "")>完成</option>
-        </select>
-
-        &nbsp;&nbsp;
-        <button type="button" id="searchButton" value="查询">查询</button>
-        <button type="button" id="resetButton" value="重置">重置</button>
-    </form>
-    <a href="#" class="add openModal" data-title="创建工单" data-edit-url="add" style="margin-right: 20px;"><b> + </b>创建工单</a>
-    <a href="/Cequipment/CElist" class="link-button" style="color: #d6d8db">维修记录总表</a>
-</div>
-
-<table class="list">
-    <div>
-        <button id="showFormButton" style="width: 30px; height: 30px; border: 2px solid transparent; border-radius: 50%; background-color: transparent; position: relative; float: right;">
-            <img src="/img/find.png" alt="搜索" style="width: 30px; height: 30px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-        </button>
-
-        <button id="fresh" name="refresh" style="width: 30px; height: 30px; border: 2px solid transparent; border-radius: 50%; background-color: transparent; position: relative; margin-right: 10px; float: right;">
-            <img src="/img/refresh2.png" alt="刷新" style="width: 25px; height: 25px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-        </button>
-
-        <script>
-            var buttons = document.getElementsByName("refresh");
-            for (var i = 0; i < buttons.length; i++) {
-                buttons[i].addEventListener('click', function () {
-                    // 获取所有的输入框并设置为空
-                    var inputs = document.querySelectorAll('#searchForm input[type=text]');
-                    for (var j = 0; j < inputs.length; j++) {
-                        inputs[j].value = "";
-                    }
-
-                    // 提交表单以重新查询并刷新页面
-                    document.getElementById('searchForm').submit();
-                });
-            }
-        </script>
-        <script>
-            document.getElementById('showFormButton').addEventListener('click', function () {
-                var form = document.getElementById('searchForm');
-                if (form.style.display === 'none') {
-                    form.style.display = 'block'; // 显示表单
-                } else {
-                    form.style.display = 'none'; // 再次点击按钮隐藏表单
-                }
-            });
-        </script>
+<div class="page-container">
+    <div class="page-header">
+        <h1 class="page-title">设备维修工单</h1>
+        <div class="header-actions">
+            <a href="#" class="btn-add openModal" data-title="创建工单" data-edit-url="add">+ 创建工单</a>
+            <a href="/Cequipment/CElist" class="btn-secondary-link">维修记录总表</a>
+            <button type="button" id="showFormButton" class="btn-icon">筛选</button>
+            <button type="button" id="refreshButton" class="btn-icon">刷新</button>
+        </div>
     </div>
 
+    <div class="search-area" id="searchPanel">
+        <p class="search-title">筛选条件</p>
+        <form id="maintenanceSearchForm" action="/Cequipment/maintenanceList" method="get" class="search-form">
+            <div class="search-item">
+                <label for="equipmentName">设备名称</label>
+                <input type="text" id="equipmentName" name="equipmentName" placeholder="输入设备名称" value="#(equipmentName)"/>
+            </div>
 
-    <tbody>
-    <tr>
-        <th width="10%">序号</th>
-        <th width="12%">设备名称</th>
-        <th width="12%">记录类型</th>
-        <th width="12%">报修日期</th>
-        <th width="12%">报修人员</th>
-        <th width="12%">主要内容</th>
-        <th width="12%">操作人</th>
-        <th width="12%">操作时间</th>
-        <th width="12%">工单状态</th>
-        <th width="12%">操作</th>
-    </tr>
-    #set(startIndex = (maintenances.pageNumber - 1) * maintenances.pageSize + 1)
-    #for (x : maintenances.getList())
-    <tr>
-        <td style="text-align:center">#(startIndex++)</td>
-        <td style="text-align:center">#(x.equipment_name)</td>
-        <td style="text-align:center">#(x.kind == "维修"? "维修" : "维护")</td>
-        <td style="text-align:center">#(x.reportday)</td>
-        <td style="text-align:center">#(x.reporter)</td>
-        <td style="text-align:center">#(x.content)</td>
-        <td style="text-align:center">#(x.repairer)</td>
-        <td style="text-align:center">#(x.repairday)</td>
-        <td style="text-align:center">
-            #if(x.step == "完成")
-            <a href="#" class="edit openModal" data-title="编辑设备" data-edit-url="/Cequipment/equipmentdetail?id=#(x.id)" style="color: green;">完成</a>
-            #elseif(x.step == "提交")
-            <span style="color: red;">提交</span>
-            #else
-            #(x.step)
+            <div class="search-item">
+                <label for="kind">记录类型</label>
+                <select id="kind" name="kind">
+                    <option value="">全部</option>
+                    <option value="维修" #if(kind == "维修") selected #end>维修</option>
+                    <option value="维护" #if(kind == "维护") selected #end>维护</option>
+                </select>
+            </div>
+
+            <div class="search-item">
+                <label for="startDate">起始日期</label>
+                <input type="date" id="startDate" name="startDate" value="#(startDate)"/>
+            </div>
+
+            <div class="search-item">
+                <label for="endDate">结束日期</label>
+                <input type="date" id="endDate" name="endDate" value="#(endDate)"/>
+            </div>
+
+            <div class="search-item">
+                <label for="step">工单状态</label>
+                <select id="step" name="step">
+                    <option value="">全部</option>
+                    <option value="进行中" #if(step == "进行中") selected #end>进行中</option>
+                    <option value="完成" #if(step == "完成") selected #end>完成</option>
+                </select>
+            </div>
+
+            <div class="search-actions">
+                <button type="button" id="searchButton" class="btn-search">查询</button>
+                <button type="button" id="resetButton" class="btn-reset">重置</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="table-wrapper">
+        <table class="data-table">
+            <thead>
+            <tr>
+                <th width="8%">序号</th>
+                <th width="12%">设备名称</th>
+                <th width="10%">记录类型</th>
+                <th width="10%">报修日期</th>
+                <th width="10%">报修人员</th>
+                <th width="14%">主要内容</th>
+                <th width="10%">操作人</th>
+                <th width="10%">操作时间</th>
+                <th width="8%">工单状态</th>
+                <th width="12%">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            #set(startIndex = (maintenances.pageNumber - 1) * maintenances.pageSize + 1)
+            #for (x : maintenances.getList())
+            <tr>
+                <td>#(startIndex++)</td>
+                <td>#(x.equipment_name)</td>
+                <td>#(x.kind == "维修" ? "维修" : "维护")</td>
+                <td>#(x.reportday)</td>
+                <td>#(x.reporter)</td>
+                <td>#(x.content)</td>
+                <td>#(x.repairer)</td>
+                <td>#(x.repairday)</td>
+                <td>
+                    #if(x.step == "完成")
+                    <a href="#" class="openModal status-complete" data-title="工单详情" data-edit-url="/Cequipment/equipmentdetail?id=#(x.id)">完成</a>
+                    #elseif(x.step == "提交")
+                    <span class="status-submit">提交</span>
+                    #else
+                    #(x.step)
+                    #end
+                </td>
+                <td class="operation-col">
+                    <a href="#" onclick="return confirmDelete('#(x.id)')">删除</a>
+                    <a href="#" class="openModal" data-title="编辑工单" data-edit-url="/Cequipment/edit/#(x.id)">编辑</a>
+                </td>
+            </tr>
             #end
-        </td>
-        <td style="text-align:left">
-            &nbsp;&nbsp;<a href="#" onclick="confirmDelete('#(x.id)')">删除</a>
+            </tbody>
+        </table>
+    </div>
 
-            <a href="#" class="edit openModal" data-title="编辑用户" data-edit-url="/Cequipment/edit/#(x.id)">编辑</a>
-        </td>
-    </tr>
-    #end
-    </tbody>
-</table>
-<div class="pagination" style="color:#000000;">
-    #@paginate(maintenances.pageNumber, maintenances.totalPage, "/Cequipment/maintenanceList?equipmentName=" + (equipmentName!= null? equipmentName : "") + "&kind=" + (kind!= null? kind : "") + "&startDate=" + (startDate!= null? startDate : "") + "&endDate=" + (endDate!= null? endDate : "") + "&step=" + (step!= null? step : "") + "&page=")
+    <div class="pagination">
+        #@paginate(maintenances.pageNumber, maintenances.totalPage, "/Cequipment/maintenanceList?equipmentName=" + (equipmentName!= null? equipmentName : "") + "&kind=" + (kind!= null? kind : "") + "&startDate=" + (startDate!= null? startDate : "") + "&endDate=" + (endDate!= null? endDate : "") + "&step=" + (step!= null? step : "") + "&page=")
+    </div>
 </div>
-<script>
-    function confirmDelete(id) {
-        var result = confirm("确定要删除吗？");
-        if (result) {
-            // 如果用户点击了确定，则执行删除操作
-            window.location.href = "/Cequipment/delete/" + id;
-        } else {
-            // 如果用户点击了取消，则不执行任何操作
-            return false;
-        }
-    }
 
-    // 为搜索按钮添加点击事件，防止默认提交行为被阻止，手动触发表单提交
-    $('#searchButton').click(function (e) {
-        e.preventDefault();
-        $('#searchForm').submit();
-    });
-
-    // 为重置按钮添加点击事件处理函数，用于清空搜索栏并提交表单
-    $('#resetButton').click(function (e) {
-        e.preventDefault();
-        // 获取所有的输入框并设置为空
-        $('#searchForm input[type=text]').val('');
-        // 将下拉选择框设置为默认值（即第一个选项）
-        $('#searchForm select').prop('selectedIndex', 0);
-        // 提交表单以重新查询并刷新页面
-        $('#searchForm').submit();
-    });
-
-    $('.openModal').click(function (e) {
-        e.preventDefault();
-        var editUrl = $(this).data('edit-url');
-        var that = this;
-
-        $.get(editUrl, function (data) {
-            var title = $(that).data('title');
-            $('#myModalLabel').text(title);
-
-            // 清除旧内容
-            $('#modalBody').html(data);
-            $('#myModal').modal('show');
-        });
-    });
-
-    $(document).ready(function () {
-        // 关闭按钮的点击事件，刷新页面
-        document.querySelector('.btn-default[data-dismiss="modal"]').addEventListener('click', function () {
-            window.location.reload();
-        });
-    });
-</script>
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="myModalLabel">模态窗口标题</h4>
+                <h4 class="modal-title" id="myModalLabel">模态窗口</h4>
             </div>
             <div class="modal-body" id="modalBody">
-                <!-- 这里将会加载你的表单内容 -->
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary" id="saveButton">保存</button>
-                <script>
-                    document.getElementById('saveButton').addEventListener('click', function () {
-                        document.getElementById('myForm').submit();
-                    });
-                </script>
+                <button type="button" class="btn btn-default modal-btn-secondary" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary modal-btn-primary" id="saveButton">保存</button>
             </div>
         </div>
     </div>
 </div>
 
-</body>
+<script>
+    function clearSearchAndSubmit() {
+        $('#maintenanceSearchForm input[type=text], #maintenanceSearchForm input[type=date]').val('');
+        $('#maintenanceSearchForm select').prop('selectedIndex', 0);
+        $('#maintenanceSearchForm').submit();
+    }
 
+    function confirmDelete(id) {
+        var result = confirm("确定要删除吗？");
+        if (result) {
+            window.location.href = "/Cequipment/delete/" + id;
+        }
+        return false;
+    }
+
+    $('#searchButton').click(function (e) {
+        e.preventDefault();
+        $('#maintenanceSearchForm').submit();
+    });
+
+    $('#resetButton').click(function (e) {
+        e.preventDefault();
+        clearSearchAndSubmit();
+    });
+
+    $('#refreshButton').click(function (e) {
+        e.preventDefault();
+        clearSearchAndSubmit();
+    });
+
+    $('#showFormButton').click(function () {
+        $('#searchPanel').toggle();
+    });
+
+    $('.openModal').click(function (e) {
+        e.preventDefault();
+        var editUrl = $(this).data('edit-url');
+        var title = $(this).data('title');
+        $.get(editUrl, function (data) {
+            $('#myModalLabel').text(title);
+            $('#modalBody').html(data);
+            if ($('#modalBody').find('#myForm').length > 0) {
+                $('#saveButton').show();
+            } else {
+                $('#saveButton').hide();
+            }
+            $('#myModal').modal('show');
+        });
+    });
+
+    $('#saveButton').click(function () {
+        var form = document.getElementById('myForm');
+        if (form) {
+            form.submit();
+        }
+    });
+
+    $(document).ready(function () {
+        $('.btn-default[data-dismiss="modal"]').on('click', function () {
+            window.location.reload();
+        });
+    });
+</script>
+</body>
 </html>

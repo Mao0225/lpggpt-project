@@ -1,25 +1,70 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>新建功能</title>
+  <style>
+    body {
+      background: #F8FAFC;
+      color: #1E293B;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    .form-container {
+      background: #FFFFFF;
+      padding: 24px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      color: #475569;
+      margin-bottom: 8px;
+    }
+
+    .form-group input[type="text"] {
+      width: 100%;
+      padding: 10px 14px;
+      font-size: 14px;
+      border: 1px solid #CBD5E1;
+      border-radius: 6px;
+      background: #FFFFFF;
+      color: #1E293B;
+      transition: all 0.15s ease;
+      box-sizing: border-box;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #3B82F6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    ::placeholder {
+      color: #94A3B8;
+    }
+  </style>
 </head>
-<title>Content</title>
 <body>
-<h1>
-</h1>
-<div class="form_box">
+<div class="form-container">
   <form action="/func/save" method="post" id="myForm">
-
-    <div>
-      <label >功能名称</label>
-      <input type="text" name="func.funName" value="" />
-    </div>
-    <div>
-      <label >功能路径</label>
-      <input type="text" name="func.funUrl" value="" />
+    <div class="form-group">
+      <label>功能名称</label>
+      <input type="text" name="func.funName" value="" placeholder="请输入功能名称" />
     </div>
 
+    <div class="form-group">
+      <label>功能路径</label>
+      <input type="text" name="func.funUrl" value="" placeholder="请输入功能路径" />
+    </div>
   </form>
 </div>
 </body>

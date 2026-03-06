@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 
 <head>
 	<meta charset="UTF-8">
@@ -14,40 +14,177 @@
 	<link href="../css/index.css" rel="stylesheet">
 
 	<style>
-		/* 添加 tab 样式 */
+		html, body {
+			height: 100%;
+			overflow: hidden;
+		}
+
+		#container {
+			height: 100vh;
+			overflow: hidden;
+		}
+
+		#main {
+			min-height: 0;
+			overflow: hidden;
+		}
+
+		#left {
+			overflow-y: auto;
+			overflow-x: hidden;
+			overscroll-behavior: contain;
+		}
+
+		.menu-search-wrap {
+			position: sticky;
+			top: 0;
+			z-index: 5;
+			padding: 10px 12px;
+			background-color: #1F2937;
+			border-bottom: 1px solid #374151;
+		}
+
+		.menu-search-box {
+			position: relative;
+		}
+
+		#menuSearchInput {
+			width: 100%;
+			height: 34px;
+			padding: 0 12px 0 34px;
+			border: 1px solid #4B5563;
+			border-radius: 6px;
+			background-color: #111827;
+			color: #F9FAFB;
+			font-size: 13px;
+			outline: none;
+		}
+
+		#menuSearchInput:focus {
+			border-color: #3B82F6;
+			box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+		}
+
+		#menuSearchInput::placeholder {
+			color: #6B7280;
+		}
+
+		.menu-search-icon {
+			position: absolute;
+			left: 12px;
+			top: 50%;
+			transform: translateY(-50%);
+			font-size: 13px;
+			color: #6B7280;
+			pointer-events: none;
+		}
+
+		#content {
+			min-width: 0;
+			min-height: 0;
+			overflow: hidden;
+		}
+
+		#contentFrame {
+			flex: 1 1 0;
+			min-height: 0;
+			width: 100%;
+			border: none;
+			display: block;
+		}
+
+		/* 工业极简主义风格 - Tab标签样式 */
 		#tabHeader {
 			display: flex;
-			border-bottom: 1px solid #ccc;
+			flex-wrap: nowrap;
+			align-items: center;
+			background-color: #1F2937; /* 次级背景色 */
+			border-bottom: 1px solid #374151; /* 第三级背景色作为边框 */
+			padding: 0 16px;
+			font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+			overflow-x: auto;
+			overflow-y: hidden;
+			scrollbar-width: thin;
 		}
 
 		.tab {
 			padding: 10px 20px;
-			background-color: #95a5a6;
+			background-color: transparent;
 			cursor: pointer;
-			border: 1px solid transparent;
-			border-bottom: none;
+			border: none;
+			border-bottom: 2px solid transparent;
+			font-size: 14px;
+			font-weight: 500;
+			color: #9CA3AF; /* 次要文字色 */
+			transition: all 0.15s ease;
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			flex: 0 0 auto;
+			max-width: 220px;
+			white-space: nowrap;
+		}
+		.tab .tab-title {
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
 		}
 		.tab:hover {
-			background-color: #007bff; /* 鼠标划过的颜色，可根据需要调整 */
+			color: #F9FAFB; /* 主要文字色 */
+			background-color: #374151; /* 悬停背景色 */
 		}
 		.tab.active {
-			background-color: #0099CC;
-			border-color: #ccc;
-			border-bottom: 1px solid #f0f0f0;
+			color: #3B82F6; /* 安全蓝作为激活色 */
+			border-bottom-color: #3B82F6;
+			font-weight: 600;
+			background-color: #374151;
 		}
 
 		.tab .close {
-			margin-left: 10px;
-			color: #999;
+			font-size: 16px;
+			color: #6B7280; /* 弱化文字色 */
+			width: 16px;
+			height: 16px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			flex: 0 0 16px;
+			border-radius: 50%;
+			transition: all 0.15s ease;
 		}
 
 		.tab .close:hover {
-			color: #333;
+			color: #F9FAFB;
+			background-color: #EF4444; /* 危险红色 */
+		}
+
+		/* 工业极简主义风格 - 左侧菜单悬停效果 */
+		.menu > li > a:hover {
+			background-color: #374151; /* 悬停背景色 */
+		}
+		.menu > li > a.active {
+			background-color: rgba(59, 130, 246, 0.15); /* 安全蓝半透明背景 */
+			color: #3B82F6; /* 安全蓝文字 */
+			font-weight: 600;
+			border-left: 3px solid #3B82F6; /* 左侧激活指示条 */
 		}
 	</style>
 
 	<script>
 		$(document).ready(function () {
+			// 隔离左侧菜单滚动，避免滚动链传递到右侧内容
+			var leftPanel = document.getElementById('left');
+			if (leftPanel) {
+				leftPanel.addEventListener('wheel', function (event) {
+					var deltaY = event.deltaY;
+					var atTop = leftPanel.scrollTop <= 0;
+					var atBottom = Math.ceil(leftPanel.scrollTop + leftPanel.clientHeight) >= leftPanel.scrollHeight;
+					if ((deltaY < 0 && atTop) || (deltaY > 0 && atBottom)) {
+						event.preventDefault();
+					}
+				}, { passive: false });
+			}
+
 			// 处理主菜单点击事件
 			$('.menu > li').click(function (event) {
 				event.stopPropagation();
@@ -56,6 +193,12 @@
 				// 切换图标
 				var icon = $(this).find('.fa1');
 				icon.toggleClass('fa-angle-down fa-angle-up');
+			});
+
+			// 左侧菜单搜索
+			$('#menuSearchInput').on('input', function () {
+				var keyword = $.trim($(this).val()).toLowerCase();
+				filterMenu(keyword);
 			});
 
 			// 处理子菜单点击事件
@@ -85,7 +228,7 @@
 				var encodedUrl = encodeURI(url);
 				console.log('Checking for tab with URL:', encodedUrl);
 				if ($('.tab[data-url="' + encodedUrl + '"]').length === 0) {
-					var tab = $('<div class="tab" data-url="' + encodedUrl + '">' + title + '<span class="close">&times;</span></div>');
+					var tab = $('<div class="tab" data-url="' + encodedUrl + '"><span class="tab-title">' + title + '</span><span class="close">&times;</span></div>');
 					$('#tabHeader').append(tab);
 					tab.click(function () {
 						$('.tab').removeClass('active');
@@ -116,6 +259,60 @@
 					console.log('Tab already exists, clicked:', encodedUrl);
 				}
 			}
+
+			function filterMenu(keyword) {
+				var hasKeyword = keyword.length > 0;
+				$('.menu > li').each(function () {
+					var $parentLi = $(this);
+					var $parentLink = $parentLi.children('a').first();
+					var parentTitle = $.trim($parentLink.find('span').first().text() || $parentLink.text()).toLowerCase();
+					var parentMatched = parentTitle.indexOf(keyword) !== -1;
+					var $submenu = $parentLi.children('.submenu');
+
+					if ($submenu.length === 0) {
+						$parentLi.toggle(!hasKeyword || parentMatched);
+						return;
+					}
+
+					var childMatched = false;
+					$submenu.children('li').each(function () {
+						var $childLi = $(this);
+						var childTitle = $.trim($childLi.find('a span').first().text() || $childLi.find('a').text()).toLowerCase();
+						var matched = childTitle.indexOf(keyword) !== -1;
+						if (!hasKeyword || parentMatched || matched) {
+							$childLi.show();
+						} else {
+							$childLi.hide();
+						}
+						if (matched) {
+							childMatched = true;
+						}
+					});
+
+					var visible = !hasKeyword || parentMatched || childMatched;
+					$parentLi.toggle(visible);
+
+					var icon = $parentLi.find('.fa1').first();
+					if (!hasKeyword) {
+						$submenu.children('li').show();
+						if (icon.length) {
+							if ($submenu.is(':visible')) {
+								icon.removeClass('fa-angle-down').addClass('fa-angle-up');
+							} else {
+								icon.removeClass('fa-angle-up').addClass('fa-angle-down');
+							}
+						}
+						return;
+					}
+
+					if (visible) {
+						$submenu.show();
+						if (icon.length) {
+							icon.removeClass('fa-angle-down').addClass('fa-angle-up');
+						}
+					}
+				});
+			}
 		});
 	</script>
 
@@ -124,9 +321,15 @@
 <body>
 <div id="container">
 	<!-- 顶部导航栏（含退出登录） -->
-	<iframe id="headerFrame" src="head.html" frameborder="0" scrolling="no" style="width:100%; height:75px; display:block; border:none;"></iframe>
+	<iframe id="headerFrame" src="head.html" frameborder="0" scrolling="no" style="width:100%; height:64px; display:block; border:none;"></iframe>
 	<div id="main">
 		<div id="left" class="menu-container">
+			<div class="menu-search-wrap">
+				<div class="menu-search-box">
+					<i class="fa fa-search menu-search-icon" aria-hidden="true"></i>
+					<input id="menuSearchInput" type="text" placeholder="搜索菜单..." autocomplete="off">
+				</div>
+			</div>
 			<ul class="menu">
 				#for(x : parentFunctions)
 				#if(x.getChildFunctions().size() == 0)
@@ -160,7 +363,7 @@
 			<!-- 右侧 tab 头部 -->
 			<div id="tabHeader"></div>
 			<!-- 右侧内容展示区域 -->
-			<iframe id="contentFrame" src="content.html" frameborder="0" width="100%" height="100%"></iframe>
+			<iframe id="contentFrame" src="content.html" frameborder="0"></iframe>
 		</div>
 	</div>
 </div>

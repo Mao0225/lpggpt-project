@@ -1,358 +1,424 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>车辆行驶监控</title>
-	<link rel="stylesheet" type="text/css" href="/css/lpg.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>车辆行驶监控</title>
+    <script src="https://webapi.amap.com/maps?v=1.4.15&key=6ec730c409404096f83c2b971263a591"></script>
+    <script src="../css/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css">
+    <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/index.css">
+    <style>
+        /* 浅色商务风格 - 车辆行驶监控页面 */
+        body {
+            background-color: #F8FAFC;
+            color: #1E293B;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
 
-	<script src="https://webapi.amap.com/maps?v=1.4.15&key=6ec730c409404096f83c2b971263a591"></script>
-	<script src="../css/jquery-3.3.1.min.js"></script>
-	<link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css" >
-	<script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="../css/lpg.css">
-	<style scoped>
-		.container {
-			padding: 50px 20px;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-		}
+        /* 搜索表单 */
+        #searchForm {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
 
-		input {
-			padding: 15px;
-			font-size: 18px;
-			border: 2px solid #a3bffa;
-			border-radius: 10px;
-			width: 100%;
-			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-			transition: border-color 0.3s ease;
-		}
+        #searchForm label {
+            color: #475569;
+            font-size: 14px;
+            font-weight: 500;
+        }
 
-		input:focus {
-			outline: none;
-			border-color: #4c87c9;
-		}
-	</style>
+        #searchForm input[type="text"] {
+            padding: 8px 12px;
+            font-size: 14px;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            background: #FFFFFF;
+            color: #1E293B;
+            min-width: 200px;
+            transition: all 0.15s ease;
+        }
 
-	<style>
-		/* 设置 #pagediv 的样式 */
-		#pagediv {
-			background-color: #f0f0f0;
-			color: black;
-			padding: 10px;
-			border: 2px solid #007bff;
-		}
+        #searchForm input[type="text"]:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
 
-		/* 设置表格样式 */
-		table.list {
-			width: 100%;
-			border-collapse: collapse;
-		}
+        #searchForm button {
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-		/* 设置表格表头样式 */
-		table.list th {
-			background-color: #add8e6;
-			color: black;
-			padding: 8px;
-			text-align: left;
-			border: 1px solid #ddd; /* 新增：添加边框 */
-		}
+        #searchForm button[type="submit"] {
+            background: #3B82F6;
+            color: #FFFFFF;
+        }
 
-		/* 设置表格单元格样式 */
-		table.list td {
-			padding: 8px;
-			border: 1px solid #ddd; /* 修改：添加边框 */
-		}
+        #searchForm button[type="submit"]:hover {
+            background: #2563EB;
+        }
 
-		/* 设置表格隔行颜色 */
-		table.list tr:nth-child(even) {
-			background-color: #f2f2f2;
-		}
+        #searchForm button[type="button"] {
+            background: #FFFFFF;
+            color: #475569;
+            border: 1px solid #CBD5E1;
+        }
 
-		table.list tr:nth-child(odd) {
-			background-color: #e0e0e0;
-		}
+        #searchForm button[type="button"]:hover {
+            background: #F8FAFC;
+            border-color: #94A3B8;
+        }
 
-		/* 设置鼠标悬停时表格行的颜色 */
-		table.list tr:hover {
-			background-color: #d3d3d3;
-		}
+        /* 表格区域 */
+        .table-container {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 0 20px 20px 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
 
-		/* 新增样式：设置新建司机链接为黑色 */
-		#pagediv .add {
-			color: black;
-		}
+        table.list {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0;
+        }
 
-		/* 新增样式：设置输入框背景色为淡灰色 */
-		#pagediv input[type="text"] {
-			background-color: #f0f0f0;
-		}
-		/* 新增样式：设置 label 文字颜色为黑色 */
-		#pagediv label {
-			color: black;
-		}
-		#pagediv .add {
-			color: white;
-			background-color: #007bff;
-			padding: 6px 12px;
-			text-decoration: none;
-			display: inline-block;
-			border-radius: 5; /* 方方正正的边框 */
-		}
-	</style>
-	<script>
-		document.addEventListener('DOMContentLoaded', (event) => {
-			// 手动刷新功能
-			document.getElementById('manualRefresh').addEventListener('click', function() {
-				const carno = encodeURIComponent("#(carno !=null?carno: '')");
-				window.location.href = `/caryunxing/yunxingkanban?carno=${carno}`;
-			});
+        table.list th {
+            background: #F8FAFC;
+            color: #475569;
+            padding: 14px 16px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            border-bottom: 1px solid #E2E8F0;
+        }
 
-			// 显示路线
-			async function showRoute(carno, updatetime) {
-				console.log(`请求数据: carno=${carno}, timestamp=${updatetime}`);
-				const response = await fetch(`/caryunxing/getVehicleLocations?carno=${carno}&timestamp=${updatetime}`);
+        table.list td {
+            padding: 14px 16px;
+            font-size: 14px;
+            color: #1E293B;
+            border-bottom: 1px solid #F1F5F9;
+            vertical-align: middle;
+            text-align: center;
+        }
 
-				if (!response.ok) {
-					console.error('网络请求失败', response);
-					alert('请求失败，请稍后重试。');
-					return;
-				}
+        table.list tr {
+            background: #FFFFFF;
+            transition: background 0.15s ease;
+        }
 
-				const data = await response.json();
-				console.log('返回的数据:', data);
+        table.list tr:nth-child(even) {
+            background: #F8FAFC;
+        }
 
-				if (data.length > 0) {
-					const path = data.map(location => normalizePathPoint(location)).filter(point => point !== null);
-					console.log('路径数据:', path);
-					if (path.length === 0) {
-						alert('轨迹坐标无效，无法绘制地图路径');
-						return;
-					}
-					drawRouteOnMap(path);
-				} else {
-					alert('未找到相关数据');
-				}
-			}
+        table.list tr:hover {
+            background: #F1F5F9;
+        }
 
-			// 坐标归一化：兼容 jingdu/weidu 反置以及 lng/lat 字段
-			function normalizePathPoint(location) {
-				let a = parseFloat(location.jingdu != null ? location.jingdu : location.lng);
-				let b = parseFloat(location.weidu != null ? location.weidu : location.lat);
+        table.list tr:last-child td {
+            border-bottom: none;
+        }
 
-				if (!Number.isFinite(a) || !Number.isFinite(b)) {
-					return null;
-				}
+        /* 可点击的地址 */
+        table.list #address {
+            color: #3B82F6;
+            cursor: pointer;
+            text-decoration: underline;
+        }
 
-				let lng = a;
-				let lat = b;
+        table.list #address:hover {
+            color: #2563EB;
+        }
 
-				// 若纬度超出范围，优先判定为经纬度反置
-				if (Math.abs(lat) > 90 && Math.abs(lng) <= 90) {
-					const temp = lng;
-					lng = lat;
-					lat = temp;
-				}
+        /* 分页 */
+        .pagination {
+            margin: 0 20px 20px 20px;
+            color: #475569;
+            font-size: 14px;
+        }
 
-				// 中国常见坐标场景兜底：经度应大致在 [70,140]，纬度应在 [0,55]
-				if (lng >= 0 && lng <= 55 && lat >= 70 && lat <= 140) {
-					const temp = lng;
-					lng = lat;
-					lat = temp;
-				}
+        .pagination a {
+            color: #475569;
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            margin: 0 2px;
+            display: inline-block;
+            transition: all 0.15s ease;
+        }
 
-				// 最终合法性校验
-				if (!(lng >= -180 && lng <= 180 && lat >= -90 && lat <= 90)) {
-					return null;
-				}
+        .pagination a:hover {
+            background: #F8FAFC;
+            border-color: #CBD5E1;
+        }
 
-				return [lng, lat];
-			}
+        .pagination .current-page {
+            color: #FFFFFF;
+            background: #3B82F6;
+            border-color: #3B82F6;
+        }
 
-			// 绘制路径
-			function drawRouteOnMap(path) {
-				console.log('绘制路径:', path); // 调试信息
+        /* 地图弹窗 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding-top: 60px;
+        }
 
-				// 显示弹出框
-				const modal = document.getElementById("mapModal");
-				modal.style.display = "block";
+        .modal-content {
+            background-color: #FFFFFF;
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 1000px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
 
+        .close {
+            color: #64748B;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.15s ease;
+        }
 
+        .close:hover {
+            color: #1E293B;
+        }
 
-				const map = new AMap.Map('map', {
-					zoom: 12, // 设置适合的缩放级别
-					center: [path[0][0], path[0][1]], // 初始中心点
-					resizeEnable: true // 启用地图自适应
-				});
+        #map {
+            width: 100%;
+            height: 600px;
+            margin-top: 20px;
+            border-radius: 8px;
+            border: 1px solid #E2E8F0;
+        }
 
-				const polyline = new AMap.Polyline({
-					path: path,
-					strokeColor: '#3366FF', // 线颜色
-					strokeWeight: 6, // 线宽
-					strokeOpacity: 0.8 // 线透明度
-				});
-				polyline.setMap(map);
+        /* 响应式 */
+        @media (max-width: 768px) {
+            #searchForm {
+                margin: 10px;
+                flex-direction: column;
+                align-items: stretch;
+            }
 
-				const bounds = polyline.getBounds();
-				if (bounds) {
-					map.setBounds(bounds); // 设置地图视图为路径的边界
-				}
-			}
+            #searchForm input[type="text"] {
+                width: 100%;
+            }
 
-			// 关闭弹出框
-			function closeModal() {
-				const modal = document.getElementById("mapModal");
-				modal.style.display = "none";
+            .table-container {
+                margin: 0 10px 10px 10px;
+                overflow-x: auto;
+            }
 
-				// 开始自动重置
-				startAutoReset();
-			}
+            table.list {
+                min-width: 800px;
+            }
 
-			// 为每个行程的地址添加点击事件
-			document.querySelectorAll('#address').forEach(item => {
-				item.addEventListener('click', function() {
-					const carno = this.getAttribute('data-carno');
-					const updatetime = this.getAttribute('data-updatetime');
-					showRoute(carno, updatetime);
-				});
-			});
-
-			// 为关闭按钮添加事件
-			document.querySelector('.close').addEventListener('click', closeModal);
-		});
-	</script>
-
-	<style>
-		body {
-			font-family: Arial, sans-serif;
-			background-color: #2c3e50;
-			color: black; /* 改为黑色 */
-		}
-
-		#map {
-			width: 100%;
-			height: 600px; /* 确保地图高度为600px */
-			margin-top: 20px;
-		}
-
-		table {
-			width: 100%;
-			border-collapse: collapse;
-			margin-top: 20px;
-		}
-
-		th, td {
-			border: 1px solid #ccc;
-			padding: 10px;
-			text-align: center;
-			cursor: pointer; /* 鼠标悬停时显示为手型 */
-		}
-
-		th {
-			background-color: #34495e;
-		}
-
-		tr:nth-child(even) {
-			background-color: #34495e; /* 偶数行背景 */
-		}
-
-		tr:nth-child(odd) {
-			background-color: #2c3e50; /* 奇数行背景 */
-		}
-
-		.pagination {
-			color: #f0f0f0;
-			font-size: 15px;
-			margin-top: 20px;
-		}
-
-		/* 弹出框的样式 */
-		.modal {
-			display: none; /* 默认隐藏 */
-			position: fixed;
-			z-index: 1000;
-			left: 0;
-			top: 0;
-			width: 100%;
-			height: 100%;
-			overflow: auto;
-			background-color: rgb(0,0,0);
-			background-color: rgba(0,0,0,0.4); /* 背景颜色 */
-			padding-top: 60px;
-		}
-
-		.modal-content {
-			background-color: #fefefe;
-			margin: 5% auto; /* 从顶部 */
-			padding: 20px;
-			border: 1px solid #888;
-			width: 80%; /* 宽度 */
-		}
-
-		.close {
-			color: #aaa;
-			float: right;
-			font-size: 28px;
-			font-weight: bold;
-		}
-
-		.close:hover,
-		.close:focus {
-			color: black;
-			text-decoration: none;
-			cursor: pointer;
-		}
-	</style>
+            #map {
+                height: 400px;
+            }
+        }
+    </style>
 </head>
 <body>
 <form id="searchForm" action="/caryunxing/yunxingkanban" method="post">
-	<label for="carno">请输入车牌号：</label>
-	<input type="text" id="carno" name="carno" placeholder="请输入车牌号" value="#(carno)"/>
-	&nbsp;&nbsp;<button type="submit">查询</button>
-	&nbsp;&nbsp;<button type="button" id="manualRefresh">立即刷新</button>
+    <label for="carno">车牌号：</label>
+    <input type="text" id="carno" name="carno" placeholder="请输入车牌号" value="#(carno)"/>
+    <button type="submit">查询</button>
+    <button type="button" id="manualRefresh">立即刷新</button>
 </form>
 
-<table class="list">
-	<tbody>
-	<tr>
-		<th>序号</th>
-		<th>车牌号</th>
-		<th>司机姓名</th>
-		<th>司机电话</th>
-		<th>GPS经度</th>
-		<th>GPS纬度</th>
-		<th>地点</th>
-		<th>时间</th>
-	</tr>
-	#set(startIndex = (yunxinglist.pageNumber - 1) * yunxinglist.pageSize + 1)
-	#for(x : yunxinglist.getList())
-	<tr>
-		<td>#(startIndex++)</td>
-		<td>#(x.carno)</td>
-		<td>#(x.drivername)</td>
-		<td>#(x.driverphone)</td>
-		<td>#(x.jingdu)</td>
-		<td>#(x.weidu)</td>
-		<td id="address" data-carno="#(x.carno)" data-updatetime="#(x.updatetime)" >#(x.address)</td>
-		<td>#(x.updatetime)</td>
-	</tr>
-	#end
-	</tbody>
-</table>
-
-<div class="pagination" style="color:#f0f0f0; font-size: 15px">
-	#@paginate(yunxinglist.pageNumber, yunxinglist.totalPage,"/caryunxing/yunxingkanban?carno="+(carno !=null?carno: "")+ "&page=")
+<div class="table-container">
+    <table class="list">
+        <tbody>
+        <tr>
+            <th>序号</th>
+            <th>车牌号</th>
+            <th>司机姓名</th>
+            <th>司机电话</th>
+            <th>GPS经度</th>
+            <th>GPS纬度</th>
+            <th>地点</th>
+            <th>时间</th>
+        </tr>
+        #set(startIndex = (yunxinglist.pageNumber - 1) * yunxinglist.pageSize + 1)
+        #for(x : yunxinglist.getList())
+        <tr>
+            <td>#(startIndex++)</td>
+            <td>#(x.carno)</td>
+            <td>#(x.drivername)</td>
+            <td>#(x.driverphone)</td>
+            <td>#(x.jingdu)</td>
+            <td>#(x.weidu)</td>
+            <td id="address" data-carno="#(x.carno)" data-updatetime="#(x.updatetime)">#(x.address)</td>
+            <td>#(x.updatetime)</td>
+        </tr>
+        #end
+        </tbody>
+    </table>
 </div>
 
-<!-- 弹出框 -->
+<div class="pagination">
+    #@paginate(yunxinglist.pageNumber, yunxinglist.totalPage,"/caryunxing/yunxingkanban?carno="+(carno !=null?carno: "")+ "&page=")
+</div>
+
+<!-- 地图弹窗 -->
 <div id="mapModal" class="modal">
-	<div class="modal-content">
-		<span class="close">&times;</span>
-		<div id="map"></div> <!-- 添加地图容器 -->
-	</div>
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <div id="map"></div>
+    </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        // 手动刷新功能
+        document.getElementById('manualRefresh').addEventListener('click', function() {
+            const carno = encodeURIComponent("#(carno !=null?carno: '')");
+            window.location.href = `/caryunxing/yunxingkanban?carno=${carno}`;
+        });
+
+        // 显示路线
+        async function showRoute(carno, updatetime) {
+            console.log(`请求数据: carno=${carno}, timestamp=${updatetime}`);
+            const response = await fetch(`/caryunxing/getVehicleLocations?carno=${carno}&timestamp=${updatetime}`);
+
+            if (!response.ok) {
+                console.error('网络请求失败', response);
+                alert('请求失败，请稍后重试。');
+                return;
+            }
+
+            const data = await response.json();
+            console.log('返回的数据:', data);
+
+            if (data.length > 0) {
+                const path = data.map(location => normalizePathPoint(location)).filter(point => point !== null);
+                console.log('路径数据:', path);
+                if (path.length === 0) {
+                    alert('轨迹坐标无效，无法绘制地图路径');
+                    return;
+                }
+                drawRouteOnMap(path);
+            } else {
+                alert('未找到相关数据');
+            }
+        }
+
+        // 坐标归一化
+        function normalizePathPoint(location) {
+            let a = parseFloat(location.jingdu != null ? location.jingdu : location.lng);
+            let b = parseFloat(location.weidu != null ? location.weidu : location.lat);
+
+            if (!Number.isFinite(a) || !Number.isFinite(b)) {
+                return null;
+            }
+
+            let lng = a;
+            let lat = b;
+
+            if (Math.abs(lat) > 90 && Math.abs(lng) <= 90) {
+                const temp = lng;
+                lng = lat;
+                lat = temp;
+            }
+
+            if (lng >= 0 && lng <= 55 && lat >= 70 && lat <= 140) {
+                const temp = lng;
+                lng = lat;
+                lat = temp;
+            }
+
+            if (!(lng >= -180 && lng <= 180 && lat >= -90 && lat <= 90)) {
+                return null;
+            }
+
+            return [lng, lat];
+        }
+
+        // 绘制路径
+        function drawRouteOnMap(path) {
+            console.log('绘制路径:', path);
+
+            const modal = document.getElementById("mapModal");
+            modal.style.display = "block";
+
+            const map = new AMap.Map('map', {
+                zoom: 12,
+                center: [path[0][0], path[0][1]],
+                resizeEnable: true
+            });
+
+            const polyline = new AMap.Polyline({
+                path: path,
+                strokeColor: '#3B82F6',
+                strokeWeight: 6,
+                strokeOpacity: 0.8
+            });
+            polyline.setMap(map);
+
+            const bounds = polyline.getBounds();
+            if (bounds) {
+                map.setBounds(bounds);
+            }
+        }
+
+        // 关闭弹窗
+        function closeModal() {
+            const modal = document.getElementById("mapModal");
+            modal.style.display = "none";
+        }
+
+        // 为每个行程的地址添加点击事件
+        document.querySelectorAll('#address').forEach(item => {
+            item.addEventListener('click', function() {
+                const carno = this.getAttribute('data-carno');
+                const updatetime = this.getAttribute('data-updatetime');
+                showRoute(carno, updatetime);
+            });
+        });
+
+        // 为关闭按钮添加事件
+        document.querySelector('.close').addEventListener('click', closeModal);
+    });
+</script>
 
 </body>
 </html>
-

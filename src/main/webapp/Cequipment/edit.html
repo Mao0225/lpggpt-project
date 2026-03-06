@@ -1,106 +1,165 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Content</title>
-  <style>
-    /* 针对按钮的点击后样式重置 */
-    button:active {
-      background-color: initial;
-      color: initial;
-      border-color: initial;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>编辑维修记录</title>
+    <style>
+        body {
+            margin: 0;
+            background: #F8FAFC;
+            color: #1E293B;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+        }
 
-    button:focus {
-      outline: none;
-    }
+        .form-container {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            padding: 20px;
+        }
 
-    /* 更具体的选择器覆盖可能影响按钮可点击性的全局样式 */
-    button.edit-btn:active,
-    button.delete-btn:active {
-      pointer-events: auto;
-    }
-  </style>
+        .form-title {
+            margin: 0 0 16px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E293B;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #E2E8F0;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px 20px;
+        }
+
+        .form-group {
+            margin: 0;
+        }
+
+        .form-group-full {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #475569;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="date"],
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 12px;
+            font-size: 14px;
+            color: #1E293B;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            background: #FFFFFF;
+            box-sizing: border-box;
+            transition: all 0.15s ease;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 88px;
+        }
+
+        .form-group input[readonly] {
+            background: #F8FAFC;
+            color: #64748B;
+            cursor: not-allowed;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .form-container {
+                padding: 14px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
-
 <body>
-<h1>编辑维修记录</h1>
-<div  class="list">
-  <form action="/Cequipment/update" method="post" id="myForm">
-    <!-- 隐藏域，用于传递维修记录的ID -->
-    <input type="hidden" name="bseMaintenance.id" value="#(maintenance.id)" />
-    <input type="hidden" name="bseMaintenance.equipmentid" value="#(maintenance.equipmentid)" />
-    <!-- 设备名称，不可编辑 -->
-    <div class="form-group">
-      <label for="equipmentName">设备名称</label>
-      <input type="text" id="equipmentName" name="" value="#(equipment)" readonly class="form-control" />
-    </div>
-    <!-- 记录类型选择 -->
-    <div class="form-group">
-      <label for="recordType">记录类型</label>
-      <select id="recordType" name="bseMaintenance.kind" class="form-control">
-        #if (maintenance.kind == "维修")maintenance
-        <option value="维修" selected>维修</option>
-        <option value="维护">维护</option>
-        #else
-        <option value="维修">维修</option>
-        <option value="维护" selected>维护</option>
-        #end
-      </select>
-    </div>
-    <!-- 报修日期选择 -->
-    <div class="form-group">
-      <label for="reportDate">报修日期</label>
-      <input type="text" id="reportDate" name="bseMaintenance.reportday" value="#(maintenance.reportday)" class="form-control datepicker" placeholder="点击选择日期" />
-    </div>
-    <!-- 报修人员输入 -->
-    <div class="form-group">
-      <label for="reporter">报修人员</label>
-      <input type="text" id="reporter" name="bseMaintenance.reporter" value="#(maintenance.reporter)" class="form-control" />
-    </div>
-    <!-- 主要内容输入 -->
-    <div class="form-group">
-      <label for="mainContent">主要内容</label>
-      <textarea id="mainContent" name="bseMaintenance.content" class="form-control">#(maintenance.content)</textarea>
-    </div>
-    <!-- 维修人员输入 -->
-    <div class="form-group">
-      <label for="repairer">维修人员</label>
-      <input type="text" id="repairer" name="bseMaintenance.repairer" value="#(maintenance.repairer)" class="form-control" />
-    </div>
-    <!-- 维修时间选择 -->
-    <div class="form-group">
-      <label for="repairday">维修时间</label>
-      <input type="text" id="repairday" name="bseMaintenance.repairday" value="#(maintenance.repairday)" class="form-control datepicker" placeholder="点击选择日期" />
-    </div>
-    <!-- 工单状态选择 -->
-    <div class="form-group">
-      <label for="step">工单状态</label>
-      <select id="step" name="bseMaintenance.step" class="form-control">
-        #if (maintenance.step == "进行中")
-        <option value="进行中" selected>进行中</option>
-        <option value="已完成">已完成</option>
-        #else
-        <option value="进行中">进行中</option>
-        <option value="已完成" selected>已完成</option>
-        #end
-      </select>
-    </div>
+<div class="form-container">
+    <h1 class="form-title">编辑维修记录</h1>
+    <form action="/Cequipment/update" method="post" id="myForm">
+        <input type="hidden" name="bseMaintenance.id" value="#(maintenance.id)"/>
+        <input type="hidden" name="bseMaintenance.equipmentid" value="#(maintenance.equipmentid)"/>
 
-  </form>
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="equipmentName">设备名称</label>
+                <input type="text" id="equipmentName" value="#(equipment)" readonly/>
+            </div>
+
+            <div class="form-group">
+                <label for="recordType">记录类型</label>
+                <select id="recordType" name="bseMaintenance.kind">
+                    #if (maintenance.kind == "维修")
+                    <option value="维修" selected>维修</option>
+                    <option value="维护">维护</option>
+                    #else
+                    <option value="维修">维修</option>
+                    <option value="维护" selected>维护</option>
+                    #end
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="reportDate">报修日期</label>
+                <input type="text" id="reportDate" name="bseMaintenance.reportday" value="#(maintenance.reportday)" placeholder="点击选择日期"/>
+            </div>
+
+            <div class="form-group">
+                <label for="reporter">报修人员</label>
+                <input type="text" id="reporter" name="bseMaintenance.reporter" value="#(maintenance.reporter)"/>
+            </div>
+
+            <div class="form-group form-group-full">
+                <label for="mainContent">主要内容</label>
+                <textarea id="mainContent" name="bseMaintenance.content">#(maintenance.content)</textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="repairer">维修人员</label>
+                <input type="text" id="repairer" name="bseMaintenance.repairer" value="#(maintenance.repairer)"/>
+            </div>
+
+            <div class="form-group">
+                <label for="repairday">维修时间</label>
+                <input type="text" id="repairday" name="bseMaintenance.repairday" value="#(maintenance.repairday)" placeholder="点击选择日期"/>
+            </div>
+
+            <div class="form-group">
+                <label for="step">工单状态</label>
+                <select id="step" name="bseMaintenance.step">
+                    #if (maintenance.step == "进行中")
+                    <option value="进行中" selected>进行中</option>
+                    <option value="已完成">已完成</option>
+                    #else
+                    <option value="进行中">进行中</option>
+                    <option value="已完成" selected>已完成</option>
+                    #end
+                </select>
+            </div>
+        </div>
+    </form>
 </div>
-<script>
-  // 初始化日期选择插件
-  $('.datepicker').datepicker({
-    format: 'yyyy-mm-dd',
-    autoclose: true,
-    todayHighlight: true
-  });
-
-
-</script>
 </body>
-
 </html>

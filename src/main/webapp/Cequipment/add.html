@@ -1,116 +1,153 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>添加维修记录</title>
+    <style>
+        body {
+            margin: 0;
+            background: #F8FAFC;
+            color: #1E293B;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+        }
+
+        .form-container {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .form-title {
+            margin: 0 0 16px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E293B;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #E2E8F0;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px 20px;
+        }
+
+        .form-group {
+            margin: 0;
+        }
+
+        .form-group-full {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #475569;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="date"],
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 12px;
+            font-size: 14px;
+            color: #1E293B;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            background: #FFFFFF;
+            box-sizing: border-box;
+            transition: all 0.15s ease;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 88px;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .form-container {
+                padding: 14px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
-<title>Content</title>
-<style>
-  /* 以下是保留你原来的样式部分 */
-  ::-webkit-input-placeholder {
-    /* Chrome/Opera/Safari */
-    color: #8A8A8A;
-    font-size: 12px;
-  }
-
-  ::-moz-placeholder {
-    /* Firefox 19+ */
-    color: #8A8A8A;
-    font-size: 12px;
-  }
-
-  :-ms-input-placeholder {
-    /* IE 10+ */
-    color: #8A8A8A;
-    font-size: 12px;
-  }
-
-  :-moz-placeholder {
-    /* Firefox 18- */
-    color: #8A8A8A;
-    font-size: 12px;
-  }
-</style>
 <body>
-<h1>添加维修记录</h1>
-<div class="form_box">
-  <form action="/Cequipment/save" method="post" id="myForm">
-    <input type="hidden" id="companyid" name="bseMaintenance.companyid" value = "#(companyid)" />
-    <!-- 设备名称选择 -->
-    <div class="form-group">
-      <label for="equipmentName">设备名称</label>
-      <select id="equipmentName" name="bseMaintenance.equipmentid" class="form-control">
-        <option value="" selected disabled>请选择设备</option>
-        #for (x : equipments)
-        <option value="#(x.id)">#(x.name)</option>
-        #end
-      </select>
-    </div>
-    <!-- 记录类型选择 -->
-    <div class="form-group">
-      <label for="recordType">记录类型</label>
-      <select id="recordType" name="bseMaintenance.kind" class="form-control">
-        <option value="维修">维修</option>
-        <option value="维护">维护</option>
-      </select>
-    </div>
-    <!-- 报修日期选择 -->
-    <div class="form-group">
-      <label for="reportDate">报修日期</label>
-      <input type="date" id="reportDate" name="bseMaintenance.reportday"  placeholder="点击选择日期" />
-    </div>
-    <!-- 报修人员输入 -->
-    <div class="form-group">
-      <label for="reporter">报修人员</label>
-      <input type="text" id="reporter" name="bseMaintenance.reporter" class="form-control" />
-    </div>
-    <!-- 主要内容输入 -->
-    <div class="form-group">
-      <label for="mainContent">主要内容</label>
-      <textarea id="mainContent" name="bseMaintenance.content" class="form-control"></textarea>
-    </div>
-    <!-- 维修人员输入 -->
-    <div class="form-group">
-      <label for="repairer">维修人员</label>
-      <input type="text" id="repairer" name="bseMaintenance.repairer" class="form-control" />
-    </div>
-    <!-- 维修时间选择 -->
-    <div class="form-group">
-      <label for="repairTime">维修时间</label>
-      <input type="date" id="repairTime" name="bseMaintenance.repairday"  placeholder="点击选择日期" />
-    </div>
-    <!-- 工单状态选择 -->
-    <div class="form-group">
-      <label for="step">工单状态</label>
-      <select id="step" name="bseMaintenance.step" class="form-control">
-        <option value="进行中">进行中</option>
-        <option value="已完成">已完成</option>
-      </select>
-    </div>
-<!--    <button type="submit" class="btn btn-primary">保存</button>-->
-  </form>
+<div class="form-container">
+    <h1 class="form-title">添加维修记录</h1>
+    <form action="/Cequipment/save" method="post" id="myForm">
+        <input type="hidden" id="companyid" name="bseMaintenance.companyid" value="#(companyid)"/>
+
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="equipmentName">设备名称</label>
+                <select id="equipmentName" name="bseMaintenance.equipmentid">
+                    <option value="" selected disabled>请选择设备</option>
+                    #for (x : equipments)
+                    <option value="#(x.id)">#(x.name)</option>
+                    #end
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="recordType">记录类型</label>
+                <select id="recordType" name="bseMaintenance.kind">
+                    <option value="维修">维修</option>
+                    <option value="维护">维护</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="reportDate">报修日期</label>
+                <input type="date" id="reportDate" name="bseMaintenance.reportday"/>
+            </div>
+
+            <div class="form-group">
+                <label for="reporter">报修人员</label>
+                <input type="text" id="reporter" name="bseMaintenance.reporter"/>
+            </div>
+
+            <div class="form-group form-group-full">
+                <label for="mainContent">主要内容</label>
+                <textarea id="mainContent" name="bseMaintenance.content"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="repairer">维修人员</label>
+                <input type="text" id="repairer" name="bseMaintenance.repairer"/>
+            </div>
+
+            <div class="form-group">
+                <label for="repairTime">维修时间</label>
+                <input type="date" id="repairTime" name="bseMaintenance.repairday"/>
+            </div>
+
+            <div class="form-group">
+                <label for="step">工单状态</label>
+                <select id="step" name="bseMaintenance.step">
+                    <option value="进行中">进行中</option>
+                    <option value="已完成">已完成</option>
+                </select>
+            </div>
+        </div>
+    </form>
 </div>
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
-<script>
-  // 假设这是服务器端渲染到页面中的 JSON 数据，获取设备列表信息
-  var jsonData = '#(com.alibaba.fastjson.JSONArray::toJSON(equipments))';
-  // 解析 JSON 数据
-  var context = JSON.parse(jsonData.replace(/#/g, ""));
-
-  // 初始化设备名称下拉框
-  $(document).ready(function () {
-    var equipmentSelect = $('#equipmentName');
-    // 遍历设备列表数据，添加选项到下拉框
-    context.forEach(function (equipment) {
-      equipmentSelect.append('<option value="' + equipment.name + '">' + equipment.name + '</option>');
-    });
-  });
-
-  // 初始化日期选择插件
-</script>
 </body>
-
 </html>

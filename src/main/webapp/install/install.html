@@ -1,178 +1,482 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>安装管理</title>
     <script src="../css/jquery-3.3.1.min.js"></script>
     <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css">
     <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="/css/lpg.css">
-    <style scoped>
-        .container {
-            padding: 50px 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        input {
-            padding: 15px;
-            font-size: 18px;
-            border: 2px solid #a3bffa;
-            border-radius: 10px;
-            width: 100%;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: border-color 0.3s ease;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: #4c87c9;
-        }
-    </style>
-
+    <link rel="stylesheet" type="text/css" href="../css/index.css">
     <style>
-        /* 设置 #pagediv 的样式 */
+        /* 浅色商务风格 - 安装管理列表页面 */
+        body {
+            background-color: #F8FAFC;
+            color: #1E293B;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* 搜索区域 */
         #pagediv {
-            background-color: #f0f0f0;
-            color: black;
-            padding: 10px;
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
         }
 
-        /* 设置表格样式 */
+        #searchForm {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        #searchForm label {
+            color: #475569;
+            font-size: 14px;
+            font-weight: 500;
+            margin: 0;
+        }
+
+        #searchForm input[type="text"],
+        #searchForm input[type="date"] {
+            padding: 8px 12px;
+            font-size: 14px;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            background: #FFFFFF;
+            color: #1E293B;
+            min-width: 140px;
+            transition: all 0.15s ease;
+        }
+
+        #searchForm input[type="text"]:focus,
+        #searchForm input[type="date"]:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        #searchForm button {
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #searchForm button[type="submit"] {
+            background: #3B82F6;
+            color: #FFFFFF;
+        }
+
+        #searchForm button[type="submit"]:hover {
+            background: #2563EB;
+        }
+
+        #searchForm button[type="button"] {
+            background: #FFFFFF;
+            color: #475569;
+            border: 1px solid #CBD5E1;
+        }
+
+        #searchForm button[type="button"]:hover {
+            background: #F8FAFC;
+            border-color: #94A3B8;
+        }
+
+        /* 表格区域 */
+        .table-scroll-wrapper {
+            overflow-x: auto;
+            overflow-y: visible;
+            margin: 0 20px 20px 20px;
+            -webkit-overflow-scrolling: touch;
+        }
+
         table.list {
-            width: 100%;
+            width: max-content;
+            min-width: 100%;
+            table-layout: auto;
             border-collapse: collapse;
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            overflow: hidden;
         }
 
-        /* 设置表格表头样式 */
         table.list th {
-            background-color: #add8e6;
-            color: black;
-            padding: 8px;
+            background: #F8FAFC;
+            color: #475569;
+            padding: 12px 14px;
             text-align: left;
-            border: 1px solid #ddd; /* 新增：添加边框 */
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            border-bottom: 1px solid #E2E8F0;
+            white-space: nowrap;
         }
 
-        /* 设置表格单元格样式 */
         table.list td {
-            padding: 8px;
-            border: 1px solid #ddd; /* 修改：添加边框 */
+            padding: 12px 14px;
+            font-size: 13px;
+            color: #1E293B;
+            border-bottom: 1px solid #F1F5F9;
+            vertical-align: middle;
+            white-space: nowrap;
         }
 
-        /* 设置表格隔行颜色 */
+        table.list tr {
+            background: #FFFFFF;
+            transition: background 0.15s ease;
+        }
+
         table.list tr:nth-child(even) {
-            background-color: #f2f2f2;
+            background: #F8FAFC;
         }
 
-        table.list tr:nth-child(odd) {
-            background-color: #e0e0e0;
-        }
-
-        /* 设置鼠标悬停时表格行的颜色 */
         table.list tr:hover {
-            background-color: #d3d3d3;
+            background: #F1F5F9;
         }
 
-        /* 新增样式：设置新建司机链接为黑色 */
-        #pagediv .add {
-            color: black;
+        table.list tr:last-child td {
+            border-bottom: none;
         }
 
-        /* 新增样式：设置输入框背景色为淡灰色 */
-        #pagediv input[type="text"] {
-            background-color: #f0f0f0;
+        /* 链接样式 */
+        table.list a {
+            color: #3B82F6;
+            text-decoration: none;
+            cursor: pointer;
+            margin-right: 8px;
         }
-        /* 新增样式：设置 label 文字颜色为黑色 */
-        #pagediv label {
-            color: black;
+
+        table.list a:hover {
+            text-decoration: underline;
+        }
+
+        table.list .delete-link {
+            color: #EF4444;
+        }
+
+        table.list .delete-link:hover {
+            color: #DC2626;
+        }
+
+        /* 分页 */
+        .pagination {
+            margin: 0 20px 20px 20px;
+            color: #475569;
+            font-size: 14px;
+        }
+
+        .pagination a {
+            color: #475569;
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            margin: 0 2px;
+            display: inline-block;
+            transition: all 0.15s ease;
+        }
+
+        .pagination a:hover {
+            background: #F8FAFC;
+            border-color: #CBD5E1;
+        }
+
+        .pagination .current {
+            color: #FFFFFF;
+            background: #3B82F6;
+            border-color: #3B82F6;
+        }
+
+        /* 模态框 - 浅色主题 */
+        .modal-content {
+            border-radius: 12px;
+            border: none;
+            background: #FFFFFF;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .modal-header {
+            background: #F8FAFC;
+            color: #1E293B;
+            border-bottom: 1px solid #E2E8F0;
+            padding: 16px 20px;
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+        }
+
+        .modal-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E293B;
+        }
+
+        .modal-body {
+            padding: 20px;
+            background: #FFFFFF;
+            color: #1E293B;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        #mediaModal .modal-dialog {
+            width: calc(100% - 32px);
+            max-width: 1280px;
+        }
+
+        .media-sections {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 14px;
+        }
+
+        .media-section {
+            border: 1px solid #E2E8F0;
+            border-radius: 10px;
+            background: #FFFFFF;
+            padding: 12px 14px;
+            min-height: 170px;
+        }
+
+        .media-section h6 {
+            margin: 0 0 10px 0;
+            font-size: 14px;
+            font-weight: 600;
+            color: #334155;
+        }
+
+        .modal-footer {
+            padding: 16px 20px;
+            background: #F8FAFC;
+            border-top: 1px solid #E2E8F0;
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+        }
+
+        .modal-footer .btn {
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 6px;
+            transition: all 0.15s ease;
+        }
+
+        .modal-footer .btn-default {
+            background: #FFFFFF;
+            color: #475569;
+            border: 1px solid #CBD5E1;
+        }
+
+        .modal-footer .btn-default:hover {
+            background: #F8FAFC;
+            border-color: #94A3B8;
+        }
+
+        .modal-footer .btn-primary {
+            background: #3B82F6;
+            color: #FFFFFF;
+            border: none;
+        }
+
+        .modal-footer .btn-primary:hover {
+            background: #2563EB;
+        }
+
+        /* 媒体容器 */
+        .media-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 12px;
+            padding: 0;
+        }
+
+        .media-item {
+            position: relative;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #F8FAFC;
+            aspect-ratio: 4 / 3;
+            min-height: 120px;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .media-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(15, 23, 42, 0.12);
+        }
+
+        .media-item img,
+        .media-item video {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .media-item img {
+            object-fit: cover;
+            cursor: zoom-in;
+        }
+
+        .media-item video {
+            object-fit: contain;
+            background: #0F172A;
+        }
+
+        .media-empty {
+            grid-column: 1 / -1;
+            padding: 10px 12px;
+            border: 1px dashed #CBD5E1;
+            border-radius: 8px;
+            background: #F8FAFC;
+            font-size: 13px;
+        }
+
+        .text-muted {
+            color: #64748B;
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            #pagediv {
+                margin: 10px;
+            }
+
+            #searchForm {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            #searchForm input[type="text"],
+            #searchForm input[type="date"] {
+                width: 100%;
+            }
+
+            .table-scroll-wrapper {
+                margin: 0 10px 10px 10px;
+            }
+
+            table.list {
+                min-width: 1000px;
+                font-size: 12px;
+            }
+
+            table.list th,
+            table.list td {
+                padding: 8px 10px;
+            }
+
+            .media-container {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                gap: 10px;
+            }
+
+            .media-sections {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
         }
     </style>
 </head>
 <body>
 <div id="pagediv">
     <form id="searchForm" action="/install/installlist" method="get">
-
-    <label>小盒子编码</label>
+        <label>小盒子编码</label>
         <input type="text" name="xiaohezibianma" value="#(xiaohezibianma)">
         <label>饭店名称</label>
         <input type="text" name="restaurantname" value="#(restaurantname)">
         <label>上传时间</label>
         <input type="date" name="time" value="#(time)">
-        <!-- 查询按钮 -->
         <button type="submit" id="searchButton">搜索</button>
-        <!-- 重置按钮 -->
         <button type="button" id="resetButton">重置</button>
-        <!-- 分页隐藏字段 -->
         <input type="hidden" name="page" value="#(xiaohezi.pageNumber != null ? xiaohezi.pageNumber : 1)">
         <input type="hidden" name="pageSize" value="10">
-        <table class="list">
-            <tbody>
-            <tr>
-                <th>序号</th>
-                <th>气瓶一</th>
-                <th>奉天码</th>
-                <th>气瓶二</th>
-                <th>奉天码</th>
-                <th>气瓶三</th>
-                <th>奉天码</th>
-                <th>气瓶四</th>
-                <th>奉天码</th>
-                <th>小盒子编码</th>
-                <th>地址</th>
-                <th>经度</th>
-                <th>维度</th>
-                <th>扫描时间</th>
-                <th>扫描员工</th>
-                <th>多媒体数据</th>
-                <th>饭店名称</th>
-                <th>位置</th>
-                <th>操作</th>
-            </tr>
-            #set(startIndex = (xiaohezi.pageNumber - 1) * xiaohezi.pageSize + 1)
-            #for(x : xiaohezi.getList())
-            <tr>
-                <td>#(startIndex++)</td>
-                <td>#(x.gas_number1)</td>
-                <td>#(x.gasfengtianno1)</td>
-                <td>#(x.gas_number2)</td>
-                <td>#(x.gasfengtianno2)</td>
-                <td>#(x.gas_number3)</td>
-                <td>#(x.gasfengtianno3)</td>
-                <td>#(x.gas_number4)</td>
-                <td>#(x.gasfengtianno4)</td>
-                <td>#(x.xiaohezi_number)</td>
-                <td>#(x.address)</td>
-                <td>#(x.jingdu)</td>
-                <td>#(x.weidu)</td>
-                <td>#(x.creattime)</td>
-                <td>#(x.worker)</td>
-                <td>
-                    <a href="javascript:void(0)" class="view-media"
-                       data-door="#(x.door_video ?? '')"
-                       data-qiguan="#(x.qiguan_video ?? '')"
-                       data-daoguan="#(x.daoguan_video ?? '')"
-                       data-louguan="#(x.louguan_video ?? '')">
-                        查看
-                    </a>
-                </td>
-                <td>#(x.restaurant_name)</td>
-                <td>#(x.restaurant_address)</td>
-                <td style="text-align:left">
-                    <a href="#" class="delete-link" onclick="deleteRecord('#(x.id)')">删除</a>
-                    <a href="#" class="edit openModal" data-title="编辑用户" data-edit-url="/install/edit?id=#(x.id)">修改</a>
-                </td>
-            </tr>
-            #end
-            </tbody>
-        </table>
-        <div class="pagination" style="color:#DDDDDD; font-size: 12px">
-            #@paginate(xiaohezi.pageNumber, xiaohezi.totalPage, "/install/installlist?xiaohezibianma=" + (xiaohezibianma!=null ? xiaohezibianma:"") + "&time=" + (time!=null ? time:"") + "&restaurantname=" + (restaurantname!=null ? restaurantname:"") + "&page=")
-
-        </div>
     </form>
 </div>
-<!-- 修改模态窗口结构 -->
+
+<div class="table-scroll-wrapper">
+    <table class="list">
+        <tbody>
+        <tr>
+            <th>序号</th>
+            <th>气瓶一</th>
+            <th>奉天码</th>
+            <th>气瓶二</th>
+            <th>奉天码</th>
+            <th>气瓶三</th>
+            <th>奉天码</th>
+            <th>气瓶四</th>
+            <th>奉天码</th>
+            <th>小盒子编码</th>
+            <th>地址</th>
+            <th>经度</th>
+            <th>维度</th>
+            <th>扫描时间</th>
+            <th>扫描员工</th>
+            <th>多媒体数据</th>
+            <th width="20%">饭店名称</th>
+            <th>位置</th>
+            <th>操作</th>
+        </tr>
+        #set(startIndex = (xiaohezi.pageNumber - 1) * xiaohezi.pageSize + 1)
+        #for(x : xiaohezi.getList())
+        <tr>
+            <td>#(startIndex++)</td>
+            <td>#(x.gas_number1)</td>
+            <td>#(x.gasfengtianno1)</td>
+            <td>#(x.gas_number2)</td>
+            <td>#(x.gasfengtianno2)</td>
+            <td>#(x.gas_number3)</td>
+            <td>#(x.gasfengtianno3)</td>
+            <td>#(x.gas_number4)</td>
+            <td>#(x.gasfengtianno4)</td>
+            <td>#(x.xiaohezi_number)</td>
+            <td>#(x.address)</td>
+            <td>#(x.jingdu)</td>
+            <td>#(x.weidu)</td>
+            <td>#(x.creattime)</td>
+            <td>#(x.worker)</td>
+            <td>
+                <a href="javascript:void(0)" class="view-media"
+                   data-door="#(x.door_video ?? '')"
+                   data-qiguan="#(x.qiguan_video ?? '')"
+                   data-daoguan="#(x.daoguan_video ?? '')"
+                   data-louguan="#(x.louguan_video ?? '')">
+                    查看
+                </a>
+            </td>
+            <td>#(x.restaurant_name)</td>
+            <td>#(x.restaurant_address)</td>
+            <td>
+                <a href="#" class="delete-link" onclick="deleteRecord('#(x.id)')">删除</a>
+                <a href="#" class="edit openModal" data-title="编辑用户" data-edit-url="/install/edit?id=#(x.id)">修改</a>
+            </td>
+        </tr>
+        #end
+        </tbody>
+    </table>
+</div>
+
+<div class="pagination">
+    #@paginate(xiaohezi.pageNumber, xiaohezi.totalPage, "/install/installlist?xiaohezibianma=" + (xiaohezibianma!=null ? xiaohezibianma:"") + "&time=" + (time!=null ? time:"") + "&restaurantname=" + (restaurantname!=null ? restaurantname:"") + "&page=")
+</div>
+
+<!-- 媒体查看模态框 -->
 <div class="modal fade" id="mediaModal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
@@ -183,52 +487,58 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="container-fluid">
-                    <!-- 安装环境 -->
-                    <div class="row mb-4">
-                        <div class="col-12">
-                            <h6>安装环境：</h6>
-                            <div class="d-flex flex-wrap media-container" id="doorMedia"></div>
-                        </div>
-                    </div>
-
-                    <!-- 连接阀 -->
-                    <div class="row mb-4">
-                        <div class="col-12">
-                            <h6>连接阀：</h6>
-                            <div class="d-flex flex-wrap media-container" id="qiguanMedia"></div>
-                        </div>
-                    </div>
-
-                    <!-- 连接管 -->
-                    <div class="row mb-4">
-                        <div class="col-12">
-                            <h6>连接管：</h6>
-                            <div class="d-flex flex-wrap media-container" id="louguanMedia"></div>
-                        </div>
-                    </div>
-
-                    <!-- 供气合同 -->
-                    <div class="row">
-                        <div class="col-12">
-                            <h6>供气合同：</h6>
-                            <div class="d-flex flex-wrap media-container" id="daoguanMedia"></div>
-                        </div>
-                    </div>
+                <div class="media-sections">
+                    <section class="media-section">
+                        <h6>安装环境</h6>
+                        <div class="media-container" id="doorMedia"></div>
+                    </section>
+                    <section class="media-section">
+                        <h6>连接阀</h6>
+                        <div class="media-container" id="qiguanMedia"></div>
+                    </section>
+                    <section class="media-section">
+                        <h6>连接管</h6>
+                        <div class="media-container" id="louguanMedia"></div>
+                    </section>
+                    <section class="media-section">
+                        <h6>供气合同</h6>
+                        <div class="media-container" id="daoguanMedia"></div>
+                    </section>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 编辑模态框 -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: auto; max-width: 600px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">模态窗口标题</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- 这里将会加载你的表单内容 -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="saveButton">保存</button>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    // 新增服务器配置（加在页面顶部）
     const SERVER_BASE_URL = 'http://39.98.221.201:8099';
+
+    // 模态窗口处理
     $(document).ready(function () {
-        // 新增的模态窗口处理代码
         $('.openModal').click(function (e) {
             e.preventDefault();
             var editUrl = $(this).data('edit-url');
@@ -243,71 +553,53 @@
         });
     });
 
-
-    // 新增全局变量管理媒体状态
-    let currentMediaSet = [];
-    let currentMediaIndex = 0;
-    let currentMediaTypeIndex = 0;
-    const mediaTypes = [
-        {name: '安装环境', field: 'door'},
-        {name: '连接阀', field: 'qiguan'},
-        {name: '连接管', field: 'daoguan'},
-        {name: '供气合同', field: 'louguan'}
-    ];
-    // 新增全局图片查看函数
+    // 显示图片
     function showImage(imageUrl) {
-        // 创建遮罩层
         const mask = document.createElement('div');
         mask.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.9);
-        z-index: 9999;
-        cursor: zoom-out;
-    `;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 9999;
+            cursor: zoom-out;
+        `;
 
-        // 创建图片容器
         const imgContainer = document.createElement('div');
         imgContainer.style.cssText = `
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 10000;
-        max-width: 90vw;
-        max-height: 90vh;
-    `;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10000;
+            max-width: 90vw;
+            max-height: 90vh;
+        `;
 
-        // 创建图片元素
         const img = new Image();
         img.style.cssText = `
-        max-width: 100%;
-        max-height: 100%;
-        object-fit: contain;
-        cursor: default;
-    `;
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            cursor: default;
+        `;
 
-        // 处理图片路径
         if (!imageUrl.startsWith('http') && !imageUrl.startsWith('blob')) {
             imageUrl = `${SERVER_BASE_URL}/${imageUrl.replace(/^\//, '')}`;
         }
         img.src = imageUrl;
 
-        // 组装元素
         imgContainer.appendChild(img);
         document.body.appendChild(mask);
         document.body.appendChild(imgContainer);
 
-        // 点击遮罩层关闭
         mask.addEventListener('click', function() {
             document.body.removeChild(mask);
             document.body.removeChild(imgContainer);
         });
 
-        // 图片加载后自动调整
         img.onload = function() {
             const viewportWidth = window.innerWidth * 0.9;
             const viewportHeight = window.innerHeight * 0.9;
@@ -321,68 +613,8 @@
             img.style.height = `${img.naturalHeight * scale}px`;
         };
     }
-    function showMediaModal(element) {
-        // 初始化媒体数据
-        currentMediaSet = [];
-        mediaTypes.forEach(type => {
-            const urls = element.dataset[type.field]?.split(",") || [];
-            if(urls.length > 0) {
-                currentMediaSet.push({
-                    type: type.name,
-                    urls: urls.map(url => `/${url.trim()}`),
-                    currentIndex: 0
-                });
-            }
-        });
 
-        if(currentMediaSet.length === 0) {
-            alert("暂无多媒体数据");
-            return;
-        }
-
-        currentMediaTypeIndex = 0;
-        loadCurrentMedia();
-        $('#mediaModal').modal('show');
-    }
-
-    function loadCurrentMedia() {
-        const container = $('#mediaContainer');
-        const typeSpan = $('#currentMediaType');
-        container.empty();
-
-        if(currentMediaSet.length === 0) return;
-
-        const currentType = currentMediaSet[currentMediaTypeIndex];
-        typeSpan.text(currentType.type);
-
-        const currentUrl = currentType.urls[currentType.currentIndex];
-        const isVideo = currentUrl.match(/\.(mp4|webm|ogg)$/i);
-
-        const mediaElement = isVideo ?
-            $(`<video controls autoplay style="max-width:100%; max-height:70vh;">
-        <source src="${SERVER_BASE_URL}/${file.trim()}"type="${getMimeType(currentUrl)}">
-           </video>`) :
-            $(`<img src="${currentUrl}" style="max-width:100%; max-height:70vh;">`);
-
-        container.append(mediaElement);
-    }
-
-    function changeMedia(direction) {
-        const currentType = currentMediaSet[currentMediaTypeIndex];
-
-        // 切换当前类型的媒体索引
-        currentType.currentIndex = (currentType.currentIndex + direction + currentType.urls.length) % currentType.urls.length;
-
-        // 如果是跨类型切换
-        if(direction === 1 && currentType.currentIndex === 0) {
-            currentMediaTypeIndex = (currentMediaTypeIndex + 1) % currentMediaSet.length;
-        } else if(direction === -1 && currentType.currentIndex === currentType.urls.length - 1) {
-            currentMediaTypeIndex = (currentMediaTypeIndex - 1 + currentMediaSet.length) % currentMediaSet.length;
-        }
-
-        loadCurrentMedia();
-    }
-    // 辅助函数：获取MIME类型
+    // 获取MIME类型
     function getMimeType(url) {
         const ext = url.split('.').pop().toLowerCase();
         const types = {
@@ -396,16 +628,7 @@
         return types[ext] || 'application/octet-stream';
     }
 
-        document.getElementById("resetButton").addEventListener("click", function(e) {
-        e.preventDefault();
-        const form = document.getElementById("searchForm");
-        form.reset();
-        form.querySelector('input[name="page"]').value = 1;
-        form.querySelector('input[name="pageSize"]').value = 10;
-        form.submit();
-    });
-
-    // 修改后的媒体查看代码
+    // 媒体查看
     $(document).ready(function() {
         $('.view-media').click(function() {
             const mediaData = {
@@ -422,7 +645,7 @@
                 const files = mediaData[type];
 
                 if(files.length === 0) {
-                    container.append('<span class="text-muted">无记录</span>');
+                    container.append('<div class="media-empty text-muted">无记录</div>');
                     return;
                 }
 
@@ -430,15 +653,14 @@
                     const isVideo = /\.(mp4|webm|ogg)$/i.test(file);
                     const mediaElement = isVideo ?
                         $(`<div class="media-item">
-                        <video controls style="max-width:200px;max-height:150px;">
-                            <source src="${SERVER_BASE_URL}/${file.trim()}" type="${getMimeType(file)}">
-                        </video>
-                       </div>`) :
+                            <video controls>
+                                <source src="${SERVER_BASE_URL}/${file.trim()}" type="${getMimeType(file)}">
+                            </video>
+                        </div>`) :
                         $(`<div class="media-item">
-                        <img src="${SERVER_BASE_URL}/${file.trim()}"
-                             style="max-width:200px;max-height:150px;cursor:zoom-in;"
-                             onclick="showImage('${file.trim()}')">
-                       </div>`);
+                            <img src="${SERVER_BASE_URL}/${file.trim()}"
+                                 onclick="showImage('${file.trim()}')">
+                        </div>`);
 
                     container.append(mediaElement);
                 });
@@ -448,10 +670,9 @@
         });
     });
 
+    // 删除记录
     function deleteRecord(id) {
-        // 确认是否删除
         if (confirm("确定要删除吗？")) {
-            // 创建一个隐藏的表单字段用于存储ID
             var deleteForm = document.createElement('form');
             deleteForm.method = 'post';
             deleteForm.action = '/install/delete';
@@ -466,29 +687,22 @@
             deleteForm.submit();
         }
     }
-</script>
 
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="myModalLabel">模态窗口标题</h4>
-            </div>
-            <div class="modal-body" id="modalBody">
-                <!-- 这里将会加载你的表单内容 -->
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary"  id="saveButton" >保存</button>
-                <script>
-                    document.getElementById('saveButton').addEventListener('click', function() {
-                        document.getElementById('myForm').submit();
-                    });
-                </script>
-            </div>
-        </div>
-    </div>
-</div>
+    // 重置按钮
+    document.getElementById("resetButton").addEventListener("click", function(e) {
+        e.preventDefault();
+        const form = document.getElementById("searchForm");
+        form.reset();
+        form.querySelector('input[name="page"]').value = 1;
+        form.querySelector('input[name="pageSize"]').value = 10;
+        form.submit();
+    });
+
+    // 保存按钮
+    document.getElementById('saveButton').addEventListener('click', function() {
+        document.getElementById('myForm').submit();
+    });
+</script>
 
 </body>
 </html>

@@ -1,160 +1,300 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <style scoped>
-        .container {
-            padding: 50px 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        input {
-            padding: 15px;
-            font-size: 18px;
-            border: 2px solid #a3bffa;
-            border-radius: 10px;
-            width: 100%;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: border-color 0.3s ease;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: #4c87c9;
-        }
-    </style>
-
+    <title>司机管理</title>
     <style>
-        /* 设置 #pagediv 的样式 */
-        #pagediv {
-            background-color: #f0f0f0;
-            color: black;
-            padding: 10px;
-            border: 2px solid #007bff;
+        body {
+            margin: 0;
+            background: #F8FAFC;
+            color: #1E293B;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
         }
 
-        /* 设置表格样式 */
+        .page-container {
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .search-area {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+        }
+
+        #searchForm {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        #searchForm label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #475569;
+            margin: 0;
+            white-space: nowrap;
+        }
+
+        #searchForm input[type="text"] {
+            padding: 8px 12px;
+            font-size: 14px;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            background: #FFFFFF;
+            color: #1E293B;
+            min-width: 180px;
+            transition: all 0.15s ease;
+        }
+
+        #searchForm input[type="text"]:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 18px;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .btn-primary {
+            background: #3B82F6;
+            color: #FFFFFF;
+        }
+
+        .btn-primary:hover {
+            background: #2563EB;
+            color: #FFFFFF;
+            text-decoration: none;
+        }
+
+        .btn-secondary {
+            background: #FFFFFF;
+            color: #475569;
+            border: 1px solid #CBD5E1;
+        }
+
+        .btn-secondary:hover {
+            background: #F8FAFC;
+            border-color: #94A3B8;
+            color: #334155;
+            text-decoration: none;
+        }
+
+        .btn-add {
+            margin-right: 8px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
         table.list {
             width: 100%;
             border-collapse: collapse;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #FFFFFF;
+            min-width: 1550px;
         }
 
-        /* 设置表格表头样式 */
+        table.list thead tr {
+            background: #F8FAFC;
+        }
+
         table.list th {
-            background-color: #add8e6;
-            color: black;
-            padding: 8px;
+            padding: 14px 16px;
+            color: #475569;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
             text-align: left;
-            border: 1px solid #ddd; /* 新增：添加边框 */
+            border-bottom: 1px solid #E2E8F0;
+            white-space: nowrap;
         }
 
-        /* 设置表格单元格样式 */
         table.list td {
-            padding: 8px;
-            border: 1px solid #ddd; /* 修改：添加边框 */
+            padding: 12px 16px;
+            color: #1E293B;
+            font-size: 14px;
+            border-bottom: 1px solid #F1F5F9;
+            vertical-align: middle;
+            white-space: nowrap;
         }
 
-        /* 设置表格隔行颜色 */
-        table.list tr:nth-child(even) {
-            background-color: #f2f2f2;
+        table.list tbody tr:nth-child(even) {
+            background: #F8FAFC;
         }
 
-        table.list tr:nth-child(odd) {
-            background-color: #e0e0e0;
+        table.list tbody tr:hover {
+            background: #F1F5F9;
         }
 
-        /* 设置鼠标悬停时表格行的颜色 */
-        table.list tr:hover {
-            background-color: #d3d3d3;
+        table.list tbody tr:last-child td {
+            border-bottom: none;
         }
 
-        /* 新增样式：设置新建司机链接为黑色 */
-        #pagediv .add {
-            color: black;
+        .thumbnail {
+            width: 120px;
+            height: 80px;
+            object-fit: cover;
+            border: 1px solid #E2E8F0;
+            border-radius: 6px;
+            background: #F8FAFC;
         }
 
-        /* 新增样式：设置输入框背景色为淡灰色 */
-        #pagediv input[type="text"] {
-            background-color: #f0f0f0;
-        }
-        /* 新增样式：设置 label 文字颜色为黑色 */
-        #pagediv label {
-            color: black;
-        }
-        #pagediv .add {
-            color: white;
-            background-color: #007bff;
-            padding: 6px 12px;
+        .op-link {
+            color: #3B82F6;
             text-decoration: none;
-            display: inline-block;
-            border-radius: 5; /* 方方正正的边框 */
+            margin-right: 12px;
+        }
+
+        .op-link:hover {
+            color: #2563EB;
+            text-decoration: underline;
+        }
+
+        .pagination {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            color: #475569;
+            font-size: 14px;
+        }
+
+        .pagination a,
+        .pagination span {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 36px;
+            height: 36px;
+            padding: 0 8px;
+            border: 1px solid #E2E8F0;
+            border-radius: 6px;
+            background: #FFFFFF;
+            color: #475569;
+            text-decoration: none;
+            transition: all 0.15s ease;
+        }
+
+        .pagination a:hover {
+            background: #F8FAFC;
+            border-color: #CBD5E1;
+        }
+
+        @media (max-width: 768px) {
+            .page-container {
+                padding: 12px;
+            }
+
+            #searchForm {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            #searchForm input[type="text"],
+            #searchForm .btn {
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
-<div id="pagediv">
-    <form id="searchForm" action="/driver/searchdata" method="get">
-        <a href="add" style="color: #DDDDDD"><b> + </b>新增司机</a>
-        <label for="drivername" style="padding-left: 25px; color: black; font-size: 17px">姓名:</label>
-        <input type="text" id="drivername" name="drivername" style="border-radius: 5px;background-color: #fbf0c5">
-        <label for="driverphone" style="padding-left: 25px; color: black; font-size: 17px">联系方式:</label>
-        <input type="text" id="driverphone" name="driverphone" style="border-radius: 5px;background-color: #fbf0c5">
-        <label for="drivercarno" style="padding-left: 25px; color: black; font-size: 17px">车牌:</label>
-        <input type="text" id="drivercarno" name="drivercarno" style="border-radius: 5px;background-color: #fbf0c5">
-        <input type="submit" value="提交">
-    </form>
+<div class="page-container">
+    <div class="search-area">
+        <form id="searchForm" action="/driver/searchdata" method="get">
+            <a class="btn btn-primary btn-add" href="/driver/add">+ 新增司机</a>
+            <label for="drivername">姓名：</label>
+            <input type="text" id="drivername" name="drivername" value="#(drivername)" placeholder="请输入姓名">
+            <label for="driverphone">联系方式：</label>
+            <input type="text" id="driverphone" name="driverphone" value="#(driverphone)" placeholder="请输入联系方式">
+            <label for="drivercarno">车牌：</label>
+            <input type="text" id="drivercarno" name="drivercarno" value="#(drivercarno)" placeholder="请输入车牌号">
+            <button class="btn btn-primary" type="submit">搜索</button>
+            <a class="btn btn-secondary" href="/driver/driverlist">重置</a>
+        </form>
+    </div>
+
+    <div class="table-wrapper">
+        <table class="list">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>姓名</th>
+                <th>性别</th>
+                <th>出生日期</th>
+                <th>手机号</th>
+                <th>身份证</th>
+                <th>车牌号</th>
+                <th>车型</th>
+                <th>颜色</th>
+                <th>生产日期</th>
+                <th>车照</th>
+                <th>驾驶证照片</th>
+                <th>危货证件号</th>
+                <th>危货证件有效期</th>
+                <th>危货证件照片</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            #for(x : drivers.getList())
+            <tr>
+                <td>#(x.id)</td>
+                <td>#(x.drivername)</td>
+                <td>#(x.driversex)</td>
+                <td>#(x.driverbirthday)</td>
+                <td>#(x.driverphone)</td>
+                <td>#(x.identity_card_no)</td>
+                <td>#(x.drivercarno)</td>
+                <td>#(x.carname)</td>
+                <td>#(x.carcolor)</td>
+                <td>#(x.carshengchanriqi)</td>
+                <td><img class="thumbnail" src="/upload/#(x.car_image_url)" alt="车照"></td>
+                <td><img class="thumbnail" src="/upload/#(x.driver_license_image_url)" alt="驾驶证照片"></td>
+                <td>#(x.risk_cargo_license_no)</td>
+                <td>#(x.risk_cargo_license_indate)</td>
+                <td><img class="thumbnail" src="/upload/#(x.risk_cargo_license_image_oss_id)" alt="危货证件照片"></td>
+                <td>
+                    <a class="op-link" href="javascript:void(0)" onclick="confirmDelete('#(x.id)')">删除</a>
+                    <a class="op-link" href="/driver/edit/#(x.id)">修改</a>
+                </td>
+            </tr>
+            #end
+            </tbody>
+        </table>
+    </div>
+
+    <div class="pagination">
+        #@paginate(drivers.pageNumber, drivers.totalPage, "/driver/driverlist/")
+    </div>
 </div>
-<table class="list">
-    <tbody>
-    <tr>
-        <th>id</th>
-        <th>姓名</th>
-        <th>性别</th>
-        <th>出生日期</th>
-        <th>手机号</th>
-        <th>身份证</th>
-        <th>车牌号</th>
-        <th>车型</th>
-        <th>颜色</th>
-        <th>生产日期</th>
-        <th>车照</th>
-        <th>驾驶证照片</th>
-        <th>危货证件号</th>
-        <th>危货证件有效期</th>
-        <th>危货证件照片</th>
-        <th>操作</th>
-    </tr>
-    #for(x : drivers.getList())
-    <tr>
-        <td>#(x.id)</td>
-        <td>#(x.drivername)</td>
-        <td>#(x.driversex)</td>
-        <td>#(x.driverbirthday)</td>
-        <td>#(x.driverphone)</td>
-        <td>#(x.identity_card_no)</td>
-        <td>#(x.drivercarno)</td>
-        <td>#(x.carname)</td>
-        <td>#(x.carcolor)</td>
-        <td>#(x.carshengchanriqi)</td>
-        <td><img src="/upload/#(x.car_image_url)" alt="Car Picture" style="width:150px; height:100px;"></td>
-        <td><img src="/upload/#(x.driver_license_image_url)" alt="Car Picture" style="width:150px; height:100px;"></td>
-        <td>#(x.risk_cargo_license_no)</td>
-        <td>#(x.risk_cargo_license_indate)</td>
-        <td><img src="/upload/#(x.risk_cargo_license_image_oss_id)" alt="Car Picture" style="width:150px; height:100px;"></td>
-        <td style="text-align:left">
-            &nbsp;&nbsp;<a href="/driver/delete/#(x.id)">删除</a>
-            &nbsp;&nbsp;<a href="/driver/edit/#(x.id)">修改</a>
-        </td>
-    </tr>
-    #end
-    </tbody>
-</table>
-<div class="pagination" style="color:#DDDDDD; font-size: 12px">
-    #@paginate(drivers.pageNumber, drivers.totalPage, "/driver/driverlist/")
-</div>
+
+<script>
+    function confirmDelete(id) {
+        if (confirm("确定要删除吗？")) {
+            window.location.href = "/driver/delete/" + id;
+        }
+    }
+</script>
 </body>
 </html>

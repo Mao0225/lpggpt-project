@@ -1,319 +1,398 @@
 <!DOCTYPE html>
-<html lang="zh-CN" xmlns:width="http://www.w3.org/1999/xhtml">
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PLC信号列表</title>
-  <script src="../css/jquery-3.3.1.min.js"></script>
-  <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css">
-  <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
-  <link rel="stylesheet" type="text/css" href="/css/lpg.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PLC信号列表</title>
+    <script src="../css/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css">
+    <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/index.css">
 
-  <style>
-    /* 重置页面默认边距 */
-    body {
-      margin: 0;
-      padding: 0;
-    }
+    <style>
+        body {
+            margin: 0;
+            background: #F8FAFC;
+            color: #1E293B;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+        }
 
-    #pagediv {
-      background-color: #f0f0f0;
-      color: black;
-      padding: 10px;
-      width: 100%;
-      box-sizing: border-box; /* 确保内边距不会增加总宽度 */
-    }
+        .page-container {
+            min-height: 100vh;
+            padding: 20px;
+            background: #F8FAFC;
+        }
 
-    .container {
-      padding: 0 20px; /* 仅保留左右内边距，移除上下内边距的影响 */
-      width: 100%;
-      max-width: none; /* 取消最大宽度限制 */
-      box-sizing: border-box;
-    }
+        #pagediv {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+        }
 
-    .table-responsive {
-      width: 100%;
-      overflow-x: auto;
-      padding: 0;
-      margin: 0;
-    }
+        #searchForm {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            width: 100%;
+        }
 
-    table.list {
-      width: 100%;
-      min-width: 1000px; /* 确保表格有足够宽度展示内容 */
-      border-collapse: collapse;
-      margin: 0;
-    }
+        .query-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
 
-    table.list th {
-      background-color: #add8e6;
-      color: black;
-      padding: 8px;
-      text-align: left;
-      border: 1px solid #ddd;
-      /* 平均分配列宽 */
-      width: calc(100% / 13); /* 13列，平均分配宽度 */
-    }
+        #searchForm label {
+            margin: 0;
+            white-space: nowrap;
+            font-size: 14px;
+            font-weight: 500;
+            color: #475569;
+        }
 
-    table.list td {
-      padding: 8px;
-      border: 1px solid #ddd;
-      word-wrap: break-word; /* 内容过长时自动换行 */
-    }
+        #searchForm input[type="text"],
+        #searchForm select {
+            min-width: 200px;
+            height: 38px;
+            padding: 8px 12px;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            background: #FFFFFF;
+            color: #1E293B;
+            font-size: 14px;
+            transition: all 0.15s ease;
+        }
 
-    table.list tr:nth-child(even) {
-      background-color: #f2f2f2;
-    }
+        #searchForm input[type="text"]:focus,
+        #searchForm select:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
 
-    table.list tr:nth-child(odd) {
-      background-color: #e0e0e0;
-    }
+        #searchForm button {
+            height: 38px;
+            padding: 0 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
 
-    table.list tr:hover {
-      background-color: #d3d3d3;
-    }
+        #searchForm .btn-primary {
+            border: none;
+            background: #3B82F6;
+            color: #FFFFFF;
+        }
 
-    #pagediv .add {
-      color: black;
-    }
+        #searchForm .btn-primary:hover {
+            background: #2563EB;
+        }
 
-    #searchForm input[type="text"] {
-      background-color: #f0f0f0;
-    }
+        #searchForm .btn-default {
+            border: 1px solid #CBD5E1;
+            background: #FFFFFF;
+            color: #475569;
+        }
 
-    #pagediv label {
-      color: black;
-    }
+        #searchForm .btn-default:hover {
+            background: #F8FAFC;
+            border-color: #94A3B8;
+        }
 
-    .hint-text {
-      color: #666;
-      font-size: 0.8em;
-      margin-left: 10px;
-    }
+        .table-wrapper {
+            overflow-x: auto;
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+        }
 
-    .pagination {
-      margin: 20px 0;
-      text-align: center;
-      color: #333;
-    }
+        table.list {
+            width: 100%;
+            min-width: 1400px;
+            border-collapse: collapse;
+            background: #FFFFFF;
+        }
 
-    .operation-btn {
-      margin: 0 5px;
-      text-decoration: none;
-    }
-      /* 新增样式：让查询条件在同一行显示 */
-    .form-group {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 15px;
-    }
+        table.list th {
+            background: #F8FAFC;
+            color: #475569;
+            font-size: 13px;
+            font-weight: 600;
+            text-align: left;
+            padding: 14px 16px;
+            border-bottom: 1px solid #E2E8F0;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+        }
 
-    .query-item {
-      display: flex;
-      align-items: center;
-      white-space: nowrap;
-    }
+        table.list td {
+            padding: 14px 16px;
+            font-size: 14px;
+            color: #1E293B;
+            border-bottom: 1px solid #F1F5F9;
+            vertical-align: middle;
+            white-space: nowrap;
+        }
 
-    .query-item label {
-      margin-right: 5px;
-      margin-bottom: 0;
-    }
+        table.list tbody tr {
+            background: #FFFFFF;
+            transition: background 0.15s ease;
+        }
 
-    .form-control {
-      display: inline-block;
-    }
+        table.list tbody tr:nth-child(even) {
+            background: #F8FAFC;
+        }
 
-    #plcno {
-      width: 200px;
-    }
+        table.list tbody tr:hover {
+            background: #F1F5F9;
+        }
 
-    #alarmType {
-      width: 180px;
-    }
+        table.list tbody tr:last-child td {
+            border-bottom: none;
+        }
 
-    .btn {
-      margin-left: 5px;
-    }
-  </style>
+        .status-danger {
+            color: #DC2626;
+            font-weight: 600;
+        }
+
+        .page-container .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 20px;
+            color: #475569;
+            flex-wrap: wrap;
+        }
+
+        .page-container .pagination a,
+        .page-container .pagination span:not(.page-info):not(.gap):not(.current) {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 36px;
+            height: 36px;
+            padding: 0 8px;
+            font-size: 14px;
+            border: 1px solid #E2E8F0;
+            border-radius: 6px;
+            color: #475569;
+            background: #FFFFFF;
+            text-decoration: none;
+            transition: all 0.15s ease;
+        }
+
+        .page-container .pagination a:hover {
+            background: #F8FAFC;
+            border-color: #CBD5E1;
+        }
+
+        .page-container .pagination .current {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 36px;
+            height: 36px;
+            padding: 0 8px;
+            background: #3B82F6;
+            color: #FFFFFF;
+            border: 1px solid #3B82F6;
+            border-radius: 6px;
+        }
+
+        .page-container .pagination .disabled {
+            color: #94A3B8;
+            background: #F8FAFC;
+            cursor: not-allowed;
+        }
+
+        .page-container .pagination .gap {
+            border: none;
+            background: transparent;
+            color: #64748B;
+            min-width: auto;
+        }
+
+        .page-container .pagination .page-input {
+            width: 44px;
+            height: 36px;
+            text-align: center;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            color: #1E293B;
+        }
+
+        .page-container .pagination .page-input:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .page-container .pagination .page-info {
+            color: #475569;
+        }
+
+        @media (max-width: 768px) {
+            .page-container {
+                padding: 12px;
+            }
+
+            #searchForm {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .query-item {
+                width: 100%;
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            #searchForm input[type="text"],
+            #searchForm select,
+            #searchForm button {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
-<div class="container">
-  <div id="pagediv">
-    <form id="searchForm" action="/plcxinhao/list" method="get">
-      <div class="form-group">
-          <div class="query-item">
-        <label for="plcno">PLC编号：</label>
-        <input type="text" id="plcno" name="plcno"
-               value="#(plcno ?? '')" placeholder="请输入PLC编号查询" class="form-control" >
-          </div>
-          <!--在这里添加报警类型选择框-->
-          <div class="query-item">
-              <label for="alarmType">报警类型：</label>
-              <select id="alarmType" name="alarmType" class="form-control" >
-                  <option value="" disabled hidden #if(!alarmType || alarmType =="") selected #end>全部报警状态</option>
-              <option value="gas_room" #if(alarmType =="gas_room") selected #end>气瓶间报警异常</option>
-              <option value="kitchen_leak" #if(alarmType =="kitchen_leak") selected #end>厨房泄漏报警异常</option>
-              <option value="smoke" #if(alarmType =="smoke") selected #end>烟感报警异常</option>
-              </select>
-          </div>
-          <div class="query-item">
-        <button type="submit" class="btn btn-primary">查询</button>
-        <button type="button" class="btn btn-default" id="resetBtn">重置</button>
-      </div>
-      </div>
-    </form>
-  </div>
+<div class="page-container">
+    <div id="pagediv">
+        <form id="searchForm" action="/plcxinhao/list" method="get">
+            <div class="query-item">
+                <label for="plcno">PLC编号：</label>
+                <input type="text" id="plcno" name="plcno" value="#(plcno ?? '')" placeholder="请输入PLC编号查询">
+            </div>
 
-  <div class="table-responsive">
-    <table class="list">
-      <thead>
-      <tr>
-        <th>序号</th>
-        <th>PLC编号</th>
-        <th>饭店名称</th>
-        <th>气瓶间报警</th>
-        <th>厨房泄露报警</th>
-        <th>烟感报警</th>
-        <!--th>报警器读数 1</th>
-        <th>报警器读数 2</th>
-        <th>报警器读数 3</th-->
-        <th>切断阀1状态</th>
-        <th>切断阀2状态</th>
-        <th>风机状态</th>
-        <!--th>通道1状态</th>
-        <th>通道2状态</th>
-        <th>通道3状态</th>
-        <th>通道4状态</th>
-        <th>通道4状态</th-->
-        <th>气体报警器数值 1</th>
-        <th>气体报警器数值 2</th>
-        <th>RFID标签</th>
-        <th>上传时间</th>
-      </tr>
-      </thead>
-      <tbody>
-      #set(startIndex = (plcList.pageNumber - 1) * plcList.pageSize + 1)
-      #for(plc : plcList.getList())
-      <tr>
-        <td>#(startIndex++)</td>
-        <td>#(plc.plcno ?? '')</td>
-        <td>#(plc.restaurant_name ?? '')</td>
-        <td>
-          #if(plc.qipingjianbaojing == "0") 正常
-          #else if(plc.qipingjianbaojing == "10") <span style="color:red">报警</span>
-          #else #(plc.qipingjianbaojing ?? '')
-          #end
-        </td>
-        <td>
-          #if(plc.chufangbaojing == "0") 正常
-          #else if(plc.chufangbaojing == "10") <span style="color:red">报警</span>
-          #else #(plc.chufangbaojing ?? '')
-          #end
-        </td>
-        <td>
-          #if(plc.yanganbaojing == "0") 正常
-          #else if(plc.yanganbaojing == "10") <span style="color:red">报警</span>
-          #else #(plc.yanganbaojing ?? '')
-          #end
-        </td>
+            <div class="query-item">
+                <label for="alarmType">报警类型：</label>
+                <select id="alarmType" name="alarmType">
+                    <option value="" disabled hidden #if(!alarmType || alarmType == "") selected #end>全部报警状态</option>
+                    <option value="gas_room" #if(alarmType == "gas_room") selected #end>气瓶间报警异常</option>
+                    <option value="kitchen_leak" #if(alarmType == "kitchen_leak") selected #end>厨房泄漏报警异常</option>
+                    <option value="smoke" #if(alarmType == "smoke") selected #end>烟感报警异常</option>
+                </select>
+            </div>
 
-        <!--td>#(plc.baoqingjidushu1 ?? '')</td>
-        <td>#(plc.baoqingjidushu2 ?? '')</td>
-        <td>#(plc.baoqingjidushu3 ?? '')</td-->
+            <div class="query-item">
+                <button type="submit" class="btn btn-primary">查询</button>
+                <button type="button" class="btn btn-default" id="resetBtn">重置</button>
+            </div>
+        </form>
+    </div>
 
-        <td>
-          #if(plc.qieduanfa1 == "0") 关闭
-          #else if(plc.qieduanfa1 == "1") 打开
-          #else #(plc.qieduanfa1 ?? '')
-          #end
-        </td>
-        <td>
-          #if(plc.qieduanfa2 == "0") 关闭
-          #else if(plc.qieduanfa2 == "1") 打开
-          #else #(plc.qieduanfa2 ?? '')
-          #end
-        </td>
-        <td>
-          #if(plc.fengji == "0") 关闭
-          #else if(plc.fengji == "10") 打开
-          #else #(plc.fengji ?? '')
-          #end
-        </td>
-        <!--td>
-          #if(plc.tongdaoone == "0") 关闭
-          #else if(plc.tongdaoone == "10") 打开
-          #else #(plc.tongdaoone ?? '')
-          #end
-        </td>
-        <td>
-          #if(plc.tongdaotwo == "0") 关闭
-          #else if(plc.tongdaotwo == "10") 打开
-          #else #(plc.tongdaotwo ?? '')
-          #end
-        </td>
-        <td>
-          #if(plc.tongdaothree == "0") 关闭
-          #else if(plc.tongdaothree == "10") 打开
-          #else #(plc.tongdaothree ?? '')
-          #end
-        </td>
-        <td>
-          #if(plc.tongdaofour == "0") 关闭
-          #else if(plc.tongdaofour == "10") 打开
-          #else #(plc.tongdaofour ?? '')
-          #end
-        </td-->
-        <td>#(plc.keranqitibaojingzhi600 ?? '')</td>
-        <td>#(plc.keranqitibaojingzhi610 ?? '')</td>
-        <td>#(plc.rfidno ?? '')</td>
-        <td>#(plc.uploadtime ?? '')</td>
+    <div class="table-wrapper">
+        <table class="list">
+            <thead>
+            <tr>
+                <th>序号</th>
+                <th>PLC编号</th>
+                <th>饭店名称</th>
+                <th>气瓶间报警</th>
+                <th>厨房泄露报警</th>
+                <th>烟感报警</th>
+                <th>切断阀1状态</th>
+                <th>切断阀2状态</th>
+                <th>风机状态</th>
+                <th>气体报警器数值 1</th>
+                <th>气体报警器数值 2</th>
+                <th>RFID标签</th>
+                <th>上传时间</th>
+            </tr>
+            </thead>
+            <tbody>
+            #set(startIndex = (plcList.pageNumber - 1) * plcList.pageSize + 1)
+            #for(plc : plcList.getList())
+            <tr>
+                <td>#(startIndex++)</td>
+                <td>#(plc.plcno ?? '')</td>
+                <td>#(plc.restaurant_name ?? '')</td>
+                <td>
+                    #if(plc.qipingjianbaojing == "0") 正常
+                    #else if(plc.qipingjianbaojing == "10") <span class="status-danger">报警</span>
+                    #else #(plc.qipingjianbaojing ?? '')
+                    #end
+                </td>
+                <td>
+                    #if(plc.chufangbaojing == "0") 正常
+                    #else if(plc.chufangbaojing == "10") <span class="status-danger">报警</span>
+                    #else #(plc.chufangbaojing ?? '')
+                    #end
+                </td>
+                <td>
+                    #if(plc.yanganbaojing == "0") 正常
+                    #else if(plc.yanganbaojing == "10") <span class="status-danger">报警</span>
+                    #else #(plc.yanganbaojing ?? '')
+                    #end
+                </td>
+                <td>
+                    #if(plc.qieduanfa1 == "0") 关闭
+                    #else if(plc.qieduanfa1 == "1") 打开
+                    #else #(plc.qieduanfa1 ?? '')
+                    #end
+                </td>
+                <td>
+                    #if(plc.qieduanfa2 == "0") 关闭
+                    #else if(plc.qieduanfa2 == "1") 打开
+                    #else #(plc.qieduanfa2 ?? '')
+                    #end
+                </td>
+                <td>
+                    #if(plc.fengji == "0") 关闭
+                    #else if(plc.fengji == "10") 打开
+                    #else #(plc.fengji ?? '')
+                    #end
+                </td>
+                <td>#(plc.keranqitibaojingzhi600 ?? '')</td>
+                <td>#(plc.keranqitibaojingzhi610 ?? '')</td>
+                <td>#(plc.rfidno ?? '')</td>
+                <td>#(plc.uploadtime ?? '')</td>
+            </tr>
+            #end
+            </tbody>
+        </table>
+    </div>
 
-      </tr>
-      #end
-      </tbody>
-    </table>
-  </div>
-
-  <!-- 分页控件 -->
-  <div class="pagination">
     #set(currentPlcno = plcno ?? '')
     #set(currentAlarmType = alarmType ?? '')
-    #@paginate(plcList.pageNumber, plcList.totalPage, "/plcxinhao/list?plcno=" + currentPlcno + "&alarmType=" +currentAlarmType + "&page=")
-  </div>
+    #@paginate(plcList.pageNumber, plcList.totalPage, "/plcxinhao/list?plcno=" + currentPlcno + "&alarmType=" + currentAlarmType + "&page=")
 </div>
 
 <script>
-    // 页面加载时处理选择框状态
-  $(document).ready(function() {
-    // 如果没有选择报警类型，确保显示"全部报警状态"
-    if (!$('#alarmType').val()) {
-      $('#alarmType').val('');
-    }
-  });
+    $(document).ready(function () {
+        if (!$("#alarmType").val()) {
+            $("#alarmType").val("");
+        }
+    });
 
-  // 重置查询条件
-  $('#resetBtn').click(function() {
-    $('#plcno').val('');
-    $('#alarmType').val('');
-    $('#searchForm').submit();
-  });
+    $("#resetBtn").click(function () {
+        $("#plcno").val("");
+        $("#alarmType").val("");
+        $("#searchForm").submit();
+    });
 
-  // 删除确认
-  function confirmDelete(id) {
-    if (confirm("确定要删除这条记录吗？此操作不可恢复！")) {
-      const plcno = $('#plcno').val();
-      const alarmType = $('#alarmType').val();
-      let url = "/plcxinhao/delete?id=" + id;
-      if (plcno) {
-        url += "&plcno=" + encodeURIComponent(plcno);
-      }
-      if(alarmType){
-      url += "&alarmType=" + encodeURIComponent(alarmType);
-      }
-      window.location.href = url;
+    function confirmDelete(id) {
+        if (confirm("确定要删除这条记录吗？此操作不可恢复！")) {
+            var plcno = $("#plcno").val();
+            var alarmType = $("#alarmType").val();
+            var url = "/plcxinhao/delete?id=" + id;
+            if (plcno) {
+                url += "&plcno=" + encodeURIComponent(plcno);
+            }
+            if (alarmType) {
+                url += "&alarmType=" + encodeURIComponent(alarmType);
+            }
+            window.location.href = url;
+        }
     }
-  }
 </script>
 </body>
 </html>

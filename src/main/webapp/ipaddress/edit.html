@@ -1,56 +1,84 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>编辑IP地址</title>
     <style>
-        .form_box {
-            padding: 20px;
+        body {
+            background: #F8FAFC;
+            color: #1E293B;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            margin: 0;
+            padding: 0;
         }
 
-        .form_box div {
-            margin-bottom: 15px;
+        .form-container {
+            background: #FFFFFF;
+            padding: 24px;
         }
 
-        .form_box label {
-            display: inline-block;
-            width: 100px;
-            text-align: right;
-            margin-right: 10px;
+        .form-group {
+            margin-bottom: 20px;
         }
 
-        .form_box input {
-            width: 300px;
-            padding: 5px;
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #475569;
+            margin-bottom: 8px;
         }
 
-        .hint-text {
-            color: #666;
-            font-size: 0.8em;
-            margin-left: 10px;
+        .required {
+            color: #EF4444;
+            margin-right: 4px;
         }
 
-        .button-group {
-            margin-left: 110px;
-            margin-top: 20px;
+        .form-group input[type="text"] {
+            width: 100%;
+            padding: 10px 14px;
+            font-size: 14px;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            background: #FFFFFF;
+            color: #1E293B;
+            transition: all 0.15s ease;
+            box-sizing: border-box;
         }
 
-        .button-group button {
-            padding: 6px 15px;
-            margin-right: 10px;
+        .form-group input:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-group input[readonly] {
+            background: #F8FAFC;
+            color: #64748B;
+            cursor: not-allowed;
+        }
+
+        .help-text {
+            font-size: 12px;
+            color: #64748B;
+            margin-top: 6px;
         }
 
         .error-msg {
-            color: red;
-            margin-left: 110px;
-            margin-bottom: 15px;
+            color: #DC2626;
+            font-size: 13px;
+            margin-bottom: 16px;
+        }
+
+        ::placeholder {
+            color: #94A3B8;
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
-<div class="form_box">
-    <!-- 显示后端返回的错误信息 -->
+<div class="form-container">
     #if(errorMsg)
     <div class="error-msg">#(errorMsg)</div>
     #end
@@ -58,54 +86,54 @@
     <form action="/ipaddress/update" method="post" id="myForm">
         <input type="hidden" name="ipaddress.id" value="#(ipaddress.id)">
 
-        <div>
-            <label>设备编号</label>
-            <input type="text" name="ipaddress.deviceno" value="#(ipaddress.deviceno)" required>
-        </div>
-        <div>
-            <label>设备开关命令</label>
-            <input type="text" name="ipaddress.poweronoff" value="#(ipaddress.poweronoff)"
-                   placeholder="10是正常，20是需要自动重启" required>
-            <span class="hint-text">提示：10=正常，20=需要自动重启</span>
-        </div>
-        <div>
-            <label>IP地址</label>
-            <input type="text" name="ipaddress.ipaddress" value="#(ipaddress.ipaddress)" required>
-        </div>
-        <div>
-            <label>标志</label>
-            <input type="text" name="ipaddress.flag" value="#(ipaddress.flag)">
-        </div>
-        <div>
-            <label>状态</label>
-            <input type="text" name="ipaddress.status" value="#(ipaddress.status)">
-        </div>
-        <div>
-            <label>预留1</label>
-            <input type="text" name="ipaddress.yuliu1" value="#(ipaddress.yuliu1)">
-        </div>
-        <div>
-            <label>备注</label>
-            <input type="text" name="ipaddress.memo" value="#(ipaddress.memo)">
-        </div>
-        <div>
-            <label>发生时间</label>
-            <input type="text" name="ipaddress.happendtime" value="#(ipaddress.happendtime)" readonly>
-            <span class="hint-text">创建时的时间，不允许修改</span>
+        <div class="form-group">
+            <label><span class="required">*</span>设备编号</label>
+            <input type="text" name="ipaddress.deviceno" value="#(ipaddress.deviceno)" required placeholder="请输入设备编号">
         </div>
 
-        <div class="button-group">
-            <button type="submit">保存</button>
-            <button type="button" onclick="window.location.href='/ipaddress/iplist'">取消</button>
+        <div class="form-group">
+            <label><span class="required">*</span>设备开关命令</label>
+            <input type="text" name="ipaddress.poweronoff" value="#(ipaddress.poweronoff)" placeholder="10=正常，20=需要自动重启" required>
+            <div class="help-text">提示：10=正常，20=需要自动重启</div>
+        </div>
+
+        <div class="form-group">
+            <label><span class="required">*</span>IP地址</label>
+            <input type="text" name="ipaddress.ipaddress" value="#(ipaddress.ipaddress)" required placeholder="请输入IP地址">
+        </div>
+
+        <div class="form-group">
+            <label>标志</label>
+            <input type="text" name="ipaddress.flag" value="#(ipaddress.flag)" placeholder="可选">
+        </div>
+
+        <div class="form-group">
+            <label>状态</label>
+            <input type="text" name="ipaddress.status" value="#(ipaddress.status)" placeholder="可选">
+        </div>
+
+        <div class="form-group">
+            <label>预留1</label>
+            <input type="text" name="ipaddress.yuliu1" value="#(ipaddress.yuliu1)" placeholder="可选">
+        </div>
+
+        <div class="form-group">
+            <label>备注</label>
+            <input type="text" name="ipaddress.memo" value="#(ipaddress.memo)" placeholder="可选">
+        </div>
+
+        <div class="form-group">
+            <label>发生时间</label>
+            <input type="text" name="ipaddress.happendtime" value="#(ipaddress.happendtime)" readonly>
+            <div class="help-text">创建时的时间，不允许修改</div>
         </div>
     </form>
 </div>
 
 <script>
-    // 表单提交前验证（仅保留设备编号和开关命令验证）
     document.getElementById('myForm').addEventListener('submit', function(e) {
-        const deviceno = document.querySelector('input[name="ipaddress.deviceno"]').value;
-        const poweronoff = document.querySelector('input[name="ipaddress.poweronoff"]').value;
+        var deviceno = document.querySelector('input[name="ipaddress.deviceno"]').value;
+        var poweronoff = document.querySelector('input[name="ipaddress.poweronoff"]').value;
 
         if (!deviceno.trim()) {
             alert('设备编号不能为空');
@@ -113,7 +141,7 @@
             return false;
         }
 
-        if (!['10', '20'].includes(poweronoff.trim())) {
+        if (['10', '20'].indexOf(poweronoff.trim()) === -1) {
             alert('设备开关命令只能是10或20');
             e.preventDefault();
             return false;

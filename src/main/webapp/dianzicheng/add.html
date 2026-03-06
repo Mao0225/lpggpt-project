@@ -1,156 +1,239 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新增电子秤</title>
     <style>
-        input{
-            border-radius:5px ; background-color:#fbf0c5;
-            width: 400px; /* 调整这个宽度值以适应你的需求 */
+        body {
+            background: #F8FAFC;
+            color: #1E293B;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            margin: 0;
+        }
 
+        .form-container {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            padding: 24px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 0;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #475569;
+            margin-bottom: 8px;
+        }
+
+        .required {
+            color: #EF4444;
+            margin-right: 4px;
+        }
+
+        .form-group input[type="text"],
+        .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            font-size: 14px;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            background: #FFFFFF;
+            color: #1E293B;
+            transition: all 0.15s ease;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-group input[readonly] {
+            background: #F8FAFC;
+            color: #64748B;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 768px) {
+            .form-container {
+                padding: 16px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
         }
     </style>
 </head>
-<title>Content</title>
 <body>
-<h1>
-</h1>
-<div class="form_box">
+<div class="form-container">
     <form id="myForm" action="/dianzicheng/save" method="post">
+        <div class="form-grid">
+            <div class="form-group">
+                <label><span class="required">*</span>秤编号</label>
+                <input type="text" name="dianzicheng.bianma" value="">
+            </div>
 
-        <div>
-            <label >秤编号</label>
-            <input type="text" name="dianzicheng.bianma" value=""/>
-        </div>
+            <div class="form-group">
+                <label>阿里用户名</label>
+                <input type="text" name="dianzicheng.alichengmingzi" value="">
+            </div>
 
-        <div>
-            <label >阿里用户名</label>
-            <input type="text" name="dianzicheng.alichengmingzi" value=""/>
-        </div>
+            <div class="form-group">
+                <label>生产厂家</label>
+                <input type="text" name="dianzicheng.shengchangchangjia" value="">
+            </div>
 
-        <div>
-            <label >生产厂家</label>
-            <input type="text" name="dianzicheng.shengchangchangjia" value=""/>
-        </div>
+            <div class="form-group">
+                <label>生产日期</label>
+                <input type="text" name="dianzicheng.shengchanriqi" value="" placeholder="yyyy-mm-dd">
+            </div>
 
-        <div>
-            <label >生产日期</label>
-            <input type="text" name="dianzicheng.shengchanriqi" value=""/>
-        </div>
+            <div class="form-group">
+                <label>注册日期</label>
+                <input type="text" name="dianzicheng.zhuceriqi" value="" placeholder="yyyy-mm-dd">
+            </div>
 
-        <div>
-            <label >注册日期</label>
-            <input type="text" name="dianzicheng.zhuceriqi" value=""/>
-        </div>
+            <div class="form-group">
+                <label>饭店名称</label>
+                <input type="hidden" id="dianzicheng_shiyongfandianmingzi" name="dianzicheng.shiyongfandianmingzi" readonly>
+                <select id="selectName" name="dianzicheng.shiyongfandianmingzi" onchange="chooseName()">
+                    <option value="-1" selected>请选择饭店名字</option>
+                    #for ( x: restaurants)
+                    <option value="#(x.id)">#(x.name)</option>
+                    #end
+                </select>
+            </div>
 
-        <div>
-            <label >饭店名称</label>
-            <input type="hidden" id="dianzicheng_shiyongfandianmingzi" name="dianzicheng.shiyongfandianmingzi" readonly>
-            <select id="selectName" name="dianzicheng.shiyongfandianmingzi" onchange="chooseName()" style="border-radius: 5px;background-color: white; width: 200px;height:30px;text-align: center;">
-                <option value="-1" selected>请选择饭店名字</option>
-                #for ( x: restaurants)
-                <option value="#(x.id)">#(x.name)</option>
-                #end
-            </select>
-        </div>
+            <div class="form-group">
+                <label>饭店联系电话</label>
+                <input type="text" id="dianzicheng_shiyongfangphone" name="dianzicheng.shiyongfangphone" value="" readonly>
+            </div>
 
-        <div>
-            <label >饭店联系电话</label>
-            <input type="text" id="dianzicheng_shiyongfangphone" name="dianzicheng.shiyongfangphone" value="" readonly />
-        </div>
-        <div>
-            <label >是否打开阀门</label>
-            <input type="text" name="dianzicheng.dakaifamen" value="" />
-        </div>
-        <div>
-            <label >是否关闭阀门</label>
-            <input type="text" name="dianzicheng.guanbifamen" value="" />
-        </div>
-        <div>
-            <label >获取秤的全部状态</label>
-            <input type="text" name="dianzicheng.huoquchengxinxi" value="" />
-        </div>
-        <div>
-            <label >获取警报</label>
-            <input type="text" name="dianzicheng.huoqujingbao" value="" />
-        </div>
-        <div>
-            <label >打开警报</label>
-            <input type="text" name="dianzicheng.dakaijingbao" value="" />
-        </div>
-        <div>
-            <label >关闭警报</label>
-            <input type="text" name="dianzicheng.guanbijingbao" value="" />
-        </div>
+            <div class="form-group">
+                <label>是否打开阀门</label>
+                <input type="text" name="dianzicheng.dakaifamen" value="">
+            </div>
 
-        <div>
-            <label >状态</label>
-            <input type="text" name="dianzicheng.status" value="" />
-        </div>
+            <div class="form-group">
+                <label>是否关闭阀门</label>
+                <input type="text" name="dianzicheng.guanbifamen" value="">
+            </div>
 
-        <div>
-            <label >预留1</label>
-            <input type="text" name="dianzicheng.yuliu1" value="" />
-        </div>
-        <div>
-            <label >预留2</label>
-            <input type="text" name="dianzicheng.yuliu2" value="" />
-        </div>
-        <div>
-            <label >预留3</label>
-            <input type="text" name="dianzicheng.yuliu3" value="" />
-        </div>
-        <div>
-            <label >备注（预留命令位置）</label>
-            <input type="text" name="dianzicheng.memo" value="" />
-        </div>
-        <div>
-            <label >绑定接口</label>
-            <input type="text" name="dianzicheng.bangdingjiekou" value="" />
-        </div>
+            <div class="form-group">
+                <label>获取秤的全部状态</label>
+                <input type="text" name="dianzicheng.huoquchengxinxi" value="">
+            </div>
 
-        <div>
-            <label >解绑接口</label>
-            <input type="text" name="dianzicheng.jiebangdingjiekou" value="" />
-        </div>
-        <div>
-            <label ></label>
-            <input hidden id="telephoneid" type="hidden" name="dianzicheng.shiyongfangphoneid" value="" />
+            <div class="form-group">
+                <label>获取警报</label>
+                <input type="text" name="dianzicheng.huoqujingbao" value="">
+            </div>
+
+            <div class="form-group">
+                <label>打开警报</label>
+                <input type="text" name="dianzicheng.dakaijingbao" value="">
+            </div>
+
+            <div class="form-group">
+                <label>关闭警报</label>
+                <input type="text" name="dianzicheng.guanbijingbao" value="">
+            </div>
+
+            <div class="form-group">
+                <label><span class="required">*</span>状态</label>
+                <input type="text" name="dianzicheng.status" value="">
+            </div>
+
+            <div class="form-group">
+                <label>预留1</label>
+                <input type="text" name="dianzicheng.yuliu1" value="">
+            </div>
+
+            <div class="form-group">
+                <label>预留2</label>
+                <input type="text" name="dianzicheng.yuliu2" value="">
+            </div>
+
+            <div class="form-group">
+                <label>预留3</label>
+                <input type="text" name="dianzicheng.yuliu3" value="">
+            </div>
+
+            <div class="form-group full-width">
+                <label>备注（预留命令位置）</label>
+                <input type="text" name="dianzicheng.memo" value="">
+            </div>
+
+            <div class="form-group">
+                <label>绑定接口</label>
+                <input type="text" name="dianzicheng.bangdingjiekou" value="">
+            </div>
+
+            <div class="form-group">
+                <label>解绑接口</label>
+                <input type="text" name="dianzicheng.jiebangdingjiekou" value="">
+            </div>
+
+            <input hidden id="telephoneid" type="hidden" name="dianzicheng.shiyongfangphoneid" value="">
         </div>
     </form>
 </div>
-</body>
+
 <script>
-    // 假设这是服务器端渲染到页面中的JSON数据
     var jsonData = '#(com.alibaba.fastjson.JSONArray::toJSON(restaurants))';
-    // 解析JSON数据
-    var context = JSON.parse(jsonData.replace(/#/g, ""));
+    var context = [];
+    try {
+        context = JSON.parse(jsonData.replace(/#/g, ""));
+    } catch (e) {
+        context = [];
+    }
 
     function chooseName() {
         var selectId = document.getElementById("selectName").value;
-
-        if (selectId == "-1") {
-            // document.getElementById("dianzicheng_shiyongfandianmingzi").value = "";
-            // document.getElementById("dianzicheng_shiyongfangphone").value = "";
+        if (selectId === "-1") {
+            document.getElementById("dianzicheng_shiyongfandianmingzi").value = "";
+            document.getElementById("dianzicheng_shiyongfangphone").value = "";
+            document.getElementById("telephoneid").value = "";
             return;
         }
 
-        // 查找选中的饭店对象
-        var selectedRestaurant = context.find(function(restaurant) {
+        var selectedRestaurant = context.find(function (restaurant) {
             return restaurant.id == selectId;
         });
 
         if (selectedRestaurant) {
-            document.getElementById("dianzicheng_shiyongfandianmingzi").value = selectedRestaurant.name;
-            document.getElementById("dianzicheng_shiyongfangphone").value = selectedRestaurant.telephone;
-
+            document.getElementById("dianzicheng_shiyongfandianmingzi").value = selectedRestaurant.name || "";
+            document.getElementById("dianzicheng_shiyongfangphone").value = selectedRestaurant.telephone || "";
+            document.getElementById("telephoneid").value = selectedRestaurant.id || "";
         } else {
             document.getElementById("dianzicheng_shiyongfandianmingzi").value = "";
             document.getElementById("dianzicheng_shiyongfangphone").value = "";
+            document.getElementById("telephoneid").value = "";
             alert('找不到对应的饭店！');
         }
-
     }
+
     document.getElementById("selectName").addEventListener("change", chooseName);
 </script>
+</body>
 </html>

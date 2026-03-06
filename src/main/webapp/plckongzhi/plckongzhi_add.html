@@ -1,78 +1,127 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>添加PLC控制记录</title>
-  <script src="../css/jquery-3.3.1.min.js"></script>
-  <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css">
-  <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
-  <link rel="stylesheet" type="text/css" href="/css/lpg.css">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>添加PLC控制记录</title>
+	<style>
+		body {
+			margin: 0;
+			padding: 0;
+			background: #FFFFFF;
+			color: #1E293B;
+			font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+		}
+
+		.form-container {
+			background: #FFFFFF;
+			border: 1px solid #E2E8F0;
+			border-radius: 8px;
+			padding: 20px;
+		}
+
+		.form-group {
+			margin-bottom: 20px;
+		}
+
+		.form-group label {
+			display: block;
+			font-size: 14px;
+			font-weight: 500;
+			color: #475569;
+			margin-bottom: 8px;
+		}
+
+		.form-group input[type="text"],
+		.form-group input[type="number"],
+		.form-group select,
+		.form-group textarea {
+			width: 100%;
+			padding: 10px 14px;
+			font-size: 14px;
+			border: 1px solid #CBD5E1;
+			border-radius: 6px;
+			background: #FFFFFF;
+			color: #1E293B;
+			transition: all 0.15s ease;
+			box-sizing: border-box;
+		}
+
+		.form-group input:focus,
+		.form-group select:focus,
+		.form-group textarea:focus {
+			outline: none;
+			border-color: #3B82F6;
+			box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+		}
+
+		.form-group textarea {
+			resize: vertical;
+			min-height: 100px;
+		}
+	</style>
 </head>
-
 <body>
-<div class="container">
-  <div class="col-md-8">
-    <form action="/plckongzhi/save" method="post" id="myForm">
-      <h3>添加PLC控制记录</h3>
+<div class="form-container">
+	<form action="/plckongzhi/save" method="post" id="myForm">
+		<div class="form-group">
+			<label for="qieduanfa1kongzhi">切断阀1控制</label>
+			<select name="plc.qieduanfa1kongzhi" id="qieduanfa1kongzhi">
+				<option value="0">关闭</option>
+				<option value="1">打开</option>
+			</select>
+		</div>
 
-      <div class="form-group">
-        <label for="plc.qieduanfa1kongzhi">切断阀1控制：</label>
-        <select class="form-control" name="plc.qieduanfa1kongzhi" id="qieduanfa1kongzhi">
-          <option value="0">关闭</option>
-          <option value="1">打开</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="plc.qieduanfa2kongzhi">切断阀2控制：</label>
-        <select class="form-control" name="plc.qieduanfa2kongzhi" id="qieduanfa2kongzhi">
-          <option value="0">关闭</option>
-          <option value="1">打开</option>
-        </select>
-      </div>
+		<div class="form-group">
+			<label for="qieduanfa2kongzhi">切断阀2控制</label>
+			<select name="plc.qieduanfa2kongzhi" id="qieduanfa2kongzhi">
+				<option value="0">关闭</option>
+				<option value="1">打开</option>
+			</select>
+		</div>
 
-      <div class="form-group">
-        <label for="plc.fengjikongzhi">风机控制：</label>
-        <select class="form-control" name="plc.fengjikongzhi" id="fengjikongzhi">
-          <option value="0">关闭</option>
-          <option value="1">打开</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="plc.shumeipaikz">树莓派电源控制：</label>
-        <select class="form-control" name="plc.shumeipaikz" id="shumeipaikz">
-          <option value="0">通电</option>
-          <option value="1">断电</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="plc.plcno">PLC编号：</label>
-        <input type="text" class="form-control" name="plc.plcno" id="plcno">
-      </div>
-      <div class="form-group ">
-        <label for="plc.fandian">饭店：</label>
-        <input type="text" class="form-control" name="plc.fandian" id="fandian"  >
-      </div>
-      <div class="form-group">
-        <label for="plc.flag">标志位：</label>
-        <input type="number" class="form-control" name="plc.flag" id="flag">
-      </div>
+		<div class="form-group">
+			<label for="fengjikongzhi">风机控制</label>
+			<select name="plc.fengjikongzhi" id="fengjikongzhi">
+				<option value="0">关闭</option>
+				<option value="1">打开</option>
+			</select>
+		</div>
 
-      <div class="form-group">
-        <label for="plc.type">类型：</label>
-        <input type="number" class="form-control" name="plc.type" id="type">
-      </div>
+		<div class="form-group">
+			<label for="shumeipaikz">树莓派电源控制</label>
+			<select name="plc.shumeipaikz" id="shumeipaikz">
+				<option value="0">通电</option>
+				<option value="1">断电</option>
+			</select>
+		</div>
 
-      <div class="form-group">
-        <label for="plc.memo">备注：</label>
-        <textarea class="form-control" name="plc.memo" id="memo" rows="3"></textarea>
-      </div>
+		<div class="form-group">
+			<label for="plcno">PLC编号</label>
+			<input type="text" name="plc.plcno" id="plcno">
+		</div>
 
-      <button type="submit" class="btn btn-primary">保存</button>
-      <a href="/plckongzhi" class="btn btn-default">返回</a>
-    </form>
-  </div>
+		<div class="form-group">
+			<label for="fandian">饭店</label>
+			<input type="text" name="plc.fandian" id="fandian">
+		</div>
+
+		<div class="form-group">
+			<label for="flag">标志位</label>
+			<input type="number" name="plc.flag" id="flag">
+		</div>
+
+		<div class="form-group">
+			<label for="type">类型</label>
+			<input type="number" name="plc.type" id="type">
+		</div>
+
+		<div class="form-group">
+			<label for="memo">备注</label>
+			<textarea name="plc.memo" id="memo"></textarea>
+		</div>
+	</form>
 </div>
 </body>
 </html>
+

@@ -1,235 +1,300 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>运输记录管理</title>
     <script src="../css/jquery-3.3.1.min.js"></script>
     <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css">
     <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="/css/lpg.css">
+    <link rel="stylesheet" href="../css/font-awesome.css">
+    <link rel="stylesheet" type="text/css" href="../css/index.css">
 
-    <style scoped>
-        .container {
-            padding: 30px 15px;
+    <style>
+        /* 浅色商务风格 - 运输记录列表 */
+        body {
+            margin: 0;
+            background: #F8FAFC;
+            color: #1E293B;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+        }
+
+        .page-container {
+            background: #F8FAFC;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .search-card {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+        }
+
+        .search-form {
             display: flex;
-            justify-content: center;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
         }
 
-        input {
-            padding: 8px 12px;
-            font-size: 14px;
-            border: 1px solid #a3bffa;
-            border-radius: 4px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-            transition: border-color 0.3s ease;
-        }
-
-        input[type="date"] {
-            max-width: 180px;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: #4c87c9;
-        }
-
-        select {
-            padding: 8px 12px;
-            font-size: 14px;
-            border: 1px solid #a3bffa;
-            border-radius: 4px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-            background-color: white;
-        }
-
-        button, input[type="submit"], input[type="button"] {
-            padding: 6px 12px;
-            font-size: 14px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
+        .form-field {
             display: inline-flex;
             align-items: center;
-            justify-content: center;
-            min-width: 80px;
+            gap: 8px;
         }
 
-        input[type="submit"] {
-            background-color: #007bff;
-            color: white;
-            border: 1px solid #007bff;
-            margin-right: 8px;
-        }
-
-        input[type="button"] {
-            background-color: #f8f9fa;
-            color: #333;
-            border: 1px solid #ddd;
-        }
-
-        input[type="submit"]:hover {
-            background-color: #0069d9;
-        }
-
-        input[type="button"]:hover {
-            background-color: #e2e6ea;
-        }
-
-        .form-group {
-            display: inline-flex;
-            align-items: center;
-            margin-right: 15px;
-            margin-bottom: 10px;
-        }
-
-        .form-group label {
-            margin-right: 8px;
-            margin-bottom: 0;
+        .form-field label {
+            margin: 0;
+            font-size: 14px;
+            font-weight: 500;
+            color: #475569;
             white-space: nowrap;
         }
 
-        .btn-danger {
-            padding: 4px 8px;
-            font-size: 12px;
-        }
-    </style>
-
-    <style>
-        /* 设置 #pagediv 的样式 */
-        #pagediv {
-            background-color: #f0f0f0;
-            color: black;
-            padding: 15px;
-            border: 1px solid #007bff;
-            border-radius: 4px;
+        .search-form input[type="text"],
+        .search-form input[type="date"] {
+            min-width: 150px;
+            height: 36px;
+            padding: 0 12px;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            background: #FFFFFF;
+            color: #1E293B;
+            font-size: 14px;
+            transition: all 0.15s ease;
         }
 
-        /* 设置表格样式 */
+        .search-form input[type="text"]:focus,
+        .search-form input[type="date"]:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-actions {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .search-form input[type="submit"],
+        .search-form input[type="button"] {
+            height: 36px;
+            padding: 0 18px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .search-form input[type="submit"] {
+            background: #3B82F6;
+            color: #FFFFFF;
+            border: none;
+        }
+
+        .search-form input[type="submit"]:hover {
+            background: #2563EB;
+        }
+
+        .search-form input[type="button"] {
+            background: #FFFFFF;
+            color: #475569;
+            border: 1px solid #CBD5E1;
+        }
+
+        .search-form input[type="button"]:hover {
+            background: #F8FAFC;
+            border-color: #94A3B8;
+        }
+
+        .table-wrap {
+            width: 100%;
+            overflow-x: auto;
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+        }
+
         table.list {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 15px;
+            background: #FFFFFF;
+            min-width: 1280px;
         }
 
-        /* 设置表格表头样式 */
-        table.list th {
-            background-color: #add8e6;
-            color: black;
-            padding: 10px;
+        table.list thead th {
+            background: #F8FAFC;
+            color: #475569;
+            font-size: 13px;
+            font-weight: 600;
             text-align: left;
-            border: 1px solid #ddd;
-            font-weight: 600;
+            padding: 14px 16px;
+            border-bottom: 1px solid #E2E8F0;
+            white-space: nowrap;
         }
 
-        /* 设置表格单元格样式 */
-        table.list td {
-            padding: 10px;
-            border: 1px solid #ddd;
-        }
-
-        /* 设置表格隔行颜色 */
-        table.list tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-
-        table.list tr:nth-child(odd) {
-            background-color: #e0e0e0;
-        }
-
-        /* 设置鼠标悬停时表格行的颜色 */
-        table.list tr:hover {
-            background-color: #d3d3d3;
-        }
-
-        /* 设置新建司机链接为黑色 */
-        #pagediv .add {
-            color: white;
-            background-color: #007bff;
-            padding: 6px 12px;
-            text-decoration: none;
-            display: inline-block;
-            border-radius: 4px;
+        table.list tbody td {
+            padding: 14px 16px;
             font-size: 14px;
+            color: #1E293B;
+            border-bottom: 1px solid #F1F5F9;
+            vertical-align: middle;
         }
 
-        /* 设置输入框背景色为淡灰色 */
-        #pagediv input[type="text"] {
-            background-color: white;
+        table.list tbody tr {
+            background: #FFFFFF;
+            transition: background 0.15s ease;
         }
 
-        /* 设置 label 文字颜色为黑色 */
-        #pagediv label {
-            color: black;
-            margin-right: 5px;
-            margin-left: 10px;
+        table.list tbody tr:nth-child(even) {
+            background: #F8FAFC;
         }
 
-        #pagediv label:first-child {
-            margin-left: 0;
+        table.list tbody tr:hover {
+            background: #F1F5F9;
         }
 
-        /* 检查详情模态框样式 */
-        .modal-title {
-            font-size: 18px;
-            font-weight: 600;
+        table.list tbody tr:last-child td {
+            border-bottom: none;
         }
 
-        .modal-body table td {
-            padding: 8px;
+        .operation-cell {
+            text-align: left;
+            white-space: nowrap;
         }
 
-        .text-red {
-            color: red;
-        }
-
-        /* 分页样式 */
-        .pagination {
-            margin-top: 20px;
-            display: flex;
-            justify-content: center;
+        .action-delete {
+            display: inline-flex;
             align-items: center;
-        }
-
-        .pagination a, .pagination span {
+            gap: 6px;
             padding: 6px 12px;
-            margin: 0 2px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            background: #EF4444;
+            color: #FFFFFF;
             text-decoration: none;
-            color: #007bff;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.15s ease;
         }
 
-        .pagination .current {
-            background-color: #007bff;
-            color: white;
-            border-color: #007bff;
+        .action-delete:hover {
+            background: #DC2626;
+            color: #FFFFFF;
+            text-decoration: none;
+        }
+
+        .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #475569;
+        }
+
+        .pagination a,
+        .pagination span {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 36px;
+            height: 36px;
+            padding: 0 8px;
+            border: 1px solid #E2E8F0;
+            border-radius: 6px;
+            color: #475569;
+            background: #FFFFFF;
+            text-decoration: none;
+            transition: all 0.15s ease;
+        }
+
+        .pagination a:hover {
+            background: #F8FAFC;
+            border-color: #CBD5E1;
+        }
+
+        .pagination .current,
+        .pagination .current-page {
+            background: #3B82F6;
+            color: #FFFFFF;
+            border-color: #3B82F6;
+        }
+
+        .pagination .disabled {
+            color: #94A3B8;
+            background: #F8FAFC;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 768px) {
+            .page-container {
+                padding: 12px;
+            }
+
+            .search-card {
+                padding: 14px;
+            }
+
+            .search-form {
+                align-items: stretch;
+            }
+
+            .form-field {
+                width: 100%;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 6px;
+            }
+
+            .search-form input[type="text"],
+            .search-form input[type="date"] {
+                min-width: 0;
+                width: 100%;
+            }
+
+            .form-actions {
+                width: 100%;
+            }
+
+            .search-form input[type="submit"],
+            .search-form input[type="button"] {
+                flex: 1 1 auto;
+            }
         }
     </style>
 </head>
 <body>
-<div id="pagediv">
-    <form id="searchForm" action="/setrans/transportlist" method="post">
-        <div class="form-group">
-            <label>加气站名称</label>
-            <input type="text" name="stationname" value="#(stationname)">
-        </div>
-        <div class="form-group">
-            <label>入库时间</label>
-            <input type="date" name="uptime" value="#(uptime)">
-        </div>
-        <div class="form-group">
-            <label>出库时间</label>
-            <input type="date" name="downtime" value="#(downtime)">
-        </div>
-        <div class="form-group">
-            <label>&nbsp;</label>
-            <input value="搜索" type="submit">
-            <input type="button" value="重置" name="refresh" id="resetButton" />
-        </div>
+<div class="page-container">
+    <div class="search-card">
+        <form id="searchForm" class="search-form" action="/setrans/transportlist" method="post">
+            <div class="form-field">
+                <label for="stationname">加气站名称</label>
+                <input id="stationname" type="text" name="stationname" value="#(stationname)" placeholder="请输入加气站名称">
+            </div>
+            <div class="form-field">
+                <label for="uptime">入库时间</label>
+                <input id="uptime" type="date" name="uptime" value="#(uptime)">
+            </div>
+            <div class="form-field">
+                <label for="downtime">出库时间</label>
+                <input id="downtime" type="date" name="downtime" value="#(downtime)">
+            </div>
+            <div class="form-actions">
+                <input value="搜索" type="submit">
+                <input type="button" value="重置" name="refresh" id="resetButton">
+            </div>
+        </form>
+    </div>
 
+    <div class="table-wrap">
         <table class="list">
-            <tbody>
+            <thead>
             <tr>
                 <th>序号</th>
                 <th>气瓶入库状态</th>
@@ -244,6 +309,8 @@
                 <th>出库地址</th>
                 <th>操作</th>
             </tr>
+            </thead>
+            <tbody>
             #set(startIndex = (Transportlist.pageNumber - 1) * Transportlist.pageSize + 1)
             #for(x : Transportlist.getList())
             <tr>
@@ -258,45 +325,41 @@
                 <td>#(x.dcustomer)</td>
                 <td>#(x.downtime)</td>
                 <td>#(x.daddress)</td>
-                <td style="text-align:left">
-                    <a href="#" class="btn btn-danger" onclick="deleteRecord('#(x.id)')">
-                        <i class="fa fa-trash mr-1"></i>删除
+                <td class="operation-cell">
+                    <a href="javascript:void(0);" class="action-delete" onclick="deleteRecord('#(x.id)')">
+                        <i class="fa fa-trash" aria-hidden="true"></i>删除
                     </a>
                 </td>
             </tr>
             #end
             </tbody>
         </table>
-        <div class="pagination" style="color:#DDDDDD; font-size: 12px">
-            #@paginate(Transportlist.pageNumber, Transportlist.totalPage, "/setrans/transportlist?stationname=" + (stationname!=null ? stationname:"")+"&uptime=" + (uptime!=null ? uptime:"")+"&downtime=" + (downtime!=null ? downtime:"")+"&page=")
-        </div>
-    </form>
+    </div>
+
+    <div class="pagination">
+        #@paginate(Transportlist.pageNumber, Transportlist.totalPage, "/setrans/transportlist?stationname=" + (stationname!=null ? stationname:"")+"&uptime=" + (uptime!=null ? uptime:"")+"&downtime=" + (downtime!=null ? downtime:"")+"&page=")
+    </div>
 </div>
+
 <script>
-    document.getElementById("resetButton").addEventListener("click", function(e) {
-        // 阻止默认行为
+    document.getElementById("resetButton").addEventListener("click", function (e) {
         e.preventDefault();
-        // 清空所有输入框和下拉框的值
         document.getElementById("searchForm").reset();
-        // 手动设置表单字段为空值
-        document.querySelector('input[name="stationname"]').value = '';
-        document.querySelector('input[name="uptime"]').value = '';
-        document.querySelector('input[name="downtime"]').value = '';
-        // 提交表单以刷新页面
+        document.querySelector('input[name="stationname"]').value = "";
+        document.querySelector('input[name="uptime"]').value = "";
+        document.querySelector('input[name="downtime"]').value = "";
         document.getElementById("searchForm").submit();
     });
 
     function deleteRecord(id) {
-        // 确认是否删除
         if (confirm("确定要删除吗？")) {
-            // 创建一个隐藏的表单字段用于存储ID
-            var deleteForm = document.createElement('form');
-            deleteForm.method = 'post';
-            deleteForm.action = '/setrans/delete';
+            var deleteForm = document.createElement("form");
+            deleteForm.method = "post";
+            deleteForm.action = "/setrans/delete";
 
-            var idInput = document.createElement('input');
-            idInput.type = 'hidden';
-            idInput.name = 'id';
+            var idInput = document.createElement("input");
+            idInput.type = "hidden";
+            idInput.name = "id";
             idInput.value = id;
 
             deleteForm.appendChild(idInput);

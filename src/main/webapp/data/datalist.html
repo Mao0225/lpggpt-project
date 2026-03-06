@@ -1,351 +1,558 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据管理</title>
     <script src="../css/jquery-3.3.1.min.js"></script>
     <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css">
     <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="../css/lpg.css">
+    <link rel="stylesheet" type="text/css" href="../css/index.css">
+
     <style>
-        .media-container {
-            position: relative;
-            display: inline-block;
-            text-align: center;
-        }
-        .media-content {
-            display: inline-block;
-            margin: 0 10px;
-        }
-        .media-container button {
-            padding: 2px 5px;
-            font-size: 12px;
-            line-height: 1;
-            background-color: #f8f9fa;
-            border: 1px solid #ddd;
-        }
-        .media-container img,
-        .media-container video {
-            max-width: 100px;
-            max-height: 100px;
-            cursor: pointer;
-            vertical-align: middle;
-        }
-        /* 新增媒体控制样式 */
-        .media-controls {
-            position: relative;
-            display: inline-block;
-            margin: 5px;
-        }
-        .media-controls button {
-            padding: 2px 8px;
-            margin: 2px;
-            font-size: 12px;
-            background: #f8f9fa;
-            border: 1px solid #ddd;
-            border-radius: 3px;
-        }
-        .media-preview {
-            max-width: 100px;
-            max-height: 100px;
-            cursor: pointer;
-            vertical-align: middle;
+        body {
+            margin: 0;
+            background: #F8FAFC;
+            color: #1E293B;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
         }
 
-        #searchForm select,
+        .page-container {
+            min-height: 100vh;
+            padding: 20px;
+            background: #F8FAFC;
+        }
+
+        #pagediv {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+        }
+
+        #searchForm {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            width: 100%;
+        }
+
+        #searchForm label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #475569;
+            white-space: nowrap;
+            margin: 0;
+        }
+
         #searchForm input[type="date"] {
-            border-radius: 10px;
-            background-color: #fbf0c5;
-            width: 160px;
-            height: 30px;
+            min-width: 180px;
+            height: 38px;
+            padding: 8px 12px;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            background: #FFFFFF;
+            color: #1E293B;
+            font-size: 14px;
+            transition: all 0.15s ease;
         }
 
+        #searchForm input[type="date"]:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        #searchForm input[type="submit"],
+        #searchForm input[type="button"] {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 38px;
+            padding: 0 16px;
+            border-radius: 6px;
+            border: none;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        #searchForm input[type="submit"] {
+            background: #3B82F6;
+            color: #FFFFFF;
+        }
+
+        #searchForm input[type="submit"]:hover {
+            background: #2563EB;
+        }
+
+        #searchForm input[type="button"] {
+            background: #FFFFFF;
+            color: #475569;
+            border: 1px solid #CBD5E1;
+        }
+
+        #searchForm input[type="button"]:hover {
+            background: #F8FAFC;
+            border-color: #94A3B8;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+        }
+
+        table.list {
+            width: 100%;
+            min-width: 1300px;
+            border-collapse: collapse;
+            background: #FFFFFF;
+        }
+
+        table.list th {
+            background: #F8FAFC;
+            color: #475569;
+            font-size: 13px;
+            font-weight: 600;
+            text-align: left;
+            padding: 14px 16px;
+            border-bottom: 1px solid #E2E8F0;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+        }
+
+        table.list td {
+            padding: 14px 16px;
+            font-size: 14px;
+            color: #1E293B;
+            border-bottom: 1px solid #F1F5F9;
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+
+        table.list tbody tr {
+            background: #FFFFFF;
+            transition: background 0.15s ease;
+        }
+
+        table.list tbody tr:nth-child(even) {
+            background: #F8FAFC;
+        }
+
+        table.list tbody tr:hover {
+            background: #F1F5F9;
+        }
+
+        table.list tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .media-controls {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .media-controls button {
+            height: 28px;
+            min-width: 58px;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            background: #FFFFFF;
+            color: #475569;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .media-controls button:hover {
+            background: #F8FAFC;
+            border-color: #94A3B8;
+        }
+
+        .media-preview {
+            width: 96px;
+            height: 96px;
+            object-fit: cover;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            background: #FFFFFF;
+            cursor: pointer;
+        }
+
+        .no-media {
+            color: #94A3B8;
+            font-size: 13px;
+        }
+
+        .delete-link {
+            color: #EF4444;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.15s ease;
+        }
+
+        .delete-link:hover {
+            color: #DC2626;
+            text-decoration: underline;
+        }
+
+        .page-container .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 20px;
+            color: #475569;
+            flex-wrap: wrap;
+        }
+
+        .page-container .pagination a,
+        .page-container .pagination span:not(.page-info):not(.gap):not(.current) {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 36px;
+            height: 36px;
+            padding: 0 8px;
+            font-size: 14px;
+            border: 1px solid #E2E8F0;
+            border-radius: 6px;
+            color: #475569;
+            background: #FFFFFF;
+            text-decoration: none;
+            transition: all 0.15s ease;
+        }
+
+        .page-container .pagination a:hover {
+            background: #F8FAFC;
+            border-color: #CBD5E1;
+        }
+
+        .page-container .pagination .current {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 36px;
+            height: 36px;
+            padding: 0 8px;
+            background: #3B82F6;
+            color: #FFFFFF;
+            border: 1px solid #3B82F6;
+            border-radius: 6px;
+        }
+
+        .page-container .pagination .disabled {
+            color: #94A3B8;
+            background: #F8FAFC;
+            cursor: not-allowed;
+        }
+
+        .page-container .pagination .gap {
+            border: none;
+            background: transparent;
+            color: #64748B;
+            min-width: auto;
+        }
+
+        .page-container .pagination .page-input {
+            width: 44px;
+            height: 36px;
+            text-align: center;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            color: #1E293B;
+        }
+
+        .page-container .pagination .page-input:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .page-container .pagination .page-info {
+            color: #475569;
+        }
+
+        @media (max-width: 768px) {
+            .page-container {
+                padding: 12px;
+            }
+
+            #searchForm {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            #searchForm input[type="date"],
+            #searchForm input[type="submit"],
+            #searchForm input[type="button"] {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
-<div id="pagediv"></div>
-<form id="searchForm" action="/data/dlist" method="post">
-    <label>上传时间</label>
-    <input type="date" name="uptime" value="#(uptime)">
-    <input value="搜索" type="submit">
-    <input type="button" value="重置" name="refresh" id="resetButton" />
+<div class="page-container">
+    <div id="pagediv">
+        <form id="searchForm" action="/data/dlist" method="post">
+            <label for="uptime">上传时间</label>
+            <input id="uptime" type="date" name="uptime" value="#(uptime)">
+            <input value="搜索" type="submit">
+            <input type="button" value="重置" id="resetButton">
+        </form>
+    </div>
 
-    <script>
-        var buttons = document.getElementsByName("refresh");
-        for (var i = 0; i < buttons.length; i++) {
-            buttons[i].addEventListener('click', function() {
-                // 获取所有的输入框并设置为空
-                var inputs = document.querySelectorAll('#searchForm input[type=date]');
-                for (var j = 0; j < inputs.length; j++) {
-                    inputs[j].value = "";
-                }
+    <div class="table-wrapper">
+        <table class="list">
+            <thead>
+            <tr>
+                <th width="8%">序号</th>
+                <th width="16%">安装环境</th>
+                <th width="16%">供气合同</th>
+                <th width="16%">连接阀</th>
+                <th width="16%">连接管</th>
+                <th width="10%">上传人员</th>
+                <th width="12%">上传时间</th>
+                <th width="6%">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            #set(startIndex = (dataPage.pageNumber - 1) * dataPage.pageSize + 1)
+            #for(x : dataPage.list)
+            <tr>
+                <td style="text-align:center">#(startIndex++)</td>
 
-                // 提交表单以重新查询并刷新页面
-                document.getElementById('searchForm').submit();
-            });
-        }
-    </script>
+                <td style="text-align:center">
+                    #if(x.door_video && x.door_video != "")
+                    <div class="media-controls">
+                        #set(mediaUrls = x.door_video.split(","))
+                        #set(firstUrl = mediaUrls.length > 0 ? mediaUrls[0] : "")
+                        <button type="button" onclick="changeMedia(this, -1)">上一张</button>
+                        #if(firstUrl.matches(".*\\.(webm|mp4|ogg)$"))
+                        <video class="media-preview"
+                               data-urls="#(x.door_video)"
+                               data-current-index="0"
+                               onclick="showMedia('/' + this.dataset.urls.split(',')[this.dataset.currentIndex])">
+                            <source src="/#(firstUrl)">
+                        </video>
+                        #else
+                        <img class="media-preview"
+                             src="/#(firstUrl)"
+                             data-urls="#(x.door_video)"
+                             data-current-index="0"
+                             onclick="showMedia(this.src)">
+                        #end
+                        <button type="button" onclick="changeMedia(this, 1)">下一张</button>
+                    </div>
+                    #else
+                    <span class="no-media">无内容</span>
+                    #end
+                </td>
 
-<table class="list">
-    <tbody>
-    <tr>
-        <th width="8%">序号</th>
-        <th width="10%">安装环境</th>
-        <th width="10%">供气合同</th>
-        <th width="10%">连接阀</th>
-        <th width="10%">连接管</th>
-        <th width="10%">上传人员</th>
-        <th width="10%">上传时间</th>
-        <th width="12%">操作</th>
-    </tr>
-    #set(startIndex = (dataPage.pageNumber-1) * dataPage.pageSize + 1)
-    #for(x : dataPage.list)
-    <tr>
-        <td style="text-align:center">#(startIndex++)</td>
+                <td style="text-align:center">
+                    #if(x.daoguan_video && x.daoguan_video != "")
+                    <div class="media-controls">
+                        #set(mediaUrls = x.daoguan_video.split(","))
+                        #set(firstUrl = mediaUrls.length > 0 ? mediaUrls[0] : "")
+                        <button type="button" onclick="changeMedia(this, -1)">上一张</button>
+                        #if(firstUrl.matches(".*\\.(webm|mp4|ogg)$"))
+                        <video class="media-preview"
+                               data-urls="#(x.daoguan_video)"
+                               data-current-index="0"
+                               onclick="showMedia('/' + this.dataset.urls.split(',')[this.dataset.currentIndex])">
+                            <source src="/#(firstUrl)">
+                        </video>
+                        #else
+                        <img class="media-preview"
+                             src="/#(firstUrl)"
+                             data-urls="#(x.daoguan_video)"
+                             data-current-index="0"
+                             onclick="showMedia(this.src)">
+                        #end
+                        <button type="button" onclick="changeMedia(this, 1)">下一张</button>
+                    </div>
+                    #else
+                    <span class="no-media">无内容</span>
+                    #end
+                </td>
 
-        <!-- 门牌照片 -->
-        <td style="text-align:center">
-            #if(x.door_video && x.door_video != "")
-            <div class="media-controls">
-                #set(mediaUrls = x.door_video.split(","))
-                #set(firstUrl = mediaUrls.length > 0 ? mediaUrls[0] : "")  <!-- 修正点：使用 length 属性 -->
-                <button onclick="changeMedia(this, -1)">上一张</button>
+                <td style="text-align:center">
+                    #if(x.qiguan_video && x.qiguan_video != "")
+                    <div class="media-controls">
+                        #set(mediaUrls = x.qiguan_video.split(","))
+                        #set(firstUrl = mediaUrls.length > 0 ? mediaUrls[0] : "")
+                        <button type="button" onclick="changeMedia(this, -1)">上一张</button>
+                        #if(firstUrl.matches(".*\\.(webm|mp4|ogg)$"))
+                        <video class="media-preview"
+                               data-urls="#(x.qiguan_video)"
+                               data-current-index="0"
+                               onclick="showMedia('/' + this.dataset.urls.split(',')[this.dataset.currentIndex])">
+                            <source src="/#(firstUrl)">
+                        </video>
+                        #else
+                        <img class="media-preview"
+                             src="/#(firstUrl)"
+                             data-urls="#(x.qiguan_video)"
+                             data-current-index="0"
+                             onclick="showMedia(this.src)">
+                        #end
+                        <button type="button" onclick="changeMedia(this, 1)">下一张</button>
+                    </div>
+                    #else
+                    <span class="no-media">无内容</span>
+                    #end
+                </td>
 
-                <!-- 动态生成媒体元素 -->
-                #if(firstUrl.matches(".*\\.(webm|mp4|ogg)$"))
-                <video class="media-preview"
-                       data-urls="#(x.door_video)"
-                       data-current-index="0"
-                       onclick="showMedia('/' + this.dataset.urls.split(',')[this.dataset.currentIndex])">
-                       style="max-width:100px;max-height:100px;">
-                    <source src="/#(firstUrl)">
-                </video>
+                <td style="text-align:center">
+                    #if(x.louguan_video && x.louguan_video != "")
+                    <div class="media-controls">
+                        #set(mediaUrls = x.louguan_video.split(","))
+                        #set(firstUrl = mediaUrls.length > 0 ? mediaUrls[0] : "")
+                        <button type="button" onclick="changeMedia(this, -1)">上一张</button>
+                        #if(firstUrl.matches(".*\\.(webm|mp4|ogg)$"))
+                        <video class="media-preview"
+                               data-urls="#(x.louguan_video)"
+                               data-current-index="0"
+                               onclick="showMedia('/' + this.dataset.urls.split(',')[this.dataset.currentIndex])">
+                            <source src="/#(firstUrl)">
+                        </video>
+                        #else
+                        <img class="media-preview"
+                             src="/#(firstUrl)"
+                             data-urls="#(x.louguan_video)"
+                             data-current-index="0"
+                             onclick="showMedia(this.src)">
+                        #end
+                        <button type="button" onclick="changeMedia(this, 1)">下一张</button>
+                    </div>
+                    #else
+                    <span class="no-media">无内容</span>
+                    #end
+                </td>
 
-                #else
-                <img class="media-preview"
-                     src="/#(firstUrl)"
-                     data-urls="#(x.door_video)"
-                     data-current-index="0"
-                     onclick="showMedia(this.src)"
-                     style="max-width:100px;max-height:100px;">
-                #end
-
-                <button onclick="changeMedia(this, 1)">下一张</button>
-            </div>
-            #else
-            <div>无内容</div>
+                <td style="text-align:center">#(x.worker)</td>
+                <td style="text-align:center">#(x.create_time)</td>
+                <td style="text-align:center">
+                    <a href="#" class="delete-link" onclick="deleteRecord('#(x.id)'); return false;">删除</a>
+                </td>
+            </tr>
             #end
-        </td>
+            </tbody>
+        </table>
+    </div>
 
-        <!-- 其他媒体列保持相同结构，只需替换字段名称 -->
-        <!-- 导管照片 -->
-
-        <td style="text-align:center">
-            #if(x.daoguan_video && x.daoguan_video != "")
-            <div class="media-controls">
-                #set(mediaUrls = x.daoguan_video.split(","))
-                #set(firstUrl = mediaUrls.length > 0 ? mediaUrls[0] : "")  <!-- 修正点：使用 length 属性 -->
-                <button onclick="changeMedia(this, -1)">上一张</button>
-
-                <!-- 动态生成媒体元素 -->
-                #if(firstUrl.matches(".*\\.(webm|mp4|ogg)$"))
-                <video class="media-preview"
-                       data-urls="#(x.daoguan_video)"
-                       data-current-index="0"
-                       onclick="showMedia('/' + this.dataset.urls.split(',')[this.dataset.currentIndex])">
-                       style="max-width:100px;max-height:100px;">
-                    <source src="/#(firstUrl)">
-                </video>
-
-                #else
-                <img class="media-preview"
-                     src="/#(firstUrl)"
-                     data-urls="#(x.daoguan_video)"
-                     data-current-index="0"
-                     onclick="showMedia(this.src)"
-                     style="max-width:100px;max-height:100px;">
-                #end
-
-                <button onclick="changeMedia(this, 1)">下一张</button>
-            </div>
-            #else
-            <div>无内容</div>
-            #end
-        </td>
-
-        <!-- 气管照片 -->
-        <td style="text-align:center">
-            #if(x.qiguan_video && x.qiguan_video != "")
-            <div class="media-controls">
-                #set(mediaUrls = x.qiguan_video.split(","))
-                #set(firstUrl = mediaUrls.length > 0 ? mediaUrls[0] : "")  <!-- 修正点：使用 length 属性 -->
-                <button onclick="changeMedia(this, -1)">上一张</button>
-
-                <!-- 动态生成媒体元素 -->
-                #if(firstUrl.matches(".*\\.(webm|mp4|ogg)$"))
-                <video class="media-preview"
-                       data-urls="#(x.qiguan_video)"
-                       data-current-index="0"
-                       onclick="showMedia('/' + this.dataset.urls.split(',')[this.dataset.currentIndex])">
-                       style="max-width:100px;max-height:100px;">
-                    <source src="/#(firstUrl)">
-                </video>
-
-                #else
-                <img class="media-preview"
-                     src="/#(firstUrl)"
-                     data-urls="#(x.qiguan_video)"
-                     data-current-index="0"
-                     onclick="showMedia(this.src)"
-                     style="max-width:100px;max-height:100px;">
-                #end
-
-                <button onclick="changeMedia(this, 1)">下一张</button>
-            </div>
-            #else
-            <div>无内容</div>
-            #end
-        </td>
-
-        <!-- 楼管照片 -->
-        <td style="text-align:center">
-            #if(x.louguan_video && x.louguan_video != "")
-            <div class="media-controls">
-                #set(mediaUrls = x.louguan_video.split(","))
-                #set(firstUrl = mediaUrls.length > 0 ? mediaUrls[0] : "")  <!-- 修正点：使用 length 属性 -->
-                <button onclick="changeMedia(this, -1)">上一张</button>
-
-                <!-- 动态生成媒体元素 -->
-                #if(firstUrl.matches(".*\\.(webm|mp4|ogg)$"))
-                <video class="media-preview"
-                       data-urls="#(x.louguan_video)"
-                       data-current-index="0"
-                       onclick="showMedia('/' + this.dataset.urls.split(',')[this.dataset.currentIndex])">
-                       style="max-width:100px;max-height:100px;">
-                    <source src="/#(firstUrl)">
-                </video>
-
-                #else
-                <img class="media-preview"
-                     src="/#(firstUrl)"
-                     data-urls="#(x.louguan_video)"
-                     data-current-index="0"
-                     onclick="showMedia(this.src)"
-                     style="max-width:100px;max-height:100px;">
-                #end
-
-                <button onclick="changeMedia(this, 1)">下一张</button>
-            </div>
-            #else
-            <div>无内容</div>
-            #end
-        </td>
-        <td style="text-align:center">#(x.worker)</td>
-        <td style="text-align:center">#(x.create_time)</td>
-        <td style="text-align:left">
-            <a href="#" class="btn btn-danger" onclick="deleteRecord('#(x.id)')">删除</a>
-        </td>
-    </tr>
-    #end
-    </tbody>
-</table>
-<div class="pagination" style="color:#000000;">
-    #@paginate(dataPage.pageNumber, dataPage.totalPage, "/data/dlist?uptime= " +(uptime != null ? uptime : "") + "&page=")
+    #@paginate(dataPage.pageNumber, dataPage.totalPage, "/data/dlist?uptime=" + (uptime != null ? uptime : "") + "&page=")
 </div>
-</form>
+
 <script>
-    // 添加在 changeMedia 函数之前
+    document.getElementById("resetButton").addEventListener("click", function () {
+        var inputs = document.querySelectorAll("#searchForm input[type='date']");
+        for (var i = 0; i < inputs.length; i++) {
+            inputs[i].value = "";
+        }
+        document.getElementById("searchForm").submit();
+    });
+
     function getMimeType(url) {
-        const ext = url.split('.').pop().toLowerCase();
+        var ext = url.split(".").pop().toLowerCase();
         return {
-            'webm': 'video/webm',
-            'mp4': 'video/mp4',
-            'ogg': 'video/ogg',
-            'jpg': 'image/jpeg',
-            'jpeg': 'image/jpeg',
-            'png': 'image/png',
-            'gif': 'image/gif'
-        }[ext] || 'application/octet-stream'; // 默认类型
+            webm: "video/webm",
+            mp4: "video/mp4",
+            ogg: "video/ogg",
+            jpg: "image/jpeg",
+            jpeg: "image/jpeg",
+            png: "image/png",
+            gif: "image/gif"
+        }[ext] || "application/octet-stream";
     }
 
     function changeMedia(button, direction) {
-        const mediaControls = button.closest('.media-controls');
-        const mediaElement = mediaControls.querySelector('.media-preview');
-        const urls = (mediaElement.dataset.urls || "").split(",")
-            .map(url => url.trim()) // 去除空格
-            .filter(url => url);    // 过滤空值
+        var mediaControls = button.closest(".media-controls");
+        var mediaElement = mediaControls ? mediaControls.querySelector(".media-preview") : null;
+        if (!mediaElement) {
+            return;
+        }
 
-        if (urls.length === 0) return;
+        var urls = (mediaElement.dataset.urls || "")
+            .split(",")
+            .map(function (url) {
+                return url.trim();
+            })
+            .filter(function (url) {
+                return url;
+            });
 
-        let currentIndex = parseInt(mediaElement.dataset.currentIndex) || 0;
+        if (!urls.length) {
+            return;
+        }
+
+        var currentIndex = parseInt(mediaElement.dataset.currentIndex, 10);
+        if (isNaN(currentIndex)) {
+            currentIndex = 0;
+        }
         currentIndex = (currentIndex + direction + urls.length) % urls.length;
         mediaElement.dataset.currentIndex = currentIndex;
 
-        const newUrl = urls[currentIndex];
-        const fullUrl = `/${newUrl}`;
-        if (mediaElement.tagName === 'VIDEO') {
-            mediaElement.src = fullUrl; // 直接修改 src
+        var fullUrl = "/" + urls[currentIndex];
+        if (mediaElement.tagName === "VIDEO") {
+            mediaElement.src = fullUrl;
             mediaElement.load();
-            mediaElement.play().catch(e => console.log('需要用户交互后才能播放'));
+            mediaElement.play().catch(function () {});
         } else {
             mediaElement.src = fullUrl;
         }
     }
 
-
     function showMedia(url) {
-        const overlay = document.createElement('div');
-        overlay.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0,0,0,0.9);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 9999;
-    `;
+        var overlay = document.createElement("div");
+        overlay.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(15,23,42,0.88);display:flex;justify-content:center;align-items:center;z-index:9999;padding:24px;";
 
-        const mediaElement = url.match(/\.(webm|mp4|ogg)$/i)
-            ? document.createElement('video')
-            : document.createElement('img');
-
-        if(mediaElement.tagName === 'VIDEO') {
+        var mediaElement = url.match(/\.(webm|mp4|ogg)$/i) ? document.createElement("video") : document.createElement("img");
+        if (mediaElement.tagName === "VIDEO") {
             mediaElement.controls = true;
             mediaElement.autoplay = true;
-            mediaElement.innerHTML = `<source src="${url}" type="${getMimeType(url)}">`;
+            mediaElement.innerHTML = "<source src=\"" + url + "\" type=\"" + getMimeType(url) + "\">";
         } else {
             mediaElement.src = url;
         }
 
-        mediaElement.style.maxWidth = '90vw';
-        mediaElement.style.maxHeight = '90vh';
+        mediaElement.style.maxWidth = "90vw";
+        mediaElement.style.maxHeight = "90vh";
+        mediaElement.style.borderRadius = "8px";
+        mediaElement.style.background = "#000";
 
-        overlay.onclick = () => overlay.remove();
+        overlay.onclick = function () {
+            overlay.remove();
+        };
         overlay.appendChild(mediaElement);
         document.body.appendChild(overlay);
     }
 
     function deleteRecord(id) {
-        // 确认是否删除
-        if (confirm("确定要删除吗？")) {
-            // 创建一个隐藏的表单字段用于存储ID
-            var deleteForm = document.createElement('form');
-            deleteForm.method = 'post';
-            deleteForm.action = '/data/delete';
-
-            var idInput = document.createElement('input');
-            idInput.type = 'hidden';
-            idInput.name = 'id';
-            idInput.value = id;
-
-            deleteForm.appendChild(idInput);
-            document.body.appendChild(deleteForm);
-            deleteForm.submit();
+        if (!confirm("确定要删除吗？")) {
+            return;
         }
+
+        var deleteForm = document.createElement("form");
+        deleteForm.method = "post";
+        deleteForm.action = "/data/delete";
+
+        var idInput = document.createElement("input");
+        idInput.type = "hidden";
+        idInput.name = "id";
+        idInput.value = id;
+
+        deleteForm.appendChild(idInput);
+        document.body.appendChild(deleteForm);
+        deleteForm.submit();
     }
 </script>
-
-
 </body>
 </html>

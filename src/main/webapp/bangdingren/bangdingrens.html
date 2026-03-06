@@ -1,363 +1,506 @@
 <!DOCTYPE html>
-<html lang="en">
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Content</title>
-<script src="../css/jquery-3.3.1.min.js"></script>
-<link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css" >
-<script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
-<link rel="stylesheet" type="text/css" href="../css/lpg.css">
-
-<link rel="stylesheet" type="text/css" href="../css/lpg.css">
-
-
-<style scoped>
-    .container {
-        padding: 50px 20px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    input {
-        padding: 15px;
-        font-size: 18px;
-        border: 2px solid #a3bffa;
-        border-radius: 10px;
-        width: auto; /* 修改宽度为自动适应内容 */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        transition: border-color 0.3s ease;
-    }
-
-    input:focus {
-        outline: none;
-        border-color: #4c87c9;
-    }
-
-    /* 设置提交和重置按钮样式 */
-    #searchForm input[type="submit"],
-    #searchForm input[type="button"] {
-        width: auto;
-        padding: 8px 16px;
-        font-size: 16px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        cursor: pointer;
-        background-color: #f0f0f0;
-        margin-right: 10px;
-    }
-
-    #searchForm input[type="submit"]:hover,
-    #searchForm input[type="button"]:hover {
-        background-color: #e0e0e0;
-    }
-
-    /* 设置日期输入框样式 */
-    #searchForm input[type="date"] {
-        width: auto;
-        padding: 8px 16px;
-        font-size: 16px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        background-color: #f0f0f0;
-        margin-right: 10px;
-    }
-
-    /* 设置下拉框样式 */
-    #searchForm select {
-        width: auto;
-        padding: 8px 16px;
-        font-size: 16px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        background-color: #f0f0f0;
-        margin-right: 10px;
-    }
-</style>
-
-<style>
-    /* 设置 #pagediv 的样式 */
-    #pagediv {
-        background-color: #f0f0f0;
-        color: black;
-        padding: 10px;
-    }
-
-    /* 设置表格样式 */
-    table.list {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    /* 设置表格表头样式 */
-    table.list th {
-        background-color: #add8e6;
-        color: black;
-        padding: 8px;
-        text-align: left;
-        border: 1px solid #ddd; /* 新增：添加边框 */
-    }
-
-    /* 设置表格单元格样式 */
-    table.list td {
-        padding: 8px;
-        border: 1px solid #ddd; /* 修改：添加边框 */
-    }
-
-    /* 设置表格隔行颜色 */
-    table.list tr:nth-child(even) {
-        background-color: #f2f2f2;
-    }
-
-    table.list tr:nth-child(odd) {
-        background-color: #e0e0e0;
-    }
-
-    /* 设置鼠标悬停时表格行的颜色 */
-    table.list tr:hover {
-        background-color: #d3d3d3;
-    }
-
-    /* 新增样式：设置新建司机链接为黑色 */
-    #pagediv .add {
-        color: black;
-    }
-
-    /* 新增样式：设置输入框背景色为淡灰色 */
-    #pagediv input[type="text"] {
-        background-color: #f0f0f0;
-    }
-
-    /* 新增样式：设置 label 文字颜色为黑色 */
-    #pagediv label {
-        color: black;
-    }
-</style>
-<!-- Add your custom stylesheets and scripts here -->
-<script>
-    document.getElementById('showFormButton').addEventListener('click', function() {
-        var form = document.getElementById('searchForm');
-        if (form.style.display === 'none') {
-            form.style.display = 'block'; // 显示表单
-        } else {
-            form.style.display = 'none'; // 再次点击按钮隐藏表单
-        }
-    });
-</script>
-
-<!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-    <!-- 这里是头部信息 -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>绑定人管理</title>
+    <script src="../css/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css">
+    <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/index.css">
+
+    <style>
+        body {
+            background: #F8FAFC;
+            color: #1E293B;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            margin: 0;
+        }
+
+        .page-container {
+            margin: 20px;
+        }
+
+        .search-area {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+        }
+
+        .search-form {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .search-form label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #475569;
+            margin: 0;
+            white-space: nowrap;
+        }
+
+        .search-form input[type="text"] {
+            padding: 8px 12px;
+            font-size: 14px;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            background: #FFFFFF;
+            color: #1E293B;
+            min-width: 180px;
+            transition: all 0.15s ease;
+        }
+
+        .search-form input[type="text"]:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .btn-add,
+        .search-form input[type="submit"],
+        .btn-reset {
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-add,
+        .search-form input[type="submit"] {
+            background: #3B82F6;
+            color: #FFFFFF;
+        }
+
+        .btn-add:hover,
+        .search-form input[type="submit"]:hover {
+            background: #2563EB;
+            color: #FFFFFF;
+            text-decoration: none;
+        }
+
+        .btn-reset {
+            background: #FFFFFF;
+            color: #475569;
+            border: 1px solid #CBD5E1;
+        }
+
+        .btn-reset:hover {
+            background: #F8FAFC;
+            border-color: #94A3B8;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            overflow-y: visible;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        table.list {
+            width: max-content;
+            min-width: 100%;
+            table-layout: auto;
+            border-collapse: collapse;
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        table.list thead th {
+            background: #F8FAFC;
+            color: #475569;
+            font-size: 13px;
+            font-weight: 600;
+            text-align: left;
+            padding: 14px 16px;
+            border-bottom: 1px solid #E2E8F0;
+            white-space: nowrap;
+        }
+
+        table.list tbody td {
+            padding: 14px 16px;
+            font-size: 14px;
+            color: #1E293B;
+            border-bottom: 1px solid #F1F5F9;
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+
+        table.list tbody tr {
+            background: #FFFFFF;
+            transition: background 0.15s ease;
+        }
+
+        table.list tbody tr:nth-child(even) {
+            background: #F8FAFC;
+        }
+
+        table.list tbody tr:hover {
+            background: #F1F5F9;
+        }
+
+        table.list tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        table.list a {
+            color: #3B82F6;
+            text-decoration: none;
+            margin-right: 12px;
+            transition: color 0.15s ease;
+        }
+
+        table.list a:hover {
+            color: #2563EB;
+        }
+
+        table.list .delete-link {
+            color: #EF4444;
+        }
+
+        table.list .delete-link:hover {
+            color: #DC2626;
+        }
+
+        .table-avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 8px;
+            border: 1px solid #E2E8F0;
+            object-fit: cover;
+            cursor: pointer;
+            background: #F8FAFC;
+        }
+
+        .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 20px;
+            color: #475569;
+        }
+
+        .pagination a,
+        .pagination span {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 36px;
+            height: 36px;
+            padding: 0 8px;
+            font-size: 14px;
+            border: 1px solid #E2E8F0;
+            border-radius: 6px;
+            color: #475569;
+            background: #FFFFFF;
+            text-decoration: none;
+            transition: all 0.15s ease;
+        }
+
+        .pagination a:hover {
+            background: #F8FAFC;
+            border-color: #CBD5E1;
+        }
+
+        .pagination .current-page {
+            background: #3B82F6;
+            color: #FFFFFF;
+            border-color: #3B82F6;
+        }
+
+        .pagination .disabled {
+            color: #94A3B8;
+            background: #F8FAFC;
+            cursor: not-allowed;
+        }
+
+        .modal-content {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .modal-header {
+            background: #F8FAFC;
+            border-bottom: 1px solid #E2E8F0;
+            padding: 16px 20px;
+        }
+
+        .modal-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E293B;
+        }
+
+        .modal-body {
+            padding: 20px;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .modal-footer {
+            background: #F8FAFC;
+            border-top: 1px solid #E2E8F0;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        .btn-default {
+            background: #FFFFFF;
+            color: #475569;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            padding: 8px 16px;
+            transition: all 0.15s ease;
+        }
+
+        .btn-default:hover {
+            background: #F8FAFC;
+            border-color: #94A3B8;
+        }
+
+        .btn-primary {
+            background: #3B82F6;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 16px;
+            transition: all 0.15s ease;
+        }
+
+        .btn-primary:hover {
+            background: #2563EB;
+        }
+
+        .image-mask {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 9999;
+        }
+
+        .image-viewer {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10000;
+            background: #FFFFFF;
+            border-radius: 10px;
+            padding: 8px;
+            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .page-container {
+                margin: 10px;
+            }
+
+            .search-form {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-form input[type="text"],
+            .search-form input[type="submit"],
+            .btn-reset,
+            .btn-add {
+                width: 100%;
+            }
+
+            table.list {
+                min-width: 1150px;
+            }
+        }
+    </style>
 </head>
 <body>
-<div id="pagediv">
-    <form id="searchForm" action="/bangdingren/bangdingrenlist" method="post">
-        <a href="#" class="add openModal" data-title="新建绑定人" data-edit-url="/bangdingren/add"><b> + </b>新建绑定人</a>
-        <label> 姓名：</label>
-        <input type="text"  name="name" placeholder="姓名" value="#(name)">
+<div class="page-container">
+    <div class="search-area">
+        <form id="searchForm" class="search-form" action="/bangdingren/bangdingrenlist" method="post">
+            <a href="#" class="btn-add openModal" data-title="新建绑定人" data-edit-url="/bangdingren/add">+ 新建绑定人</a>
+            <label>姓名</label>
+            <input type="text" name="name" placeholder="姓名" value="#(name)">
+            <label>联系电话</label>
+            <input type="text" name="telephone" placeholder="联系电话" value="#(telephone)">
+            <input value="搜索" type="submit">
+            <button type="button" class="btn-reset" id="resetButton">重置</button>
+        </form>
+    </div>
 
-        <label> 联系电话：</label>
-        <input type="text"  name="telephone" placeholder="联系电话" value="#(telephone)">
+    <div class="table-wrapper">
+        <table class="list">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>绑定人姓名</th>
+                <th>账号密码</th>
+                <th>联系方式</th>
+                <th>出生日期</th>
+                <th>身份证号</th>
+                <th>培训证号</th>
+                <th>培训证有效期</th>
+                <th>培训证照片</th>
+                <th>操作标识</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            #for(x : bangdingrens.getList())
+            <tr>
+                <td>#(x.id)</td>
+                <td>#(x.name)</td>
+                <td>#(x.psw)</td>
+                <td>#(x.telphone)</td>
+                <td>#(x.chushengriqi)</td>
+                <td>#(x.identity_card_no)</td>
+                <td>#(x.train_certificate_no)</td>
+                <td>#(x.train_certificate_indate)</td>
+                <td>
+                    #if(x.train_certificate_image_url)
+                    <img src="#(x.train_certificate_image_url)" alt="培训证照片" class="table-avatar" onclick="showImage(this.src)">
+                    #else
+                    <img src="/img/+++++.png" alt="默认图片" class="table-avatar">
+                    #end
+                </td>
+                <td>#(x.update_sign)</td>
+                <td>
+                    <a href="#" class="delete-link" onclick="confirmDelete('#(x.id)')">删除</a>
+                    <a href="#" class="openModal" data-title="编辑绑定人" data-edit-url="/bangdingren/edit/#(x.id)">修改</a>
+                </td>
+            </tr>
+            #end
+            </tbody>
+        </table>
+    </div>
 
-        <input value="搜索" type="submit">
-        <input type="submit" value="重置" name="refresh">
-
-    </form>
-
+    <div class="pagination">
+        #@paginate(bangdingrens.pageNumber, bangdingrens.totalPage, "/bangdingren/bangdingrenlist?name="+(name != null ? name : "")+"&telephone="+( telephone != null ? telephone : "")+"&page=")
+    </div>
 </div>
 
-<!-- 这里是您的脚本 -->
 <script>
-    document.getElementById('fresh').addEventListener('click', function() {
-        // 提交表单以重新查询并刷新页面
+    document.getElementById('resetButton').addEventListener('click', function () {
+        var inputs = document.querySelectorAll('#searchForm input[type=text]');
+        for (var i = 0; i < inputs.length; i++) {
+            inputs[i].value = "";
+        }
         document.getElementById('searchForm').submit();
     });
 
-    document.getElementById('showFormButton').addEventListener('click', function() {
-        var form = document.getElementById('searchForm');
-        if (form.style.display === 'none') {
-            form.style.display = 'block'; // 显示表单
-        } else {
-            form.style.display = 'none'; // 再次点击按钮隐藏表单
-        }
-    });
-</script>
-</body>
-</html>
-<table class="list">
-    <tbody>
-    <tr>
-        <th>id</th>
-        <th>绑定人姓名</th>
-        <th>账号密码</th>
-        <th>联系方式</th>
-        <th>出生日期</th>
-        <th>身份证号</th>
-        <th>培训证号</th>
-        <th>培训证有效期</th>
-        <th>培训证照片</th>
-        <th>操作标识</th>
-        <th>操作</th>
-    </tr>
-
-    #for(x : bangdingrens.getList())
-    <tr>
-        <td>#(x.id)</td>
-        <td>#(x.name)</td>
-        <td>#(x.psw)</td>
-        <td>#(x.telphone)</td>
-        <td>#(x.chushengriqi)</td>
-        <td>#(x.identity_card_no)</td>
-        <td>#(x.train_certificate_no)</td>
-        <td>#(x.train_certificate_indate)</td>
-
-        <td>
-            #if(x.train_certificate_image_url)
-            <img src="#(x.train_certificate_image_url)" alt="Car picture" style="width:100px;height:100px;"  onclick="showImage(this.src)">
-            #else
-            <img src="/img/+++++.png" alt="车辆图像" style="display: none;">
-            #end
-        </td>
-
-        <td>#(x.update_sign)</td>
-        <td style="text-align:left">
-            &nbsp;&nbsp;<a href="#" onclick="confirmDelete('#(x.id)')">删除</a>
-            <a href="#" class="edit openModal" data-title="编辑用户" data-edit-url="/bangdingren/edit/#(x.id)">修改</a>
-        </td>
-    </tr>
-    #end
-    </tbody>
-</table>
-<div class="pagination" style="color:#DDDDDD;">
-    #@paginate(bangdingrens.pageNumber, bangdingrens.totalPage, "/bangdingren/bangdingrenlist?name="+(name != null ? name : "")+"&telephone="+( telephone != null ? telephone : "")+"&page=")
-</div>
-<script>
     function confirmDelete(id) {
-        var result = confirm("确定要删除吗？");
-        if (result) {
-            // 如果用户点击了确定，则执行删除操作
+        if (confirm("确定要删除吗？")) {
             window.location.href = "/bangdingren/delete/" + id;
-        } else {
-            // 如果用户点击了取消，则不执行任何操作
-            return false;
         }
     }
-</script>
 
-<script>
-    var buttons = document.getElementsByName("refresh");
-    for (var i = 0; i < buttons.length; i++) {
-        buttons[i].addEventListener('click', function() {
-            // 获取所有的输入框并设置为空
-            var inputs = document.querySelectorAll('#searchForm input[type=text]');
-            for (var j = 0; j < inputs.length; j++) {
-                inputs[j].value = "";
-            }
+    $(function () {
+        $('.openModal').click(function (e) {
+            e.preventDefault();
+            var editUrl = $(this).data('edit-url');
+            var that = this;
 
-            // 提交表单以重新查询并刷新页面
-            document.getElementById('searchForm').submit();
-        });
-    }
-</script>
-
-<script>
-    $('.openModal').click(function(e) {
-        e.preventDefault();
-        var editUrl = $(this).data('edit-url');
-        var that = this; // 保存正确的上下文
-
-        $.get(editUrl, function(data) {
-            var title = $(that).data('title');
-            $('#myModalLabel').text(title); // 修改模态窗口标题
-
-            // 清除旧内容
-            $('#modalBody').html(data); // 加载编辑内容到模态窗口
-            $('#myModal').modal('show'); // 显示模态窗口
-
+            $.get(editUrl, function (data) {
+                var title = $(that).data('title');
+                $('#myModalLabel').text(title);
+                $('#modalBody').html(data);
+                $('#myModal').modal('show');
+            });
         });
     });
 
-</script>
-<script>
     function showImage(imageUrl) {
-        if(imageUrl == null){
-
+        if (!imageUrl) {
+            return;
         }
         var img = new Image();
         img.src = imageUrl;
+
         var mask = document.createElement('div');
-        mask.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); z-index: 9999;';
+        mask.className = 'image-mask';
         document.body.appendChild(mask);
+
         var imgContainer = document.createElement('div');
-        imgContainer.style.cssText = 'position: fixed; top: 50%; left: 50%; width: auto; height: auto; transform: translate(-50%, -50%); z-index: 10000;';
+        imgContainer.className = 'image-viewer';
         imgContainer.appendChild(img);
         document.body.appendChild(imgContainer);
 
-        img.onload = function() {
-            var maxWidth = window.innerWidth * 0.8; // Adjust max width as needed
-            var maxHeight = window.innerHeight * 0.8; // Adjust max height as needed
+        img.onload = function () {
+            var maxWidth = window.innerWidth * 0.8;
+            var maxHeight = window.innerHeight * 0.8;
             var imgWidth = img.naturalWidth;
             var imgHeight = img.naturalHeight;
             var scaleFactor = Math.min(maxWidth / imgWidth, maxHeight / imgHeight);
             img.style.width = (imgWidth * scaleFactor) + "px";
             img.style.height = (imgHeight * scaleFactor) + "px";
-        }
+        };
 
-        mask.addEventListener('click', function() {
+        mask.addEventListener('click', function () {
             mask.parentNode.removeChild(mask);
             imgContainer.parentNode.removeChild(imgContainer);
         });
     }
 
+    function validateForm() {
+        var form = document.getElementById('myForm');
+        if (!form) {
+            return false;
+        }
+
+        var dateFormat = /^\d{4}-\d{2}-\d{2}$/;
+        var fields = ['bangdingren.chushengriqi', 'bangdingren.train_certificate_indate'];
+        for (var i = 0; i < fields.length; i++) {
+            var input = form.querySelector('input[name="' + fields[i] + '"]');
+            if (input && input.value.trim() !== "" && !dateFormat.test(input.value.trim())) {
+                alert('日期格式不正确，正确格式应为 yyyy-mm-dd');
+                return false;
+            }
+        }
+        return true;
+    }
+
+    $(document).on('click', '#saveButton', function () {
+        var form = document.getElementById('myForm');
+        if (form && validateForm()) {
+            form.submit();
+        }
+    });
 </script>
+
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content" >
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" id="myModalLabel">模态窗口标题</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
-            <div class="modal-body" id="modalBody" >
-
-                <!-- 这里将会加载你的表单内容 -->
-            </div>
+            <div class="modal-body" id="modalBody"></div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary"  id="saveButton" >保存</button>
-                <script>
-                    function validateForm() {
-                        // 正确的日期格式 yyyy-mm-dd
-                        const dateFormat = /^\d{4}-\d{2}-\d{2}$/;
-
-                        // 获取所有需要验证的日期输入框
-                        const dateInputs = document.querySelectorAll('input[type="text"][name^="bangdingren."][name*="indate"], input[type="text"][name^="bangdingren."][name*="chushengriqi"]');
-
-                        for (let i = 0; i < dateInputs.length; i++) {
-                            // 如果日期输入框不为空，检查日期格式
-                            if (dateInputs[i].value.trim() !== "" && !dateFormat.test(dateInputs[i].value)) {
-                                alert('日期格式不正确，无法保存,正确日期格式应为xxxx-xx-xx');
-                                return false; // 如果有任何一个日期格式不正确，直接返回false
-                            }
-                        }
-
-                        return true; // 如果所有字段验证通过，返回true
-                    }
-                    document.getElementById('saveButton').addEventListener('click', function() {
-                        // 验证表单数据
-                        if (validateForm()) {
-                            // 如果验证通过，则提交表单
-                            document.getElementById('myForm').submit();
-                        }
-                        // 如果验证失败，不提交表单（validateForm内部已经显示了错误消息）
-                    });
-                </script>
+                <button type="button" class="btn btn-primary" id="saveButton">保存</button>
             </div>
         </div>
     </div>
 </div>
-
-
-
 </body>
 </html>

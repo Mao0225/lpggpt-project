@@ -1,99 +1,287 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" width="device-width, initial-scale=1.0">
-    <title>Equipment List</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>加气枪管理</title>
     <script src="../css/jquery-3.3.1.min.js"></script>
     <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css">
     <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="/css/lpg.css">
-
-    <style scoped>
-        .container {
-            padding: 50px 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        input {
-            padding: 15px;
-            font-size: 18px;
-            border: 2px solid #a3bffa;
-            border-radius: 10px;
-            width: 100%;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: border-color 0.3s ease;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: #4c87c9;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="../css/index.css">
 
     <style>
-        /* 设置 #pagediv 的样式 */
+        /* 浅色商务风格 - 加气枪管理列表 */
+        body {
+            background: #F8FAFC;
+            color: #1E293B;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            margin: 0;
+        }
+
+        .page-shell {
+            margin: 20px;
+        }
+
+        /* 搜索区域 */
         #pagediv {
-            background-color: #f0f0f0;
-            color: black;
-            padding: 10px;
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
         }
 
-        /* 设置表格样式 */
-        table.list {
-            width: 100%;
-            border-collapse: collapse;
+        #searchForm {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
         }
 
-        /* 设置表格表头样式 */
-        table.list th {
-            background-color: #add8e6;
-            color: black;
-            padding: 8px;
-            text-align: left;
-            border: 1px solid #ddd; /* 新增：添加边框 */
-        }
-
-        /* 设置表格单元格样式 */
-        table.list td {
-            padding: 8px;
-            border: 1px solid #ddd; /* 修改：添加边框 */
-        }
-
-        /* 设置表格隔行颜色 */
-        table.list tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-
-        table.list tr:nth-child(odd) {
-            background-color: #e0e0e0;
-        }
-
-        /* 设置鼠标悬停时表格行的颜色 */
-        table.list tr:hover {
-            background-color: #d3d3d3;
-        }
-
-        /* 新增样式：设置新建司机链接为黑色 */
-        #pagediv .add {
-            color: black;
-        }
-
-        /* 新增样式：设置输入框背景色为淡灰色 */
-        #pagediv input[type="text"] {
-            background-color: #f0f0f0;
-        }
-        /* 新增样式：设置 label 文字颜色为黑色 */
         #pagediv label {
-            color: black;
+            font-size: 14px;
+            font-weight: 500;
+            color: #475569;
+            white-space: nowrap;
+            margin: 0;
+        }
+
+        #pagediv input[type="text"],
+        #pagediv select {
+            padding: 8px 12px;
+            font-size: 14px;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            background: #FFFFFF;
+            color: #1E293B;
+            min-width: 160px;
+            transition: all 0.15s ease;
+        }
+
+        #pagediv input[type="text"]:focus,
+        #pagediv select:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        #pagediv .add {
+            background: #3B82F6;
+            color: #FFFFFF;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        #pagediv .add:hover {
+            background: #2563EB;
+            color: #FFFFFF;
+        }
+
+        #searchButton {
+            background: #3B82F6;
+            color: #FFFFFF;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        #searchButton:hover {
+            background: #2563EB;
+        }
+
+        #resetButton {
+            background: #FFFFFF;
+            color: #475569;
+            border: 1px solid #CBD5E1;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        #resetButton:hover {
+            background: #F8FAFC;
+            border-color: #94A3B8;
+        }
+
+        .table-scroll-wrapper {
+            overflow-x: auto;
+            overflow-y: visible;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* 表格样式 */
+        table.list {
+            width: max-content;
+            min-width: 100%;
+            table-layout: auto;
+            border-collapse: collapse;
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        table.list th {
+            background: #F8FAFC;
+            color: #475569;
+            font-weight: 600;
+            font-size: 14px;
+            padding: 14px 16px;
+            text-align: center;
+            border-bottom: 1px solid #E2E8F0;
+            white-space: nowrap;
+        }
+
+        table.list td {
+            padding: 14px 16px;
+            border-bottom: 1px solid #E2E8F0;
+            text-align: center;
+            color: #1E293B;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+
+        table.list tbody tr:hover {
+            background: #F1F5F9;
+        }
+
+        table.list tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* 操作链接 */
+        table.list a {
+            color: #3B82F6;
+            text-decoration: none;
+            margin: 0 6px;
+            transition: all 0.15s ease;
+        }
+
+        table.list a:hover {
+            color: #2563EB;
+            text-decoration: underline;
+        }
+
+        table.list .delete-link {
+            color: #EF4444;
+        }
+
+        table.list .delete-link:hover {
+            color: #DC2626;
+        }
+
+        .pagination {
+            margin-top: 20px;
+            color: #475569;
+        }
+
+        .modal-content {
+            border-radius: 12px;
+            border: none;
+            background: #FFFFFF;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .modal-header {
+            background: #F8FAFC;
+            border-bottom: 1px solid #E2E8F0;
+            padding: 16px 20px;
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+        }
+
+        .modal-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E293B;
+        }
+
+        .modal-body {
+            padding: 20px;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .modal-footer {
+            padding: 16px 20px;
+            background: #F8FAFC;
+            border-top: 1px solid #E2E8F0;
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+        }
+
+        .modal-footer .btn-default {
+            background: #FFFFFF;
+            color: #475569;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+        }
+
+        .modal-footer .btn-default:hover {
+            background: #F8FAFC;
+            border-color: #94A3B8;
+        }
+
+        .modal-footer .btn-primary {
+            background: #3B82F6;
+            border: none;
+            border-radius: 6px;
+        }
+
+        .modal-footer .btn-primary:hover {
+            background: #2563EB;
+        }
+
+        @media (max-width: 768px) {
+            .page-shell {
+                margin: 10px;
+            }
+
+            #searchForm {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            #pagediv input[type="text"],
+            #pagediv select,
+            #searchButton,
+            #resetButton,
+            #pagediv .add {
+                width: 100%;
+            }
+
+            table.list {
+                min-width: 900px;
+            }
+
+            table.list th,
+            table.list td {
+                font-size: 12px;
+                padding: 10px 12px;
+            }
         }
     </style>
 </head>
 
 <body>
+<div class="page-shell">
 <div id="pagediv">
 
     <form id="searchForm" action="/managegun/gunlist" method="post">
@@ -106,12 +294,13 @@
             #end
         </select>
 
-        <button type="button" type="submit" value="查询" id="searchButton">查询</button>
-        <button type="button" type="submit" value="重置" id="resetButton">重置</button>
+        <button type="button" id="searchButton">查询</button>
+        <button type="button" id="resetButton">重置</button>
 
     </form>
 </div>
 
+<div class="table-scroll-wrapper">
 <table class="list">
     <tbody>
     <tr>
@@ -134,20 +323,22 @@
             <!-- 修改按钮添加点击事件，弹出编辑模态框，结构和功能与参考代码中编辑按钮类似 -->
             <a href="#" class="edit openModal" data-title="编辑设备" data-edit-url="/managegun/edit?id=#(x.id)">修改</a>
             <!-- 将删除按钮修改为a标签形式 -->
-            <a href="#" class="delete" onclick="confirmDelete('#(x.id)')">删除</a>
+            <a href="#" class="delete-link" onclick="confirmDelete('#(x.id)')">删除</a>
             <!-- 为“设备维修”按钮添加点击事件，弹出对应的模态框 -->
         </td>
     </tr>
     #end
     </tbody>
 </table>
+</div>
 
-<div class="pagination" style="color:#DDDDDD;">
+<div class="pagination">
     #set(selectedCompanyId = "")
     #if(companyname!= null && companyname!= "-1")
     #set(selectedCompanyId = companyname)
     #end
     #@paginate(gunlist.pageNumber, gunlist.totalPage, "/managegun/gunlist?companyId=" + selectedCompanyId + "&page=")
+</div>
 </div>
 <script>
 
@@ -171,13 +362,13 @@
         $('#searchForm').submit();
     });
 
-    // 为重置按钮添加点击事件处理函数，用于清空搜索栏并提交表单，让公司名称选择框数据为空
+    // 为重置按钮添加点击事件处理函数，用于清空搜索栏并提交表单
     $('#resetButton').click(function (e) {
         e.preventDefault();
         // 获取所有的输入框并设置为空
         $('#searchForm input[type=text]').val('');
         // 将下拉选择框（公司名称选择框）设置为空值，恢复到初始的“请选择公司”状态
-        $('#selectName').val('');
+        $('#selectName').val('-1');
         // 提交表单以重新查询并刷新页面
         $('#searchForm').submit();
     });
@@ -204,14 +395,24 @@
                 $('#myModal').modal('show');
             });
         });
+
+        $('#saveButton').on('click', function () {
+            var form = document.getElementById('myForm');
+            if (form) {
+                form.submit();
+            }
+        });
     });
 </script>
 <!-- 模态框结构 -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog" style="max-width: 720px;">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" id="myModalLabel">模态窗口标题</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body" id="modalBody">
                 <!-- 这里将会加载你的表单内容，此处暂时为空，后续可以根据从后端获取的数据来填充 -->
@@ -219,16 +420,10 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                 <button type="button" class="btn btn-primary" id="saveButton">保存</button>
-                <script>
-                    document.getElementById('saveButton').addEventListener('click', function () {
-                        console.log("josqb`1");
-                        // 如果验证通过，则提交表单
-                        document.getElementById('myForm').submit();
-                        // 如果验证失败，不提交表单（validateForm内部已经显示了错误消息）
-                    });
-                </script>
             </div>
 
         </div>
     </div>
 </div>
+</body>
+</html>

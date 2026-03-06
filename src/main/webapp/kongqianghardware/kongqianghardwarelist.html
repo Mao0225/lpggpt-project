@@ -1,189 +1,412 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" width="device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>控枪硬件列表</title>
     <script src="../css/jquery-3.3.1.min.js"></script>
     <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css">
     <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="/css/lpg.css">
-
-    <style scoped>
-        .container {
-            padding: 50px 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        input {
-            padding: 15px;
-            font-size: 18px;
-            border: 2px solid #a3bffa;
-            border-radius: 10px;
-            width: 100%;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: border-color 0.3s ease;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: #4c87c9;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="../css/index.css">
 
     <style>
+        /* 浅色商务风格 - 控枪硬件列表 */
+        body {
+            background: #F8FAFC;
+            color: #1E293B;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+        }
+
+        .page-container {
+            background: #F8FAFC;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
         #pagediv {
-            background-color: #f0f0f0;
-            color: black;
-            padding: 10px;
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+        }
+
+        #searchForm {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            width: 100%;
+        }
+
+        #pagediv label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #475569;
+            margin: 0;
+            white-space: nowrap;
+        }
+
+        #pagediv input[type="text"] {
+            padding: 8px 12px;
+            font-size: 14px;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            background: #FFFFFF;
+            color: #1E293B;
+            min-width: 220px;
+            transition: all 0.15s ease;
+        }
+
+        #pagediv input[type="text"]:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        #pagediv input[type="submit"],
+        #pagediv button {
+            border: none;
+            padding: 8px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        #pagediv input[type="submit"] {
+            background: #3B82F6;
+            color: #FFFFFF;
+        }
+
+        #pagediv input[type="submit"]:hover {
+            background: #2563EB;
+        }
+
+        #pagediv .btn-reset {
+            background: #FFFFFF;
+            color: #475569;
+            border: 1px solid #CBD5E1;
+        }
+
+        #pagediv .btn-reset:hover {
+            background: #F8FAFC;
+            border-color: #94A3B8;
+        }
+
+        #pagediv .add {
+            background: #3B82F6;
+            color: #FFFFFF;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.15s ease;
+        }
+
+        #pagediv .add:hover {
+            background: #2563EB;
+            color: #FFFFFF;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
         }
 
         table.list {
             width: 100%;
             border-collapse: collapse;
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        table.list thead tr {
+            background: #F8FAFC;
         }
 
         table.list th {
-            background-color: #add8e6;
-            color: black;
-            padding: 8px;
+            background: #F8FAFC;
+            color: #475569;
+            font-size: 13px;
+            font-weight: 600;
             text-align: left;
-            border: 1px solid #ddd;
+            padding: 14px 16px;
+            border-bottom: 1px solid #E2E8F0;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
         }
 
         table.list td {
-            padding: 8px;
-            border: 1px solid #ddd;
+            padding: 14px 16px;
+            font-size: 14px;
+            color: #1E293B;
+            border-bottom: 1px solid #F1F5F9;
+            vertical-align: middle;
+            white-space: nowrap;
         }
 
-        table.list tr:nth-child(even) {
-            background-color: #f2f2f2;
+        table.list tbody tr {
+            background: #FFFFFF;
+            transition: background 0.15s ease;
         }
 
-        table.list tr:nth-child(odd) {
-            background-color: #e0e0e0;
+        table.list tbody tr:nth-child(even) {
+            background: #F8FAFC;
         }
 
-        table.list tr:hover {
-            background-color: #d3d3d3;
+        table.list tbody tr:hover {
+            background: #F1F5F9;
         }
 
-        #pagediv .add {
-            color: black;
+        table.list tbody tr:last-child td {
+            border-bottom: none;
         }
 
-        #pagediv input[type="text"] {
-            background-color: #f0f0f0;
+        table.list a {
+            color: #3B82F6;
+            text-decoration: none;
+            margin-right: 12px;
+            transition: color 0.15s ease;
         }
 
-        #pagediv label {
-            color: black;
+        table.list a:hover {
+            color: #2563EB;
+            text-decoration: underline;
         }
 
-        /* 控枪命令弹窗样式优化 */
-        #gunCommandModal .modal-body {
-            max-height: 400px;
-            overflow-y: auto;
+        .view-command {
+            display: inline-flex;
+            align-items: center;
+            margin-right: 0;
+        }
+
+        .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 20px;
+            color: #475569;
+        }
+
+        .pagination a,
+        .pagination span {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 36px;
+            height: 36px;
+            padding: 0 8px;
+            font-size: 14px;
+            border: 1px solid #E2E8F0;
+            border-radius: 6px;
+            color: #475569;
+            background: #FFFFFF;
+            text-decoration: none;
+            transition: all 0.15s ease;
+        }
+
+        .pagination a:hover {
+            background: #F8FAFC;
+            border-color: #CBD5E1;
+        }
+
+        .pagination .current-page {
+            background: #3B82F6;
+            color: #FFFFFF;
+            border-color: #3B82F6;
+        }
+
+        .pagination .disabled {
+            color: #94A3B8;
+            background: #F8FAFC;
+            cursor: not-allowed;
+        }
+
+        .modal-content {
+            border: 1px solid #E2E8F0;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .modal-header {
+            background: #F8FAFC;
+            border-bottom: 1px solid #E2E8F0;
+            padding: 16px 20px;
+        }
+
+        .modal-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E293B;
+        }
+
+        .modal-body {
             padding: 20px;
+        }
+
+        .modal-footer {
+            background: #F8FAFC;
+            border-top: 1px solid #E2E8F0;
+            padding: 16px 20px;
+        }
+
+        .btn-default {
+            background: #FFFFFF;
+            color: #475569;
+            border: 1px solid #CBD5E1;
+        }
+
+        .btn-default:hover {
+            background: #F8FAFC;
+            border-color: #94A3B8;
+        }
+
+        .btn-primary {
+            background: #3B82F6;
+            color: #FFFFFF;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background: #2563EB;
+        }
+
+        #gunCommandModal .modal-body {
+            max-height: 420px;
+            overflow-y: auto;
         }
 
         #gunCommandModal .command-item {
             margin: 8px 0;
-            padding: 6px;
-            background-color: #f8f9fa;
-            border-radius: 4px;
+            padding: 8px 12px;
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: 6px;
+            color: #334155;
             word-break: break-all;
+            font-size: 13px;
+        }
+
+        @media (max-width: 768px) {
+            #searchForm {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            #pagediv input[type="text"] {
+                width: 100%;
+                min-width: 100%;
+            }
+
+            #pagediv input[type="submit"],
+            #pagediv button,
+            #pagediv .add {
+                width: 100%;
+                justify-content: center;
+            }
+
+            table.list {
+                min-width: 1100px;
+            }
         }
     </style>
 </head>
 
 <body>
-<div id="pagediv">
-    <form id="searchForm" action="/kongqianghardware/list" method="post">
-        <a href="#" class="add openModal" data-title="添加控枪硬件" data-edit-url="/kongqianghardware/add"><b> + </b>添加控枪硬件</a>
-        <label>公司名称：</label>
-        <input type="text" id="stationName" name="stationName" placeholder="请输入公司名称关键字"
-               value="#(stationName ?? '')" />
-        <button type="button" id="searchButton">查询</button>
-        <button type="button" id="resetButton">重置</button>
-    </form>
+<div class="page-container">
+    <div id="pagediv">
+        <form id="searchForm" action="/kongqianghardware/list" method="post">
+            <a href="#" class="add openModal" data-title="添加控枪硬件" data-edit-url="/kongqianghardware/add">+ 添加控枪硬件</a>
+
+            <label for="stationName">公司名称：</label>
+            <input type="text" id="stationName" name="stationName" placeholder="请输入公司名称关键字" value="#(stationName ?? '')" />
+
+            <input type="submit" value="查询">
+            <button type="button" id="resetButton" class="btn-reset">重置</button>
+        </form>
+    </div>
+
+    <div class="table-wrapper">
+        <table class="list">
+            <thead>
+            <tr>
+                <th width="6%">序号</th>
+                <th width="12%">硬件编号</th>
+                <th width="12%">加气站名称</th>
+                <th width="12%">创建时间</th>
+                <th width="8%">创建人</th>
+                <th width="8%">状态</th>
+                <th width="8%">类型</th>
+                <th width="8%">备注</th>
+                <th width="12%">控枪命令</th>
+                <th width="14%">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            #set(startIndex = (hardwareList.pageNumber - 1) * hardwareList.pageSize + 1)
+            #for(x : hardwareList.getList())
+            <tr>
+                <td>#(startIndex++)</td>
+                <td>#(x.hardwareno)</td>
+                <td>#(x.station_name)</td>
+                <td>#(x.createtime)</td>
+                <td>#(x.creater)</td>
+                <td>#(x.status)</td>
+                <td>#(x.type)</td>
+                <td>#(x.memo)</td>
+                <td>
+                    <a href="#" class="view-command" onclick="showGunCommands('#(x.hardwareno)')">查看控枪命令</a>
+                </td>
+                <td>
+                    <a href="#" class="edit openModal" data-title="编辑控枪硬件" data-edit-url="/kongqianghardware/edit?id=#(x.id)">修改</a>
+                    <a href="#" class="delete" onclick="confirmDelete('#(x.id)')">删除</a>
+                </td>
+            </tr>
+            #end
+            </tbody>
+        </table>
+    </div>
+
+    <div class="pagination">
+        #set(selectedStationName = "")
+        #if(stationName != null && stationName != "")
+        #set(selectedStationName = stationName)
+        #end
+        #@paginate(hardwareList.pageNumber, hardwareList.totalPage, "/kongqianghardware/list?stationName=" + selectedStationName + "&page=")
+    </div>
 </div>
 
-<table class="list">
-    <tbody>
-    <tr>
-        <th width="6%">序号</th>
-        <th width="12%">硬件编号*</th>
-        <th width="12%">加气站名称</th>
-        <th width="12%">创建时间</th>
-        <th width="8%">创建人</th>
-        <th width="8%">状态</th>
-        <th width="8%">类型</th>
-        <th width="8%">备注</th>
-        <th width="12%">控枪命令</th> <!-- 新增控枪命令列 -->
-        <th width="8%">操作</th>
-    </tr>
-    #set(startIndex = (hardwareList.pageNumber - 1) * hardwareList.pageSize + 1)
-    #for(x : hardwareList.getList())
-    <tr>
-        <td>#(startIndex++)</td>
-        <td>#(x.hardwareno)</td>
-        <td>#(x.station_name)</td>
-        <td>#(x.createtime)</td>
-        <td>#(x.creater)</td>
-        <td>#(x.status)</td>
-        <td>#(x.type)</td>
-        <td>#(x.memo)</td>
-        <!-- 新增控枪命令列内容 -->
-        <td>
-            <a href="#" class="view-command" onclick="showGunCommands('#(x.hardwareno)')">查看控枪命令</a>
-        </td>
-        <td>
-            <a href="#" class="edit openModal" data-title="编辑控枪硬件" data-edit-url="/kongqianghardware/edit?id=#(x.id)">修改</a>
-            <a href="#" class="delete" onclick="confirmDelete('#(x.id)')">删除</a>
-        </td>
-    </tr>
-    #end
-    </tbody>
-</table>
-
-<div class="pagination" style="color:#DDDDDD;">
-    #set(selectedStationName = "")
-    #if(stationName != null && stationName != "")
-    #set(selectedStationName = stationName)
-    #end
-    #@paginate(hardwareList.pageNumber, hardwareList.totalPage, "/kongqianghardware/list?stationName=" + selectedStationName + "&page=")
-</div>
-
-<!-- 原有编辑/添加模态框 -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" id="myModalLabel">模态窗口标题</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
-            <div class="modal-body" id="modalBody">
-                <!-- 表单内容将在这里加载 -->
-            </div>
+            <div class="modal-body" id="modalBody"></div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                 <button type="button" class="btn btn-primary" id="saveButton">保存</button>
-                <script>
-                    document.getElementById('saveButton').addEventListener('click', function () {
-                        document.getElementById('myForm').submit();
-                    });
-                </script>
             </div>
         </div>
     </div>
 </div>
 
-<!-- 新增控枪命令模态框 -->
 <div class="modal fade" id="gunCommandModal" tabindex="-1" role="dialog" aria-labelledby="gunCommandModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" id="gunCommandModalLabel">控枪命令列表</h4>
@@ -191,9 +414,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body" id="gunCommandContent">
-                <!-- 控枪命令内容将动态生成在这里 -->
-            </div>
+            <div class="modal-body" id="gunCommandContent"></div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
             </div>
@@ -202,11 +423,11 @@
 </div>
 
 <script>
-    // 搜索和重置按钮逻辑
-    $('#searchButton').click(function (e) {
-        e.preventDefault();
-        $('#searchForm').submit();
-    });
+    function confirmDelete(id) {
+        if (confirm("确定要删除该控枪硬件记录吗？")) {
+            window.location.href = "/kongqianghardware/delete?id=" + id;
+        }
+    }
 
     $('#resetButton').click(function (e) {
         e.preventDefault();
@@ -214,15 +435,6 @@
         $('#searchForm').submit();
     });
 
-    // 删除确认逻辑
-    function confirmDelete(id) {
-        console.log("进入删除函数，id: " + id);
-        if (confirm("确定要删除该控枪硬件记录吗？")) {
-            window.location.href = "/kongqianghardware/delete?id=" + id;
-        }
-    }
-
-    // 编辑/添加弹窗逻辑
     $(document).ready(function () {
         $('.openModal').click(function (e) {
             e.preventDefault();
@@ -238,12 +450,9 @@
         });
     });
 
-    // 显示控枪命令弹窗逻辑
     function showGunCommands(hardwareNo) {
-        // 基础URL模板
-        const baseUrl = 'http://39.98.221.201:9010/relay/control?device={device}&module={module}&channel={channel}&action={action}';
-        // 生成8条控枪命令的参数组合
-        const commandConfigs = [
+        var baseUrl = 'http://39.98.221.201:9010/relay/control?device={device}&module={module}&channel={channel}&action={action}';
+        var commandConfigs = [
             { module: 'module1', channel: 1, action: 'on' },
             { module: 'module1', channel: 1, action: 'off' },
             { module: 'module1', channel: 2, action: 'on' },
@@ -254,22 +463,28 @@
             { module: 'module2', channel: 2, action: 'off' }
         ];
 
-        // 生成命令HTML
-        let commandHtml = '';
-        commandConfigs.forEach((config, index) => {
-            const commandUrl = baseUrl
+        var commandHtml = '';
+        commandConfigs.forEach(function (config, index) {
+            var commandUrl = baseUrl
                 .replace('{device}', hardwareNo)
                 .replace('{module}', config.module)
                 .replace('{channel}', config.channel)
                 .replace('{action}', config.action);
-            commandHtml += `<div class="command-item">${index + 1}. ${commandUrl}</div>`;
+            commandHtml += '<div class="command-item">' + (index + 1) + '. ' + commandUrl + '</div>';
         });
 
-        // 填充弹窗内容并显示
         $('#gunCommandContent').html(commandHtml);
-        $('#gunCommandModalLabel').text(`控枪命令列表 - 硬件编号：${hardwareNo}`);
+        $('#gunCommandModalLabel').text('控枪命令列表 - 硬件编号：' + hardwareNo);
         $('#gunCommandModal').modal('show');
     }
+
+    document.getElementById('saveButton').addEventListener('click', function () {
+        var form = document.getElementById('myForm');
+        if (form) {
+            form.submit();
+        }
+    });
 </script>
 </body>
+
 </html>

@@ -1,244 +1,374 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Content</title>
+    <title>编辑司机车辆</title>
+    <style>
+        body {
+            margin: 0;
+            background: #F8FAFC;
+            color: #1E293B;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+        }
+
+        .form-container {
+            background: #FFFFFF;
+            padding: 24px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 0;
+        }
+
+        .form-group-full {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #475569;
+        }
+
+        .required {
+            margin-right: 4px;
+            color: #EF4444;
+        }
+
+        .form-group input[type="text"] {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            background: #FFFFFF;
+            color: #1E293B;
+            font-size: 14px;
+            box-sizing: border-box;
+            transition: all 0.15s ease;
+        }
+
+        .form-group input[type="text"]:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .field-hint {
+            margin-top: 6px;
+            font-size: 12px;
+            color: #64748B;
+        }
+
+        .image-upload {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .upload-trigger {
+            width: 100px;
+            height: 100px;
+            border: 2px dashed #CBD5E1;
+            border-radius: 6px;
+            background: #F8FAFC;
+            color: #475569;
+            font-size: 12px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            margin-bottom: 0;
+            transition: all 0.15s ease;
+        }
+
+        .upload-trigger:hover {
+            border-color: #3B82F6;
+            background: #F1F5F9;
+            color: #2563EB;
+        }
+
+        .upload-item {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            border: 1px solid #E2E8F0;
+            border-radius: 6px;
+            overflow: hidden;
+            background: #FFFFFF;
+        }
+
+        .upload-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .upload-item .remove-image {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 22px;
+            height: 22px;
+            border: none;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.92);
+            color: #EF4444;
+            font-size: 14px;
+            line-height: 1;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s ease;
+        }
+
+        .upload-item .remove-image:hover {
+            background: #EF4444;
+            color: #FFFFFF;
+        }
+
+        @media (max-width: 768px) {
+            .form-container {
+                padding: 16px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+        }
+    </style>
 </head>
 <body>
-<div class="form_box">
-    <form  id="myForm"  action="/drivercar/update" method="post">
-        <script>
-            var imageCount = 0;
-            function uploadFile(inputElementId) {
-                var fileInput = document.getElementById(inputElementId);
-                var file = fileInput.files[0];
+<div class="form-container">
+    <form id="myForm" action="/drivercar/update" method="post">
+        <input type="hidden" name="drivercar.id" value="#(drivercar.id??)">
 
-                // 如果没有选择文件，直接返回
-                if (!file) {
-                    return;
-                }
-
-                var formData = new FormData();
-                formData.append('file', file);
-
-                fetch('/drivercar/localUpload', {
-                    method: 'POST',
-                    body: formData
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('File uploaded successfully. Local URL is', data.url);
-                        var urlInput = document.getElementById(inputElementId + 'Url');
-                        // 保留原有的 URL，将新的 URL 添加到列表中
-                        if (urlInput.value) {
-                            urlInput.value += ',' + data.url;
-                        } else {
-                            urlInput.value = data.url;
-                        }
-                        // 在图片预览容器中添加新的图片元素
-                        var container = document.getElementById(inputElementId + 'Container');
-                        var div = document.createElement('div');
-                        div.style.position = 'relative';
-                        div.style.width = "100px";  // 设置图片大小
-                        div.style.height = "100px";
-
-                        var img = document.createElement('img');
-                        img.src = data.url;
-                        img.style.width = "100%";  // 设置图片大小
-                        img.style.height = "100%";
-                        div.appendChild(img);
-
-                        var button = document.createElement('button');
-                        button.innerText = '×';
-                        button.style.position = 'absolute';
-                        button.style.top = '0';
-                        button.style.right = '0';
-                        button.style.background = 'rgba(255, 255, 255, 0.7)';
-                        button.style.border = 'none';
-                        button.style.fontSize = '1em';
-                        button.style.cursor = 'pointer';
-                        button.onclick = function() {
-                            // 从 DOM 中移除图片元素
-                            div.parentNode.removeChild(div);
-
-                            // 从 URL 列表中删除对应的 URL
-                            var urls = urlInput.value.split(',');
-                            var urlIndex = urls.indexOf(data.url);
-                            if (urlIndex > -1) {
-                                urls.splice(urlIndex, 1);
-                            }
-                            urlInput.value = urls.join(',');
-                        };
-                        div.appendChild(button);
-
-                        container.appendChild(div);
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                    });
-            }
-
-
-            $(document).ready(function() {
-                var imageIds = ['driverLicenseImageInput', 'riskCargoLicenseImageUrlInput', 'carImageInput'];
-                var imageUrls = ["#(drivercar.driver_license_image_url)", "#(drivercar.risk_cargo_license_image_url)", "#(drivercar.car_image_url)"];
-
-                imageIds.forEach(function(id, index) {
-                    var container = document.getElementById(id + 'Container');
-                    var urls = imageUrls[index].split(',');
-                    urls.forEach(function(url, urlIndex) {
-                        // 如果 URL 为空，就跳过这个 URL
-                        if (!url || url === '') {
-                            return;
-                        }
-                        var div = document.createElement('div');
-                        div.style.position = 'relative';
-                        div.style.width = "100px";  // 设置图片大小
-                        div.style.height = "100px";
-
-                        var img = document.createElement('img');
-                        // if (url.includes('http')) {
-                        //     img.src =url;
-                        // } else {
-                        //     img.src = "/upload/drivercar/" + url;
-                        // }
-                        img.src=url;
-
-                        img.style.width = "100%";  // 设置图片大小
-                        img.style.height = "100%";
-                        div.appendChild(img);
-
-                        var button = document.createElement('button');
-                        button.innerText = '×';
-                        button.style.position = 'absolute';
-                        button.style.top = '0';
-                        button.style.right = '0';
-                        button.style.background = 'rgba(255, 255, 255, 0.7)';
-                        button.style.border = 'none';
-                        button.style.fontSize = '1em';
-                        button.style.cursor = 'pointer';
-                        button.onclick = function() {
-                            deleteImage(id, div, urlIndex);
-                        };
-                        div.appendChild(button);
-
-                        container.appendChild(div);
-                    });
-                });
-            });
-
-
-
-
-            function deleteImage(inputElementId, imageElement, urlIndex) {
-                // 从 DOM 中移除图片元素
-                imageElement.parentNode.removeChild(imageElement);
-
-                // 从 URL 列表中删除对应的 URL
-                var urlInput = document.getElementById(inputElementId + 'Url');
-                var urls = urlInput.value.split(',');
-                urls.splice(urlIndex, 1);
-                urlInput.value = urls.join(',');
-            }
-
-
-
-        </script>
-
-        <input type="hidden" name="drivercar.id" value="#(drivercar.id??)" />
-
-
-        <div>
-            <label>危货证件照片</label>
-            <div id="riskCargoLicenseImageUrlInputContainer" class="image-upload">
-                <!-- 图片元素将在这里动态创建 -->
-                <label for="riskCargoLicenseImageUrlInput">
-                    <img id="riskCargoLicenseImageUrlInputPreview"  src="/img/+++++.png" alt="点击添加图片" title="点击添加图片" />
-                </label>
-                <input type="file" id="riskCargoLicenseImageUrlInput" name="risk_cargo_license_image_file" onchange="uploadFile('riskCargoLicenseImageUrlInput')"  style="display: none;" />
+        <div class="form-grid">
+            <div class="form-group form-group-full">
+                <label><span class="required">*</span>危货证件照片</label>
+                <div id="riskCargoLicenseImageUrlInputContainer" class="image-upload">
+                    <label class="upload-trigger" for="riskCargoLicenseImageUrlInput">点击上传</label>
+                    <input type="file" id="riskCargoLicenseImageUrlInput" name="risk_cargo_license_image_file" onchange="uploadFile('riskCargoLicenseImageUrlInput')" style="display: none;">
+                </div>
+                <input type="hidden" id="riskCargoLicenseImageUrlInputUrl" name="drivercar.risk_cargo_license_image_url" value="#(drivercar.risk_cargo_license_image_url)">
             </div>
-            <input type="hidden" id="riskCargoLicenseImageUrlInputUrl" name="drivercar.risk_cargo_license_image_url" value="#(drivercar.risk_cargo_license_image_url)" />
-        </div>
 
-        <div>
-            <label>车辆照片</label>
-            <div id="carImageInputContainer" class="image-upload">
-                <!-- 图片元素将在这里动态创建 -->
-                <label for="carImageInput">
-                    <img id="carImageInputPreview" src="/img/+++++.png"  alt="点击添加图片" title="点击添加图片" />
-                </label>
-                <input type="file" id="carImageInput" name="car_image_file" onchange="uploadFile('carImageInput')" accept="image/jpeg, image/png" style="display: none;" />
+            <div class="form-group form-group-full">
+                <label><span class="required">*</span>车辆照片</label>
+                <div id="carImageInputContainer" class="image-upload">
+                    <label class="upload-trigger" for="carImageInput">点击上传</label>
+                    <input type="file" id="carImageInput" name="car_image_file" onchange="uploadFile('carImageInput')" accept="image/jpeg, image/png" style="display: none;">
+                </div>
+                <input type="hidden" id="carImageInputUrl" name="drivercar.car_image_url" value="#(drivercar.car_image_url)">
             </div>
-            <input type="hidden" id="carImageInputUrl" name="drivercar.car_image_url" value="#(drivercar.car_image_url)" />
-        </div>
 
-        <div>
-            <label>驾驶证照片</label>
-            <div id="driverLicenseImageInputContainer" class="image-upload">
-                <!-- 图片元素将在这里动态创建 -->
-                <label for="driverLicenseImageInput">
-                    <img id="driverLicenseImageInputPreview" src="/img/+++++.png"  alt="点击添加图片" title="点击添加图片" />
-                </label>
-                <input type="file" id="driverLicenseImageInput" name="driver_license_image_file" onchange="uploadFile('driverLicenseImageInput')" style="display: none;" />
+            <div class="form-group form-group-full">
+                <label><span class="required">*</span>驾驶证照片</label>
+                <div id="driverLicenseImageInputContainer" class="image-upload">
+                    <label class="upload-trigger" for="driverLicenseImageInput">点击上传</label>
+                    <input type="file" id="driverLicenseImageInput" name="driver_license_image_file" onchange="uploadFile('driverLicenseImageInput')" style="display: none;">
+                </div>
+                <input type="hidden" id="driverLicenseImageInputUrl" name="drivercar.driver_license_image_url" value="#(drivercar.driver_license_image_url)">
             </div>
-            <input type="hidden" id="driverLicenseImageInputUrl" name="drivercar.driver_license_image_url" value="#(drivercar.driver_license_image_url)" />
-        </div>
 
+            <div class="form-group">
+                <label><span class="required">*</span>司机姓名</label>
+                <input type="text" name="drivercar.drivername" value="#(drivercar.drivername)" required>
+            </div>
 
+            <div class="form-group">
+                <label><span class="required">*</span>联系方式</label>
+                <input type="text" name="drivercar.driverphone" value="#(drivercar.driverphone)" required>
+            </div>
 
-        <div>
-            <label>身份证号</label>
-            <input type="text" name="drivercar.identity_card_no" value="#(drivercar.identity_card_no)" />
-        </div>
-        <div>
-            <label>危货证件号</label>
-            <input type="text" name="drivercar.risk_cargo_license_no" value="#(drivercar.risk_cargo_license_no)" />
-        </div>
-        <div>
-            <label>危货证件有效期</label>
-            <input type="text" name="drivercar.risk_cargo_license_indate" value="#(drivercar.risk_cargo_license_indate)" />
-        </div>
-        <div>
-            <label>司机姓名</label>
-            <input type="text" name="drivercar.drivername" value="#(drivercar.drivername)" />
-        </div>
-        <div>
-            <label>联系方式</label>
-            <input type="text" name="drivercar.driverphone" value="#(drivercar.driverphone)" />
-        </div>
-        <div>
-            <label>登陆密码</label>
-            <input type="text" name="drivercar.driverpsw" value="#(drivercar.driverpsw)" />
-        </div>
-        <div>
-            <label>出生日期</label>
-            <input type="text" name="drivercar.driverbirthday" value="#(drivercar.driverbirthday)" />
-        </div>
-        <div>
-            <label>性别</label>
-            <input type="text" name="drivercar.driversex" value="#(drivercar.driversex)" />
-        </div>
-        <div>
-            <label>车牌号</label>
-            <input type="text" name="drivercar.drivercarno" value="#(drivercar.drivercarno)" />
-        </div>
-        <div>
-            <label>车辆名称</label>
-            <input type="text" name="drivercar.carname" value="#(drivercar.carname)" />
-        </div>
-        <div>
-            <label>车辆生产日期</label>
-            <input type="text" name="drivercar.carshengchanriqi" value="#(drivercar.carshengchanriqi)" />
-        </div>
-        <div>
-            <label>车辆颜色</label>
-            <input type="text" name="drivercar.carcolor" value="#(drivercar.carcolor)" />
+            <div class="form-group">
+                <label><span class="required">*</span>车牌号</label>
+                <input type="text" name="drivercar.drivercarno" value="#(drivercar.drivercarno)" required>
+            </div>
+
+            <div class="form-group">
+                <label>车辆名称</label>
+                <input type="text" name="drivercar.carname" value="#(drivercar.carname)">
+            </div>
+
+            <div class="form-group">
+                <label>车辆颜色</label>
+                <input type="text" name="drivercar.carcolor" value="#(drivercar.carcolor)">
+            </div>
+
+            <div class="form-group">
+                <label>车辆生产日期</label>
+                <input type="text" name="drivercar.carshengchanriqi" value="#(drivercar.carshengchanriqi)" placeholder="格式：yyyy-mm-dd">
+            </div>
+
+            <div class="form-group">
+                <label>身份证号</label>
+                <input type="text" name="drivercar.identity_card_no" value="#(drivercar.identity_card_no)">
+            </div>
+
+            <div class="form-group">
+                <label>危货证件号</label>
+                <input type="text" name="drivercar.risk_cargo_license_no" value="#(drivercar.risk_cargo_license_no)">
+            </div>
+
+            <div class="form-group">
+                <label>危货证件有效期</label>
+                <input type="text" name="drivercar.risk_cargo_license_indate" value="#(drivercar.risk_cargo_license_indate)" placeholder="格式：yyyy-mm-dd">
+            </div>
+
+            <div class="form-group">
+                <label>出生日期</label>
+                <input type="text" name="drivercar.driverbirthday" value="#(drivercar.driverbirthday)" placeholder="格式：yyyy-mm-dd">
+            </div>
+
+            <div class="form-group">
+                <label>性别</label>
+                <input type="text" name="drivercar.driversex" value="#(drivercar.driversex)">
+            </div>
+
+            <div class="form-group">
+                <label>登录密码</label>
+                <input type="text" name="drivercar.driverpsw" value="#(drivercar.driverpsw)">
+                <div class="field-hint">如无需修改密码，可保持当前值。</div>
+            </div>
         </div>
     </form>
 </div>
 
+<script>
+    function setImageUrls(inputElementId, urls) {
+        var urlInput = document.getElementById(inputElementId + "Url");
+        urlInput.value = urls.join(",");
+    }
 
+    function getImageUrls(inputElementId) {
+        var urlInput = document.getElementById(inputElementId + "Url");
+        if (!urlInput || !urlInput.value) {
+            return [];
+        }
+        return urlInput.value.split(",").filter(function (item) {
+            return item && item.trim() !== "";
+        });
+    }
 
+    function deleteImage(inputElementId, imageElement, imageUrl) {
+        if (imageElement && imageElement.parentNode) {
+            imageElement.parentNode.removeChild(imageElement);
+        }
+        var urls = getImageUrls(inputElementId).filter(function (url) {
+            return url !== imageUrl;
+        });
+        setImageUrls(inputElementId, urls);
+    }
+
+    function appendImageItem(inputElementId, imageUrl) {
+        var container = document.getElementById(inputElementId + "Container");
+        if (!container) {
+            return;
+        }
+
+        var item = document.createElement("div");
+        item.className = "upload-item";
+
+        var img = document.createElement("img");
+        img.src = imageUrl;
+        img.alt = "上传图片";
+        item.appendChild(img);
+
+        var button = document.createElement("button");
+        button.type = "button";
+        button.className = "remove-image";
+        button.innerText = "×";
+        button.onclick = function () {
+            deleteImage(inputElementId, item, imageUrl);
+        };
+        item.appendChild(button);
+
+        var trigger = container.querySelector(".upload-trigger");
+        if (trigger) {
+            container.insertBefore(item, trigger);
+        } else {
+            container.appendChild(item);
+        }
+    }
+
+    function uploadFile(inputElementId) {
+        var fileInput = document.getElementById(inputElementId);
+        var file = fileInput ? fileInput.files[0] : null;
+        if (!file) {
+            return;
+        }
+
+        var formData = new FormData();
+        formData.append("file", file);
+
+        fetch("/drivercar/localUpload", {
+            method: "POST",
+            body: formData
+        })
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+                if (!data || !data.url) {
+                    return;
+                }
+                var urls = getImageUrls(inputElementId);
+                urls.push(data.url);
+                setImageUrls(inputElementId, urls);
+                appendImageItem(inputElementId, data.url);
+                fileInput.value = "";
+            })
+            .catch(function (error) {
+                console.error("Error:", error);
+            });
+    }
+
+    function initExistingImages() {
+        var map = [
+            { id: "driverLicenseImageInput", raw: "#(drivercar.driver_license_image_url)" },
+            { id: "riskCargoLicenseImageUrlInput", raw: "#(drivercar.risk_cargo_license_image_url)" },
+            { id: "carImageInput", raw: "#(drivercar.car_image_url)" }
+        ];
+
+        map.forEach(function (item) {
+            var container = document.getElementById(item.id + "Container");
+            if (!container || container.getAttribute("data-initialized") === "1") {
+                return;
+            }
+            container.setAttribute("data-initialized", "1");
+
+            var urls = (item.raw || "").split(",").map(function (url) {
+                return url.trim();
+            }).filter(function (url) {
+                return url !== "";
+            });
+
+            setImageUrls(item.id, urls);
+            urls.forEach(function (url) {
+                appendImageItem(item.id, url);
+            });
+        });
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", initExistingImages);
+    } else {
+        initExistingImages();
+    }
+    setTimeout(initExistingImages, 0);
+</script>
 </body>
 </html>

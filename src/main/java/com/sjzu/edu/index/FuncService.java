@@ -19,4 +19,20 @@ public class FuncService {
         return dao.paginate(pageNumber, pageSize, "select *", "from func order by id asc");
     }
 
+    public Page<Func> paginate(int pageNumber, int pageSize, String searchKey) {
+        if (searchKey == null || searchKey.trim().isEmpty()) {
+            return paginate(pageNumber, pageSize);
+        }
+
+        String keyword = "%" + searchKey.trim() + "%";
+        return dao.paginate(
+                pageNumber,
+                pageSize,
+                "select *",
+                "from func where fun_name like ? or fun_url like ? order by id asc",
+                keyword,
+                keyword
+        );
+    }
+
 }

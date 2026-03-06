@@ -1,83 +1,125 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>编辑控枪硬件</title>
-    <link rel="stylesheet" type="text/css" href="/css/lpg.css">
     <style>
-        .form_box {
-            padding: 20px;
+        body {
+            background: #F8FAFC;
+            color: #1E293B;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            margin: 0;
+            padding: 0;
         }
-        .form_box div {
-            margin-bottom: 15px;
+
+        .form-container {
+            background: #FFFFFF;
+            padding: 24px;
         }
-        label {
-            display: inline-block;
-            width: 100px;
-            text-align: right;
-            margin-right: 10px;
+
+        .form-group {
+            margin-bottom: 20px;
         }
-        input, select, textarea {
-            padding: 5px;
-            width: 300px;
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #475569;
+            margin-bottom: 8px;
+        }
+
+        .required {
+            color: #EF4444;
+            margin-right: 4px;
+        }
+
+        .form-group input[type="text"],
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            font-size: 14px;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            background: #FFFFFF;
+            color: #1E293B;
+            transition: all 0.15s ease;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 84px;
+        }
+
+        .form-group .help-text {
+            font-size: 12px;
+            color: #64748B;
+            margin-top: 6px;
+        }
+
+        ::placeholder {
+            color: #94A3B8;
         }
     </style>
 </head>
 
 <body>
-<div class="form_box">
+<div class="form-container">
     <form id="myForm" action="/kongqianghardware/update" method="post">
         <input type="hidden" name="hardware.id" value="#(record.id)" />
-        <div>
-            <label>硬件名称</label>
-            <input type="text" name="hardware.hardwareno" value="#(record.hardwareno)" required />
+
+        <div class="form-group">
+            <label><span class="required">*</span>硬件编号</label>
+            <input type="text" name="hardware.hardwareno" value="#(record.hardwareno)" placeholder="请输入硬件编号" required />
         </div>
-        <div>
-            <label>公司名称</label>
-            <select id="selectName" name="hardware.stationid" onchange="chooseName()" required>
+
+        <div class="form-group">
+            <label><span class="required">*</span>公司名称</label>
+            <select id="selectName" name="hardware.stationid" required>
                 #for (x: gastations)
                 <option value="#(x.id)" #if(record.stationid == x.id)selected#end>#(x.station_name)</option>
                 #end
             </select>
         </div>
-        <div>
+
+        <div class="form-group">
             <label>创建时间</label>
-            <input type="text" name="hardware.createtime" value="#(record.createtime)" />
+            <input type="text" name="hardware.createtime" value="#(record.createtime)" placeholder="请输入创建时间" />
         </div>
-        <div>
+
+        <div class="form-group">
             <label>创建人</label>
-            <input type="text" name="hardware.creater" value="#(record.creater)" />
+            <input type="text" name="hardware.creater" value="#(record.creater)" placeholder="请输入创建人" />
         </div>
-        <div>
+
+        <div class="form-group">
             <label>状态</label>
-            <input type="text" name="hardware.status" value="#(record.status)" />
+            <input type="text" name="hardware.status" value="#(record.status)" placeholder="请输入状态" />
         </div>
-        <div>
+
+        <div class="form-group">
             <label>类型</label>
-            <input type="text" name="hardware.type" value="#(record.type)" />
+            <input type="text" name="hardware.type" value="#(record.type)" placeholder="请输入类型" />
         </div>
-        <div>
+
+        <div class="form-group">
             <label>备注</label>
-            <textarea name="hardware.memo">#(record.memo)</textarea>
+            <textarea name="hardware.memo" placeholder="请输入备注">#(record.memo)</textarea>
         </div>
     </form>
 </div>
 </body>
-<script>
-    var gastations = [
-        #for (x: gastations)
-    { id: "#(x.id)", name: "#(x.station_name)" },
-    #end
-    ];
-    function chooseName() {
-        var selectName = document.getElementById("selectName").value;
-        console.log("selectName: " + selectName);
-        var selectedCompany = gastations.find(function (gastations) {
-            return gastations.name === selectName;
-        });
-    }
-</script>
 
 </html>

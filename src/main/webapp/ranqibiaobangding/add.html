@@ -1,77 +1,102 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Add Gas Meter Binding</title>
+	<style>
+		body {
+			background: #FFFFFF;
+			color: #1E293B;
+			font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+		}
+
+		.form-container {
+			background: #FFFFFF;
+			padding: 24px;
+		}
+
+		.form-group {
+			margin-bottom: 20px;
+		}
+
+		.form-group label {
+			display: block;
+			font-size: 14px;
+			font-weight: 500;
+			color: #475569;
+			margin-bottom: 8px;
+		}
+
+		.form-group input[type="text"],
+		.form-group select {
+			width: 100%;
+			padding: 10px 14px;
+			font-size: 14px;
+			border: 1px solid #CBD5E1;
+			border-radius: 6px;
+			background: #FFFFFF;
+			color: #1E293B;
+			transition: all 0.15s ease;
+			box-sizing: border-box;
+		}
+
+		.form-group input:focus,
+		.form-group select:focus {
+			outline: none;
+			border-color: #3B82F6;
+			box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+		}
+	</style>
 </head>
-<title>Content</title>
-<style>
-    ::-webkit-input-placeholder { /* Chrome/Opera/Safari */
-        color: #8A8A8A;
-        font-size: 12px;
-    }
-    ::-moz-placeholder { /* Firefox 19+ */
-        color: #8A8A8A;
-        font-size: 12px;
-    }
-    :-ms-input-placeholder { /* IE 10+ */
-        color: #8A8A8A;
-        font-size: 12px;
-    }
-    :-moz-placeholder { /* Firefox 18- */
-        color:#8A8A8A;
-        font-size: 12px;
-    }
-</style>
+<body style="background-color: #F8FAFC;">
+<div class="form-container">
+	<form action="/ranqibiaobangding/save" method="post" id="myForm">
+		<div class="form-group">
+			<label>燃气表编号</label>
+			<input type="text" name="ranqibiaobangding.ranqibiaono" value="" />
+		</div>
 
-<body>
-<h1>
-</h1>
-<div class="form_box">
-    <form action="/ranqibiaobangding/save" method="post" id="myForm">
-        <div>
-            <label>燃气表编号</label>
-            <input type="text" name="ranqibiaobangding.ranqibiaono" value="" />
-        </div>
-        <div>
-            <label>气瓶编号</label>
-            <input type="text" name="ranqibiaobangding.qipingno" value="" />
-        </div>
-        <div>
-            <label>扫描时间</label>
-            <input type="text" name="ranqibiaobangding.saomiaoshijian" value="" />
-        </div>
-        <div>
-            <label>扫描人</label>
-            <input type="text" name="ranqibiaobangding.saomiaoren" value="" />
-        </div>
-        <div>
-            <label>表读数</label>
-            <input type="text" name="ranqibiaobangding.biaodushu" value="" />
-        </div>
-        <div>
-            <label>表读数日期</label>
-            <input type="text" name="ranqibiaobangding.biaodushuriqi" value="" />
-        </div>
-        <div>
-            <label>经度</label>
-            <input type="text" name="ranqibiaobangding.jingdu" value="" />
-        </div>
-        <div>
-            <label>纬度</label>
-            <input type="text" name="ranqibiaobangding.weidu" value="" />
-        </div>
-        <div>
-            <label>地址</label>
-            <input type="text" name="ranqibiaobangding.address" value="" />
-        </div>
+		<div class="form-group">
+			<label>气瓶编号</label>
+			<input type="text" name="ranqibiaobangding.qipingno" value="" />
+		</div>
 
+		<div class="form-group">
+			<label>扫描时间</label>
+			<input type="text" name="ranqibiaobangding.saomiaoshijian" value="" />
+		</div>
 
+		<div class="form-group">
+			<label>扫描人</label>
+			<input type="text" name="ranqibiaobangding.saomiaoren" value="" />
+		</div>
 
+		<div class="form-group">
+			<label>表读数</label>
+			<input type="text" name="ranqibiaobangding.biaodushu" value="" />
+		</div>
 
+		<div class="form-group">
+			<label>表读数日期</label>
+			<input type="text" name="ranqibiaobangding.biaodushuriqi" value="" />
+		</div>
 
+		<div class="form-group">
+			<label>经度</label>
+			<input type="text" name="ranqibiaobangding.jingdu" value="" />
+		</div>
 
-    </form>
+		<div class="form-group">
+			<label>纬度</label>
+			<input type="text" name="ranqibiaobangding.weidu" value="" />
+		</div>
+
+		<div class="form-group">
+			<label>地址</label>
+			<input type="text" name="ranqibiaobangding.address" value="" />
+		</div>
+	</form>
 </div>
 </body>
 </html>

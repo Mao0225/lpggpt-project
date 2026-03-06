@@ -1,30 +1,122 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Equipment</title>
+    <title>新增设备</title>
     <style>
+        body {
+            margin: 0;
+            background: #F8FAFC;
+            color: #1E293B;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+        }
+
+        .form_box {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .form_box form {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form_box label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #475569;
+            margin: 0;
+        }
+
+        .form_box input[type="text"],
+        .form_box input[type="date"],
+        .form_box select,
+        .form_box textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            background: #FFFFFF;
+            color: #1E293B;
+            font-size: 14px;
+            transition: all 0.15s ease;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+
+        .form_box textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form_box input:focus,
+        .form_box select:focus,
+        .form_box textarea:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form_box input[readonly] {
+            background: #F8FAFC;
+            color: #64748B;
+        }
+
+        .image-upload {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .image-upload > label {
+            margin: 0;
+            cursor: pointer;
+        }
+
+        .image-upload img {
+            width: 92px;
+            height: 92px;
+            border-radius: 8px;
+            border: 1px solid #CBD5E1;
+            object-fit: cover;
+            background: #F8FAFC;
+        }
+
+        @media (max-width: 768px) {
+            .form_box {
+                padding: 14px;
+            }
+
+            .form_box form {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
-
-<body style="background-color: #0b333f; color: #FFFFFF">
+<body>
 <div class="form_box">
     <form id="myForm" action="/equipment/save" method="post">
-        <!-- 新增设备站点输入框 -->
-        <div style="margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
-            <label style="min-width: 80px;">设备站点</label>
-            <input
-                    type="text"
-                    value="#(gasstation.station_name)"
-                    readonly
-                    style="width: 260px; padding: 5px;"
-            />
+        <div class="form-group full-width">
+            <label>设备站点</label>
+            <input type="text" value="#(gasstation.station_name)" readonly>
         </div>
 
-
-        <div>
+        <div class="form-group">
             <label>设备种类</label>
             <select name="equipment.kind">
                 <option value="特种设备">特种设备</option>
@@ -32,150 +124,132 @@
                 <option value="消防器材">消防器材</option>
             </select>
         </div>
-        <!-- 隐藏的companyid输入框 -->
-        <input type="hidden" name="equipment.companyid" id="companyidInput" value="#(companyId)" />
-        <input type="hidden" name="equipment.writer" id="writerInput" value="#(writer)" />
-        <div>
+
+        <input type="hidden" name="equipment.companyid" id="companyidInput" value="#(companyId)">
+        <input type="hidden" name="equipment.writer" id="writerInput" value="#(writer)">
+
+        <div class="form-group">
             <label>生产厂商</label>
-            <input type="text" name="equipment.factory" value="" />
+            <input type="text" name="equipment.factory" value="">
         </div>
-        <div>
+        <div class="form-group">
             <label>型号规格</label>
-            <input type="text" name="equipment.model" value="" />
+            <input type="text" name="equipment.model" value="">
         </div>
-        <div>
+        <div class="form-group">
             <label>设备名称</label>
-            <input type="text" name="equipment.name" value="" />
+            <input type="text" name="equipment.name" value="">
         </div>
-        <div>
+        <div class="form-group">
             <label>放置位置</label>
-            <input type="text" name="equipment.location" value="" />
+            <input type="text" name="equipment.location" value="">
         </div>
-        <div>
+        <div class="form-group">
             <label>购买人员</label>
-            <input type="text" name="equipment.buyer" value="" />
+            <input type="text" name="equipment.buyer" value="">
         </div>
-        <div>
+        <div class="form-group">
             <label>购买价格</label>
-            <input type="text" name="equipment.price" value="" />
+            <input type="text" name="equipment.price" value="">
         </div>
-        <div class="text-input-div">
+        <div class="form-group">
             <label>购买日期</label>
-            <input type="date" name="equipment.buyday" />
+            <input type="date" name="equipment.buyday">
         </div>
-        <div class="text-input-div">
+        <div class="form-group">
             <label>生产日期</label>
-            <input type="date" name="equipment.producedate" />
+            <input type="date" name="equipment.producedate">
         </div>
-        <div class="text-input-div">
+        <div class="form-group">
             <label>上次检修期</label>
-            <input type="date" name="equipment.lastcheckdate" />
+            <input type="date" name="equipment.lastcheckdate">
         </div>
-        <div class="text-input-div">
+        <div class="form-group">
             <label>失效日期</label>
-            <input type="date" name="equipment.expiredate" />
+            <input type="date" name="equipment.expiredate">
         </div>
-        <div>
+        <div class="form-group full-width">
             <label>备注信息</label>
-            <textarea name="equipment.remark" ></textarea>
+            <textarea name="equipment.remark"></textarea>
         </div>
-        <!-- 设备图片上传部分 -->
-        <div>
+
+        <div class="form-group full-width">
             <label>设备图片</label>
-            <div id="equipmentImageUrlInputContainer" class="image-upload">
+            <div id="equipmentImageInputContainer" class="image-upload">
                 <label for="equipmentImageInput">
-                    <img id="equipmentImageInputPreview" src="/img/img_2.png" alt="点击添加图片" title="点击添加图片" />
+                    <img id="equipmentImageInputPreview" src="/img/img_2.png" alt="点击添加图片" title="点击添加图片">
                 </label>
-                <input type="file" id="equipmentImageInput" name="equipment_picture_file" onchange="uploadFile('equipmentImageInput')" accept="image/jpeg, image/png" style="display: none;" />
+                <input type="file" id="equipmentImageInput" name="equipment_picture_file" onchange="uploadFile('equipmentImageInput')" accept="image/jpeg, image/png" style="display: none;">
             </div>
-            <input type="hidden" id="equipmentImageInputUrl" name="equipment.picture" value="" />
+            <input type="hidden" id="equipmentImageInputUrl" name="equipment.picture" value="">
         </div>
     </form>
 </div>
 
 <script>
-    var imageCount = 0;
-
     function uploadFile(inputElementId) {
         var fileInput = document.getElementById(inputElementId);
         var file = fileInput.files[0];
-
-        // 如果没有选择文件，直接返回
         if (!file) {
             return;
         }
 
         var formData = new FormData();
-        formData.append('file', file);
+        formData.append("file", file);
 
-        fetch('/equipment/equipmentImageUpload', { // 这里的URL需根据实际后端接口调整，假设和设备相关的上传接口是这个
-            method: 'POST',
+        fetch("/equipment/equipmentImageUpload", {
+            method: "POST",
             body: formData
         })
-            .then(response => response.json())
-            .then(data => {
-                console.log('File uploaded successfully. Local URL is', data.url);
-                var urlInput = document.getElementById(inputElementId + 'Url');
-                // 保留原有的 URL，将新的 URL 添加到列表中
+            .then(function (response) { return response.json(); })
+            .then(function (data) {
+                var urlInput = document.getElementById(inputElementId + "Url");
                 if (urlInput.value) {
-                    urlInput.value += ',' + data.url;
+                    urlInput.value += "," + data.url;
                 } else {
                     urlInput.value = data.url;
                 }
-                // 在图片预览容器中添加新的图片元素
-                var container = document.getElementById(inputElementId + 'Container');
-                var div = document.createElement('div');
-                div.style.position = 'relative';
-                div.style.width = "100px";
-                div.style.height = "100px";
 
-                var img = document.createElement('img');
+                var container = document.getElementById(inputElementId + "Container");
+                var div = document.createElement("div");
+                div.style.position = "relative";
+                div.style.width = "92px";
+                div.style.height = "92px";
+
+                var img = document.createElement("img");
                 img.src = data.url;
                 img.style.width = "100%";
                 img.style.height = "100%";
+                img.style.objectFit = "cover";
+                img.style.borderRadius = "8px";
+                img.style.border = "1px solid #CBD5E1";
                 div.appendChild(img);
 
-                var button = document.createElement('button');
-                button.innerText = '×';
-                button.style.position = 'absolute';
-                button.style.top = '0';
-                button.style.right = '0';
-                button.style.background = 'rgba(255, 255, 255, 0.7)';
-                button.style.border = 'none';
-                button.style.fontSize = '1em';
-                button.style.cursor = 'pointer';
+                var button = document.createElement("button");
+                button.type = "button";
+                button.innerText = "x";
+                button.style.position = "absolute";
+                button.style.top = "0";
+                button.style.right = "0";
+                button.style.border = "none";
+                button.style.background = "rgba(255,255,255,0.8)";
+                button.style.cursor = "pointer";
                 button.onclick = function () {
-                    // 从 DOM 中移除图片元素
                     div.parentNode.removeChild(div);
-
-                    // 从 URL 列表中删除对应的 URL
-                    var urls = urlInput.value.split(',');
+                    var urls = urlInput.value.split(",");
                     var urlIndex = urls.indexOf(data.url);
                     if (urlIndex > -1) {
                         urls.splice(urlIndex, 1);
                     }
-                    urlInput.value = urls.join(',');
+                    urlInput.value = urls.join(",");
                 };
                 div.appendChild(button);
-
                 container.appendChild(div);
             })
-            .catch(error => {
-                console.error('Error:', error);
+            .catch(function (error) {
+                console.error("Error:", error);
             });
-    }
-
-    function deleteImage(inputElementId, imageElement, urlIndex) {
-        // 从 DOM 中移除图片元素
-        imageElement.parentNode.removeChild(imageElement);
-
-        // 从 URL 列表中删除对应的 URL
-        var urlInput = document.getElementById(inputElementId + 'Url');
-        var urls = urlInput.value.split(',');
-        urls.splice(urlIndex, 1);
-        urlInput.value = urls.join(',');
     }
 </script>
 </body>
-
 </html>

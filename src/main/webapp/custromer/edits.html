@@ -1,45 +1,111 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Content</title>
+    <title>编辑客户</title>
+    <style>
+        /* 浅色商务风格 - 表单 */
+        body {
+            background: #F8FAFC;
+            color: #1E293B;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .form-container {
+            background: #FFFFFF;
+            padding: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #475569;
+            margin-bottom: 8px;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group input[type="password"],
+        .form-group input[type="number"],
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            font-size: 14px;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            background: #FFFFFF;
+            color: #1E293B;
+            transition: all 0.15s ease;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-group input[readonly] {
+            background: #F8FAFC;
+            color: #64748B;
+            cursor: not-allowed;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+    </style>
 </head>
 <body>
-<h1></h1>
-<div class="form_box">
+<div class="form-container">
     <form action="/custromer/update" method="post" id="myForm">
         <input type="hidden" name="custromer.id" value="#(custromer.id)">
 
-        <div>
-            <label>加气站</label>
+        <div class="form-group">
+            <label>加气站 <span style="color: #EF4444;">*</span></label>
             <input type="hidden" id="cstation" name="custromer.station" value="#(custromer.station)" readonly/>
             <input type="hidden" id="stationid" name="custromer.stationid" value="#(custromer.stationid)" readonly/>
-            <select id="selectName" name="custromer.station_select" onchange="chooseName()" style="border-radius: 5px;background-color: white; width: 200px;height:30px;text-align: center;">
+            <select id="selectName" name="custromer.station_select" onchange="chooseName()" required>
                 #for ( x: stations)
                 <option value="#(x.id)" #(x.id == custromer.stationid ? "selected" : "")>#(x.station_name)</option>
                 #end
             </select>
         </div>
 
-        <div>
+        <div class="form-group">
             <label>加气站地址</label>
-            <input type="text" name="custromer.saddress" value="#(custromer.saddress)">
+            <input type="text" name="custromer.saddress" value="#(custromer.saddress)" placeholder="请输入加气站地址">
         </div>
-        <div>
-            <label>客户</label>
-            <input type="text" name="custromer.customer" value="#(custromer.customer)">
+
+        <div class="form-group">
+            <label>客户名称 <span style="color: #EF4444;">*</span></label>
+            <input type="text" name="custromer.customer" value="#(custromer.customer)" placeholder="请输入客户名称" required>
         </div>
-        <div>
+
+        <div class="form-group">
             <label>客户电话</label>
-            <input type="text" name="custromer.telephone" value="#(custromer.telephone)">
+            <input type="text" name="custromer.telephone" value="#(custromer.telephone)" placeholder="请输入客户电话">
         </div>
-        <div>
+
+        <div class="form-group">
             <label>客户地址</label>
-            <input type="text" name="custromer.caddress" value="#(custromer.caddress)">
+            <input type="text" name="custromer.caddress" value="#(custromer.caddress)" placeholder="请输入客户地址">
         </div>
     </form>
 </div>
+
 <script>
     var stations = [
         #for ( x: stations)
@@ -53,28 +119,23 @@
         if (selectId == "-1") {
             document.getElementById("cstation").value = "";
             document.getElementById("stationid").value = "";
-            console.log("选择了无效选项，cstation:", document.getElementById("cstation").value, "stationid:", document.getElementById("stationid").value);
             return;
         }
 
-        // 查找选中的加气站对象
         var selectedStation = stations.find(function(station) {
-            return station.id == selectId; // 确保这里的属性名正确
+            return station.id == selectId;
         });
 
         if (selectedStation) {
             document.getElementById("cstation").value = selectedStation.station_name;
             document.getElementById("stationid").value = selectedStation.id;
-            console.log("选中加气站，cstation:", document.getElementById("cstation").value, "stationid:", document.getElementById("stationid").value);
         } else {
             document.getElementById("stationid").value = "";
             alert('找不到对应的加气站！');
         }
     }
 
-    // 添加监听器
     document.getElementById("selectName").addEventListener("change", chooseName);
 </script>
-
 </body>
 </html>

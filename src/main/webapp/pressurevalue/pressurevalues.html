@@ -1,172 +1,305 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Content</title>
-    <!-- Add your custom stylesheets and scripts here -->
-    <link rel="stylesheet" type="text/css" href="/css/lpg.css">
+    <title>压力值记录</title>
     <script src="../css/jquery-3.3.1.min.js"></script>
-    <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css" >
+    <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css">
     <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="../css/lpg.css"></head>
+    <link rel="stylesheet" type="text/css" href="../css/index.css">
 
-<style scoped>
-    .container {
-        padding: 50px 20px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
+    <style>
+        body {
+            margin: 0;
+            background: #F8FAFC;
+            color: #1E293B;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+        }
 
-    input {
-        padding: 15px;
-        font-size: 18px;
-        border: 2px solid #a3bffa;
-        border-radius: 10px;
-        width: 100%;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        transition: border-color 0.3s ease;
-    }
+        .page-container {
+            min-height: 100vh;
+            padding: 20px;
+            background: #F8FAFC;
+        }
 
-    input:focus {
-        outline: none;
-        border-color: #4c87c9;
-    }
-</style>
+        #pagediv {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+        }
 
-<style>
-    /* 设置 #pagediv 的样式 */
-    #pagediv {
-        background-color: #f0f0f0;
-        color: black;
-        padding: 10px;
-    }
+        #searchForm {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            width: 100%;
+        }
 
-    /* 设置表格样式 */
-    table.list {
-        width: 100%;
-        border-collapse: collapse;
-    }
+        #searchForm label {
+            margin: 0;
+            white-space: nowrap;
+            font-size: 14px;
+            font-weight: 500;
+            color: #475569;
+        }
 
-    /* 设置表格表头样式 */
-    table.list th {
-        background-color: #add8e6;
-        color: black;
-        padding: 8px;
-        text-align: left;
-        border: 1px solid #ddd; /* 新增：添加边框 */
-    }
+        #searchForm input[type="text"] {
+            min-width: 220px;
+            height: 38px;
+            padding: 8px 12px;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            background: #FFFFFF;
+            color: #1E293B;
+            font-size: 14px;
+            transition: all 0.15s ease;
+        }
 
-    /* 设置表格单元格样式 */
-    table.list td {
-        padding: 8px;
-        border: 1px solid #ddd; /* 修改：添加边框 */
-    }
+        #searchForm input[type="text"]:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
 
-    /* 设置表格隔行颜色 */
-    table.list tr:nth-child(even) {
-        background-color: #f2f2f2;
-    }
+        #searchForm button[type="submit"] {
+            height: 38px;
+            padding: 0 16px;
+            border: none;
+            border-radius: 6px;
+            background: #3B82F6;
+            color: #FFFFFF;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
 
-    table.list tr:nth-child(odd) {
-        background-color: #e0e0e0;
-    }
+        #searchForm button[type="submit"]:hover {
+            background: #2563EB;
+        }
 
-    /* 设置鼠标悬停时表格行的颜色 */
-    table.list tr:hover {
-        background-color: #d3d3d3;
-    }
+        .table-wrapper {
+            overflow-x: auto;
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+        }
 
-    /* 新增样式：设置新建司机链接为黑色 */
-    #pagediv .add {
-        color: black;
-    }
+        table.list {
+            width: 100%;
+            min-width: 1800px;
+            border-collapse: collapse;
+            background: #FFFFFF;
+        }
 
-    /* 新增样式：设置输入框背景色为淡灰色 */
-    #pagediv input[type="text"] {
-        background-color: #f0f0f0;
-    }
-    /* 新增样式：设置 label 文字颜色为黑色 */
-    #pagediv label {
-        color: black;
-    }
-</style>
+        table.list th {
+            background: #F8FAFC;
+            color: #475569;
+            font-size: 13px;
+            font-weight: 600;
+            text-align: left;
+            padding: 14px 16px;
+            border-bottom: 1px solid #E2E8F0;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+        }
 
+        table.list td {
+            padding: 14px 16px;
+            font-size: 14px;
+            color: #1E293B;
+            border-bottom: 1px solid #F1F5F9;
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+
+        table.list tbody tr {
+            background: #FFFFFF;
+            transition: background 0.15s ease;
+        }
+
+        table.list tbody tr:nth-child(even) {
+            background: #F8FAFC;
+        }
+
+        table.list tbody tr:hover {
+            background: #F1F5F9;
+        }
+
+        table.list tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .page-container .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 20px;
+            color: #475569;
+            flex-wrap: wrap;
+        }
+
+        .page-container .pagination a,
+        .page-container .pagination span:not(.page-info):not(.gap):not(.current) {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 36px;
+            height: 36px;
+            padding: 0 8px;
+            font-size: 14px;
+            border: 1px solid #E2E8F0;
+            border-radius: 6px;
+            color: #475569;
+            background: #FFFFFF;
+            text-decoration: none;
+            transition: all 0.15s ease;
+        }
+
+        .page-container .pagination a:hover {
+            background: #F8FAFC;
+            border-color: #CBD5E1;
+        }
+
+        .page-container .pagination .current {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 36px;
+            height: 36px;
+            padding: 0 8px;
+            background: #3B82F6;
+            color: #FFFFFF;
+            border: 1px solid #3B82F6;
+            border-radius: 6px;
+        }
+
+        .page-container .pagination .disabled {
+            color: #94A3B8;
+            background: #F8FAFC;
+            cursor: not-allowed;
+        }
+
+        .page-container .pagination .gap {
+            border: none;
+            background: transparent;
+            color: #64748B;
+            min-width: auto;
+        }
+
+        .page-container .pagination .page-input {
+            width: 44px;
+            height: 36px;
+            text-align: center;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            color: #1E293B;
+        }
+
+        .page-container .pagination .page-input:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .page-container .pagination .page-info {
+            color: #475569;
+        }
+
+        @media (max-width: 768px) {
+            .page-container {
+                padding: 12px;
+            }
+
+            #searchForm {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            #searchForm input[type="text"],
+            #searchForm button[type="submit"] {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
-<div id="pagediv">
-    <!--a href="add" style="color: #DDDDDD"><b> + </b>新建用户</a-->
-    <form id="searchForm" action="/pressurevalue/pressurevaluelist" method="post">
-        <label for="controllerid">请输入控制器id：</label>
-        <input type="text" id="controllerid" name="controllerid" value="#(controllerid)">
-        &nbsp;&nbsp;<label for="status">请输入阀门状态：</label>
-        <input type="text" id="status" name="status" value="#(status)">
-        &nbsp;&nbsp;<button type="submit">提交</button>
+<div class="page-container">
+    <div id="pagediv">
+        <form id="searchForm" action="/pressurevalue/pressurevaluelist" method="post">
+            <label for="controllerid">请输入控制器id：</label>
+            <input type="text" id="controllerid" name="controllerid" value="#(controllerid)">
+
+            <label for="status">请输入阀门状态：</label>
+            <input type="text" id="status" name="status" value="#(status)">
+
+            <button type="submit">提交</button>
         </form>
+    </div>
+
+    <div class="table-wrapper">
+        <table class="list">
+            <thead>
+            <tr>
+                <th>序号</th>
+                <th>控制器ID</th>
+                <th>标况累计量</th>
+                <th>工况累计量</th>
+                <th>阀门状态</th>
+                <th>电池电压</th>
+                <th>表内时间</th>
+                <th>抄表时间</th>
+                <th>温度</th>
+                <th>压力</th>
+                <th>表内运行状态</th>
+                <th>创建者ID</th>
+                <th>创建时间</th>
+                <th>更新者ID</th>
+                <th>更新时间</th>
+                <th>删除时间</th>
+                <th>信号强度</th>
+                <th>原因标志位</th>
+                <th>htte</th>
+                <th>剩余金额</th>
+            </tr>
+            </thead>
+            <tbody>
+            #set(startIndex = (pressurevaluelist.pageNumber - 1) * pressurevaluelist.pageSize + 1)
+            #for(x : pressurevaluelist.getList())
+            <tr>
+                <td>#(startIndex++)</td>
+                <td>#(x.controller_id)</td>
+                <td>#(x.standard_condition_accumulated)</td>
+                <td>#(x.working_condition_accumulated)</td>
+                <td>#(x.valve_status)</td>
+                <td>#(x.battery_voltage)</td>
+                <td>#(x.in_meter_datetime)</td>
+                <td>#(x.meter_reading_datetime)</td>
+                <td>#(x.temperature)</td>
+                <td>#(x.pressure)</td>
+                <td>#(x.meter_operating_status)</td>
+                <td>#(x.created_id)</td>
+                <td>#(x.created_time)</td>
+                <td>#(x.updated_id)</td>
+                <td>#(x.updated_time)</td>
+                <td>#(x.deleted_time)</td>
+                <td>#(x.signallevel)</td>
+                <td>#(x.terminalreporttype)</td>
+                <td>#(x.httemparr)</td>
+                <td>#(x.shengyujine)</td>
+            </tr>
+            #end
+            </tbody>
+        </table>
+    </div>
+
+    #@paginate(pressurevaluelist.pageNumber, pressurevaluelist.totalPage, "/pressurevalue/pressurevaluelist/?status=" + (status != null ? status : "") + "&controllerid=" + (controllerid != null ? controllerid : "") + "&page=")
 </div>
-<table class="list">
-    <tbody>
-    <tr>
-        <th>序号</th>
-        <!--th>饭店ID</th>
-        <th>气瓶ID</th>
-        <th>压力表ID</th-->
-        <th>控制器ID</th>
-        <th>标况累计量</th>
-        <th>工况累计量</th>
-        <th>阀门状态</th>
-        <th>电池电压</th>
-        <th>表内时间</th>
-        <th>抄表时间</th>
-        <th>温度</th>
-        <th>压力</th>
-        <th>表内运行状态</th>
-        <th>创建者ID</th>
-        <th>创建时间</th>
-        <th>更新者ID</th>
-        <th>更新时间</th>
-        <th>删除时间</th>
-        <th>信号强度</th>
-        <th>原因标志位</th>
-        <th>htte</th>
-        <th>剩余金额</th>
-
-    </tr>
-    #set(startIndex = (pressurevaluelist.pageNumber - 1) * pressurevaluelist.pageSize + 1)
-    #for(x : pressurevaluelist.getList())
-    <tr>
-        <td>#(startIndex++)</td> <!-- 显示序号并递增 -->
-        <!--td>#(x.affiliation_user_id)</td>
-        <td>#(x.gas_cylinder_id)</td>
-        <td>#(x.pressure_gauge_id)</td-->
-        <td>#(x.controller_id)</td>
-        <td>#(x.standard_condition_accumulated)</td>
-        <td>#(x.working_condition_accumulated)</td>
-        <td>#(x.valve_status)</td>
-        <td>#(x.battery_voltage)</td>
-        <td>#(x.in_meter_datetime)</td>
-        <td>#(x.meter_reading_datetime)</td>
-        <td>#(x.temperature)</td>
-        <td>#(x.pressure)</td>
-        <td>#(x.meter_operating_status)</td>
-        <td>#(x.created_id)</td>
-        <td>#(x.created_time)</td>
-        <td>#(x.updated_id)</td>
-        <td>#(x.updated_time)</td>
-        <td>#(x.deleted_time)</td>
-        <td>#(x.signallevel)</td>
-        <td>#(x.terminalreporttype)</td>
-        <td>#(x.httemparr)</td>
-        <td>#(x.shengyujine)</td>
-
-    </tr>
-    #end
-    </tbody>
-</table>
-<div class="pagination" style="color:#f0f0f0; font-size: 15px">
-    #@paginate(pressurevaluelist.pageNumber, pressurevaluelist.totalPage,"/pressurevalue/pressurevaluelist/?status=" + (status != null ? status : "") + "&controllerid=" + (controllerid != null ? controllerid : "") +   "&page=")
-</div>
-
 </body>
 </html>

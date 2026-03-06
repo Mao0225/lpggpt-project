@@ -1,293 +1,492 @@
-<!DOCTYPE html>
-<html lang="en">
-
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" width="device-width, initial-scale=1.0">
-    <title>Equipment List</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小盒子管理</title>
     <script src="../css/jquery-3.3.1.min.js"></script>
     <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css">
     <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/lpg.css">
 
-
-    <style scoped>
-        .container {
-            padding: 50px 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        input {
-            padding: 15px;
-            font-size: 18px;
-            border: 2px solid #a3bffa;
-            border-radius: 10px;
-            width: 100%;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: border-color 0.3s ease;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: #4c87c9;
-        }
-    </style>
-
     <style>
-        /* 设置 #pagediv 的样式 */
-        #pagediv {
-            background-color: #f0f0f0;
-            color: black;
-            padding: 10px;
-            border: 2px solid #007bff;
-            margin-bottom: 15px;
+        body {
+            margin: 0;
+            background: #F8FAFC;
+            color: #1E293B;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
         }
 
-        /* 搜索区域布局优化 */
+        .page-container {
+            background: #F8FAFC;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        #pagediv {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
         #searchForm {
             display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            flex: 1;
         }
 
-        /* 日期输入框专门样式 - 解决过大问题 */
-        input[type="date"] {
-            padding: 14px 10px;  /* 调整内边距 */
-            font-size: 16px;    /* 调整字体大小 */
-            width: auto;        /* 自动适应内容宽度 */
-            min-width: 180px;   /* 最小宽度保证可用性 */
-        }
-
-        /* 设置表格样式 */
-        table.list {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        /* 设置表格表头样式 */
-        table.list th {
-            background-color: #add8e6;
-            color: black;
-            padding: 8px;
-            text-align: left;
-            border: 1px solid #ddd;
-        }
-
-        /* 设置表格单元格样式 */
-        table.list td {
-            padding: 8px;
-            border: 1px solid #ddd;
-        }
-
-        /* 设置表格隔行颜色 */
-        table.list tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-
-        table.list tr:nth-child(odd) {
-            background-color: #e0e0e0;
-        }
-
-        /* 设置鼠标悬停时表格行的颜色 */
-        table.list tr:hover {
-            background-color: #d3d3d3;
-        }
-
-        /* 设置新建司机链接样式 */
-        #pagediv .add {
-            color: white;
-            background-color: #007bff;
-            padding: 6px 12px;
-            text-decoration: none;
-            display: inline-block;
-            border-radius: 4px;
-        }
-
-        /* 设置输入框背景色为淡灰色 */
-        #pagediv input[type="text"] {
-            background-color: #f0f0f0;
-            width: auto;
-            min-width: 150px;
-        }
-
-        /* 设置 label 文字颜色为黑色 */
         #pagediv label {
-            color: black;
-            margin-bottom: 0;
+            margin: 0;
+            font-size: 14px;
+            font-weight: 500;
+            color: #475569;
+            white-space: nowrap;
         }
 
-        /* 操作列样式 */
-        .edit, .delete {
-            margin: 0 5px;
+        #pagediv input[type="text"],
+        #pagediv input[type="date"],
+        #pagediv select {
+            padding: 8px 12px;
+            min-width: 180px;
+            font-size: 14px;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            background: #FFFFFF;
+            color: #1E293B;
+            transition: all 0.15s ease;
+        }
+
+        #pagediv input:focus,
+        #pagediv select:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        #pagediv input::placeholder {
+            color: #94A3B8;
+        }
+
+        .btn-add,
+        .btn-search,
+        .btn-reset {
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.15s ease;
+        }
+
+        .btn-add {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border: none;
+            background: #3B82F6;
+            color: #FFFFFF;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .btn-add:hover {
+            background: #2563EB;
+            color: #FFFFFF;
             text-decoration: none;
         }
 
-        .edit {
-            color: #007bff;
+        .btn-search {
+            padding: 8px 20px;
+            border: none;
+            background: #3B82F6;
+            color: #FFFFFF;
+            cursor: pointer;
         }
 
-        .delete {
-            color: #dc3545;
+        .btn-search:hover {
+            background: #2563EB;
+        }
+
+        .btn-reset {
+            padding: 8px 20px;
+            border: 1px solid #CBD5E1;
+            background: #FFFFFF;
+            color: #475569;
+            cursor: pointer;
+        }
+
+        .btn-reset:hover {
+            background: #F8FAFC;
+            border-color: #94A3B8;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            background: #FFFFFF;
+        }
+
+        .data-table {
+            width: 100%;
+            min-width: 1900px;
+            border-collapse: collapse;
+            background: #FFFFFF;
+        }
+
+        .data-table thead tr {
+            background: #F8FAFC;
+        }
+
+        .data-table th {
+            background: #F8FAFC;
+            color: #475569;
+            font-size: 13px;
+            font-weight: 600;
+            text-align: left;
+            padding: 14px 16px;
+            border-bottom: 1px solid #E2E8F0;
+            white-space: nowrap;
+        }
+
+        .data-table td {
+            padding: 14px 16px;
+            font-size: 14px;
+            color: #1E293B;
+            border-bottom: 1px solid #F1F5F9;
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+
+        .data-table tbody tr {
+            background: #FFFFFF;
+            transition: background 0.15s ease;
+        }
+
+        .data-table tbody tr:nth-child(even) {
+            background: #F8FAFC;
+        }
+
+        .data-table tbody tr:hover {
+            background: #F1F5F9;
+        }
+
+        .data-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .data-table a {
+            color: #3B82F6;
+            text-decoration: none;
+            margin-right: 12px;
+            transition: color 0.15s ease;
+        }
+
+        .data-table a:hover {
+            color: #2563EB;
+            text-decoration: underline;
+        }
+
+        .data-table td.action-cell {
+            text-align: center;
+        }
+
+        .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 20px;
+        }
+
+        .pagination a,
+        .pagination span {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 36px;
+            height: 36px;
+            padding: 0 8px;
+            font-size: 14px;
+            border: 1px solid #E2E8F0;
+            border-radius: 6px;
+            color: #475569;
+            background: #FFFFFF;
+            text-decoration: none;
+            transition: all 0.15s ease;
+        }
+
+        .pagination a:hover {
+            background: #F8FAFC;
+            border-color: #CBD5E1;
+        }
+
+        .pagination .current-page {
+            background: #3B82F6;
+            color: #FFFFFF;
+            border-color: #3B82F6;
+        }
+
+        .pagination .disabled {
+            color: #94A3B8;
+            background: #F8FAFC;
+            cursor: not-allowed;
+        }
+
+        .modal-content {
+            border: 1px solid #E2E8F0;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+        }
+
+        .modal-header {
+            background: #F8FAFC;
+            border-bottom: 1px solid #E2E8F0;
+            padding: 16px 20px;
+        }
+
+        .modal-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E293B;
+        }
+
+        .modal-body {
+            padding: 20px;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .modal-footer {
+            background: #F8FAFC;
+            border-top: 1px solid #E2E8F0;
+            padding: 16px 20px;
+        }
+
+        .btn-default {
+            background: #FFFFFF;
+            color: #475569;
+            border: 1px solid #CBD5E1;
+        }
+
+        .btn-default:hover {
+            background: #F8FAFC;
+            border-color: #94A3B8;
+        }
+
+        .btn-primary {
+            background: #3B82F6;
+            color: #FFFFFF;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background: #2563EB;
+        }
+
+        @media (max-width: 768px) {
+            .page-container {
+                padding: 12px;
+            }
+
+            #pagediv {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 14px;
+            }
+
+            #searchForm {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            #pagediv input[type="text"],
+            #pagediv input[type="date"],
+            #pagediv select,
+            .btn-search,
+            .btn-reset,
+            .btn-add {
+                width: 100%;
+                min-width: 0;
+            }
+
+            .data-table th,
+            .data-table td {
+                padding: 10px 12px;
+            }
         }
     </style>
 </head>
 
 <body>
-<div id="pagediv">
+<div class="page-container">
+    <div id="pagediv">
+        <a href="#" class="btn-add openModal" data-title="添加小盒子" data-edit-url="/xiaohezi/add">+ 添加小盒子</a>
+        <form id="searchForm" action="/xiaohezi/xiaohezilist" method="post">
+            <label for="xiaohezino">小盒子编号：</label>
+            <input type="text" id="xiaohezino" name="xiaohezino" value="#(xiaohezino)" placeholder="请输入小盒子编号">
 
-    <form id="searchForm" action="/xiaohezi/xiaohezilist" method="post">
-        <a href="#" class="add openModal" data-title="添加小盒子" data-edit-url="/xiaohezi/add"><b> + </b>添加小盒子</a>
-        <label>小盒子编号：</label>
-        <input type="text" name="xiaohezino" value="#(xiaohezino)">
-        <label>创建时间：</label>
-        <input type="date" name="createTime" value="#(createTime)">
-        <label>饭店名称：</label>
-        <input type="text" name="restaurant" value="#(restaurant)">
-        <button type="button" id="searchButton">查询</button>
-        <button type="button" id="resetButton">重置</button>
-    </form>
+            <label for="createTime">创建时间：</label>
+            <input type="date" id="createTime" name="createTime" value="#(createTime)">
+
+            <label for="restaurant">饭店名称：</label>
+            <input type="text" id="restaurant" name="restaurant" value="#(restaurant)" placeholder="请输入饭店名称">
+
+            <button type="button" class="btn-search" id="searchButton">查询</button>
+            <button type="button" class="btn-reset" id="resetButton">重置</button>
+        </form>
+    </div>
+
+    <div class="table-wrapper">
+        <table class="data-table">
+            <thead>
+            <tr>
+                <th>序号</th>
+                <th>小盒子编号</th>
+                <th>饭店编号</th>
+                <th>饭店名称</th>
+                <th>阀门1打开</th>
+                <th>阀门1关闭</th>
+                <th>阀门2打开</th>
+                <th>阀门2关闭</th>
+                <th>阀门3打开</th>
+                <th>阀门3关闭</th>
+                <th>阀门4打开</th>
+                <th>阀门4关闭</th>
+                <th>阀门5打开</th>
+                <th>阀门5关闭</th>
+                <th>创建时间</th>
+                <th>创建者</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            #set(startIndex = (xiaohezilist.pageNumber - 1) * xiaohezilist.pageSize + 1)
+            #for(x : xiaohezilist.getList())
+            <tr>
+                <td>#(startIndex++)</td>
+                <td>#(x.xiaohezi_no)</td>
+                <td>#(x.restaurantid)</td>
+                <td>#(x.restaurant)</td>
+                <td>#(x.famen1open)</td>
+                <td>#(x.famen1close)</td>
+                <td>#(x.famen2open)</td>
+                <td>#(x.famen2close)</td>
+                <td>#(x.famen3open)</td>
+                <td>#(x.famen3close)</td>
+                <td>#(x.famen4open)</td>
+                <td>#(x.famen4close)</td>
+                <td>#(x.famen5open)</td>
+                <td>#(x.famen5close)</td>
+                <td>#(x.createtime)</td>
+                <td>#(x.writer)</td>
+                <td class="action-cell">
+                    <a href="#" class="openModal" data-title="编辑小盒子" data-edit-url="/xiaohezi/edit?id=#(x.id)">修改</a>
+                    <a href="#" onclick="confirmDelete('#(x.id)')">删除</a>
+                </td>
+            </tr>
+            #end
+            </tbody>
+        </table>
+    </div>
+
+    <div class="pagination">
+        #@paginate(xiaohezilist.pageNumber, xiaohezilist.totalPage, "/xiaohezi/xiaohezilist?xiaohezino=" + (xiaohezino!=null ? xiaohezino : "") + "&createTime=" + (createTime!=null ? createTime : "") + "&restaurant=" + (restaurant!=null ? restaurant : "") + "&page=")
+    </div>
 </div>
 
-<table class="list">
-    <tbody>
-    <tr>
-        <th width="8%">序号</th>
-        <th width="10">小盒子编号</th>
-        <th width="10">饭店编号</th>
-        <th width="10">饭店名称</th>
-        <th width="8">阀门1打开</th>
-        <th width="8">阀门1关闭</th>
-        <th width="8">阀门2打开</th>
-        <th width="8">阀门2关闭</th>
-        <th width="8">阀门3打开</th>
-        <th width="8">阀门3关闭</th>
-        <th width="8">阀门4打开</th>
-        <th width="8">阀门4关闭</th>
-        <th width="8">阀门5打开</th>
-        <th width="8">阀5关闭</th>
-        <th width="10">创建时间</th>
-        <th width="10">创建者</th>
-        <th width="10">操作</th> <!-- 添加操作列标题 -->
-    </tr>
-    #set(startIndex = (xiaohezilist.pageNumber - 1) * xiaohezilist.pageSize + 1)
-    #for(x : xiaohezilist.getList())
-    <tr>
-        <td>#(startIndex++)</td> <!-- 显示序号并递增 -->
-        <td>#(x.xiaohezi_no)</td>
-        <td>#(x.restaurantid)</td>
-        <td>#(x.restaurant)</td>
-        <td>#(x.famen1open)</td>
-        <td>#(x.famen1close)</td>
-        <td>#(x.famen2open)</td>
-        <td>#(x.famen2close)</td>
-        <td>#(x.famen3open)</td>
-        <td>#(x.famen3close)</td>
-        <td>#(x.famen4open)</td>
-        <td>#(x.famen4close)</td>
-        <td>#(x.famen5open)</td>
-        <td>#(x.famen5close)</td>
-        <td>#(x.createtime)</td>
-        <td>#(x.writer)</td>
-        <td>
-            <!-- 修改按钮添加点击事件，弹出编辑模态框，结构和功能与参考代码中编辑按钮类似 -->
-            <a href="#" class="edit openModal" data-title="编辑设备" data-edit-url="/xiaohezi/edit?id=#(x.id)">修改</a>
-            <!-- 将删除按钮修改为a标签形式 -->
-            <a href="#" class="delete" onclick="confirmDelete('#(x.id)')">删除</a>
-            <!-- 为“设备维修”按钮添加点击事件，弹出对应的模态框 -->
-        </td>
-    </tr>
-    #end
-    </tbody>
-</table>
-
-<div class="pagination" style="color:#DDDDDD; font-size: 12px">
-    #@paginate(xiaohezilist.pageNumber, xiaohezilist.totalPage, "/xiaohezi/xiaohezilist?xiaohezino=" + (xiaohezino!=null ? xiaohezino:"")+"&createTime=" + (createTime!=null ? createTime:"")+"&restaurant=" + (restaurant!=null ? restaurant:"")+"&page=")
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">模态窗口</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="saveButton">保存</button>
+            </div>
+        </div>
+    </div>
 </div>
+
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        var searchForm = document.getElementById("searchForm");
-        var searchButton = document.getElementById("searchButton");
-        var resetButton = document.getElementById("resetButton");
-
-        // 查询按钮：正常提交表单
-        searchButton.addEventListener("click", function(e) {
-            e.preventDefault();
-            searchForm.submit();
-        });
-
-        // 重置按钮：清空条件并提交表单
-        resetButton.addEventListener("click", function(e) {
-            e.preventDefault();
-
-            // 清空文本框、日期框
-            searchForm.querySelectorAll('input[type="text"], input[type="date"]').forEach(function(el){
-                el.value = '';
-            });
-
-            // 重置下拉框
-            searchForm.querySelectorAll('select').forEach(function(el){
-                el.selectedIndex = 0;
-            });
-
-            // 关键：提交空表单，刷新数据
-            searchForm.submit();
-        });
-    });
-
-    // 确认删除
     function confirmDelete(id) {
-        console.log("进入到了删除函数");
-        console.log("id: " + id);
-        if (confirm("确定要删除该设备记录吗？")) {
+        if (confirm("确定要删除该小盒子记录吗？")) {
             window.location.href = "/xiaohezi/delete?id=" + id;
         }
     }
 
-    // 打开模态框
-    $(document).ready(function () {
-        $('.openModal').click(function (e) {
+    document.addEventListener("DOMContentLoaded", function () {
+        var searchForm = document.getElementById("searchForm");
+        var searchButton = document.getElementById("searchButton");
+        var resetButton = document.getElementById("resetButton");
+
+        if (searchButton && searchForm) {
+            searchButton.addEventListener("click", function (e) {
+                e.preventDefault();
+                searchForm.submit();
+            });
+        }
+
+        if (resetButton && searchForm) {
+            resetButton.addEventListener("click", function (e) {
+                var i;
+                var textAndDateInputs;
+                var selects;
+                e.preventDefault();
+
+                textAndDateInputs = searchForm.querySelectorAll('input[type="text"], input[type="date"]');
+                for (i = 0; i < textAndDateInputs.length; i++) {
+                    textAndDateInputs[i].value = "";
+                }
+
+                selects = searchForm.querySelectorAll("select");
+                for (i = 0; i < selects.length; i++) {
+                    selects[i].selectedIndex = 0;
+                }
+
+                searchForm.submit();
+            });
+        }
+
+        document.getElementById("saveButton").addEventListener("click", function () {
+            var form = document.getElementById("myForm");
+            if (form) {
+                form.submit();
+            }
+        });
+    });
+
+    $(function () {
+        $(".openModal").on("click", function (e) {
+            var editUrl;
+            var title;
             e.preventDefault();
-            var editUrl = $(this).data('edit-url');
-            var that = this;
+
+            editUrl = $(this).data("edit-url");
+            title = $(this).data("title");
 
             $.get(editUrl, function (data) {
-                var title = $(that).data('title');
-                $('#myModalLabel').text(title);
-
-                // 清空旧内容，加载新内容
-                $('#modalBody').html(data);
-                $('#myModal').modal('show');
+                $("#myModalLabel").text(title);
+                $("#modalBody").html(data);
+                $("#myModal").modal("show");
             });
         });
     });
 </script>
 
-<!-- 模态框结构 -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="myModalLabel">模态窗口标题</h4>
-            </div>
-            <div class="modal-body" id="modalBody">
-                <!-- 这里将会加载你的表单内容，此处暂时为空，后续可以根据从后端获取的数据来填充 -->
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary" id="saveButton">保存</button>
-                <script>
-                    document.getElementById('saveButton').addEventListener('click', function () {
-                        console.log("josqb`1");
-                        // 如果验证通过，则提交表单
-                        document.getElementById('myForm').submit();
-                        // 如果验证失败，不提交表单（validateForm内部已经显示了错误消息）
-                    });
-                </script>
-            </div>
-
-        </div>
-    </div>
-</div>
+</body>
+</html>

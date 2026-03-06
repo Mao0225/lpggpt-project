@@ -1,143 +1,186 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Content</title>
-    <link rel="stylesheet" type="text/css" href="../css/lpg.css">
-
-    <style scoped>
-        .container {
-            padding: 50px 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        input {
-            padding: 8px 12px;
-            font-size: 14px;
-            border: 1px solid #a3bffa;
-            border-radius: 4px;
-            width: 150px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-            transition: border-color 0.3s ease;
-            margin-right: 10px;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: #4c87c9;
-        }
-
-        input[type="submit"],
-        input[type="button"] {
-            padding: 6px 12px;
-            font-size: 14px;
-            border-radius: 4px;
-            cursor: pointer;
-            border: none;
-            width: auto;
-            margin-right: 5px;
-        }
-
-        input[type="submit"] {
-            background-color: #007bff;
-            color: white;
-        }
-
-        input[type="button"] {
-            background-color: #6c757d;
-            color: white;
-        }
-    </style>
+    <title>摄像头查找</title>
+    <link rel="stylesheet" type="text/css" href="../css/index.css">
 
     <style>
+        body {
+            margin: 0;
+            background: #F8FAFC;
+            color: #1E293B;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+        }
+
+        .page-container {
+            min-height: 100vh;
+            padding: 20px;
+            background: #F8FAFC;
+        }
+
         #pagediv {
-            background-color: #f0f0f0;
-            color: black;
-            padding: 10px;
-            border: 2px solid #007bff;
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+        }
+
+        #searchForm {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            width: 100%;
+        }
+
+        #searchForm label {
+            margin: 0;
+            white-space: nowrap;
+            font-size: 14px;
+            font-weight: 500;
+            color: #475569;
+        }
+
+        #searchForm input[type="text"],
+        #searchForm input[type="date"],
+        #searchForm input[type="time"] {
+            min-width: 160px;
+            height: 38px;
+            padding: 8px 12px;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            background: #FFFFFF;
+            color: #1E293B;
+            font-size: 14px;
+            transition: all 0.15s ease;
+        }
+
+        #searchForm input[type="text"]:focus,
+        #searchForm input[type="date"]:focus,
+        #searchForm input[type="time"]:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        #searchForm input[type="submit"],
+        #searchForm input[type="button"] {
+            height: 38px;
+            padding: 0 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        #searchForm input[type="submit"] {
+            border: none;
+            background: #3B82F6;
+            color: #FFFFFF;
+        }
+
+        #searchForm input[type="submit"]:hover {
+            background: #2563EB;
+        }
+
+        #searchForm input[type="button"] {
+            border: 1px solid #CBD5E1;
+            background: #FFFFFF;
+            color: #475569;
+        }
+
+        #searchForm input[type="button"]:hover {
+            background: #F8FAFC;
+            border-color: #94A3B8;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
         }
 
         table.list {
             width: 100%;
+            min-width: 1300px;
             border-collapse: collapse;
+            background: #FFFFFF;
         }
 
         table.list th {
-            background-color: #add8e6;
-            color: black;
-            padding: 8px;
+            background: #F8FAFC;
+            color: #475569;
+            font-size: 13px;
+            font-weight: 600;
             text-align: left;
-            border: 1px solid #ddd;
+            padding: 14px 16px;
+            border-bottom: 1px solid #E2E8F0;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
         }
 
         table.list td {
-            padding: 8px;
-            border: 1px solid #ddd;
-            position: relative; /* 新增：为加载指示器提供定位容器 */
+            padding: 14px 16px;
+            font-size: 14px;
+            color: #1E293B;
+            border-bottom: 1px solid #F1F5F9;
+            vertical-align: middle;
         }
 
-        table.list tr:nth-child(even) {
-            background-color: #f2f2f2;
+        table.list tbody tr {
+            background: #FFFFFF;
+            transition: background 0.15s ease;
         }
 
-        table.list tr:nth-child(odd) {
-            background-color: #e0e0e0;
+        table.list tbody tr:nth-child(even) {
+            background: #F8FAFC;
         }
 
-        table.list tr:hover {
-            background-color: #d3d3d3;
+        table.list tbody tr:hover {
+            background: #F1F5F9;
         }
 
-        #pagediv .add {
-            color: white;
-            background-color: #007bff;
-            padding: 6px 12px;
-            text-decoration: none;
-            display: inline-block;
-            border-radius: 4px;
+        table.list tbody tr:last-child td {
+            border-bottom: none;
         }
 
-        #pagediv input[type="text"] {
-            background-color: #f0f0f0;
-        }
-
-        #pagediv label {
-            color: black;
-        }
-
-        /* 图片加载相关样式 */
         .img-container {
             position: relative;
-            display: inline-block;
+            width: 120px;
+            height: 90px;
+            margin: 0 auto;
+            border: 1px solid #E2E8F0;
+            border-radius: 6px;
+            background: #F8FAFC;
+            overflow: hidden;
         }
 
         .img-loading {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(255, 255, 255, 0.8);
+            inset: 0;
+            background: rgba(248, 250, 252, 0.92);
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 1;
+            z-index: 2;
+            color: #64748B;
             font-size: 12px;
-            color: #666;
+            gap: 6px;
         }
 
-        /* 加载动画 */
         .loading-spinner {
-            width: 20px;
-            height: 20px;
-            border: 2px solid #ddd;
-            border-top: 2px solid #007bff;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #CBD5E1;
+            border-top: 2px solid #3B82F6;
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin-right: 5px;
         }
 
         @keyframes spin {
@@ -145,31 +188,138 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* 弹窗样式 */
+        table.list td img {
+            width: 120px;
+            height: 90px;
+            object-fit: cover;
+            cursor: pointer;
+            display: none;
+            transition: transform 0.2s ease;
+        }
+
+        table.list td img.visible {
+            display: block;
+        }
+
+        table.list td img:hover {
+            transform: scale(1.05);
+        }
+
+        .img-placeholder {
+            position: absolute;
+            inset: 0;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: #94A3B8;
+            font-size: 12px;
+            cursor: pointer;
+            background: #F8FAFC;
+            line-height: 1.4;
+        }
+
+        .img-placeholder.visible {
+            display: flex;
+        }
+
+        .page-container .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 20px;
+            color: #475569;
+            flex-wrap: wrap;
+        }
+
+        .page-container .pagination a,
+        .page-container .pagination span:not(.page-info):not(.gap):not(.current) {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 36px;
+            height: 36px;
+            padding: 0 8px;
+            font-size: 14px;
+            border: 1px solid #E2E8F0;
+            border-radius: 6px;
+            color: #475569;
+            background: #FFFFFF;
+            text-decoration: none;
+            transition: all 0.15s ease;
+        }
+
+        .page-container .pagination a:hover {
+            background: #F8FAFC;
+            border-color: #CBD5E1;
+        }
+
+        .page-container .pagination .current {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 36px;
+            height: 36px;
+            padding: 0 8px;
+            background: #3B82F6;
+            color: #FFFFFF;
+            border: 1px solid #3B82F6;
+            border-radius: 6px;
+        }
+
+        .page-container .pagination .disabled {
+            color: #94A3B8;
+            background: #F8FAFC;
+            cursor: not-allowed;
+        }
+
+        .page-container .pagination .gap {
+            border: none;
+            background: transparent;
+            color: #64748B;
+            min-width: auto;
+        }
+
+        .page-container .pagination .page-input {
+            width: 44px;
+            height: 36px;
+            text-align: center;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            color: #1E293B;
+        }
+
+        .page-container .pagination .page-input:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .page-container .pagination .page-info {
+            color: #475569;
+        }
+
         .popup-overlay {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
+            inset: 0;
+            background: rgba(15, 23, 42, 0.8);
             z-index: 9999;
             justify-content: center;
             align-items: center;
+            padding: 24px;
         }
 
         .popup-content {
-            position: relative;
-            background-color: #fff;
-            padding: 15px;
-            border-radius: 8px;
-            max-width: 90%;
-            max-height: 90%;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s ease;
-            transform: scale(0.95);
+            position: fixed;
+            background: #FFFFFF;
+            border-radius: 10px;
+            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.3);
+            max-width: 90vw;
+            max-height: 90vh;
+            padding: 16px;
+            cursor: grab;
         }
 
         .popup-overlay.active .popup-content {
@@ -178,333 +328,281 @@
 
         .close-btn {
             position: absolute;
-            top: 10px;
-            right: 15px;
-            font-size: 32px;
-            font-weight: bold;
-            color: #333;
+            top: 8px;
+            right: 12px;
+            font-size: 28px;
+            line-height: 1;
+            color: #334155;
             cursor: pointer;
-            transition: color 0.2s ease;
             z-index: 10;
-        }
-
-        .close-btn:hover {
-            color: #ff0000;
         }
 
         #popup-img {
             display: block;
             width: auto;
             height: auto;
-            max-width: 100%;
-            max-height: 85vh;
+            max-width: 86vw;
+            max-height: 82vh;
             margin: 0 auto;
             object-fit: contain;
         }
 
-        table.list td img {
-            max-width: 120px;
-            max-height: 90px;
-            cursor: pointer;
-            transition: transform 0.3s;
-            border-radius: 4px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            display: none; /* 初始隐藏，加载成功后显示 */
-        }
+        @media (max-width: 768px) {
+            .page-container {
+                padding: 12px;
+            }
 
-        table.list td img.visible {
-            display: inline-block;
-        }
+            #searchForm {
+                flex-direction: column;
+                align-items: stretch;
+            }
 
-        table.list td img:hover {
-            transform: scale(1.1);
-        }
-
-        /* 图片加载失败占位图样式 */
-        .img-placeholder {
-            width: 120px;
-            height: 90px;
-            background-color: #f0f0f0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #999;
-            font-size: 12px;
-            border-radius: 4px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            cursor: pointer;
-            display: none;
-        }
-
-        .img-placeholder.visible {
-            display: flex;
+            #searchForm input[type="text"],
+            #searchForm input[type="date"],
+            #searchForm input[type="time"],
+            #searchForm input[type="submit"],
+            #searchForm input[type="button"] {
+                width: 100%;
+            }
         }
     </style>
-
 </head>
 <body>
-
 <div class="popup-overlay" id="popup">
     <div class="popup-content" id="popup-content">
         <span class="close-btn" id="close-btn">&times;</span>
-        <img src="" id="popup-img">
+        <img src="" id="popup-img" alt="预览图">
     </div>
 </div>
 
-<div id="pagediv">
-    <form id="searchForm" action="/shexiangtoufind/shexiangtoulist" method="post">
-        <label>摄像头编号:</label>
-        <input type="text" name="shexiangtouno" value="#(shexiangtouno)">
-        <label>发生日期:</label>
-        <input type="date" name="searchDate" id="searchDate" value="#(searchDate)">
-        <label>发生时间:</label>
-        <input type="time" name="searchTime" id="searchTime" value="#(searchTime??)" step="1">
-        <label>&nbsp;</label>
-        <input value="搜索" type="submit">
-        <input type="button" value="重置" name="refresh" id="resetButton" />
-    </form>
-</div>
+<div class="page-container">
+    <div id="pagediv">
+        <form id="searchForm" action="/shexiangtoufind/shexiangtoulist" method="post">
+            <label>摄像头编号:</label>
+            <input type="text" name="shexiangtouno" value="#(shexiangtouno)">
 
-<table class="list">
-    <tbody>
-    <tr>
-        <th width="3%">id</th>
-        <th width="12%">摄像头编号</th>
-        <th width="12%">发生时间</th>
-        <th width="10%">报警图片</th>
-        <th width="10%">报警信息</th>
-        <th width="10%">饭店名称</th>
-        <th width="10%">饭店电话</th>
-        <th width="10%">饭店地址</th>
-        <th width="10%">cpu 温度</th>
-        <th width="10%">系统错误信息</th>
-    </tr>
-    #set(startIndex = (shexiangtou.pageNumber - 1) * shexiangtou.pageSize + 1)
-    #for(x : shexiangtou.getList())
-    <tr>
-        <td style="text-align:center">#(startIndex++)</td>
-        <td style="text-align:center">#(x.shexiangtouno)</td>
-        <td style="text-align:center">#(x.happendtime)</td>
-        <td style="text-align:center">
-            <!-- 图片容器：包含加载指示器、实际图片和失败占位图 -->
-            <div class="img-container">
-                <div class="img-loading">
-                    <div class="loading-spinner"></div>
-                    <span>加载中...</span>
-                </div>
-                <img
-                        data-img-name="#(x.Alarmpic)"
-                        src=""
-                        alt="报警图片"
-                        onload="this.classList.add('visible')"
-                >
-                <div class="img-placeholder">图片加载失败<br>点击重试</div>
-            </div>
-        </td>
-        <td style="text-align:center">#(x.alarmmes)</td>
-        <td style="text-align:center">#(x.restaurantname)</td>
-        <td style="text-align:center">#(x.restaurantphone)</td>
-        <td style="text-align:center">#(x.restaurantaddress)</td>
-        <td style="text-align:center">#(x.memo)</td>
-        <td style="text-align:center">#(x.alarmtype)</td>
-    </tr>
-    #end
-    </tbody>
-</table>
+            <label>发生日期:</label>
+            <input type="date" name="searchDate" id="searchDate" value="#(searchDate)">
 
-<div class="pagination" style="color:#000000;">
-    #set(pageUrl = "/shexiangtoufind/shexiangtoulist?shexiangtouno=" + shexiangtouno + "&searchDate=" + (searchDate ??"") +"&searchTime=" +(searchTime ??"") + "&page=")
+            <label>发生时间:</label>
+            <input type="time" name="searchTime" id="searchTime" value="#(searchTime??)" step="1">
+
+            <input value="搜索" type="submit">
+            <input type="button" value="重置" name="refresh" id="resetButton">
+        </form>
+    </div>
+
+    <div class="table-wrapper">
+        <table class="list">
+            <thead>
+            <tr>
+                <th width="3%">id</th>
+                <th width="12%">摄像头编号</th>
+                <th width="12%">发生时间</th>
+                <th width="10%">报警图片</th>
+                <th width="10%">报警信息</th>
+                <th width="10%">饭店名称</th>
+                <th width="10%">饭店电话</th>
+                <th width="10%">饭店地址</th>
+                <th width="10%">cpu 温度</th>
+                <th width="10%">系统错误信息</th>
+            </tr>
+            </thead>
+            <tbody>
+            #set(startIndex = (shexiangtou.pageNumber - 1) * shexiangtou.pageSize + 1)
+            #for(x : shexiangtou.getList())
+            <tr>
+                <td style="text-align:center">#(startIndex++)</td>
+                <td style="text-align:center">#(x.shexiangtouno)</td>
+                <td style="text-align:center">#(x.happendtime)</td>
+                <td style="text-align:center">
+                    <div class="img-container">
+                        <div class="img-loading">
+                            <div class="loading-spinner"></div>
+                            <span>加载中...</span>
+                        </div>
+                        <img data-img-name="#(x.Alarmpic)" src="" alt="报警图片" onload="this.classList.add('visible')">
+                        <div class="img-placeholder">图片加载失败<br>点击重试</div>
+                    </div>
+                </td>
+                <td style="text-align:center">#(x.alarmmes)</td>
+                <td style="text-align:center">#(x.restaurantname)</td>
+                <td style="text-align:center">#(x.restaurantphone)</td>
+                <td style="text-align:center">#(x.restaurantaddress)</td>
+                <td style="text-align:center">#(x.memo)</td>
+                <td style="text-align:center">#(x.alarmtype)</td>
+            </tr>
+            #end
+            </tbody>
+        </table>
+    </div>
+
+    #set(pageUrl = "/shexiangtoufind/shexiangtoulist?shexiangtouno=" + shexiangtouno + "&searchDate=" + (searchDate ?? "") + "&searchTime=" + (searchTime ?? "") + "&page=")
     #@paginate(shexiangtou.pageNumber, shexiangtou.totalPage, pageUrl)
 </div>
 
 <script>
-    // 页面加载完成后初始化所有图片加载
-    document.addEventListener('DOMContentLoaded', function() {
-        document.querySelectorAll('.img-container img').forEach(img => {
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".img-container img").forEach(function (img) {
             loadImage(img);
         });
     });
 
-    // 图片加载函数 - 带重试机制和缓存控制
     function loadImage(imgElement) {
-        const imageName = imgElement.getAttribute('data-img-name');
+        var imageName = imgElement.getAttribute("data-img-name");
         if (!imageName) {
             handleLoadError(imgElement);
             return;
         }
 
-        const container = imgElement.parentElement;
-        const loading = container.querySelector('.img-loading');
-        const placeholder = container.querySelector('.img-placeholder');
+        var container = imgElement.parentElement;
+        var loading = container.querySelector(".img-loading");
+        var placeholder = container.querySelector(".img-placeholder");
 
-        // 重置状态
-        imgElement.classList.remove('visible');
-        placeholder.classList.remove('visible');
-        loading.style.display = 'flex';
+        imgElement.classList.remove("visible");
+        placeholder.classList.remove("visible");
+        loading.style.display = "flex";
 
-        // 端口列表和重试次数设置
-        const ports = [8100, 8101];
-        const maxRetries = 2; // 每个端口最多重试2次
-        let currentPortIndex = 0;
-        let currentRetry = 0;
+        var ports = [8100, 8101];
+        var maxRetries = 2;
+        var currentPortIndex = 0;
+        var currentRetry = 0;
 
-        // 生成带时间戳的URL，避免缓存问题
         function getImageUrl(port) {
-            return `http://39.98.221.201:${port}/upload/temp/${imageName}?t=${new Date().getTime()}`;
+            return "http://39.98.221.201:" + port + "/upload/temp/" + imageName + "?t=" + new Date().getTime();
         }
 
-        // 尝试加载图片
         function tryLoad() {
-            const img = new Image();
-            const currentPort = ports[currentPortIndex];
+            var img = new Image();
+            var currentPort = ports[currentPortIndex];
             img.src = getImageUrl(currentPort);
 
-            img.onload = function() {
-                // 加载成功，更新图片源并显示
+            img.onload = function () {
                 imgElement.src = img.src;
-                loading.style.display = 'none';
-                bindClickEvent(imgElement); // 绑定点击事件
+                loading.style.display = "none";
+                bindClickEvent(imgElement);
             };
 
-            img.onerror = function() {
+            img.onerror = function () {
                 currentRetry++;
-                // 如果当前端口重试次数未达上限，继续重试
                 if (currentRetry < maxRetries) {
-                    setTimeout(tryLoad, 500); // 500ms后重试
+                    setTimeout(tryLoad, 500);
                 } else {
-                    // 当前端口重试完毕，切换到下一个端口
                     currentPortIndex++;
                     currentRetry = 0;
                     if (currentPortIndex < ports.length) {
-                        tryLoad(); // 尝试下一个端口
+                        tryLoad();
                     } else {
-                        // 所有端口都尝试失败
                         handleLoadError(imgElement);
                     }
                 }
             };
         }
 
-        // 开始加载
         tryLoad();
     }
 
-    // 处理加载失败
     function handleLoadError(imgElement) {
-        const container = imgElement.parentElement;
-        const loading = container.querySelector('.img-loading');
-        const placeholder = container.querySelector('.img-placeholder');
+        var container = imgElement.parentElement;
+        var loading = container.querySelector(".img-loading");
+        var placeholder = container.querySelector(".img-placeholder");
 
-        loading.style.display = 'none';
-        placeholder.classList.add('visible');
-
-        // 绑定点击重试事件
-        placeholder.onclick = function() {
+        loading.style.display = "none";
+        placeholder.classList.add("visible");
+        placeholder.onclick = function () {
             loadImage(imgElement);
         };
     }
 
-    // 绑定图片点击事件
     function bindClickEvent(element) {
-        // 先移除已有的事件监听，避免重复绑定
         element.onclick = null;
-        element.onclick = () => {
+        element.onclick = function () {
             showPopup(element.src);
         };
     }
 
-    // 弹窗显示函数
     function showPopup(imgSrc) {
-        var popup = document.getElementById('popup');
-        var popupImg = document.getElementById('popup-img');
+        var popup = document.getElementById("popup");
+        var popupImg = document.getElementById("popup-img");
+        var popupContent = document.getElementById("popup-content");
+        popupImg.src = "";
+        popupImg.style.display = "none";
+        popupContent.style.left = "";
+        popupContent.style.top = "";
+        popup.style.display = "flex";
+        popup.classList.add("active");
 
-        // 显示加载状态
-        popupImg.src = '';
-        popupImg.style.display = 'none';
-        popup.style.display = 'flex';
-        popup.classList.add('active');
-
-        // 加载弹窗图片
-        const tempImg = new Image();
+        var tempImg = new Image();
         tempImg.src = imgSrc;
-        tempImg.onload = function() {
+        tempImg.onload = function () {
             popupImg.src = imgSrc;
-            popupImg.style.display = 'block';
+            popupImg.style.display = "block";
         };
-
-        // 点击弹窗背景关闭
-        popup.addEventListener('click', function(e) {
-            if (e.target === popup) {
-                closePopup();
-            }
-        });
     }
 
-    // 关闭弹窗函数
     function closePopup() {
-        var popup = document.getElementById('popup');
-        popup.classList.remove('active');
-
-        setTimeout(() => {
-            popup.style.display = 'none';
-        }, 300);
+        var popup = document.getElementById("popup");
+        popup.classList.remove("active");
+        popup.style.display = "none";
     }
 
-    // 关闭按钮事件
-    document.getElementById('close-btn').addEventListener('click', closePopup);
-
-    // ESC键关闭弹窗
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
+    document.getElementById("close-btn").addEventListener("click", closePopup);
+    document.getElementById("popup").addEventListener("click", function (e) {
+        if (e.target.id === "popup") {
+            closePopup();
+        }
+    });
+    document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") {
             closePopup();
         }
     });
 
-    // 弹窗拖拽功能
-    let isDragging = false;
-    let offsetX, offsetY;
-    const popupContent = document.getElementById('popup-content');
+    var isDragging = false;
+    var offsetX = 0;
+    var offsetY = 0;
+    var popupContent = document.getElementById("popup-content");
+    var popupImgEl = document.getElementById("popup-img");
 
-    popupContent.addEventListener('mousedown', (e) => {
-        if (e.button === 0 && (e.target === popupContent || e.target === document.getElementById('popup-img'))) {
+    popupContent.addEventListener("mousedown", function (e) {
+        if (e.button === 0 && (e.target === popupContent || e.target === popupImgEl)) {
             isDragging = true;
             offsetX = e.clientX - popupContent.offsetLeft;
             offsetY = e.clientY - popupContent.offsetTop;
-            popupContent.style.cursor = 'grabbing';
+            popupContent.style.cursor = "grabbing";
         }
     });
 
-    document.addEventListener('mouseup', () => {
+    document.addEventListener("mouseup", function () {
         isDragging = false;
-        popupContent.style.cursor = 'grab';
+        popupContent.style.cursor = "grab";
     });
 
-    document.addEventListener('mousemove', (e) => {
-        if (isDragging) {
-            const x = e.clientX - offsetX;
-            const y = e.clientY - offsetY;
-            const viewportWidth = window.innerWidth;
-            const viewportHeight = window.innerHeight;
-            const popupWidth = popupContent.offsetWidth;
-            const popupHeight = popupContent.offsetHeight;
-            const maxX = viewportWidth - popupWidth;
-            const maxY = viewportHeight - popupHeight;
-            const constrainedX = Math.max(0, Math.min(x, maxX));
-            const constrainedY = Math.max(0, Math.min(y, maxY));
-
-            popupContent.style.left = `${constrainedX}px`;
-            popupContent.style.top = `${constrainedY}px`;
+    document.addEventListener("mousemove", function (e) {
+        if (!isDragging) {
+            return;
         }
+        var x = e.clientX - offsetX;
+        var y = e.clientY - offsetY;
+        var viewportWidth = window.innerWidth;
+        var viewportHeight = window.innerHeight;
+        var popupWidth = popupContent.offsetWidth;
+        var popupHeight = popupContent.offsetHeight;
+        var maxX = viewportWidth - popupWidth;
+        var maxY = viewportHeight - popupHeight;
+        var constrainedX = Math.max(0, Math.min(x, maxX));
+        var constrainedY = Math.max(0, Math.min(y, maxY));
+        popupContent.style.left = constrainedX + "px";
+        popupContent.style.top = constrainedY + "px";
     });
 
-    // 重置按钮功能
-    document.getElementById('resetButton').addEventListener('click', function(e) {
+    document.getElementById("resetButton").addEventListener("click", function (e) {
         e.preventDefault();
-        document.getElementById('searchForm').reset();
-        document.querySelector('input[name="shexiangtouno"]').value = '';
-        document.getElementById('searchDate').value = '';
-        document.getElementById('searchTime').value = '';
-        document.getElementById('searchForm').submit();
+        document.getElementById("searchForm").reset();
+        document.querySelector("input[name='shexiangtouno']").value = "";
+        document.getElementById("searchDate").value = "";
+        document.getElementById("searchTime").value = "";
+        document.getElementById("searchForm").submit();
     });
 </script>
 </body>

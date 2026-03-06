@@ -51,6 +51,7 @@ public class _MappingKit {
 		arp.addMapping("fill_record_check1", "id", FillRecordCheck1.class);
 		arp.addMapping("func", "id", Func.class);
 		arp.addMapping("gas_bottle", "id", GasBottle.class);
+		arp.addMapping("gas_docs", "id", GasDocs.class);
 		arp.addMapping("gas_file", "id", GasFile.class);
 		arp.addMapping("gas_file123", "id", GasFile123.class);
 		arp.addMapping("gas_file_copy1", "id", GasFileCopy1.class);

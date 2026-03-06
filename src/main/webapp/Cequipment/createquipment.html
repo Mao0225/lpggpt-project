@@ -1,161 +1,281 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <title>报修记录展示</title>
-  <script src="../css/jquery-3.3.1.min.js"></script>
-  <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css">
-  <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
-  <link rel="stylesheet" type="text/css" href="../css/lpg.css">
-  <style scoped>
-    .container {
-      padding: 50px 20px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>报修记录总表</title>
+    <style>
+        body {
+            margin: 0;
+            background: #F8FAFC;
+            color: #1E293B;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+        }
 
-    input {
-      padding: 15px;
-      font-size: 18px;
-      border: 2px solid #a3bffa;
-      border-radius: 10px;
-      width: 100%;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      transition: border-color 0.3s ease;
-    }
+        .page-container {
+            padding: 20px;
+        }
 
-    input:focus {
-      outline: none;
-      border-color: #4c87c9;
-    }
-  </style>
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            gap: 12px;
+        }
 
-  <style>
-    /* 设置 #pagediv 的样式 */
-    #pagediv {
-      background-color: #f0f0f0;
-      color: black;
-      padding: 10px;
-      border: 2px solid #007bff;
-    }
+        .page-title {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E293B;
+        }
 
-    /* 设置表格样式 */
-    table.list {
-      width: 100%;
-      border-collapse: collapse;
-    }
+        .btn-back {
+            background: #FFFFFF;
+            color: #475569;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
 
-    /* 设置表格表头样式 */
-    table.list th {
-      background-color: #add8e6;
-      color: black;
-      padding: 8px;
-      text-align: left;
-      border: 1px solid #ddd; /* 新增：添加边框 */
-    }
+        .btn-back:hover {
+            background: #F8FAFC;
+            border-color: #94A3B8;
+        }
 
-    /* 设置表格单元格样式 */
-    table.list td {
-      padding: 8px;
-      border: 1px solid #ddd; /* 修改：添加边框 */
-    }
+        .search-area {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
 
-    /* 设置表格隔行颜色 */
-    table.list tr:nth-child(even) {
-      background-color: #f2f2f2;
-    }
+        .search-area label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #475569;
+            white-space: nowrap;
+        }
 
-    table.list tr:nth-child(odd) {
-      background-color: #e0e0e0;
-    }
+        .search-area input[type="text"],
+        .search-area select {
+            padding: 8px 12px;
+            font-size: 14px;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            background: #FFFFFF;
+            color: #1E293B;
+            min-width: 180px;
+            transition: all 0.15s ease;
+        }
 
-    /* 设置鼠标悬停时表格行的颜色 */
-    table.list tr:hover {
-      background-color: #d3d3d3;
-    }
+        .search-area input:focus,
+        .search-area select:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
 
-    /* 新增样式：设置新建司机链接为黑色 */
-    #pagediv .add {
-      color: black;
-    }
+        .search-area .btn-search {
+            background: #3B82F6;
+            color: #FFFFFF;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
 
-    /* 新增样式：设置输入框背景色为淡灰色 */
-    #pagediv input[type="text"] {
-      background-color: #f0f0f0;
-    }
-    /* 新增样式：设置 label 文字颜色为黑色 */
-    #pagediv label {
-      color: black;
-    }
-    #pagediv .add {
-      color: white;
-      background-color: #007bff;
-      padding: 6px 12px;
-      text-decoration: none;
-      display: inline-block;
-      border-radius: 5; /* 方方正正的边框 */
-    }
-  </style>
+        .search-area .btn-search:hover {
+            background: #2563EB;
+        }
+
+        .search-area .btn-reset {
+            background: #FFFFFF;
+            color: #475569;
+            border: 1px solid #CBD5E1;
+            padding: 8px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .search-area .btn-reset:hover {
+            background: #F8FAFC;
+            border-color: #94A3B8;
+        }
+
+        .table-wrapper {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            overflow: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1500px;
+        }
+
+        .data-table thead th {
+            background: #F8FAFC;
+            color: #475569;
+            font-size: 13px;
+            font-weight: 600;
+            text-align: center;
+            padding: 12px 14px;
+            border-bottom: 1px solid #E2E8F0;
+            white-space: nowrap;
+        }
+
+        .data-table tbody td {
+            padding: 12px 14px;
+            font-size: 14px;
+            color: #1E293B;
+            border-bottom: 1px solid #F1F5F9;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .data-table tbody tr:nth-child(even) {
+            background: #F8FAFC;
+        }
+
+        .data-table tbody tr:hover {
+            background: #F1F5F9;
+        }
+
+        .data-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        @media (max-width: 768px) {
+            .page-container {
+                padding: 12px;
+            }
+
+            .page-title {
+                font-size: 18px;
+            }
+        }
+    </style>
 </head>
-
 <body>
-<div class="record-box">
-  <h2>报修记录</h2>
+<div class="page-container">
+    <div class="page-header">
+        <h1 class="page-title">报修记录总表</h1>
+        <button class="btn-back" type="button" onclick="goBack()">返回</button>
+    </div>
+
+    <form class="search-area" id="searchForm">
+        <label for="equipmentName">设备名称</label>
+        <input type="text" id="equipmentName" placeholder="输入设备名称">
+
+        <label for="recordType">记录类型</label>
+        <select id="recordType">
+            <option value="">全部</option>
+            <option value="维修">维修</option>
+            <option value="维护">维护</option>
+        </select>
+
+        <button type="submit" class="btn-search">查询</button>
+        <button type="button" id="resetButton" class="btn-reset">重置</button>
+    </form>
+
+    <div class="table-wrapper">
+        <table class="data-table">
+            <thead>
+            <tr>
+                <th>序号</th>
+                <th>设备名称</th>
+                <th>记录</th>
+                <th>规格型号</th>
+                <th>投用日期</th>
+                <th>放置位置</th>
+                <th>生产厂家</th>
+                <th>报修时间</th>
+                <th>完成时间</th>
+                <th>报修人</th>
+                <th>主要内容</th>
+                <th>维修人员</th>
+                <th>联系电话</th>
+                <th>处置过程</th>
+                <th>备注建议</th>
+                <th>备件耗材</th>
+            </tr>
+            </thead>
+            <tbody>
+            #set(startIndex = 1)
+            #for(x : CEmain)
+            <tr>
+                <td>#(startIndex++)</td>
+                <td>#(x.equipment_name)</td>
+                <td>#(x.kind)</td>
+                <td>#(x.model)</td>
+                <td>#(x.buyday)</td>
+                <td>#(x.location)</td>
+                <td>#(x.factory)</td>
+                <td>#(x.reportday)</td>
+                <td>#(x.repairday)</td>
+                <td>#(x.reporter)</td>
+                <td>#(x.content)</td>
+                <td>#(x.repairer)</td>
+                <td>#(x.phone)</td>
+                <td>#(x.process)</td>
+                <td>#(x.remark)</td>
+                <td>#(x.fitting_name)</td>
+            </tr>
+            #end
+            </tbody>
+        </table>
+    </div>
 </div>
-<button class="back-button" onclick="goBack()">返回</button>
-<table border="1" class="list">
-  <thead>
-  <tr>
-    <th>序号</th>
-    <th>设备名称</th>
-    <th>记录</th>
-    <th>规格型号</th>
-    <th>投用日期</th>
-    <th>放置位置</th>
-    <th>生成厂家</th>
-    <th>报修时间</th>
-    <th>完成时间</th>
-    <th>报修人</th>
-    <th>主要内容</th>
-    <th>维修人员</th>
-    <th>联系电话</th>
-    <th>处置过程</th>
-    <th>备注建议</th>
-    <th>备件耗材</th>
-  </tr>
-  </thead>
-  <tbody>
-  #set(startIndex = 1)
-  #for(x : CEmain)
-  <tr>
-    <td>#(startIndex++)</td>
-    <td>#(x.equipment_name)</td>
-    <td>#(x.kind)</td>
-    <td>#(x.model)</td>
-    <td>#(x.buyday)</td>
-    <td>#(x.location)</td>
-    <td>#(x.factory)</td>
-    <td>#(x.reportday)</td>
-    <td>#(x.repairday)</td>
-    <td>#(x.reporter)</td>
-    <td>#(x.content)</td>
-    <td>#(x.repairer)</td>
-    <td>#(x.phone)</td>
-    <td>#(x.process)</td>
-    <td>#(x.remark)</td>
-    <td>#(x.fitting_name)</td>
-  </tr>
-  #end
-  </tbody>
-</table>
 
 <script>
-  function goBack() {
-    window.history.back();
-  }
+    function goBack() {
+        window.history.back();
+    }
+
+    function applyFilter() {
+        var equipmentKeyword = document.getElementById("equipmentName").value.trim().toLowerCase();
+        var recordType = document.getElementById("recordType").value;
+        var rows = document.querySelectorAll(".data-table tbody tr");
+
+        rows.forEach(function (row) {
+            var equipmentText = row.cells[1] ? row.cells[1].innerText.trim().toLowerCase() : "";
+            var kindText = row.cells[2] ? row.cells[2].innerText.trim() : "";
+
+            var matchEquipment = !equipmentKeyword || equipmentText.indexOf(equipmentKeyword) !== -1;
+            var matchKind = !recordType || kindText === recordType;
+            row.style.display = (matchEquipment && matchKind) ? "" : "none";
+        });
+    }
+
+    document.getElementById("searchForm").addEventListener("submit", function (event) {
+        event.preventDefault();
+        applyFilter();
+    });
+
+    document.getElementById("resetButton").addEventListener("click", function () {
+        document.getElementById("equipmentName").value = "";
+        document.getElementById("recordType").value = "";
+        applyFilter();
+    });
 </script>
 </body>
-
 </html>

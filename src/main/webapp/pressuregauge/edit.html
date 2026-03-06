@@ -1,120 +1,150 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Content</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Edit Pressure Gauge</title>
+	<style>
+		body {
+			background: #FFFFFF;
+			color: #1E293B;
+			font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+		}
+
+		.form-container {
+			background: #FFFFFF;
+			padding: 24px;
+		}
+
+		.form-group {
+			margin-bottom: 20px;
+		}
+
+		.form-group label {
+			display: block;
+			font-size: 14px;
+			font-weight: 500;
+			color: #475569;
+			margin-bottom: 8px;
+		}
+
+		.form-group input[type="text"],
+		.form-group select {
+			width: 100%;
+			padding: 10px 14px;
+			font-size: 14px;
+			border: 1px solid #CBD5E1;
+			border-radius: 6px;
+			background: #FFFFFF;
+			color: #1E293B;
+			transition: all 0.15s ease;
+			box-sizing: border-box;
+		}
+
+		.form-group input:focus,
+		.form-group select:focus {
+			outline: none;
+			border-color: #3B82F6;
+			box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+		}
+	</style>
 </head>
-<body>
-<h1></h1>
-<div class="form_box">
-    <form action="/pressuregauge/update" method="post" id="myForm">
-        <input type="hidden" name="pressuregauge.id" value="#(pressuregauge.id??)" />
+<body style="background-color: #F8FAFC;">
+<div class="form-container">
+	<form action="/pressuregauge/update" method="post" id="myForm">
+		<input type="hidden" name="pressuregauge.id" value="#(pressuregauge.id??)" />
 
-        <div>
-            <label for="selectName">饭店名字</label>
-            <input type="hidden" id="restaurantname" name="pressuregauge.name" value="" readonly/>
-            <input type="hidden" id="affiliation_user_id" name="pressuregauge.affiliation_user_id" value="" readonly/>
-            <select id="selectName" name="restaurantname" onchange="chooseName()" style="border-radius: 5px;background-color: white; width: 200px;height:30px;text-align: center;">
-                #for ( x: restaurants)
-                <option value="#(x.id)" #(x.id == pressuregauge.affiliation_user_id ? "selected" : "")>#(x.name)</option>
-                #end
-            </select>
-        </div>
+		<div class="form-group">
+			<label for="selectName">饭店名字</label>
+			<select id="selectName" name="restaurantname" onchange="chooseName()">
+				#for ( x: restaurants)
+				<option value="#(x.id)" #(x.id == pressuregauge.affiliation_user_id ? "selected" : "")>#(x.name)</option>
+				#end
+			</select>
+			<input type="hidden" id="restaurantname" name="pressuregauge.name" value="" readonly/>
+			<input type="hidden" id="affiliation_user_id" name="pressuregauge.affiliation_user_id" value="" readonly/>
+		</div>
 
-        <div>
-            <label for="controller_id">控制器ID</label>
-            <input id="controller_id" type="text" name="pressuregauge.controller_id" value="#(pressuregauge.controller_id)" />
-        </div>
+		<div class="form-group">
+			<label for="controller_id">控制器ID</label>
+			<input id="controller_id" type="text" name="pressuregauge.controller_id" value="#(pressuregauge.controller_id)" />
+		</div>
 
-        <div>
-            <label for="status">状态</label>
-            <select id="status" name="pressuregauge.status" required>
-                <option value="0" #(pressuregauge.status == 0 ? "selected" : "")>在用</option>
-                <option value="1" #(pressuregauge.status == 1 ? "selected" : "")>停用</option>
-            </select>
-        </div>
+		<div class="form-group">
+			<label for="status">状态</label>
+			<select id="status" name="pressuregauge.status" required>
+				<option value="0" #(pressuregauge.status == 0 ? "selected" : "")>在用</option>
+				<option value="1" #(pressuregauge.status == 1 ? "selected" : "")>停用</option>
+			</select>
+		</div>
 
-        <div>
-            <label for="created">创建者</label>
-            <input id="created" type="text" name="pressuregauge.created" value="#(pressuregauge.created)" />
-        </div>
+		<div class="form-group">
+			<label for="created">创建者</label>
+			<input id="created" type="text" name="pressuregauge.created" value="#(pressuregauge.created)" />
+		</div>
 
-        <div>
-            <label for="created_time">创建时间</label>
-            <input id="created_time" type="text" name="pressuregauge.created_time" value="#(pressuregauge.created_time)" />
-        </div>
+		<div class="form-group">
+			<label for="created_time">创建时间</label>
+			<input id="created_time" type="text" name="pressuregauge.created_time" value="#(pressuregauge.created_time)" />
+		</div>
 
-        <div>
-            <label for="stopTime">停用时间</label>
-            <input type="text" id="stopTime" name="pressuregauge.stop_time" value="#(pressuregauge.stop_time)" />
-        </div>
+		<div class="form-group">
+			<label for="stopTime">停用时间</label>
+			<input type="text" id="stopTime" name="pressuregauge.stop_time" value="#(pressuregauge.stop_time)" />
+		</div>
 
-        <div>
-            <label for="remark1">备注</label>
-            <input type="text" id="remark1" name="pressuregauge.remark1" value="#(pressuregauge.remark1)" />
-        </div>
-    </form>
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            var isValueSetByUser = false;
-
-            // 监听状态选择变化
-            $('#status').on('change', function () {
-                isValueSetByUser = true;
-
-                // 如果选择的是停用
-                if ($(this).val() === '1') {
-                    $('#stopTime').attr('required', 'required'); // 设置为必填
-                } else {
-                    $('#stopTime').removeAttr('required'); // 移除必填
-                    $('#stopTime').val(''); // 清空停用时间输入
-                }
-            });
-
-            // 表单提交检查
-            $('form').on('submit', function () {
-                // 检查停用状态下停用时间是否填写
-                if ($('#status').val() === '1' && $('#stopTime').val() === '') {
-                    alert('当状态为停用时，停用时间必填');
-                    return false; // 阻止表单提交
-                }
-
-                return true; // 允许提交
-            });
-        });
-
-        // 假设这是服务器端渲染到页面中的JSON数据
-        var jsonData = '#(com.alibaba.fastjson.JSONArray::toJSON(restaurants))';
-        // 解析JSON数据
-        var context = JSON.parse(jsonData.replace(/#/g, ""));
-
-        function chooseName() {
-            var selectId = document.getElementById("selectName").value;
-
-            if (selectId == "-1") {
-                return;
-            }
-            // 查找选中的饭店对象
-            var selectedRestaurant = context.find(function(restaurant) {
-                return restaurant.id == selectId;
-            });
-            if (selectedRestaurant) {
-                document.getElementById("restaurantname").value = selectedRestaurant.name;
-                document.getElementById("affiliation_user_id").value = selectedRestaurant.id;
-            } else {
-                document.getElementById("restaurantname").value = "";
-                document.getElementById("affiliation_user_id").value = "";
-                alert('找不到对应的饭店！');
-            }
-        }
-
-        document.getElementById("selectName").addEventListener("change", chooseName);
-    </script>
-
+		<div class="form-group">
+			<label for="remark1">备注</label>
+			<input type="text" id="remark1" name="pressuregauge.remark1" value="#(pressuregauge.remark1)" />
+		</div>
+	</form>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+	var jsonData = '#(com.alibaba.fastjson.JSONArray::toJSON(restaurants))';
+	var context = JSON.parse(jsonData.replace(/#/g, ""));
+
+	$(document).ready(function () {
+		$('#status').on('change', function () {
+			if ($(this).val() === '1') {
+				$('#stopTime').attr('required', 'required');
+			} else {
+				$('#stopTime').removeAttr('required');
+				$('#stopTime').val('');
+			}
+		});
+
+		$('form').on('submit', function () {
+			if ($('#status').val() === '1' && $('#stopTime').val() === '') {
+				alert('当状态为停用时，停用时间必填');
+				return false;
+			}
+			return true;
+		});
+	});
+
+	function chooseName() {
+		var selectId = document.getElementById("selectName").value;
+		if (selectId == "-1") {
+			return;
+		}
+
+		var selectedRestaurant = context.find(function(restaurant) {
+			return restaurant.id == selectId;
+		});
+
+		if (selectedRestaurant) {
+			document.getElementById("restaurantname").value = selectedRestaurant.name;
+			document.getElementById("affiliation_user_id").value = selectedRestaurant.id;
+		} else {
+			document.getElementById("restaurantname").value = "";
+			document.getElementById("affiliation_user_id").value = "";
+			alert('找不到对应的饭店！');
+		}
+	}
+
+	document.getElementById("selectName").addEventListener("change", chooseName);
+</script>
 </body>
 </html>
-

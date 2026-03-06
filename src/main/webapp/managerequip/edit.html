@@ -6,6 +6,83 @@
     <meta name="viewport" width="device-width, initial-scale=1.0">
     <title>Edit Equipment</title>
     <style>
+        /* 浅色商务风格 - 表单 */
+        body {
+            background: #F8FAFC;
+            color: #1E293B;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+        }
+
+        .form_box {
+            background: #FFFFFF;
+            padding: 24px;
+            border-radius: 8px;
+        }
+
+        .form_box form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form_box div {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form_box label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #475569;
+            margin-bottom: 8px;
+        }
+
+        .form_box input[type="text"],
+        .form_box textarea,
+        .form_box select {
+            padding: 10px 12px;
+            font-size: 14px;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            background: #FFFFFF;
+            color: #1E293B;
+            transition: all 0.15s ease;
+            font-family: inherit;
+        }
+
+        .form_box textarea {
+            resize: vertical;
+            min-height: 100px;
+            grid-column: 1 / -1;
+        }
+
+        .form_box input[type="text"]:focus,
+        .form_box textarea:focus,
+        .form_box select:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .image-upload {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            grid-column: 1 / -1;
+        }
+
+        .image-upload label {
+            cursor: pointer;
+            margin: 0;
+        }
+
+        .image-upload img {
+            width: 100px;
+            height: 100px;
+            border: 1px solid #E2E8F0;
+            border-radius: 6px;
+            object-fit: cover;
+        }
     </style>
 </head>
 

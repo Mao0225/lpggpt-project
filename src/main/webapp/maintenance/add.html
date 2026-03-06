@@ -1,272 +1,188 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Equipment List</title>
+    <title>添加备件耗材</title>
     <script src="../css/jquery-3.3.1.min.js"></script>
     <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css">
     <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="/css/lpg.css">
+    <link rel="stylesheet" type="text/css" href="../css/index.css">
+
     <style>
-        /* 整体页面背景色及布局 */
+        /* 浅色商务风格 - 维护管理表单 */
         body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background-color: #f4f4f4; /* 柔和的背景色 */
-            font-family: Arial, sans-serif;
+            background: #F8FAFC;
+            color: #1E293B;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
             margin: 0;
         }
 
-        /* 表单样式 */
-        form {
-            font-family: Arial, sans-serif;
-            padding: 30px;
-            display: flex;
-            flex-direction: column;
-            align-items: center; /* 让内部元素居中对齐 */
-            background-color: #ffdf7e;
-            border-radius: 10px; /* 更圆润的边框 */
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.15); /* 增强阴影效果 */
-            margin-bottom: 30px;
-            width: 100%;
+        .page-container {
+            background: #F8FAFC;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .form-container {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            padding: 24px;
             max-width: 600px;
-            position: relative; /* 为添加伪元素做准备 */
+            margin: 0 auto;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
-        form::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 5px;
-            background: linear-gradient(to right, #ffd700, #008000); /* 顶部添加彩色线条装饰 */
-            border-top-left-radius: 10px;
-            border-top-right-radius: 10px;
-        }
-
-        label {
-            margin-bottom: 10px;
-            color: #555555; /* 稍深一点的灰色 */
-            font-weight: 500;
-            font-size: 16px; /* 适当增大字体大小 */
-            width: 100%; /* 占满一行 */
-            text-align: left; /* 左对齐文字 */
-        }
-
-        input[type="text"],
-        select {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            background-image: linear-gradient(to bottom, #ffffcc 50%, #f9f9f9 50%); /* 更柔和的黄白渐变 */
-            background-size: 100% 200%;
-            background-position: 0 0;
-            transition: background-position 0.3s ease;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 添加输入框阴影 */
-            font-size: 14px; /* 调整字体大小 */
-        }
-
-        input[type="text"]:hover,
-        select:hover {
-            background-position: 0 100%;
-        }
-
-        input[type="text"]:focus,
-        select:focus {
-            outline: none;
-            border-color: #007bff;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2); /* 聚焦时阴影变化 */
-        }
-
-        /* 保存按钮样式 */
-        button[type="submit"] {
-            padding: 12px 30px;
-            background-color: #008000; /* 绿色按钮，更符合常规风格 */
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease; /* 增加缩放效果过渡 */
+        .form-title {
             font-size: 16px;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2); /* 按钮阴影 */
-            margin-right: 15px; /* 增加按钮间距 */
-        }
-
-        button[type="submit"]:hover {
-            background-color: #006400; /* 按钮悬停加深颜色 */
-            transform: scale(1.05); /* 鼠标悬停时稍微放大 */
-        }
-
-        /* 返回按钮样式 */
-        button[type="button"] {
-            padding: 12px 30px;
-            background-color: #0000ff; /* 蓝色按钮，比较美观的颜色 */
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            font-size: 16px;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
-        }
-
-        button[type="button"]:hover {
-            background-color: #0000cc; /* 按钮悬停加深颜色 */
-            transform: scale(1.05);
-        }
-
-        #useInput {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            transition: border-color 0.3s ease;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            font-size: 14px;
-        }
-
-        #useInput:focus {
-            border-color: #007bff;
-            outline: none;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-        }
-
-        /* 新增按钮容器样式，用于将按钮放置在右下角 */
-        .button-container {
-            width: 100%;
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            margin-top: 20px; /* 根据实际情况调整按钮与上方元素的间距 */
-        }
-
-        /* 表格样式 */
-        table.list {
-            width: 100%;
-            border-collapse: collapse;
-            background-color: #ffffff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
-            border-radius: 10px;
-            margin-top: 30px;
-            overflow: hidden;
-        }
-
-        table.list th,
-        table.list td {
-            border: 1px solid #e0e0e0; /* 更淡的边框色 */
-            padding: 15px;
-            text-align: center;
-            font-size: 14px;
-        }
-
-        table.list th {
-            background-color: #f8f9fa;
-            color: #495057;
             font-weight: 600;
+            color: #1E293B;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #E2E8F0;
         }
 
-        /* 分页样式 */
-        .pagination {
-            text-align: center;
-            margin-top: 30px;
-            color: #999999;
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
             font-size: 14px;
+            font-weight: 500;
+            color: #475569;
+            margin-bottom: 8px;
         }
 
-        /* 模态框样式 */
-        .modal {
-            background-color: rgba(0, 0, 0, 0.5);
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            z-index: 1000;
-            overflow: auto;
+        .form-group input[type="text"],
+        .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            font-size: 14px;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            background: #FFFFFF;
+            color: #1E293B;
+            transition: all 0.15s ease;
+            box-sizing: border-box;
         }
 
-        .modal-dialog {
-            max-width: 600px;
-            margin: 1.75rem auto;
-            background-color: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
         }
 
-        .modal-content {
-            padding: 30px;
-        }
-
-        .modal-header {
-            border-bottom: 1px solid #e0e0e0;
-            padding: 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .modal-footer {
-            border-top: 1px solid #e0e0e0;
-            padding: 1rem;
-            text-align: right;
+        .button-container {
             display: flex;
             justify-content: flex-end;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .btn {
+            display: inline-flex;
             align-items: center;
+            justify-content: center;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            border: none;
+        }
+
+        .btn-primary {
+            background: #3B82F6;
+            color: #FFFFFF;
+        }
+
+        .btn-primary:hover {
+            background: #2563EB;
+        }
+
+        .btn-secondary {
+            background: #FFFFFF;
+            color: #475569;
+            border: 1px solid #CBD5E1;
+        }
+
+        .btn-secondary:hover {
+            background: #F8FAFC;
+            border-color: #94A3B8;
+        }
+
+        @media (max-width: 768px) {
+            .form-container {
+                padding: 16px;
+            }
+
+            .button-container {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
         }
     </style>
 </head>
 
 <body>
-<form id="sparePartsForm" action="/maintenance/saveFitting?key=#(key)" method="post">
-    <!-- 添加隐藏的companyId输入框 -->
-    <input type="hidden" id="companyid" name="fitting.stationid" value="#(companyId)">
-    <input type="hidden" id="mid" name="fitting.mid" value="#(key)">
-    <!-- 添加隐藏的writer输入框 -->
-    <input type="hidden" id="writer" name="fitting.staff" value="#(writer)">
-    <input type="hidden" id="equipmentis" name="interval.equipmentid" value="#(equipmentId)">
+<div class="page-container">
+    <div class="form-container">
+        <div class="form-title">添加备件耗材</div>
+        <form id="sparePartsForm" action="/maintenance/saveFitting?key=#(key)" method="post">
+            <!-- 隐藏字段 -->
+            <input type="hidden" id="companyid" name="fitting.stationid" value="#(companyId)">
+            <input type="hidden" id="mid" name="fitting.mid" value="#(key)">
+            <input type="hidden" id="writer" name="fitting.staff" value="#(writer)">
+            <input type="hidden" id="equipmentis" name="interval.equipmentid" value="#(equipmentId)">
+            <input type="hidden" id="Iwriter" name="interval.writer" value="#(writer)">
+            <input type="hidden" id="Icompanyid" name="interval.companyid" value="#(companyId)">
+            <input type="hidden" id="selectedFittingId" name="fid">
 
-    <input type="hidden" id="Iwriter" name="interval.writer" value="#(writer)">
-    <!-- 添加一个隐藏的输入框，用于存储所选备件的Id -->
-    <input type="hidden" id="Icompanyid" name="interval.companyid" value="#(companyId)">
-    <input type="hidden" id="selectedFittingId" name="fid">
-    <label>备件耗材</label>
-    <select id="selectName" name="fitting.name" onchange="chooseName()">
-        <option value="-1" selected>请选择备件</option>
-        #for (x: bsefittings)
-        <option value="#(x.name)">#(x.name)</option>
-        #end
-    </select>
+            <div class="form-group">
+                <label for="selectName">备件耗材</label>
+                <select id="selectName" name="fitting.name" onchange="chooseName()">
+                    <option value="-1" selected>请选择备件</option>
+                    #for (x: bsefittings)
+                    <option value="#(x.name)">#(x.name)</option>
+                    #end
+                </select>
+            </div>
 
-    <label for="quantitySelect">消耗数量：</label>
-    <select id="quantitySelect" name="fitting.count">
-        <option value="-1" selected>请选择数量</option>
-        #for (x: bsefittings)
-        <option value="#(x.number)">#(x.number)</option>
-        #end
-    </select>
+            <div class="form-group">
+                <label for="quantitySelect">消耗数量</label>
+                <select id="quantitySelect" name="fitting.count">
+                    <option value="-1" selected>请选择数量</option>
+                    #for (x: bsefittings)
+                    <option value="#(x.number)">#(x.number)</option>
+                    #end
+                </select>
+            </div>
 
+            <div class="form-group">
+                <label for="remark">备注</label>
+                <input type="text" id="remark" name="fitting.content" placeholder="请输入备注信息">
+            </div>
 
-    <label for="remark">备注：</label>
-    <input type="text" id="remark" name="fitting.content">
+            <div class="form-group">
+                <label for="useInput">使用设备</label>
+                <input type="text" id="useInput" name="fitting.equipment" placeholder="请输入使用设备">
+            </div>
 
-    <label for="useInput">使用设备：</label>
-    <input type="text" id="useInput" name="fitting.equipment">
-
-    <!-- 新增按钮容器包裹按钮 -->
-    <div class="button-container">
-        <button type="submit" id="saveButton">保存</button>
-        <button type="button" id="backButton">返回</button>
+            <div class="button-container">
+                <button type="button" id="backButton" class="btn btn-secondary">返回</button>
+                <button type="submit" id="saveButton" class="btn btn-primary">保存</button>
+            </div>
+        </form>
     </div>
-</form>
+</div>
 <script>
     var bsefittings = [
         #for (x: bsefittings)

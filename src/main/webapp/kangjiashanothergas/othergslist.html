@@ -1,288 +1,426 @@
- <!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Content</title>
-	<!-- Add your custom stylesheets and scripts here -->
-	<script src="../css/jquery-3.3.1.min.js"></script>
-	<link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css" >
-	<script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="../css/lpg.css">
-	<script src="../css/jquery-3.3.1.min.js"></script>
-	<link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css" >
-	<script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="../css/lpg.css">
-	<style scoped>
-		.container {
-			padding: 50px 20px;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-		}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>康佳山其他气体</title>
+    <script src="../css/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css">
+    <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/index.css">
 
-		input {
-			padding: 8px 12px; /* 减小内边距 */
-			font-size: 14px;   /* 减小字体大小 */
-			border: 1px solid #a3bffa; /* 减小边框宽度 */
-			border-radius: 4px; /* 调整圆角 */
-			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* 减小阴影 */
-			transition: border-color 0.3s ease;
-			margin-right: 10px; /* 添加右侧间距 */
-		}
+    <style>
+        body {
+            margin: 0;
+            background: #F8FAFC;
+            color: #1E293B;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+        }
 
-		input[type="date"] {
-			max-width: 180px;
-		}
+        .page-container {
+            min-height: 100vh;
+            padding: 20px;
+            background: #F8FAFC;
+        }
 
-		input:focus {
-			outline: none;
-			border-color: #4c87c9;
-		}
+        #pagediv {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+        }
 
-		/* 调整搜索和重置按钮样式 */
-		input[type="submit"],
-		input[type="button"] {
-			padding: 6px 12px;
-			font-size: 14px;
-			border-radius: 4px;
-			cursor: pointer;
-			border: none;
-			width: auto;
-			margin-right: 5px;
-		}
+        #searchForm {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            width: 100%;
+        }
 
-		input[type="submit"] {
-			background-color: #007bff;
-			color: white;
-		}
+        #searchForm label,
+        #searchForm span {
+            margin: 0;
+            white-space: nowrap;
+            font-size: 14px;
+            font-weight: 500;
+            color: #475569;
+        }
 
-		input[type="button"] {
-			background-color: #6c757d;
-			color: white;
-		}
-	</style>
+        #searchForm input[type="text"],
+        #searchForm input[type="date"] {
+            min-width: 180px;
+            height: 38px;
+            padding: 8px 12px;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            background: #FFFFFF;
+            color: #1E293B;
+            font-size: 14px;
+            transition: all 0.15s ease;
+        }
 
-	<style>
-		/* 设置 #pagediv 的样式 */
-		#pagediv {
-			background-color: #f0f0f0;
-			color: black;
-			padding: 10px;
-			border: 2px solid #007bff;
-		}
+        #searchForm input[type="text"]:focus,
+        #searchForm input[type="date"]:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
 
-		/* 设置表格样式 */
-		table.list {
-			width: 100%;
-			border-collapse: collapse;
-		}
+        #searchForm button,
+        #searchForm input[type="button"] {
+            height: 38px;
+            padding: 0 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
 
-		/* 设置表格表头样式 */
-		table.list th {
-			background-color: #add8e6;
-			color: black;
-			padding: 8px;
-			text-align: left;
-			border: 1px solid #ddd; /* 新增：添加边框 */
-		}
+        #searchForm button[type="submit"] {
+            border: none;
+            background: #3B82F6;
+            color: #FFFFFF;
+        }
 
-		/* 设置表格单元格样式 */
-		table.list td {
-			padding: 8px;
-			border: 1px solid #ddd; /* 修改：添加边框 */
-		}
+        #searchForm button[type="submit"]:hover {
+            background: #2563EB;
+        }
 
-		/* 设置表格隔行颜色 */
-		table.list tr:nth-child(even) {
-			background-color: #f2f2f2;
-		}
+        #searchForm #resetButton {
+            border: 1px solid #CBD5E1;
+            background: #FFFFFF;
+            color: #475569;
+        }
 
-		table.list tr:nth-child(odd) {
-			background-color: #e0e0e0;
-		}
+        #searchForm #resetButton:hover {
+            background: #F8FAFC;
+            border-color: #94A3B8;
+        }
 
-		/* 设置鼠标悬停时表格行的颜色 */
-		table.list tr:hover {
-			background-color: #d3d3d3;
-		}
+        .table-wrapper {
+            overflow-x: auto;
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+        }
 
-		/* 新增样式：设置新建司机链接为黑色 */
-		#pagediv .add {
-			color: black;
-		}
+        table.list {
+            width: 100%;
+            min-width: 1200px;
+            border-collapse: collapse;
+            background: #FFFFFF;
+        }
 
-		/* 新增样式：设置输入框背景色为淡灰色 */
-		#pagediv input[type="text"] {
-			background-color: #f0f0f0;
-		}
-		/* 新增样式：设置 label 文字颜色为黑色 */
-		#pagediv label {
-			color: black;
-		}
-		#pagediv .add {
-			color: white;
-			background-color: #007bff;
-			padding: 6px 12px;
-			text-decoration: none;
-			display: inline-block;
-			border-radius: 4px;
-		}
-	</style>
+        table.list th {
+            background: #F8FAFC;
+            color: #475569;
+            font-size: 13px;
+            font-weight: 600;
+            text-align: left;
+            padding: 14px 16px;
+            border-bottom: 1px solid #E2E8F0;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+        }
 
+        table.list td {
+            padding: 14px 16px;
+            font-size: 14px;
+            color: #1E293B;
+            border-bottom: 1px solid #F1F5F9;
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+
+        table.list tbody tr {
+            background: #FFFFFF;
+            transition: background 0.15s ease;
+        }
+
+        table.list tbody tr:nth-child(even) {
+            background: #F8FAFC;
+        }
+
+        table.list tbody tr:hover {
+            background: #F1F5F9;
+        }
+
+        table.list tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .page-container .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 20px;
+            color: #475569;
+            flex-wrap: wrap;
+        }
+
+        .page-container .pagination a,
+        .page-container .pagination span:not(.page-info):not(.gap):not(.current) {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 36px;
+            height: 36px;
+            padding: 0 8px;
+            font-size: 14px;
+            border: 1px solid #E2E8F0;
+            border-radius: 6px;
+            color: #475569;
+            background: #FFFFFF;
+            text-decoration: none;
+            transition: all 0.15s ease;
+        }
+
+        .page-container .pagination a:hover {
+            background: #F8FAFC;
+            border-color: #CBD5E1;
+        }
+
+        .page-container .pagination .current {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 36px;
+            height: 36px;
+            padding: 0 8px;
+            background: #3B82F6;
+            color: #FFFFFF;
+            border: 1px solid #3B82F6;
+            border-radius: 6px;
+        }
+
+        .page-container .pagination .disabled {
+            color: #94A3B8;
+            background: #F8FAFC;
+            cursor: not-allowed;
+        }
+
+        .page-container .pagination .gap {
+            border: none;
+            background: transparent;
+            color: #64748B;
+            min-width: auto;
+        }
+
+        .page-container .pagination .page-input {
+            width: 44px;
+            height: 36px;
+            text-align: center;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            color: #1E293B;
+        }
+
+        .page-container .pagination .page-input:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .page-container .pagination .page-info {
+            color: #475569;
+        }
+
+        .modal-content {
+            border: 1px solid #E2E8F0;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.15);
+            overflow: hidden;
+        }
+
+        .modal-header {
+            background: #F8FAFC;
+            border-bottom: 1px solid #E2E8F0;
+            padding: 16px 20px;
+        }
+
+        .modal-body {
+            background: #FFFFFF;
+            padding: 20px;
+        }
+
+        .modal-footer {
+            background: #F8FAFC;
+            border-top: 1px solid #E2E8F0;
+            padding: 16px 20px;
+        }
+
+        @media (max-width: 768px) {
+            .page-container {
+                padding: 12px;
+            }
+
+            #searchForm {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            #searchForm input[type="text"],
+            #searchForm input[type="date"],
+            #searchForm button,
+            #searchForm input[type="button"] {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
- 	<div id="pagediv">
-		<form id="searchForm" action="/kangjiashanothergas/othergslist" method="post">
-			<label for="stationcode">请输入单位编码：</label>
-			<input type="text" id="stationcode" name="stationcode" placeholder="请输入单位编码" value="#(stationcode)"/>
-			<label>时间范围：</label>
-			<input type="date" id="dateStart" />
-			<span> 至 </span>
-			<input type="date" id="dateEnd" />
-			<input type="hidden" name="tradedateStart" id="tradedateStart" value="#(tradedateStart ?? '')"/>
-			<input type="hidden" name="tradedateEnd" id="tradedateEnd" value="#(tradedateEnd ?? '')"/>
-			&nbsp;&nbsp;<button type="submit">查询</button>
-			<input type="button" value="重置" name="refresh" id="resetButton" />
-		</form>
-<!--		<a href="#" class="add openModal" data-title="新建加气记录" data-edit-url="add"><b> + </b>新建加气机加气记录</a>-->
-	</div>
-	<table class="list">
-		<tbody>
-		<tr>
-			<th>序号</th>
-			<th>交易日期（tradetime）</th>
-			<th>枪号</th>
-			<th>流水号</th>
-			<th>灌装量（KG）</th>
+<div class="page-container">
+    <div id="pagediv">
+        <form id="searchForm" action="/kangjiashanothergas/othergslist" method="post">
+            <label for="stationcode">请输入单位编码：</label>
+            <input type="text" id="stationcode" name="stationcode" placeholder="请输入单位编码" value="#(stationcode)">
 
-			<th>目标量（KG）</th>
-			<th>灌装用时</th>
-			<th>单位编码</th>
-			<th>创建日期（createdate）</th>
-			<th>uuid</th>
-		</tr>
-		#set(startIndex = (othergslist.pageNumber - 1) * othergslist.pageSize + 1)
+            <label>时间范围：</label>
+            <input type="date" id="dateStart">
+            <span>至</span>
+            <input type="date" id="dateEnd">
 
-		#for(x : othergslist.getList())
-		<tr>
-			<td>#(startIndex++)</td> <!-- 显示序号并递增 -->
-			<td>#(x.TradeDate)</td>
-			<td>#(x.GunNo)</td>
-			<td>#(x.TradeNo)</td>
-			<td>#(x.NowGas)</td>
-			<td>#(x.beginpressure)</td>
-			
- 			<td>#(x.addgaslong)</td>
-			<td>#(x.stationCode)</td>
-			<td>#(x.create_time)</td>
-			<td>#(x.uuid)</td>
+            <input type="hidden" name="tradedateStart" id="tradedateStart" value="#(tradedateStart ?? '')">
+            <input type="hidden" name="tradedateEnd" id="tradedateEnd" value="#(tradedateEnd ?? '')">
 
-		</tr>
-		#end
-		</tbody>
-	</table>
-	<div class="pagination" style="color:#f0f0f0; font-size: 15px">
-		#@paginate(othergslist.pageNumber, othergslist.totalPage, "/kangjiashanothergas/othergslist?stationcode=" + (stationcode != null ? stationcode : "") +"&tradedateStart=" + (tradedateStart != null ? tradedateStart : "") + "&tradedateEnd=" + (tradedateEnd != null ? tradedateEnd : "") + "&page=")
-	</div>
-	<script>
-		$('.openModal').click(function(e) {
-			e.preventDefault();
-			var editUrl = $(this).data('edit-url');
-			var that = this; // 保存正确的上下文
+            <button type="submit">查询</button>
+            <input type="button" value="重置" name="refresh" id="resetButton">
+        </form>
+    </div>
 
-			$.get(editUrl, function(data) {
-				var title = $(that).data('title');
-				$('#myModalLabel').text(title); // 修改模态窗口标题
+    <div class="table-wrapper">
+        <table class="list">
+            <thead>
+            <tr>
+                <th>序号</th>
+                <th>交易日期（tradetime）</th>
+                <th>枪号</th>
+                <th>流水号</th>
+                <th>灌装量（KG）</th>
+                <th>目标量（KG）</th>
+                <th>灌装用时</th>
+                <th>单位编码</th>
+                <th>创建日期（createdate）</th>
+                <th>uuid</th>
+            </tr>
+            </thead>
+            <tbody>
+            #set(startIndex = (othergslist.pageNumber - 1) * othergslist.pageSize + 1)
+            #for(x : othergslist.getList())
+            <tr>
+                <td>#(startIndex++)</td>
+                <td>#(x.TradeDate)</td>
+                <td>#(x.GunNo)</td>
+                <td>#(x.TradeNo)</td>
+                <td>#(x.NowGas)</td>
+                <td>#(x.beginpressure)</td>
+                <td>#(x.addgaslong)</td>
+                <td>#(x.stationCode)</td>
+                <td>#(x.create_time)</td>
+                <td>#(x.uuid)</td>
+            </tr>
+            #end
+            </tbody>
+        </table>
+    </div>
 
-				// 清除旧内容
-				$('#modalBody').html(data); // 加载编辑内容到模态窗口
-				$('#myModal').modal('show'); // 显示模态窗口
-			});
-		});
+    #@paginate(othergslist.pageNumber, othergslist.totalPage, "/kangjiashanothergas/othergslist?stationcode=" + (stationcode != null ? stationcode : "") + "&tradedateStart=" + (tradedateStart != null ? tradedateStart : "") + "&tradedateEnd=" + (tradedateEnd != null ? tradedateEnd : "") + "&page=")
+</div>
 
-	</script>
-	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h4 class="modal-title" id="myModalLabel">模态窗口标题</h4>
-				</div>
-				<div class="modal-body" id="modalBody">
-					<!-- 这里将会加载你的表单内容 -->
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-					<button type="button" class="btn btn-primary"  id="saveButton" >保存</button>
-					<script>
-						document.getElementById('saveButton').addEventListener('click', function() {
-							document.getElementById('myForm').submit();
-						});
-					</script>
-				</div>
-			</div>
-		</div>
-	</div>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">模态窗口标题</h4>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="saveButton">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
-	// 时间范围：与 filrdck 一致的日期选择器逻辑
-	document.addEventListener('DOMContentLoaded', function() {
-		var dateStart = document.getElementById('dateStart');
-		var dateEnd = document.getElementById('dateEnd');
-		var tradedateStartHidden = document.getElementById('tradedateStart');
-		var tradedateEndHidden = document.getElementById('tradedateEnd');
-		var form = document.getElementById('searchForm');
+    $(".openModal").click(function (e) {
+        e.preventDefault();
+        var editUrl = $(this).data("edit-url");
+        var that = this;
 
-		// 从后端回显的 hidden 值同步到日期选择器（取前 10 位 yyyy-MM-dd）
-		if (tradedateStartHidden.value && tradedateStartHidden.value.length >= 10) {
-			dateStart.value = tradedateStartHidden.value.substring(0, 10);
-		}
-		if (tradedateEndHidden.value && tradedateEndHidden.value.length >= 10) {
-			dateEnd.value = tradedateEndHidden.value.substring(0, 10);
-		}
+        $.get(editUrl, function (data) {
+            $("#myModalLabel").text($(that).data("title"));
+            $("#modalBody").html(data);
+            $("#myModal").modal("show");
+        });
+    });
 
-		// 两个都为空时设置为当天并自动提交（与 filrdck 一致）
-		if (!dateStart.value && !dateEnd.value) {
-			var today = new Date();
-			var year = today.getFullYear();
-			var month = String(today.getMonth() + 1).padStart(2, '0');
-			var day = String(today.getDate()).padStart(2, '0');
-			var dateStr = year + '-' + month + '-' + day;
-			dateStart.value = dateStr;
-			dateEnd.value = dateStr;
-			tradedateStartHidden.value = dateStr + ' 00:00:00.0';
-			tradedateEndHidden.value = dateStr + ' 23:59:59.0';
-			form.submit();
-		}
-	});
+    document.getElementById("saveButton").addEventListener("click", function () {
+        var form = document.getElementById("myForm");
+        if (form) {
+            form.submit();
+        }
+    });
 
-	// 提交前把日期选择器转成后端需要的格式 yyyy-MM-dd HH:mm:ss.0
-	document.getElementById('searchForm').addEventListener('submit', function() {
-		var dateStart = document.getElementById('dateStart');
-		var dateEnd = document.getElementById('dateEnd');
-		var tradedateStartHidden = document.getElementById('tradedateStart');
-		var tradedateEndHidden = document.getElementById('tradedateEnd');
-		tradedateStartHidden.value = dateStart.value ? dateStart.value + ' 00:00:00.0' : '';
-		tradedateEndHidden.value = dateEnd.value ? dateEnd.value + ' 23:59:59.0' : '';
-	});
+    document.addEventListener("DOMContentLoaded", function () {
+        var dateStart = document.getElementById("dateStart");
+        var dateEnd = document.getElementById("dateEnd");
+        var tradedateStartHidden = document.getElementById("tradedateStart");
+        var tradedateEndHidden = document.getElementById("tradedateEnd");
+        var form = document.getElementById("searchForm");
 
-	document.getElementById("resetButton").addEventListener("click", function(e) {
-		e.preventDefault();
-		document.querySelector('input[name="stationcode"]').value = '';
-		document.getElementById('tradedateStart').value = '';
-		document.getElementById('tradedateEnd').value = '';
-		// 重置时设置日期范围为当天（与 filrdck 一致）
-		var today = new Date();
-		var year = today.getFullYear();
-		var month = String(today.getMonth() + 1).padStart(2, '0');
-		var day = String(today.getDate()).padStart(2, '0');
-		var dateStr = year + '-' + month + '-' + day;
-		document.getElementById('dateStart').value = dateStr;
-		document.getElementById('dateEnd').value = dateStr;
-		document.getElementById('tradedateStart').value = dateStr + ' 00:00:00.0';
-		document.getElementById('tradedateEnd').value = dateStr + ' 23:59:59.0';
-		document.getElementById("searchForm").submit();
-	});
+        if (tradedateStartHidden.value && tradedateStartHidden.value.length >= 10) {
+            dateStart.value = tradedateStartHidden.value.substring(0, 10);
+        }
+        if (tradedateEndHidden.value && tradedateEndHidden.value.length >= 10) {
+            dateEnd.value = tradedateEndHidden.value.substring(0, 10);
+        }
+
+        if (!dateStart.value && !dateEnd.value) {
+            var today = new Date();
+            var year = today.getFullYear();
+            var month = String(today.getMonth() + 1).padStart(2, "0");
+            var day = String(today.getDate()).padStart(2, "0");
+            var dateStr = year + "-" + month + "-" + day;
+            dateStart.value = dateStr;
+            dateEnd.value = dateStr;
+            tradedateStartHidden.value = dateStr + " 00:00:00.0";
+            tradedateEndHidden.value = dateStr + " 23:59:59.0";
+            form.submit();
+        }
+    });
+
+    document.getElementById("searchForm").addEventListener("submit", function () {
+        var dateStart = document.getElementById("dateStart");
+        var dateEnd = document.getElementById("dateEnd");
+        var tradedateStartHidden = document.getElementById("tradedateStart");
+        var tradedateEndHidden = document.getElementById("tradedateEnd");
+        tradedateStartHidden.value = dateStart.value ? dateStart.value + " 00:00:00.0" : "";
+        tradedateEndHidden.value = dateEnd.value ? dateEnd.value + " 23:59:59.0" : "";
+    });
+
+    document.getElementById("resetButton").addEventListener("click", function (e) {
+        e.preventDefault();
+        document.querySelector("input[name='stationcode']").value = "";
+        document.getElementById("tradedateStart").value = "";
+        document.getElementById("tradedateEnd").value = "";
+
+        var today = new Date();
+        var year = today.getFullYear();
+        var month = String(today.getMonth() + 1).padStart(2, "0");
+        var day = String(today.getDate()).padStart(2, "0");
+        var dateStr = year + "-" + month + "-" + day;
+        document.getElementById("dateStart").value = dateStr;
+        document.getElementById("dateEnd").value = dateStr;
+        document.getElementById("tradedateStart").value = dateStr + " 00:00:00.0";
+        document.getElementById("tradedateEnd").value = dateStr + " 23:59:59.0";
+        document.getElementById("searchForm").submit();
+    });
 </script>
-
 </body>
 </html>

@@ -4,91 +4,190 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>历史版本列表</title>
+    <link rel="stylesheet" type="text/css" href="../css/index.css">
     <style>
-        .form_box {
-            padding: 20px;
+        /* 浅色商务风格 - 历史版本列表页面 */
+        body {
+            background-color: #F8FAFC;
+            color: #1E293B;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            margin: 0;
+            padding: 0;
         }
+
+        .form_box {
+            padding: 24px;
+            max-width: 2000px;
+            margin: 0 auto;
+        }
+
+        .form_box h2 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E293B;
+            margin: 0 0 20px 0;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #E2E8F0;
+        }
+
+        /* 表格样式 */
+        .table-container {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 18px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 0;
         }
-        th, td {
-            padding: 15px;
-            border: 2px solid #a3bffa;
+
+        table th {
+            background: #F8FAFC;
+            color: #475569;
+            padding: 14px 16px;
             text-align: left;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            border-bottom: 1px solid #E2E8F0;
         }
-        th {
-            background-color: #4c87c9;
-            color: white;
+
+        table td {
+            padding: 14px 16px;
+            font-size: 14px;
+            color: #1E293B;
+            border-bottom: 1px solid #F1F5F9;
+            vertical-align: middle;
         }
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
+
+        table tr {
+            background: #FFFFFF;
+            transition: background 0.15s ease;
         }
-        tr:hover {
-            background-color: #e0e7ff;
+
+        table tr:nth-child(even) {
+            background: #F8FAFC;
         }
+
+        table tr:hover {
+            background: #F1F5F9;
+        }
+
+        table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* 链接样式 */
         a {
-            color: #4c87c9;
+            color: #3B82F6;
             text-decoration: none;
+            font-weight: 500;
         }
+
         a:hover {
             text-decoration: underline;
         }
-        #saveButton{
+
+        /* 文件查看按钮 */
+        table a[download],
+        table a[target="_blank"] {
+            display: inline-block;
+            padding: 6px 14px;
+            background: rgba(59, 130, 246, 0.1);
+            color: #3B82F6;
+            border-radius: 6px;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            text-align: center;
+            transition: all 0.15s ease;
+        }
+
+        table a[download]:hover,
+        table a[target="_blank"]:hover {
+            background: rgba(59, 130, 246, 0.2);
+            text-decoration: none;
+        }
+
+        /* 暂无数据 */
+        .empty-message {
+            text-align: center;
+            padding: 40px 20px;
+            color: #64748B;
+            font-size: 14px;
+        }
+
+        /* 隐藏保存按钮 */
+        #saveButton {
             display: none;
         }
 
-
+        /* 模态框调整 */
         .modal-dialog {
             min-width: 100px;
             max-width: 80vw;
             width: auto;
         }
 
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .form_box {
+                padding: 16px;
+            }
+
+            .table-container {
+                overflow-x: auto;
+            }
+
+            table {
+                min-width: 800px;
+            }
+        }
     </style>
 </head>
 <body>
 <div class="form_box">
     <h2>历史版本列表</h2>
     #if(list != null && list.size() > 0)
-    <table>
-        <thead>
-        <tr>
-<!--            <th>应用编码</th>-->
-            <th>应用名称</th>
-            <th>版本号</th>
-            <th>文件</th>
-            <th>备注</th>
-            <th>更新内容</th>
-            <th>强制更新</th>
-            <th>更新时间</th>
-        </tr>
-        </thead>
-        <tbody>
-        #for(app : list)
-        <tr>
-<!--            <td>#(app.appcode ?? '')</td>-->
-            <td>#(app.name ?? '')</td>
-            <td>#(app.version ?? '')</td>
-            <td>
-                #if(app.file != null)
-                <a href="#(app.file)" target="_blank">查看文件</a>
-                #else
-                无
-                #end
-            </td>
-            <td>#(app.memo ?? '')</td>
-            <td>#(app.content ?? '')</td>
-            <td>#(app.isforce == 1 ? '是' : '否')</td>
-            <td>#date(app.updatetime, 'yyyy-MM-dd HH:mm:ss')</td>
-        </tr>
-        #end
-        </tbody>
-    </table>
+    <div class="table-container">
+        <table>
+            <thead>
+            <tr>
+                <th>应用名称</th>
+                <th>版本号</th>
+                <th>文件</th>
+                <th>备注</th>
+                <th>更新内容</th>
+                <th>强制更新</th>
+                <th>更新时间</th>
+            </tr>
+            </thead>
+            <tbody>
+            #for(app : list)
+            <tr>
+                <td>#(app.name ?? '')</td>
+                <td>#(app.version ?? '')</td>
+                <td>
+                    #if(app.file != null)
+                    <a href="#(app.file)" target="_blank">查看文件</a>
+                    #else
+                    <span style="color: #94A3B8;">无</span>
+                    #end
+                </td>
+                <td>#(app.memo ?? '')</td>
+                <td>#(app.content ?? '')</td>
+                <td>#(app.isforce == 1 ? '是' : '否')</td>
+                <td>#date(app.updatetime, 'yyyy-MM-dd HH:mm:ss')</td>
+            </tr>
+            #end
+            </tbody>
+        </table>
+    </div>
     #else
-    <p>暂无历史版本记录</p>
+    <p class="empty-message">暂无历史版本记录</p>
     #end
 </div>
 </body>

@@ -34,9 +34,9 @@ public class CreatEquipmentController extends Controller {
         System.out.println(stationid);
         // 调用Service层方法查询数据
         List<Record> CEmain= service.getData(stationid);
-        for (Record record : CEmain) {
-            System.out.println(record);
-        }
+//        for (Record record : CEmain) {
+//            System.out.println(record);
+//        }
 
         // 将数据传递到前端页面
         setAttr("CEmain", CEmain);
@@ -68,6 +68,7 @@ public class CreatEquipmentController extends Controller {
 
             // 调用服务层方法进行带条件的分页查询
             Page<Record> maintenances = service.searchMaintenanceList(pageNumber, pageSize, stationid, equipmentName, kind, startDate, endDate, step);
+            System.out.println("获取的数量"+maintenances.getTotalRow());
             setAttr("maintenances", maintenances);
             render("equipment.html");
 

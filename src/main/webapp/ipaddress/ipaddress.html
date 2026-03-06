@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,137 +7,422 @@
     <script src="../css/jquery-3.3.1.min.js"></script>
     <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css">
     <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="../css/lpg.css">
+    <link rel="stylesheet" type="text/css" href="../css/index.css">
 
     <style>
+        /* 浅色商务风格 - IP地址管理列表 */
+        body {
+            background: #F8FAFC;
+            color: #1E293B;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+        }
+
+        .page-container {
+            background: #F8FAFC;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
         #pagediv {
-            background-color: #f0f0f0;
-            color: black;
-            padding: 10px;
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+        }
+
+        #searchForm {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            width: 100%;
+        }
+
+        #pagediv label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #475569;
+            white-space: nowrap;
+            margin: 0;
+        }
+
+        #pagediv input[type="text"] {
+            padding: 8px 12px;
+            font-size: 14px;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            background: #FFFFFF;
+            color: #1E293B;
+            min-width: 180px;
+            transition: all 0.15s ease;
+        }
+
+        #pagediv input[type="text"]:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        #pagediv input[type="submit"],
+        #pagediv button {
+            border: none;
+            padding: 8px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        #pagediv input[type="submit"] {
+            background: #3B82F6;
+            color: #FFFFFF;
+        }
+
+        #pagediv input[type="submit"]:hover {
+            background: #2563EB;
+        }
+
+        #pagediv .btn-reset {
+            background: #FFFFFF;
+            color: #475569;
+            border: 1px solid #CBD5E1;
+        }
+
+        #pagediv .btn-reset:hover {
+            background: #F8FAFC;
+            border-color: #94A3B8;
+        }
+
+        #pagediv .add {
+            background: #3B82F6;
+            color: #FFFFFF;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.15s ease;
+        }
+
+        #pagediv .add:hover {
+            background: #2563EB;
+            color: #FFFFFF;
+        }
+
+        .hint-text {
+            font-size: 12px;
+            color: #64748B;
+        }
+
+        .table-tools {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+            margin-bottom: 12px;
+        }
+
+        .tool-btn {
+            width: 36px;
+            height: 36px;
+            border: 1px solid #E2E8F0;
+            border-radius: 6px;
+            background: #FFFFFF;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s ease;
+        }
+
+        .tool-btn:hover {
+            background: #F8FAFC;
+            border-color: #CBD5E1;
+        }
+
+        .tool-btn img {
+            width: 20px;
+            height: 20px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
         }
 
         table.list {
             width: 100%;
             border-collapse: collapse;
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        table.list thead tr {
+            background: #F8FAFC;
         }
 
         table.list th {
-            background-color: #add8e6;
-            color: black;
-            padding: 8px;
+            background: #F8FAFC;
+            color: #475569;
+            font-size: 13px;
+            font-weight: 600;
             text-align: left;
-            border: 1px solid #ddd;
+            padding: 14px 16px;
+            border-bottom: 1px solid #E2E8F0;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
         }
 
         table.list td {
-            padding: 8px;
-            border: 1px solid #ddd;
+            padding: 14px 16px;
+            font-size: 14px;
+            color: #1E293B;
+            border-bottom: 1px solid #F1F5F9;
+            vertical-align: middle;
+            white-space: nowrap;
         }
 
-        table.list tr:nth-child(even) {
-            background-color: #f2f2f2;
+        table.list tbody tr {
+            background: #FFFFFF;
+            transition: background 0.15s ease;
         }
 
-        table.list tr:nth-child(odd) {
-            background-color: #e0e0e0;
+        table.list tbody tr:nth-child(even) {
+            background: #F8FAFC;
         }
 
-        table.list tr:hover {
-            background-color: #d3d3d3;
+        table.list tbody tr:hover {
+            background: #F1F5F9;
         }
 
-        #pagediv .add {
-            color: black;
+        table.list tbody tr:last-child td {
+            border-bottom: none;
         }
 
-        #searchForm input[type="text"] {
-            background-color: #f0f0f0;
+        table.list a {
+            color: #3B82F6;
+            text-decoration: none;
+            margin-right: 12px;
+            transition: color 0.15s ease;
         }
 
-        #pagediv label {
-            color: black;
+        table.list a:hover {
+            color: #2563EB;
+            text-decoration: underline;
         }
 
-        .hint-text {
-            color: #666;
-            font-size: 0.8em;
-            margin-left: 10px;
+        .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 20px;
+            color: #475569;
+        }
+
+        .pagination a,
+        .pagination span {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 36px;
+            height: 36px;
+            padding: 0 8px;
+            font-size: 14px;
+            border: 1px solid #E2E8F0;
+            border-radius: 6px;
+            color: #475569;
+            background: #FFFFFF;
+            text-decoration: none;
+            transition: all 0.15s ease;
+        }
+
+        .pagination a:hover {
+            background: #F8FAFC;
+            border-color: #CBD5E1;
+        }
+
+        .pagination .current-page {
+            background: #3B82F6;
+            color: #FFFFFF;
+            border-color: #3B82F6;
+        }
+
+        .pagination .disabled {
+            color: #94A3B8;
+            background: #F8FAFC;
+            cursor: not-allowed;
+        }
+
+        .modal-content {
+            border: 1px solid #E2E8F0;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .modal-header {
+            background: #F8FAFC;
+            border-bottom: 1px solid #E2E8F0;
+            padding: 16px 20px;
+        }
+
+        .modal-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E293B;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .modal-footer {
+            background: #F8FAFC;
+            border-top: 1px solid #E2E8F0;
+            padding: 16px 20px;
+        }
+
+        .btn-default {
+            background: #FFFFFF;
+            color: #475569;
+            border: 1px solid #CBD5E1;
+        }
+
+        .btn-default:hover {
+            background: #F8FAFC;
+            border-color: #94A3B8;
+        }
+
+        .btn-primary {
+            background: #3B82F6;
+            color: #FFFFFF;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background: #2563EB;
+        }
+
+        @media (max-width: 768px) {
+            #searchForm {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            #pagediv input[type="text"] {
+                width: 100%;
+                min-width: 100%;
+            }
+
+            #pagediv input[type="submit"],
+            #pagediv button,
+            #pagediv .add {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .hint-text {
+                display: block;
+            }
+
+            table.list {
+                min-width: 900px;
+            }
         }
     </style>
 </head>
 <body>
-<div id="pagediv">
-    <!-- 表单表单提交地址更新为新的列表页路由 -->
-    <form id="searchForm" action="/ipaddress/iplist" method="post">
-        <a href="/ipaddress/add" class="add openModal" data-title="新建IP地址"><b> + </b>新建IP地址</a>
+<div class="page-container">
+    <div id="pagediv">
+        <form id="searchForm" action="/ipaddress/iplist" method="post">
 
-        <label>设备编号:</label>
-        <input type="text" name="deviceno" value="#(deviceno)">
+            <label>设备编号:</label>
+            <input type="text" name="deviceno" value="#(deviceno)" placeholder="请输入设备编号">
 
-        <label>设备开关命令:</label>
-        <input type="text" name="poweronoff" value="#(poweronoff)">
-        <span class="hint-text">10=正常，20=需要自动重启</span>
+            <label>设备开关命令:</label>
+            <input type="text" name="poweronoff" value="#(poweronoff)" placeholder="请输入 10 或 20">
+            <span class="hint-text">10=正常，20=需要自动重启</span>
 
-        <label>IP地址:</label>
-        <input type="text" name="ipaddress" value="#(ipaddress)">
+            <label>IP地址:</label>
+            <input type="text" name="ipaddress" value="#(ipaddress)" placeholder="请输入IP地址">
 
-        <label>发生时间:</label>
-        <input type="text" name="happendtime" value="#(happendtime)">
+            <label>发生时间:</label>
+            <input type="text" name="happendtime" value="#(happendtime)" placeholder="请输入发生时间">
 
-        <label>&nbsp;</label>
-        <input value="搜索" type="submit">
-        <input type="button" value="重置" id="resetBtn">
-    </form>
-</div>
+            <input value="搜索" type="submit">
+            <button type="button" id="resetBtn" class="btn-reset">重置</button>
+                        <a href="#" class="add openModal" data-title="新建IP地址" data-edit-url="/ipaddress/add">+ 新建IP地址</a>
 
-<table class="list">
-    <div>
-        <button id="showFormButton" style="width: 30px; height: 30px; border: 2px solid transparent; border-radius: 50%; background-color: transparent; position: relative; float: right;">
-            <img src="/img/find.png" alt="搜索" style="width: 30px; height: 30px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-        </button>
-
-        <button id="fresh" style="width: 30px; height: 30px; border: 2px solid transparent; border-radius: 50%; background-color: transparent; position: relative;  margin-right: 10px;float: right;">
-            <img src="/img/refresh2.png" alt="刷新" style="width: 25px; height: 25px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-        </button>
+        </form>
     </div>
 
-    <tbody>
-    <tr>
-        <th width="10%">序号</th>
-        <th width="15%">设备编号</th>
-        <th width="15%">设备开关命令</th>
-        <th width="15%">IP地址</th>
-        <th width="15%">发生时间</th>
-        <th width="20%">操作</th>
-    </tr>
-    #set(startIndex = (ipaddressPage.pageNumber - 1) * ipaddressPage.pageSize + 1)
-    #for(x : ipaddressPage.getList())
-    <tr>
-        <td style="text-align:center">#(startIndex++)</td>
-        <td style="text-align:center">#(x.deviceno)</td>
-        <!-- 设备开关命令显示转换 -->
-        <td style="text-align:center">
-            #if(x.poweronoff == "10")
-            正常
-            #elseif(x.poweronoff == "20")
-            需要自动重启
-            #else
-            #(x.poweronoff)
-            #end
-        </td>
-        <td style="text-align:center">#(x.ipaddress)</td>
-        <td style="text-align:center">#(x.happendtime)</td>
-        <td style="text-align:left">
-            &nbsp;&nbsp;<a href="#" onclick="confirmDelete('#(x.id)')">删除</a>
-            <a href="/ipaddress/edit/#(x.id)">修改</a>
-        </td>
-    </tr>
-    #end
-    </tbody>
-</table>
 
-<div class="pagination" style="color:#000000;">
-    #@paginate(ipaddressPage.pageNumber, ipaddressPage.totalPage, "/ipaddress/iplist?deviceno=" + (deviceno != null ? deviceno : "") + "&poweronoff=" + (poweronoff != null ? poweronoff : "") + "&ipaddress=" + (ipaddress != null ? ipaddress : "") + "&happendtime=" + (happendtime != null ? happendtime : "") + "&page=")
+
+    <div class="table-wrapper">
+        <table class="list">
+            <thead>
+            <tr>
+                <th width="10%">序号</th>
+                <th width="18%">设备编号</th>
+                <th width="20%">设备开关命令</th>
+                <th width="18%">IP地址</th>
+                <th width="18%">发生时间</th>
+                <th width="16%">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            #set(startIndex = (ipaddressPage.pageNumber - 1) * ipaddressPage.pageSize + 1)
+            #for(x : ipaddressPage.getList())
+            <tr>
+                <td>#(startIndex++)</td>
+                <td>#(x.deviceno)</td>
+                <td>
+                    #if(x.poweronoff == "10")
+                    正常
+                    #elseif(x.poweronoff == "20")
+                    需要自动重启
+                    #else
+                    #(x.poweronoff)
+                    #end
+                </td>
+                <td>#(x.ipaddress)</td>
+                <td>#(x.happendtime)</td>
+                <td>
+                    <a href="#" onclick="confirmDelete('#(x.id)')">删除</a>
+                    <a href="#" class="openModal" data-title="编辑IP地址" data-edit-url="/ipaddress/edit/#(x.id)">修改</a>
+                </td>
+            </tr>
+            #end
+            </tbody>
+        </table>
+    </div>
+
+    <div class="pagination">
+        #@paginate(ipaddressPage.pageNumber, ipaddressPage.totalPage, "/ipaddress/iplist?deviceno=" + (deviceno != null ? deviceno : "") + "&poweronoff=" + (poweronoff != null ? poweronoff : "") + "&ipaddress=" + (ipaddress != null ? ipaddress : "") + "&happendtime=" + (happendtime != null ? happendtime : "") + "&page=")
+    </div>
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">模态窗口</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="saveButton">保存</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -147,18 +432,37 @@
         }
     }
 
-    $('#resetBtn').click(function() {
+    $('#resetBtn').click(function () {
         $('#searchForm input[type=text]').val('');
         $('#searchForm').attr('action', '/ipaddress/iplist').submit();
     });
 
-    $('#fresh').click(function() {
+    $('#fresh').click(function () {
         window.location.href = '/ipaddress/iplist';
     });
 
-    $('#showFormButton').click(function() {
+    $('#showFormButton').click(function () {
         var form = $('#searchForm');
-        form.toggle();
+        form.css('display', form.css('display') === 'none' ? 'flex' : 'none');
+    });
+
+    $('.openModal').click(function (e) {
+        e.preventDefault();
+        var editUrl = $(this).data('edit-url');
+        var title = $(this).data('title');
+
+        $.get(editUrl, function (data) {
+            $('#myModalLabel').text(title);
+            $('#modalBody').html(data);
+            $('#myModal').modal('show');
+        });
+    });
+
+    document.getElementById('saveButton').addEventListener('click', function () {
+        var form = document.getElementById('myForm');
+        if (form) {
+            form.submit();
+        }
     });
 </script>
 </body>

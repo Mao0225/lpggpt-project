@@ -1,86 +1,174 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-<title>Content</title>
-<body>
-<h1>
-</h1>
-<div class="form_box">
-    <form action="/basshexiangtouinfo/update" method="post" id="myForm">
-        <input type="hidden" name="shexiangtou.id" value="#(shexiangtou.id??)" />
-        <div>
-            <label >摄像头编号</label>
-            <input type="text" name="shexiangtou.shexiangtoubianhao" value="#(shexiangtou.shexiangtoubianhao)" />
-        </div>
-        <div>
-            <label >生产厂家</label>
-            <input type="text" name="shexiangtou.shengchanchangjia" value="#(shexiangtou.shengchanchangjia)" />
-        </div>
-        <div>
-            <label >厂家电话</label>
-            <input type="text" name="shexiangtou.changjiadianhua" value="#(shexiangtou.changjiadianhua)" />
-        </div>
-        <div>
-            <label >生产时间</label>
-            <input type="text" name="shexiangtou.shengchanshijian" value="#(shexiangtou.shengchanshijian)" />
-        </div>
-        <div>
-            <label >饭店编号</label>
-            <input type="text" id="restaurantid" name="shexiangtou.restaurantid" value="#(shexiangtou.restaurantid)" readonly/>
-        </div>
-        <div>
-            <label >饭店名字</label>
-            <input type="hidden" id="restaurantname" name="shexiangtou.restaurantname" value="#(shexiangtou.restaurantname)" readonly/>
-            <select id="selectName" name="shexiangtou.restaurantname" onchange="chooseName()" style="border-radius: 5px;background-color: white; width: 200px;height:30px;text-align: center;">
-                <option value="-1" selected>#(shexiangtou.restaurantname)</option>
-                #for ( x: restaurants)
-                <option value="#(x.id)">#(x.name)</option>
-                #end
-            </select>
-        </div>
-        <div>
-            <label >饭店电话</label>
-            <input type="text" id = "restaurantphone" name="shexiangtou.restaurantphone" value="#(shexiangtou.restaurantphone)" />
-        </div>
-        <div>
-            <label >饭店地址</label>
-            <input type="text" id = "restaurantaddress" name="shexiangtou.restaurantaddress" value="#(shexiangtou.restaurantaddress)" />
-        </div>
-    </form>
-    <script>
-        // 假设这是服务器端渲染到页面中的JSON数据
-        var jsonData = '#(com.alibaba.fastjson.JSONArray::toJSON(restaurants))';
-        // 解析JSON数据
-        var context = JSON.parse(jsonData.replace(/#/g, ""));
-        function chooseName() {
-            var selectId = document.getElementById("selectName").value;
+    <title>编辑摄像头</title>
+    <style>
+        body {
+            background: #F8FAFC;
+            color: #1E293B;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            margin: 0;
+        }
 
-            if (selectId == "-1") {
-                return;
+        .form-container {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            padding: 24px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 0;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #475569;
+            margin-bottom: 8px;
+        }
+
+        .required {
+            color: #EF4444;
+            margin-right: 4px;
+        }
+
+        .form-group input[type="text"],
+        .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            font-size: 14px;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            background: #FFFFFF;
+            color: #1E293B;
+            transition: all 0.15s ease;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-group input[readonly] {
+            background: #F8FAFC;
+            color: #64748B;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 768px) {
+            .form-container {
+                padding: 16px;
             }
-            // 查找选中的饭店对象
-            var selectedRestaurant = context.find(function(restaurant) {
-                return restaurant.id == selectId;
-            });
-            if (selectedRestaurant) {
-                document.getElementById("restaurantname").value = selectedRestaurant.name;
-                document.getElementById("restaurantphone").value = selectedRestaurant.telephone;
-                document.getElementById("restaurantid").value = selectedRestaurant.id;
-                document.getElementById("restaurantaddress").value = selectedRestaurant.address;
 
-            } else {
-                document.getElementById("restaurantname").value = "";
-                document.getElementById("restaurantphone").value = "";
-                document.getElementById("restaurantid").value = "";
-                alert('找不到对应的饭店！');
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
             }
         }
-        document.getElementById("selectName").addEventListener("change", chooseName);
-    </script>
+    </style>
+</head>
+<body>
+<div class="form-container">
+    <form action="/basshexiangtouinfo/update" method="post" id="myForm">
+        <input type="hidden" name="shexiangtou.id" value="#(shexiangtou.id??)">
 
+        <div class="form-grid">
+            <div class="form-group">
+                <label><span class="required">*</span>摄像头编号</label>
+                <input type="text" name="shexiangtou.shexiangtoubianhao" value="#(shexiangtou.shexiangtoubianhao)">
+            </div>
+
+            <div class="form-group">
+                <label>生产厂家</label>
+                <input type="text" name="shexiangtou.shengchanchangjia" value="#(shexiangtou.shengchanchangjia)">
+            </div>
+
+            <div class="form-group">
+                <label>厂家电话</label>
+                <input type="text" name="shexiangtou.changjiadianhua" value="#(shexiangtou.changjiadianhua)">
+            </div>
+
+            <div class="form-group">
+                <label>生产时间</label>
+                <input type="text" name="shexiangtou.shengchanshijian" value="#(shexiangtou.shengchanshijian)" placeholder="yyyy-mm-dd">
+            </div>
+
+            <div class="form-group">
+                <label>饭店编号</label>
+                <input type="text" id="restaurantid" name="shexiangtou.restaurantid" value="#(shexiangtou.restaurantid)" readonly>
+            </div>
+
+            <div class="form-group">
+                <label>饭店名字</label>
+                <input type="hidden" id="restaurantname" name="shexiangtou.restaurantname" value="#(shexiangtou.restaurantname)" readonly>
+                <select id="selectName" name="shexiangtou.restaurantname" onchange="chooseName()">
+                    <option value="-1" selected>#(shexiangtou.restaurantname)</option>
+                    #for ( x: restaurants)
+                    <option value="#(x.id)">#(x.name)</option>
+                    #end
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>饭店电话</label>
+                <input type="text" id="restaurantphone" name="shexiangtou.restaurantphone" value="#(shexiangtou.restaurantphone)">
+            </div>
+
+            <div class="form-group">
+                <label>饭店地址</label>
+                <input type="text" id="restaurantaddress" name="shexiangtou.restaurantaddress" value="#(shexiangtou.restaurantaddress)">
+            </div>
+        </div>
+    </form>
 </div>
+
+<script>
+    var jsonData = '#(com.alibaba.fastjson.JSONArray::toJSON(restaurants))';
+    var context = [];
+    try {
+        context = JSON.parse(jsonData.replace(/#/g, ""));
+    } catch (e) {
+        context = [];
+    }
+
+    function chooseName() {
+        var selectId = document.getElementById("selectName").value;
+        if (selectId === "-1") {
+            return;
+        }
+
+        var selectedRestaurant = context.find(function (restaurant) {
+            return restaurant.id == selectId;
+        });
+
+        if (selectedRestaurant) {
+            document.getElementById("restaurantname").value = selectedRestaurant.name || "";
+            document.getElementById("restaurantphone").value = selectedRestaurant.telephone || "";
+            document.getElementById("restaurantid").value = selectedRestaurant.id || "";
+            document.getElementById("restaurantaddress").value = selectedRestaurant.address || "";
+        } else {
+            document.getElementById("restaurantname").value = "";
+            document.getElementById("restaurantphone").value = "";
+            document.getElementById("restaurantid").value = "";
+            document.getElementById("restaurantaddress").value = "";
+            alert('找不到对应的饭店！');
+        }
+    }
+
+    document.getElementById("selectName").addEventListener("change", chooseName);
+</script>
 </body>
 </html>

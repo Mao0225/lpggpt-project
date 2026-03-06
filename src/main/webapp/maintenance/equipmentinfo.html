@@ -1,192 +1,225 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" width="device-width, initial-scale=1.0">
-    <title>Edit Equipment</title>
-
-    <style scoped>
-        .container {
-            padding: 50px 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        input {
-            padding: 15px;
-            font-size: 18px;
-            border: 2px solid #a3bffa;
-            border-radius: 10px;
-            width: 100%;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: border-color 0.3s ease;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: #4c87c9;
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>设备详情</title>
+    <script src="../css/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css">
+    <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/index.css">
 
     <style>
-        /* 设置 #pagediv 的样式 */
-        #pagediv {
-            background-color: #f0f0f0;
-            color: black;
-            padding: 10px;
+        /* 浅色商务风格 - 设备信息展示 */
+        body {
+            background: #F8FAFC;
+            color: #1E293B;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            margin: 0;
         }
 
-        /* 设置表格样式 */
-        table.list {
+        .page-container {
+            background: #F8FAFC;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .form-container {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            padding: 24px;
+            max-width: 700px;
+            margin: 0 auto;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #475569;
+            margin-bottom: 8px;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="date"] {
             width: 100%;
-            border-collapse: collapse;
+            padding: 10px 14px;
+            font-size: 14px;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            background: #F8FAFC;
+            color: #64748B;
+            cursor: not-allowed;
+            box-sizing: border-box;
         }
 
-        /* 设置表格表头样式 */
-        table.list th {
-            background-color: #add8e6;
-            color: black;
-            padding: 8px;
-            text-align: left;
-            border: 1px solid #ddd; /* 新增：添加边框 */
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 12px;
+            margin-top: 12px;
         }
 
-        /* 设置表格单元格样式 */
-        table.list td {
-            padding: 8px;
-            border: 1px solid #ddd; /* 修改：添加边框 */
+        .image-item {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            border: 1px solid #E2E8F0;
+            border-radius: 6px;
+            overflow: hidden;
+            background: #F8FAFC;
+            cursor: pointer;
+            transition: all 0.15s ease;
         }
 
-        /* 设置表格隔行颜色 */
-        table.list tr:nth-child(even) {
-            background-color: #f2f2f2;
+        .image-item:hover {
+            border-color: #3B82F6;
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.15);
         }
 
-        table.list tr:nth-child(odd) {
-            background-color: #e0e0e0;
+        .image-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
-        /* 设置鼠标悬停时表格行的颜色 */
-        table.list tr:hover {
-            background-color: #d3d3d3;
+        .image-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
         }
 
-        /* 新增样式：设置新建司机链接为黑色 */
-        #pagediv .add {
-            color: black;
+        .image-modal.active {
+            display: flex;
         }
 
-        /* 新增样式：设置输入框背景色为淡灰色 */
-        #pagediv input[type="text"] {
-            background-color: #f0f0f0;
+        .image-modal img {
+            max-width: 80%;
+            max-height: 80%;
+            object-fit: contain;
         }
-        /* 新增样式：设置 label 文字颜色为黑色 */
-        #pagediv label {
-            color: black;
+
+        @media (max-width: 768px) {
+            .form-container {
+                padding: 16px;
+            }
+
+            .image-gallery {
+                grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            }
+
+            .image-item {
+                width: 80px;
+                height: 80px;
+            }
         }
     </style>
 </head>
 
 <body>
-<div class="form_box">
-    <!-- 移除表单的action和method属性，使其不再具备提交数据到后端的功能 -->
-    <form id="myForm">
-        <div>
-            <label>设备站点</label>
-            <!-- 添加readonly属性，将输入框设置为只读，无法更改内容 -->
-            <input type="text" name="equipment.station_name" value="#(equipmentInfo.station_name)" readonly />
-        </div>
-        <div>
-            <label>设备种类</label>
-            <input type="text" name="equipment.kind" value="#(equipmentInfo.kind)" readonly />
-        </div>
-        <div>
-            <label>生产厂商</label>
-            <input type="text" name="equipment.factory" value="#(equipmentInfo.factory)" readonly />
-        </div>
-        <div>
-            <label>型号规格</label>
-            <input type="text" name="equipment.model" value="#(equipmentInfo.model)" readonly />
-        </div>
-        <div>
-            <label>设备名称</label>
-            <input type="text" name="equipment.name" value="#(equipmentInfo.name)" readonly />
-        </div>
-        <div>
-            <label>放置位置</label>
-            <input type="text" name="equipment.location" value="#(equipmentInfo.location)" readonly />
-        </div>
-        <div>
-            <label>购买人员</label>
-            <input type="text" name="equipment.buyer" value="#(equipmentInfo.buyer)" readonly />
-        </div>
-        <div class="text-input-div">
-            <label>购买价格</label>
-            <input type="text" name="equipment.price" value="#(equipmentInfo.price)" readonly />
-        </div>
-        <div class="text-input-div">
-            <label>生产日期</label>
-            <input type="text" name="equipment.producedate" value="#(equipmentInfo.producedate)" readonly />
-        </div>
-        <div class="text-input-div">
-            <label>购买日期</label>
-            <input type="text" name="equipment.buyday" value="#(equipmentInfo.buyday)" readonly />
-        </div>
-        <div class="text-input-div">
-            <label>上次检修期</label>
-            <input type="text" name="equipment.lastcheckdate" value="#(equipmentInfo.lastcheckdate)" readonly />
-        </div>
-        <div class="text-input-div">
-            <label>失效日期</label>
-            <input type="text" name="equipment.expiredate" value="#(equipmentInfo.expiredate)" readonly />
-        </div>
-        <div class="text-input-div">
-            <label>备注信息</label>
-            <input type="text" name="equipment.remark" value="#(equipmentInfo.remark)" readonly />
-        </div>
-        <!-- 设备图片上传部分 -->
-        <div>
-            <label>设备图片</label>
-            <div id="equipmentImageUrlInputContainer" class="image-upload">
-<!--                <input type="file" id="equipmentImageInput" name="equipment_picture_file" onchange="uploadFile('equipmentImageInput')" accept="image/jpeg, image/png" style="display: none;" />-->
+<div class="page-container">
+    <div class="form-container">
+        <form id="myForm">
+            <div class="form-group">
+                <label>设备站点</label>
+                <input type="text" name="equipment.station_name" value="#(equipmentInfo.station_name)" readonly />
             </div>
-            <input type="hidden" id="equipmentImageInputUrl" name="equipmentinfo.picture" value="#(equipmentInfo.picture)" />
-        </div>
-    </form>
+            <div class="form-group">
+                <label>设备种类</label>
+                <input type="text" name="equipment.kind" value="#(equipmentInfo.kind)" readonly />
+            </div>
+            <div class="form-group">
+                <label>生产厂商</label>
+                <input type="text" name="equipment.factory" value="#(equipmentInfo.factory)" readonly />
+            </div>
+            <div class="form-group">
+                <label>型号规格</label>
+                <input type="text" name="equipment.model" value="#(equipmentInfo.model)" readonly />
+            </div>
+            <div class="form-group">
+                <label>设备名称</label>
+                <input type="text" name="equipment.name" value="#(equipmentInfo.name)" readonly />
+            </div>
+            <div class="form-group">
+                <label>放置位置</label>
+                <input type="text" name="equipment.location" value="#(equipmentInfo.location)" readonly />
+            </div>
+            <div class="form-group">
+                <label>购买人员</label>
+                <input type="text" name="equipment.buyer" value="#(equipmentInfo.buyer)" readonly />
+            </div>
+            <div class="form-group">
+                <label>购买价格</label>
+                <input type="text" name="equipment.price" value="#(equipmentInfo.price)" readonly />
+            </div>
+            <div class="form-group">
+                <label>生产日期</label>
+                <input type="text" name="equipment.producedate" value="#(equipmentInfo.producedate)" readonly />
+            </div>
+            <div class="form-group">
+                <label>购买日期</label>
+                <input type="text" name="equipment.buyday" value="#(equipmentInfo.buyday)" readonly />
+            </div>
+            <div class="form-group">
+                <label>上次检修期</label>
+                <input type="text" name="equipment.lastcheckdate" value="#(equipmentInfo.lastcheckdate)" readonly />
+            </div>
+            <div class="form-group">
+                <label>失效日期</label>
+                <input type="text" name="equipment.expiredate" value="#(equipmentInfo.expiredate)" readonly />
+            </div>
+            <div class="form-group">
+                <label>备注信息</label>
+                <input type="text" name="equipment.remark" value="#(equipmentInfo.remark)" readonly />
+            </div>
+            <div class="form-group">
+                <label>设备图片</label>
+                <div id="equipmentImageUrlInputContainer" class="image-gallery"></div>
+                <input type="hidden" id="equipmentImageInputUrl" name="equipmentinfo.picture" value="#(equipmentInfo.picture)" />
+            </div>
+        </form>
+    </div>
 </div>
+
+<div class="image-modal" id="imageModal">
+    <img id="modalImage" src="" alt="设备图片">
+</div>
+
 <script>
     $(document).ready(function () {
-        // 获取存储设备图片URL的隐藏输入框的值，并分割成数组（假设多个URL用逗号分隔）
         var equipmentImageUrls = document.getElementById('equipmentImageInputUrl').value.split(',');
-        console.log("equipmentImageUrls: " + equipmentImageUrls);
         var container = document.getElementById('equipmentImageUrlInputContainer');
-        console.log("container: " + container);
-        equipmentImageUrls.forEach(function (url, urlIndex) {
-            console.log("okkkk");
-            // 如果 URL 为空，就跳过这个 URL
+
+        equipmentImageUrls.forEach(function (url) {
             if (!url || url === '') {
                 return;
             }
+
             var div = document.createElement('div');
-            console.log("div: " + div);
-            div.style.position = 'relative';
-            div.style.width = "100px";
-            div.style.height = "100px";
+            div.className = 'image-item';
 
             var img = document.createElement('img');
             img.src = url;
-            console.log("img.sec: " + img.src);
-            img.style.width = "100%";
-            img.style.height = "100%";
-            div.appendChild(img);
-
-            // 为图片添加点击事件，点击时调用showImage函数并传入图片链接
-            img.onclick = function () {
+            img.onclick = function (e) {
+                e.stopPropagation();
                 showImage(this.src);
             };
 
+            div.appendChild(img);
             container.appendChild(div);
         });
     });
@@ -195,31 +228,15 @@
         if (imageUrl == null) {
             return;
         }
-        var img = new Image();
-        img.src = imageUrl;
-        var mask = document.createElement('div');
-        mask.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); z-index: 9999;';
-        document.body.appendChild(mask);
-        var imgContainer = document.createElement('div');
-        imgContainer.style.cssText = 'position: fixed; top: 50%; left: 50%; width: auto; height: auto; transform: translate(-50%, -50%); z-index: 10000;';
-        imgContainer.appendChild(img);
-        document.body.appendChild(imgContainer);
-
-        img.onload = function () {
-            var maxWidth = window.innerWidth * 0.8; // Adjust max width as needed
-            var maxHeight = window.innerHeight * 0.8; // Adjust max height as needed
-            var imgWidth = img.naturalWidth;
-            var imgHeight = img.naturalHeight;
-            var scaleFactor = Math.min(maxWidth / imgWidth, maxHeight / imgHeight);
-            img.style.width = (imgWidth * scaleFactor) + "px";
-            img.style.height = (imgHeight * scaleFactor) + "px";
-        }
-
-        mask.addEventListener('click', function () {
-            mask.parentNode.removeChild(mask);
-            imgContainer.parentNode.removeChild(imgContainer);
-        });
+        var modal = document.getElementById('imageModal');
+        var modalImage = document.getElementById('modalImage');
+        modalImage.src = imageUrl;
+        modal.classList.add('active');
     }
+
+    document.getElementById('imageModal').addEventListener('click', function () {
+        this.classList.remove('active');
+    });
 </script>
 </body>
 

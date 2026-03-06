@@ -1,254 +1,378 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>电子秤管理</title>
     <script src="../css/jquery-3.3.1.min.js"></script>
     <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css">
     <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/lpg.css">
 
-    <style scoped>
-        .container {
-            padding: 50px 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        input {
-            padding: 15px;
-            font-size: 18px;
-            border: 2px solid #a3bffa;
-            border-radius: 10px;
-            width: 100%;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: border-color 0.3s ease;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: #4c87c9;
-        }
-    </style>
-
     <style>
-        /* 设置 #pagediv 的样式 */
-        #pagediv {
-            background-color: #f0f0f0;
-            color: black;
-            padding: 10px;
-            border: 2px solid #007bff;
+        body {
+            background: #F8FAFC;
+            color: #1E293B;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            margin: 0;
         }
 
-        /* 设置表格样式 */
+        .page-container {
+            background: #F8FAFC;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .search-area {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .btn-add {
+            background: #3B82F6;
+            color: #FFFFFF;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.15s ease;
+        }
+
+        .btn-add:hover {
+            background: #2563EB;
+            color: #FFFFFF;
+            text-decoration: none;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            background: #FFFFFF;
+        }
+
         table.list {
             width: 100%;
+            min-width: 1800px;
             border-collapse: collapse;
+            background: #FFFFFF;
         }
 
-        /* 设置表格表头样式 */
-        table.list th {
-            background-color: #add8e6;
-            color: black;
-            padding: 8px;
+        table.list thead th {
+            background: #F8FAFC;
+            color: #475569;
+            font-size: 13px;
+            font-weight: 600;
             text-align: left;
-            border: 1px solid #ddd; /* 新增：添加边框 */
+            padding: 14px 16px;
+            border-bottom: 1px solid #E2E8F0;
+            white-space: nowrap;
         }
 
-        /* 设置表格单元格样式 */
-        table.list td {
-            padding: 8px;
-            border: 1px solid #ddd; /* 修改：添加边框 */
+        table.list tbody td {
+            padding: 14px 16px;
+            font-size: 14px;
+            color: #1E293B;
+            border-bottom: 1px solid #F1F5F9;
+            vertical-align: middle;
+            white-space: nowrap;
         }
 
-        /* 设置表格隔行颜色 */
-        table.list tr:nth-child(even) {
-            background-color: #f2f2f2;
+        table.list tbody tr {
+            background: #FFFFFF;
+            transition: background 0.15s ease;
         }
 
-        table.list tr:nth-child(odd) {
-            background-color: #e0e0e0;
+        table.list tbody tr:nth-child(even) {
+            background: #F8FAFC;
         }
 
-        /* 设置鼠标悬停时表格行的颜色 */
-        table.list tr:hover {
-            background-color: #d3d3d3;
+        table.list tbody tr:hover {
+            background: #F1F5F9;
         }
 
-        /* 新增样式：设置新建司机链接为黑色 */
-        #pagediv .add {
-            color: black;
+        table.list tbody tr:last-child td {
+            border-bottom: none;
         }
 
-        /* 新增样式：设置输入框背景色为淡灰色 */
-        #pagediv input[type="text"] {
-            background-color: #f0f0f0;
-        }
-        /* 新增样式：设置 label 文字颜色为黑色 */
-        #pagediv label {
-            color: black;
-        }
-        #pagediv .add {
-            color: white;
-            background-color: #007bff;
-            padding: 6px 12px;
+        table.list a {
+            color: #3B82F6;
             text-decoration: none;
-            display: inline-block;
-            border-radius: 5; /* 方方正正的边框 */
+            margin-right: 12px;
+            transition: color 0.15s ease;
         }
-    </style>
-    <title>Content</title>
-    <!-- Add your custom stylesheets and scripts here -->
-</head>
-<body>
 
+        table.list a:hover {
+            color: #2563EB;
+        }
 
-    <div id="pagediv">
-        <a href="#" class="add openModal" data-title="新建电子秤" data-edit-url="add" ><b> + </b>新建电子秤</a>
-    </div>
-    <table class="list">
-        <tbody>
-        <thead>
-        <tr>
-            <th>序号</th>
-            <th>秤编号</th>
-            <th>阿里用户名</th>
-            <th>生产厂家</th>
-            <th>生产日期</th>
-            <th>注册日期</th>
-            <th>饭店名称</th>
-            <th>饭店联系电话</th>
-            <th>是否打开阀门</th>
-            <th>是否关闭阀门</th>
-            <th>获取秤的全部状态</th>
-            <th>获取警报</th>
-            <th>打开警报</th>
-            <th>关闭警报</th>
-            <th>状态</th>
-            <th>预留1</th>
-            <th>预留2</th>
-            <th>预留3</th>
-            <th>备注（预留命令位置）</th>
-            <th>绑定接口</th>
-            <th>解绑接口</th>
-            <th>操作</th>
-        </tr>
-        </thead>
-        #set(startIndex = (dianzichengs.pageNumber - 1) * dianzichengs.pageSize + 1)
+        .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 20px;
+            color: #475569;
+        }
 
-        #for(x : dianzichengs.getList())
-        <tr>
-            <td>#(startIndex++)</td> <!-- 显示序号并递增 -->
-            <td>#(x.bianma)</td>
-            <td>#(x.alichengmingzi)</td>
-            <td>#(x.shengchangchangjia)</td>
-            <td>#(x.shengchanriqi)</td>
-            <td>#(x.zhuceriqi)</td>
-            <td>#(x.shiyongfandianmingzi)</td>
-            <td>#(x.shiyongfangphone)</td>
-            <td>#(x.dakaifamen)</td>
-            <td>#(x.guanbifamen)</td>
-            <td>#(x.huoquchengxinxi)</td>
-            <td>#(x.huoqujingbao)</td>
-            <td>#(x.dakaijingbao)</td>
-            <td>#(x.guanbijingbao)</td>
-            <td>#(x.status)</td>
-            <td>#(x.yuliu1)</td>
-            <td>#(x.yuliu2)</td>
-            <td>#(x.yuliu3)</td>
-            <td>#(x.memo)</td>
-            <td>#(x.bangdingjiekou)</td>
-            <td>#(x.jiebangdingjiekou)</td>
+        .pagination a,
+        .pagination span {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 36px;
+            height: 36px;
+            padding: 0 8px;
+            font-size: 14px;
+            border: 1px solid #E2E8F0;
+            border-radius: 6px;
+            color: #475569;
+            background: #FFFFFF;
+            text-decoration: none;
+            transition: all 0.15s ease;
+        }
 
-            <td style="text-align:left">
-                &nbsp;&nbsp;<a href="#" onclick="confirmDelete('#(x.id)')">删除</a>
-                &nbsp;&nbsp; <a href="#" class="edit openModal" data-title="编辑电子秤" data-edit-url="/dianzicheng/edit/#(x.id)">修改</a>
-            </td>
-        </tr>
-        #end
-        </tbody>
-    </table>
-    <div class="pagination" style="color:#DDDDDD; font-size: 24px">
-        #@paginate(dianzichengs.pageNumber, dianzichengs.totalPage, "/dianzicheng/dianzichenglist?page=")
-    </div>
+        .pagination a:hover {
+            background: #F8FAFC;
+            border-color: #CBD5E1;
+        }
 
-    <script>
-        function confirmDelete(id) {
-            var result = confirm("确定要删除吗？");
-            if (result) {
-                // 如果用户点击了确定，则执行删除操作
-                window.location.href = "/dianzicheng/delete/" + id;
-            } else {
-                // 如果用户点击了取消，则不执行任何操作
-                return false;
+        .pagination .current-page {
+            background: #3B82F6;
+            color: #FFFFFF;
+            border-color: #3B82F6;
+        }
+
+        .pagination .disabled {
+            color: #94A3B8;
+            background: #F8FAFC;
+            cursor: not-allowed;
+        }
+
+        .modal-content {
+            border: 1px solid #E2E8F0;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .modal-header {
+            background: #F8FAFC;
+            border-bottom: 1px solid #E2E8F0;
+            padding: 16px 20px;
+        }
+
+        .modal-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E293B;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .modal-footer {
+            background: #F8FAFC;
+            border-top: 1px solid #E2E8F0;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        .btn-default {
+            background: #FFFFFF;
+            color: #475569;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            transition: all 0.15s ease;
+        }
+
+        .btn-default:hover {
+            background: #F8FAFC;
+            border-color: #94A3B8;
+        }
+
+        .btn-primary {
+            background: #3B82F6;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 6px;
+            transition: all 0.15s ease;
+        }
+
+        .btn-primary:hover {
+            background: #2563EB;
+        }
+
+        @media (max-width: 768px) {
+            .page-container {
+                padding: 12px;
+            }
+
+            .search-area {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .btn-add {
+                width: 100%;
+                justify-content: center;
             }
         }
-    </script>
+    </style>
+</head>
+<body>
+<div class="page-container">
+    <div class="search-area">
+        <a href="#" class="btn-add openModal" data-title="新建电子秤" data-edit-url="add">+ 新建电子秤</a>
+    </div>
+
+    <div class="table-wrapper">
+        <table class="list">
+            <thead>
+            <tr>
+                <th>序号</th>
+                <th>秤编号</th>
+                <th>阿里用户名</th>
+                <th>生产厂家</th>
+                <th>生产日期</th>
+                <th>注册日期</th>
+                <th>饭店名称</th>
+                <th>饭店联系电话</th>
+                <th>是否打开阀门</th>
+                <th>是否关闭阀门</th>
+                <th>获取秤的全部状态</th>
+                <th>获取警报</th>
+                <th>打开警报</th>
+                <th>关闭警报</th>
+                <th>状态</th>
+                <th>预留1</th>
+                <th>预留2</th>
+                <th>预留3</th>
+                <th>备注（预留命令位置）</th>
+                <th>绑定接口</th>
+                <th>解绑接口</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            #set(startIndex = (dianzichengs.pageNumber - 1) * dianzichengs.pageSize + 1)
+            #for(x : dianzichengs.getList())
+            <tr>
+                <td>#(startIndex++)</td>
+                <td>#(x.bianma)</td>
+                <td>#(x.alichengmingzi)</td>
+                <td>#(x.shengchangchangjia)</td>
+                <td>#(x.shengchanriqi)</td>
+                <td>#(x.zhuceriqi)</td>
+                <td>#(x.shiyongfandianmingzi)</td>
+                <td>#(x.shiyongfangphone)</td>
+                <td>#(x.dakaifamen)</td>
+                <td>#(x.guanbifamen)</td>
+                <td>#(x.huoquchengxinxi)</td>
+                <td>#(x.huoqujingbao)</td>
+                <td>#(x.dakaijingbao)</td>
+                <td>#(x.guanbijingbao)</td>
+                <td>#(x.status)</td>
+                <td>#(x.yuliu1)</td>
+                <td>#(x.yuliu2)</td>
+                <td>#(x.yuliu3)</td>
+                <td>#(x.memo)</td>
+                <td>#(x.bangdingjiekou)</td>
+                <td>#(x.jiebangdingjiekou)</td>
+                <td>
+                    <a href="#" onclick="confirmDelete('#(x.id)')">删除</a>
+                    <a href="#" class="openModal" data-title="编辑电子秤" data-edit-url="/dianzicheng/edit/#(x.id)">修改</a>
+                </td>
+            </tr>
+            #end
+            </tbody>
+        </table>
+    </div>
+
+    <div class="pagination">
+        #@paginate(dianzichengs.pageNumber, dianzichengs.totalPage, "/dianzicheng/dianzichenglist?page=")
+    </div>
+</div>
 
 <script>
-    $('.openModal').click(function(e) {
+    function confirmDelete(id) {
+        if (confirm("确定要删除吗？")) {
+            window.location.href = "/dianzicheng/delete/" + id;
+        }
+    }
+
+    $('.openModal').click(function (e) {
         e.preventDefault();
         var editUrl = $(this).data('edit-url');
-        var that = this; // 保存正确的上下文
+        var that = this;
 
-        $.get(editUrl, function(data) {
+        $.get(editUrl, function (data) {
             var title = $(that).data('title');
-            $('#myModalLabel').text(title); // 修改模态窗口标题
-
-            // 清除旧内容
-            $('#modalBody').html(data); // 加载编辑内容到模态窗口
-            $('#myModal').modal('show'); // 显示模态窗口
+            $('#myModalLabel').text(title);
+            $('#modalBody').html(data);
+            $('#myModal').modal('show');
         });
     });
 
+    function validateForm() {
+        var form = document.getElementById('myForm');
+        if (!form) {
+            return false;
+        }
+
+        var dateFormat = /^\d{4}-\d{2}-\d{2}$/;
+        var statusInput = form.querySelector('input[name="dianzicheng.status"]');
+        if (statusInput && statusInput.value.trim() === "") {
+            alert('状态不能为空');
+            return false;
+        }
+
+        var fields = ['dianzicheng.shengchanriqi', 'dianzicheng.zhuceriqi'];
+        for (var i = 0; i < fields.length; i++) {
+            var input = form.querySelector('input[name="' + fields[i] + '"]');
+            if (input && input.value.trim() !== "" && !dateFormat.test(input.value.trim())) {
+                alert('日期格式不正确，正确格式应为 yyyy-mm-dd');
+                return false;
+            }
+        }
+        return true;
+    }
+
+    document.getElementById('saveButton').addEventListener('click', function () {
+        if (validateForm()) {
+            document.getElementById('myForm').submit();
+        }
+    });
 </script>
+
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" id="myModalLabel">模态窗口标题</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
-            <div class="modal-body" id="modalBody">
-                <!-- 这里将会加载你的表单内容 -->
-            </div>
+            <div class="modal-body" id="modalBody"></div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary"  id="saveButton" >保存</button>
-
-                <script>
-                    function validateForm() {
-                        // 正确的日期格式 yyyy-mm-dd
-                        const dateFormat = /^\d{4}-\d{2}-\d{2}$/;
-
-                        // 获取所有需要验证的日期输入框
-                        const dateInputs = document.querySelectorAll('input[type="text"][name^="dianzicheng."][name*="zhuceriqi"], input[type="text"][name^="dianzicheng."][name*="shengchanriqi"]');
-                        var statusInput = document.querySelector('input[name="dianzicheng.status"]');
-                        for (let i = 0; i < dateInputs.length; i++) {
-                            if (statusInput.value === '') {
-                                alert('状态不能为空');
-                                return false
-                            }
-                            // 如果日期输入框不为空，检查日期格式
-                            if (dateInputs[i].value.trim() !== "" && !dateFormat.test(dateInputs[i].value)) {
-                                alert('日期格式不正确，无法保存,正确日期格式应为xxxx-xx-xx');
-                                return false; // 如果有任何一个日期格式不正确，直接返回false
-                            }
-                        }
-                        return true;
-                    }
-
-
-                    document.getElementById('saveButton').addEventListener('click', function() {
-                        // 验证表单数据
-                        if (validateForm()) {
-                            // 如果验证通过，则提交表单
-                            document.getElementById('myForm').submit();
-                        }
-                        // 如果验证失败，不提交表单（validateForm内部已经显示了错误消息）
-                    });
-                </script>
-
+                <button type="button" class="btn btn-primary" id="saveButton">保存</button>
             </div>
         </div>
     </div>
