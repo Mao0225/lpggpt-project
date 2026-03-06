@@ -376,7 +376,6 @@
 
         document.getElementById("myForm").addEventListener("submit", function(e) {
             var gasNumber = document.getElementById("gas_file.gas_number").value.trim();
-            var stationId = document.getElementById("gas_file.stationid").value.trim();
             var tip = document.getElementById("gasNumberTip");
 
             if (!gasNumber) {
@@ -384,13 +383,6 @@
                 tip.innerText = "气瓶编号不能为空！";
                 tip.style.color = "#EF4444";
                 alert("气瓶编号不能为空，请填写！");
-                return false;
-            }
-            if (!stationId || stationId === "-1") {
-                e.preventDefault();
-                tip.innerText = "请选择有效的加气站！";
-                tip.style.color = "#EF4444";
-                alert("请选择有效的加气站！");
                 return false;
             }
             if (tip.innerText.includes("已存在")) {

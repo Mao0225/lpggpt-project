@@ -208,7 +208,7 @@
             <div class="form-two-column">
                 <div>
                     <label>检验机构</label>
-                    <input type="text" name="gas_file.filling_gas_station" value="" />
+                    <input type="text" name="gas_file.inspect_unit" value="" />
                 </div>
                 <div>
                     <label>设备品种</label>
@@ -383,7 +383,48 @@
             selectName.addEventListener("change", chooseName);
         }
         chooseName();
+
+        // 表单提交验证
+        var form = document.getElementById("myForm");
+        if (form) {
+            form.addEventListener("submit", function(e) {
+                if (!validateFormBeforeSubmit()) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+        }
     });
+
+    function validateFormBeforeSubmit() {
+        var gasNumber = document.getElementById("gas_file.gas_number").value.trim();
+        var selectValue = document.getElementById("selectName").value.trim();
+        var tip = document.getElementById("gasNumberTip");
+
+        // 检查气瓶编号
+        if (!gasNumber) {
+            alert("气瓶编号不能为空，请填写！");
+            tip.innerText = "气瓶编号不能为空！";
+            tip.style.color = "#EF4444";
+            document.getElementById("gas_file.gas_number").focus();
+            return false;
+        }
+
+        // 检查加气站（检查下拉框的值）
+        if (!selectValue || selectValue === "-1" || selectValue === "") {
+            alert("请选择加气站！");
+            document.getElementById("selectName").focus();
+            return false;
+        }
+
+        // 检查气瓶编号是否重复
+        if (tip.innerText.includes("已存在")) {
+            alert("气瓶编号重复，请更换后再提交！");
+            return false;
+        }
+
+        return true;
+    }
 </script>
 </body>
 </html>

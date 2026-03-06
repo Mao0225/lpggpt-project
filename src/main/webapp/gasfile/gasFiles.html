@@ -530,7 +530,24 @@
     function validateForm() {
         const dateFormat = /^\d{4}-\d{2}-\d{2}$/;
         const inputs = document.querySelectorAll('input[type="text"][name^="gas_file."]');
+        const selects = document.querySelectorAll('select[name^="gas_file."]');
 
+        // 检查必填字段
+        for (let i = 0; i < inputs.length; i++) {
+            if (inputs[i].hasAttribute('required') && inputs[i].value.trim() === "") {
+                alert('请填写所有必填字段！');
+                return false;
+            }
+        }
+
+        for (let i = 0; i < selects.length; i++) {
+            if (selects[i].hasAttribute('required') && (selects[i].value === "" || selects[i].value === "-1")) {
+                alert('请选择所有必填项！');
+                return false;
+            }
+        }
+
+        // 检查日期格式
         for (let i = 0; i < inputs.length; i++) {
             if (inputs[i].name.includes("date") && inputs[i].value.trim() !== "" && !dateFormat.test(inputs[i].value)) {
                 alert('日期格式不正确，无法保存,正确格式为xxxx-xx-xx');

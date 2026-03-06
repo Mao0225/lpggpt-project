@@ -1,54 +1,56 @@
 package com.sjzu.edu.index;
 
-import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 import com.sjzu.edu.common.model.BseEquipment;
-import com.sjzu.edu.common.model.Restaurant;
-import com.sjzu.edu.common.model.User;
-
-import javax.servlet.http.HttpSession;
 
 public class ManageEquipmentService {
     private BseEquipment dao = new BseEquipment().dao();
+
+    // 原有方法：查询全部设备（返回Page<BseEquipment>）
     public Page<BseEquipment> paginate(int pageNumber, int pageSize) {
         return dao.paginate(pageNumber, pageSize, "select *", "from bse_equipment order by id DESC");
     }
 
-    public Page<Record> search(int pageNumber, int pageSize, Integer id) {  // 参数id改为包装类型Integer，方便处理可能为null的情况
+    // 新增方法：按公司ID查询设备（返回Page<BseEquipment>，和原有paginate返回类型一致）
+    public Page<BseEquipment> searchByCompanyId(int pageNumber, int pageSize, Integer companyId) {
+        StringBuilder sqlBuilder = new StringBuilder("from bse_equipment");
+        // 只有companyId不为null且不等于-1时，才添加筛选条件
+        if (companyId != null && companyId != -1) {
+            sqlBuilder.append(" WHERE companyid = ?");
+            // 使用参数化查询，避免SQL注入
+            return dao.paginate(pageNumber, pageSize, "select *", sqlBuilder.toString(), companyId);
+        } else {
+            // 查全部，复用原有逻辑
+            return paginate(pageNumber, pageSize);
+        }
+    }
+
+    // 保留原有search方法（如果其他地方用到），但mequiplist不再使用
+    public Page<Record> search(int pageNumber, int pageSize, Integer id) {
         String selectFields = "select *";
         StringBuilder sqlBuilder = new StringBuilder("from bse_equipment");
 
-        // 构建动态查询条件，添加根据companyid与传入id匹配的筛选条件
-        if (id!= null) {
-            sqlBuilder.append(" WHERE companyid = ").append(id);  // 精确匹配companyid与传入的id相等
-            // 如果需要模糊匹配，可以使用如下方式（根据实际需求选择）
-            // sqlBuilder.append(" WHERE companyid LIKE '%").append(id).append("%'");
+        if (id != null && id != -1) {
+            sqlBuilder.append(" WHERE companyid = ").append(id);
         }
-
         sqlBuilder.append(" ORDER BY id DESC");
         String sql = sqlBuilder.toString();
-        System.out.println(sql);
+        System.out.println("最终执行的SQL：" + sql);
         return Db.paginate(pageNumber, pageSize, selectFields, sql);
     }
+
     public Record findByEquipmentIdAndCompanyId(int equipmentId) {
-        // 明确指定SELECT语句的字段部分
-        String selectFields = "SELECT * ";
-        StringBuilder sqlBuilder = new StringBuilder();
-        // 先添加SELECT字段部分
-        sqlBuilder.append(selectFields);
-        // 再添加FROM和表名以及WHERE条件部分，使用String.format确保空格等格式正确
-        sqlBuilder.append(String.format("FROM %s ", "bse_equipment"));
-        sqlBuilder.append(String.format("WHERE id = %d ", equipmentId));
-        String sql = sqlBuilder.toString();
-        System.out.println("构建的完整SQL语句为: " + sql);
-        // 使用Db.findFirst尝试获取符合条件的第一条（也是唯一一条，根据你的业务逻辑应该是对应唯一数据行）记录
-        return Db.findFirst(sql);
+        String sql = "SELECT * FROM bse_equipment WHERE id = ?";
+        System.out.println("查询维修数据SQL：" + sql + " 参数：" + equipmentId);
+        return Db.findFirst(sql, equipmentId);
     }
+
     public void deleteById(int id) {
         dao.deleteById(id);
     }
+
     public BseEquipment findById(int id) {
         return dao.findById(id);
     }

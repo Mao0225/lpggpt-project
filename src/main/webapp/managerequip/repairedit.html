@@ -1,46 +1,52 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Equipment Repair</title>
+    <title>设备维修</title>
     <style>
-        /* 浅色商务风格 - 表单 */
         body {
+            margin: 0;
             background: #F8FAFC;
             color: #1E293B;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
         }
 
         .form_box {
             background: #FFFFFF;
-            padding: 24px;
+            border: 1px solid #E2E8F0;
             border-radius: 8px;
+            padding: 24px;
         }
 
-        .form_box form {
+        #myForm {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
             gap: 20px;
         }
 
-        .form_box div {
+        .form-field {
             display: flex;
             flex-direction: column;
+            min-width: 0;
         }
 
-        .form_box label {
+        .form-field.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-field label {
             font-size: 14px;
             font-weight: 500;
             color: #475569;
             margin-bottom: 8px;
         }
 
-        .form_box input[type="text"],
-        .form_box input[type="date"],
-        .form_box textarea,
-        .form_box select {
+        .form-field input[type="text"],
+        .form-field input[type="date"],
+        .form-field textarea,
+        .form-field select {
+            width: 100%;
             padding: 10px 12px;
             font-size: 14px;
             border: 1px solid #CBD5E1;
@@ -48,72 +54,80 @@
             background: #FFFFFF;
             color: #1E293B;
             transition: all 0.15s ease;
+            box-sizing: border-box;
             font-family: inherit;
         }
 
-        .form_box input[type="text"]:read-only {
+        .form-field input[readonly] {
             background: #F8FAFC;
             color: #64748B;
         }
 
-        .form_box textarea {
-            resize: vertical;
-            min-height: 100px;
-            grid-column: 1 / -1;
-        }
-
-        .form_box input[type="text"]:focus,
-        .form_box input[type="date"]:focus,
-        .form_box textarea:focus,
-        .form_box select:focus {
+        .form-field input[type="text"]:focus,
+        .form-field input[type="date"]:focus,
+        .form-field textarea:focus,
+        .form-field select:focus {
             outline: none;
             border-color: #3B82F6;
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-field textarea {
+            min-height: 110px;
+            resize: vertical;
+        }
+
+        @media (max-width: 768px) {
+            .form_box {
+                padding: 16px;
+            }
+
+            #myForm {
+                grid-template-columns: 1fr;
+                gap: 14px;
+            }
+
+            .form-field.full-width {
+                grid-column: auto;
+            }
         }
     </style>
 </head>
 
 <body>
 <div class="form_box">
-    <form id="myForm" >
-        <!--        <input type="hidden" name="equipment.id" value="#(equipment.id??)" />-->
-        <!-- 添加隐藏的input元素来传递companyid -->
+    <form id="myForm">
         <input type="hidden" name="maintenance.companyid" value="#(maintenanceInfo.companyid)" />
-        <!-- 添加隐藏的input元素来传递equipmentid -->
         <input type="hidden" name="maintenance.equipmentid" value="#(maintenanceInfo.id)" />
-        <!-- 将maintenance.step的值固定设置为字符串“完成” -->
         <input type="hidden" name="maintenance.step" value="提交" />
-        <!-- 添加隐藏的input元素来传递weiter -->
         <input type="hidden" name="maintenance.writer" value="#(maintenanceInfo.writer)" />
-        <!-- 添加隐藏的input元素来传递writetime -->
         <input type="hidden" name="maintenance.writetime" value="#(maintenanceInfo.writetime)" />
-        <!-- 添加隐藏的input元素来传递delete_time -->
         <input type="hidden" name="maintenance.delete_time" value="#(maintenanceInfo.delete_time)" />
-        <div>
+
+        <div class="form-field">
             <label>设备名称</label>
-            <input type="text" name="maintenance.name"  value="#(maintenanceInfo.name)" readonly />
+            <input type="text" name="maintenance.name" value="#(maintenanceInfo.name)" readonly />
         </div>
-        <div>
+        <div class="form-field">
             <label>记录类型</label>
             <select name="maintenance.kind">
                 <option value="维护">维护</option>
                 <option value="维修">维修</option>
             </select>
         </div>
-        <div class="text-input-div">
+        <div class="form-field">
             <label>报修日期</label>
             <input type="date" name="maintenance.reportday" />
         </div>
-        <div>
+        <div class="form-field">
             <label>报修人员</label>
             <input type="text" name="maintenance.reporter" value="" />
         </div>
-        <div>
+        <div class="form-field full-width">
             <label>主要内容</label>
             <textarea name="maintenance.content"></textarea>
         </div>
     </form>
 </div>
 </body>
-
 </html>

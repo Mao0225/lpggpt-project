@@ -104,9 +104,37 @@ public class GasfileController extends Controller {
     }
 
     public void update() {
-        GasFile gasFile = getModel(GasFile.class, "gas_file");
-        gasFile.update();
-        redirect("/gasFile/gasFilelist");
+        try {
+            GasFile gasFile = getModel(GasFile.class, "gas_file");
+            String gasNumber = gasFile.getGasNumber();
+            int stationid = gasFile.getStationid();
+            int id = gasFile.getId();
+
+            System.out.println("接收编辑气瓶档案：气瓶编号=" + gasNumber + ", ID=" + id);
+
+            // 检查气瓶编号是否重复（排除当前记录）
+            boolean isDuplicate = service.isGasNumberDuplicateForUpdate(gasNumber, stationid, id);
+            if (isDuplicate) {
+                System.err.println("编辑失败：气瓶编号[" + gasNumber + "]已存在！");
+                List<GasStation> gasstations = gasstation.find("SELECT id, station_name FROM gas_station");
+                setAttr("gasstations", gasstations);
+                setAttr("errorMsg", "编辑失败：气瓶编号「" + gasNumber + "」已存在，请更换！");
+                setAttr("gas_file", gasFile);
+                render("edit.html");
+                return;
+            }
+
+            System.out.println("气瓶编号[" + gasNumber + "]未重复，执行更新");
+            gasFile.update();
+            redirect("/gasFile/gasFilelist");
+        } catch (Exception e) {
+            System.err.println("编辑气瓶档案异常：" + e.getMessage());
+            e.printStackTrace();
+            List<GasStation> gasstations = gasstation.find("SELECT id, station_name FROM gas_station");
+            setAttr("gasstations", gasstations);
+            setAttr("errorMsg", "编辑失败：系统异常，请稍后重试！");
+            render("edit.html");
+        }
     }
 
     public void delete() {

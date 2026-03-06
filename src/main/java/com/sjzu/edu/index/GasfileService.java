@@ -41,6 +41,32 @@ public class GasfileService {
         return count > 0;
     }
 
+    public boolean isGasNumberDuplicateForUpdate(String gasNumber, int stationid, int id) {
+        if (gasNumber == null || gasNumber.trim().isEmpty()) {
+            System.out.println("校验失败：气瓶编号为空");
+            return true;
+        }
+        if (stationid <= 0) {
+            System.out.println("校验失败：加气站ID无效，stationid=" + stationid);
+            return true;
+        }
+
+        String sql = "SELECT COUNT(*) FROM gas_file WHERE gas_number = ? AND stationid = ? AND id != ?";
+        Long count = 0L;
+        try {
+            count = Db.queryLong(sql, gasNumber.trim(), stationid, id);
+            System.out.printf("校验气瓶编号[%s]（加气站ID：%d，排除ID：%d）重复度：数据库中存在%d条记录%n",
+                    gasNumber.trim(), stationid, id, count);
+        } catch (Exception e) {
+            System.err.printf("校验气瓶编号[%s]（加气站ID：%d）时出错：%s%n",
+                    gasNumber.trim(), stationid, e.getMessage());
+            e.printStackTrace();
+            return true;
+        }
+
+        return count > 0;
+    }
+
     public boolean saveGasFile(GasFile gasFile) {
         String gasNumber = gasFile.getGasNumber();
         int stationid = gasFile.getStationid();

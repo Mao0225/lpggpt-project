@@ -1,49 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" width="device-width, initial-scale=1.0">
-    <title>Equipment List</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>设备管理列表</title>
     <script src="../css/jquery-3.3.1.min.js"></script>
     <link rel="stylesheet" href="../css/bootstrap-4.3.1-dist/css/bootstrap.min.css">
     <script src="../css/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
     <link rel="stylesheet" type="text/css" href="/css/lpg.css">
 
-    <style scoped>
-        .container {
-            padding: 50px 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        input {
-            padding: 15px;
-            font-size: 18px;
-            border: 2px solid #a3bffa;
-            border-radius: 10px;
-            width: 100%;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: border-color 0.3s ease;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: #4c87c9;
-        }
-    </style>
-
     <style>
-        /* 浅色商务风格 - 设备管理列表 */
         body {
+            margin: 0;
             background: #F8FAFC;
             color: #1E293B;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
         }
 
-        /* 搜索区域 */
-        #pagediv {
+        .page-container {
+            background: #F8FAFC;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .search-area {
             background: #FFFFFF;
             border: 1px solid #E2E8F0;
             border-radius: 8px;
@@ -55,139 +35,293 @@
             gap: 12px;
         }
 
-        #pagediv label {
+        .search-area label {
+            margin: 0;
             font-size: 14px;
             font-weight: 500;
             color: #475569;
             white-space: nowrap;
-            margin: 0;
         }
 
-        #pagediv input[type="text"],
-        #pagediv select {
+        .search-area select,
+        .search-area input[type="text"] {
+            min-width: 180px;
             padding: 8px 12px;
             font-size: 14px;
             border: 1px solid #CBD5E1;
             border-radius: 6px;
             background: #FFFFFF;
             color: #1E293B;
-            min-width: 160px;
             transition: all 0.15s ease;
         }
 
-        #pagediv input[type="text"]:focus,
-        #pagediv select:focus {
+        .search-area select:focus,
+        .search-area input[type="text"]:focus {
             outline: none;
             border-color: #3B82F6;
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
         }
 
-        #pagediv button {
-            background: #3B82F6;
-            color: #FFFFFF;
-            border: none;
-            padding: 8px 20px;
+        .btn-search,
+        .btn-reset {
             border-radius: 6px;
             font-size: 14px;
             font-weight: 500;
+            padding: 8px 20px;
             cursor: pointer;
             transition: all 0.15s ease;
         }
 
-        #pagediv button:hover {
+        .btn-search {
+            border: none;
+            background: #3B82F6;
+            color: #FFFFFF;
+        }
+
+        .btn-search:hover {
             background: #2563EB;
         }
 
-        /* 表格样式 */
-        table.list {
-            width: 100%;
-            border-collapse: collapse;
+        .btn-reset {
+            border: 1px solid #CBD5E1;
+            background: #FFFFFF;
+            color: #475569;
+        }
+
+        .btn-reset:hover {
+            background: #F8FAFC;
+            border-color: #94A3B8;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
             background: #FFFFFF;
             border: 1px solid #E2E8F0;
             border-radius: 8px;
-            overflow: hidden;
         }
 
-        table.list th {
+        .data-table {
+            width: 100%;
+            min-width: 980px;
+            border-collapse: collapse;
+            background: #FFFFFF;
+        }
+
+        .data-table thead th {
             background: #F8FAFC;
             color: #475569;
+            font-size: 13px;
             font-weight: 600;
-            font-size: 14px;
-            padding: 14px 16px;
             text-align: center;
+            padding: 14px 16px;
             border-bottom: 1px solid #E2E8F0;
+            white-space: nowrap;
         }
 
-        table.list td {
+        .data-table tbody td {
             padding: 14px 16px;
-            border-bottom: 1px solid #E2E8F0;
-            text-align: center;
+            font-size: 14px;
             color: #1E293B;
-            font-size: 14px;
+            border-bottom: 1px solid #F1F5F9;
+            text-align: center;
+            vertical-align: middle;
+            white-space: nowrap;
         }
 
-        table.list tbody tr:hover {
+        .data-table tbody tr {
+            background: #FFFFFF;
+            transition: background 0.15s ease;
+        }
+
+        .data-table tbody tr:nth-child(even) {
+            background: #F8FAFC;
+        }
+
+        .data-table tbody tr:hover {
             background: #F1F5F9;
         }
 
-        table.list tbody tr:last-child td {
+        .data-table tbody tr:last-child td {
             border-bottom: none;
         }
 
-        /* 操作链接 */
-        table.list a {
+        .data-table a {
             color: #3B82F6;
             text-decoration: none;
             margin: 0 6px;
-            transition: all 0.15s ease;
+            transition: color 0.15s ease;
         }
 
-        table.list a:hover {
+        .data-table a:hover {
             color: #2563EB;
             text-decoration: underline;
         }
 
-        /* 分页 */
-        .pagination {
-            margin-top: 20px;
-            text-align: center;
+        .data-table .delete-link {
+            color: #EF4444;
+        }
+
+        .data-table .delete-link:hover {
+            color: #DC2626;
+        }
+
+        .page-container .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin: 20px 0;
             color: #475569;
         }
 
-        .pagination a,
-        .pagination span {
-            display: inline-block;
-            padding: 8px 12px;
-            margin: 0 4px;
+        .page-container .pagination a,
+        .page-container .pagination span:not(.page-info):not(.gap):not(.current) {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 36px;
+            height: 36px;
+            padding: 0 8px;
+            font-size: 14px;
             border: 1px solid #E2E8F0;
             border-radius: 6px;
-            color: #3B82F6;
+            color: #475569;
+            background: #FFFFFF;
             text-decoration: none;
             transition: all 0.15s ease;
         }
 
-        .pagination a:hover {
-            background: #F1F5F9;
-            border-color: #3B82F6;
+        .page-container .pagination a:hover {
+            background: #F8FAFC;
+            border-color: #CBD5E1;
+            color: #475569;
         }
 
-        .pagination .active {
+        .page-container .pagination .current {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 36px;
+            height: 36px;
+            padding: 0 8px;
+            font-size: 14px;
+            border: 1px solid #3B82F6;
+            border-radius: 6px;
             background: #3B82F6;
             color: #FFFFFF;
+        }
+
+        .page-container .pagination .disabled {
+            color: #94A3B8;
+            background: #F8FAFC;
+            border-color: #E2E8F0;
+            cursor: not-allowed;
+        }
+
+        .page-container .pagination .gap {
+            border: none;
+            background: transparent;
+            color: #94A3B8;
+        }
+
+        .page-container .pagination .page-input {
+            width: 44px;
+            height: 36px;
+            padding: 0;
+            text-align: center;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            color: #1E293B;
+            background: #FFFFFF;
+        }
+
+        .page-container .pagination .page-input:focus {
+            outline: none;
             border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .page-container .pagination .page-info {
+            color: #475569;
+        }
+
+        .modal-content {
+            border: 1px solid #E2E8F0;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .modal-header {
+            background: #F8FAFC;
+            border-bottom: 1px solid #E2E8F0;
+            padding: 16px 20px;
+        }
+
+        .modal-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E293B;
+        }
+
+        .modal-body {
+            padding: 20px;
+            background: #F8FAFC;
+        }
+
+        .modal-footer {
+            background: #F8FAFC;
+            border-top: 1px solid #E2E8F0;
+            padding: 16px 20px;
+        }
+
+        .btn-default {
+            background: #FFFFFF;
+            color: #475569;
+            border: 1px solid #CBD5E1;
+        }
+
+        .btn-default:hover {
+            background: #F8FAFC;
+            border-color: #94A3B8;
+        }
+
+        .btn-primary {
+            background: #3B82F6;
+            color: #FFFFFF;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background: #2563EB;
+        }
+
+        @media (max-width: 768px) {
+            .page-container {
+                padding: 12px;
+            }
+
+            .search-area {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-area select,
+            .search-area input[type="text"] {
+                width: 100%;
+            }
+
+            .btn-search,
+            .btn-reset {
+                width: 100%;
+            }
         }
     </style>
 </head>
 
 <body>
-<div id="pagediv">
-    <!-- 新增“添加设备”按钮 -->
-    <!-- 新增“添加设备”按钮，已修改为和drivercar.html中新建司机按钮类似结构 -->
-
-
-    <!-- 搜索表单 -->
-    <form id="searchForm" action="/managerequip/equipmentsearch" method="post">
-        <label>公司名称：</label>
+<div class="page-container">
+    <form id="searchForm" class="search-area" action="/managerequip/equipmentsearch" method="post">
+        <label for="selectName">公司名称：</label>
         <select id="selectName" name="companyId" onchange="chooseName()">
             <option value="-1" selected>请选择公司</option>
             #for (x: gastations)
@@ -195,151 +329,146 @@
             #end
         </select>
 
-        <button type="button" type="submit" value="查询" id="searchButton">查询</button>
-        <button type="button" type="submit" value="重置" id="resetButton">重置</button>
-
+        <button type="button" id="searchButton" class="btn-search">查询</button>
+        <button type="button" id="resetButton" class="btn-reset">重置</button>
     </form>
-</div>
 
-<table class="list">
-    <tbody>
-    <tr>
-        <th width="8%">序号</th>
-        <th width="10">生产厂商</th>
-        <th width="10">设备型号</th>
-        <th width="10">设备名称</th>
-        <th width="10">设备种类</th>
-        <th width="10">生产日期</th>
-        <th width="10">上次检修日期</th>
-        <th width="10">失效日期</th>
-        <th width="10">操作</th> <!-- 添加操作列标题 -->
-    </tr>
-    #set(startIndex = (BseEquipmentlist.pageNumber - 1) * BseEquipmentlist.pageSize + 1)
-    #for(x : BseEquipmentlist.getList())
-    <tr>
-        <td>#(startIndex++)</td> <!-- 显示序号并递增 -->
-        <td>#(x.factory)</td>
-        <td>#(x.model)</td>
-        <td>#(x.name)</td>
-        <td>#(x.kind)</td>
-        <td>#(x.producedate)</td>
-        <td>#(x.lastcheckdate)</td>
-        <td>#(x.expiredate)</td>
-        <td>
-            <!-- 修改按钮添加点击事件，弹出编辑模态框，结构和功能与参考代码中编辑按钮类似 -->
-            <a href="#" class="edit openModal" data-title="编辑设备" data-edit-url="/managerequip/edit?id=#(x.id)">修改</a>
-            <!-- 将删除按钮修改为a标签形式 -->
-            <a href="#" class="delete" onclick="confirmDelete('#(x.id)')">删除</a>
-            <!-- 为“设备维修”按钮添加点击事件，弹出对应的模态框 -->
-            <a href="#" class="repair openModal" data-title="设备维修" data-edit-url="/managerequip/repairedit?id=#(x.id)">维修</a>
-        </td>
-    </tr>
-    #end
-    </tbody>
-</table>
+    <div class="table-wrapper">
+        <table class="data-table">
+            <thead>
+            <tr>
+                <th width="8%">序号</th>
+                <th width="12%">生产厂商</th>
+                <th width="12%">设备型号</th>
+                <th width="12%">设备名称</th>
+                <th width="12%">设备种类</th>
+                <th width="12%">生产日期</th>
+                <th width="12%">上次检修日期</th>
+                <th width="12%">失效日期</th>
+                <th width="8%">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            #set(startIndex = (BseEquipmentlist.pageNumber - 1) * BseEquipmentlist.pageSize + 1)
+            #for(x : BseEquipmentlist.getList())
+            <tr>
+                <td>#(startIndex++)</td>
+                <td>#(x.factory)</td>
+                <td>#(x.model)</td>
+                <td>#(x.name)</td>
+                <td>#(x.kind)</td>
+                <td>#(x.producedate)</td>
+                <td>#(x.lastcheckdate)</td>
+                <td>#(x.expiredate)</td>
+                <td>
+                    <a href="#" class="openModal" data-title="编辑设备" data-edit-url="/managerequip/edit?id=#(x.id)">修改</a>
+                    <a href="#" class="delete-link" onclick="confirmDelete('#(x.id)')">删除</a>
+                    <a href="#" class="openModal" data-title="设备维修" data-edit-url="/managerequip/repairedit?id=#(x.id)">维修</a>
+                </td>
+            </tr>
+            #end
+            </tbody>
+        </table>
+    </div>
 
-<div class="pagination" style="color:#DDDDDD;">
     #set(selectedCompanyId = "")
     #if(companyname!= null && companyname!= "-1")
     #set(selectedCompanyId = companyname)
     #end
     #@paginate(BseEquipmentlist.pageNumber, BseEquipmentlist.totalPage, "/managerequip/equipmentsearch?companyId=" + selectedCompanyId + "&page=")
 </div>
-<script>
 
+<script>
     var gastations = [
         #for (x: gastations)
-    { id: "#(x.id)", name: "#(x.station_name)" },
-    #end
+        { id: "#(x.id)", name: "#(x.station_name)" },
+        #end
     ];
+
     function chooseName() {
         var selectName = document.getElementById("selectName").value;
-        console.log("selectName: " + selectName);
-        // 查找选中的备件对象，通过name属性来查找
-        var selectedCompany = gastations.find(function (gastations) {
-            return gastations.name === selectName;
+        gastations.find(function (item) {
+            return item.id === selectName;
         });
     }
-    document.getElementById("selectName").addEventListener("change", chooseName);
-    // 为搜索按钮添加点击事件，防止默认提交行为被阻止，手动触发表单提交
+
     $('#searchButton').click(function (e) {
         e.preventDefault();
         $('#searchForm').submit();
     });
 
-    // 为重置按钮添加点击事件处理函数，用于清空搜索栏并提交表单，让公司名称选择框数据为空
     $('#resetButton').click(function (e) {
         e.preventDefault();
-        // 获取所有的输入框并设置为空
         $('#searchForm input[type=text]').val('');
-        // 将下拉选择框（公司名称选择框）设置为空值，恢复到初始的“请选择公司”状态
         $('#selectName').val('');
-        // 提交表单以重新查询并刷新页面
         $('#searchForm').submit();
     });
-    // 确认删除的函数，向后端delete函数发送删除请求，同样假设后端接收设备id作为参数
+
     function confirmDelete(id) {
-        console.log("进入到了删除函数");
-        console.log("id: " + id);
         if (confirm("确定要删除该设备记录吗？")) {
             window.location.href = "/managerequip/delete?id=" + id;
         }
     }
+
     $(document).ready(function () {
         $('.openModal').click(function (e) {
             e.preventDefault();
             var editUrl = $(this).data('edit-url');
-            var that = this;
+            var title = $(this).data('title');
 
             $.get(editUrl, function (data) {
-                var title = $(that).data('title');
                 $('#myModalLabel').text(title);
-
-                // Clear old content
                 $('#modalBody').html(data);
                 $('#myModal').modal('show');
             });
         });
-        // 为“设备维修”按钮弹出的模态框中的保存按钮添加点击事件处理逻辑（here is a simple example first, which can be perfected according to actual needs）
+
         $('#saveButton').click(function () {
-            console.log("来到了维修函数");
-            var repairFormData = $('#modalBody form').serialize();
-            $.post('/equipment/repair', repairFormData, function (response) {
-                if (response.success) {
-                    alert('设备维修信息保存成功');
-                    $('#myModal').modal('hide');
-                    // You can add refreshing the list and other operations as needed.
-                    $('#searchForm').submit();
-                }
-            }).fail(function () {
-                alert('请求保存设备维修信息出错，请稍后再试');
-            });
+            var $form = $('#modalBody').find('form').first();
+            if ($form.length === 0) {
+                return;
+            }
+
+            var isRepairForm = $form.find('[name^="maintenance."]').length > 0;
+            if (isRepairForm) {
+                var repairFormData = $form.serialize();
+                $.post('/equipment/repair', repairFormData, function (response) {
+                    if (response.success) {
+                        alert('设备维修信息保存成功');
+                        $('#myModal').modal('hide');
+                        $('#searchForm').submit();
+                    }
+                }).fail(function () {
+                    alert('请求保存设备维修信息出错，请稍后再试');
+                });
+                return;
+            }
+
+            if (typeof $form[0].requestSubmit === "function") {
+                $form[0].requestSubmit();
+            } else {
+                $form[0].submit();
+            }
         });
     });
 </script>
-<!-- 模态框结构 -->
+
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="myModalLabel">模态窗口标题</h4>
+                <h4 class="modal-title" id="myModalLabel">弹窗标题</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
-            <div class="modal-body" id="modalBody">
-                <!-- 这里将会加载你的表单内容，此处暂时为空，后续可以根据从后端获取的数据来填充 -->
-            </div>
+            <div class="modal-body" id="modalBody"></div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                 <button type="button" class="btn btn-primary" id="saveButton">保存</button>
-                <script>
-                    document.getElementById('saveButton').addEventListener('click', function () {
-                        console.log("josqb`1");
-                        // 如果验证通过，则提交表单
-                        document.getElementById('myForm').submit();
-                        // 如果验证失败，不提交表单（validateForm内部已经显示了错误消息）
-                    });
-                </script>
             </div>
-
         </div>
     </div>
 </div>
+</body>
+</html>
