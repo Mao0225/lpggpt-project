@@ -197,6 +197,7 @@
             option = document.createElement('option');
             option.value = context[i].id;
             option.textContent = context[i].stationName || context[i].station_name;
+            console.log("选项"+option);
             selectElement.appendChild(option);
         }
 
@@ -276,13 +277,27 @@
         xhr.send();
     }
 
-    document.addEventListener('DOMContentLoaded', function () {
+    function initAddForm() {
+        var selectElement = document.getElementById('selectName');
+        var formElement = document.getElementById('myForm');
+
+        if (!selectElement || !formElement || formElement.dataset.stationInit === '1') {
+            return;
+        }
+
         initStationOptions();
-        document.getElementById('selectName').addEventListener('change', chooseName);
-        document.getElementById('myForm').addEventListener('submit', function () {
+        selectElement.addEventListener('change', chooseName);
+        formElement.addEventListener('submit', function () {
             chooseName();
         });
-    });
+        formElement.dataset.stationInit = '1';
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initAddForm);
+    } else {
+        initAddForm();
+    }
 </script>
 </body>
 </html>

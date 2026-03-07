@@ -35,6 +35,7 @@ public class GGasFileController extends Controller {
     public void add() {
         List<GasStation> gasstations = gasstation.find("SELECT id, station_name FROM gas_station WHERE id="+getSessionAttr("stationid") +"");
         setAttr("gasstations", gasstations);
+        System.out.println("gasstations"+gasstations);
         System.out.println("gasstations.size()"+gasstations.size());
         render("add.html");
     }
