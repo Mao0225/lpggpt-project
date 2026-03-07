@@ -4,72 +4,157 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>LPG运营平台</title>
-	<!-- Add your custom stylesheets and scripts here -->
 	<style>
-		/* 工业极简主义风格 - 顶部导航栏 */
 		body {
 			margin: 0;
-			padding: 0;
-			background-color: #111827; /* 主背景色 */
-			height: 64px; /* 统一高度 */
+			padding: 0 24px;
+			height: 64px;
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
-			padding: 0 24px;
 			box-sizing: border-box;
 			font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-			border-bottom: 1px solid #374151; /* 底部边框 */
+			background-color: #111827;
+			border-bottom: 1px solid #374151;
 		}
+
 		.header-left {
 			display: flex;
 			align-items: center;
 			gap: 16px;
+			min-width: 0;
 		}
+
+		.header-menu-btn {
+			display: none;
+			align-items: center;
+			justify-content: center;
+			flex: 0 0 40px;
+			width: 40px;
+			height: 40px;
+			padding: 0;
+			border: 0;
+			border-radius: 8px;
+			background: transparent;
+			cursor: pointer;
+		}
+
+		.header-menu-btn:hover {
+			background-color: #374151;
+		}
+
+		.header-menu-btn span {
+			display: block;
+			width: 18px;
+			height: 2px;
+			margin: 2px 0;
+			border-radius: 999px;
+			background-color: #F9FAFB;
+		}
+
 		.header-logo {
 			width: 36px;
 			height: 36px;
 		}
+
 		.header-title {
 			font-size: 20px;
 			font-weight: 600;
-			color: #F9FAFB; /* 主要文字色 */
 			line-height: 1;
 			letter-spacing: 0.5px;
+			color: #F9FAFB;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
 		}
+
 		.header-exit {
-			display: flex;
+			display: inline-flex;
 			align-items: center;
 			gap: 8px;
-			color: #9CA3AF; /* 次要文字色 */
+			padding: 8px 12px;
+			border-radius: 6px;
+			background-color: transparent;
+			color: #9CA3AF;
 			text-decoration: none;
 			font-size: 14px;
 			font-weight: 500;
 			transition: all 0.15s ease;
-			padding: 8px 12px;
-			border-radius: 6px;
-			background-color: transparent;
 		}
+
 		.header-exit:hover {
-			background-color: #374151; /* 悬停背景色 */
+			background-color: #374151;
 			color: #F9FAFB;
 		}
-		.header-exit img {
-			width: 20px;
-			height: 20px;
-			filter: brightness(0) invert(0.8); /* 灰色图标 */
+
+		.header-exit-icon {
+			width: 18px;
+			height: 18px;
+			flex: 0 0 18px;
+			stroke: currentColor;
+			fill: none;
+			stroke-width: 1.8;
+			stroke-linecap: round;
+			stroke-linejoin: round;
+			transition: transform 0.15s ease;
 		}
-		.header-exit:hover img {
-			filter: brightness(0) invert(1); /* 悬停时白色图标 */
+
+		.header-exit:hover .header-exit-icon {
+			transform: translateX(1px);
+		}
+
+		@media (max-width: 991.98px) {
+			body {
+				padding: 0 12px;
+			}
+
+			.header-left {
+				gap: 10px;
+				flex: 1 1 auto;
+			}
+
+			.header-menu-btn {
+				display: inline-flex;
+				flex-direction: column;
+			}
+
+			.header-logo {
+				width: 30px;
+				height: 30px;
+			}
+
+			.header-title {
+				font-size: 16px;
+			}
+
+			.header-exit {
+				padding: 8px;
+				gap: 0;
+				flex: 0 0 auto;
+			}
+
+			.header-exit span {
+				display: none;
+			}
 		}
 	</style>
 </head>
 <body>
 <div class="header-left">
-	<img class="header-logo" src="../img/ft.logo.png" alt="Logo"/>
+	<button class="header-menu-btn" type="button" aria-label="Toggle menu" onclick="if (window.parent && typeof window.parent.toggleSidebar === 'function') { window.parent.toggleSidebar(); }">
+		<span></span>
+		<span></span>
+		<span></span>
+	</button>
+	<img class="header-logo" src="../img/ft.logo.png" alt="Logo">
 	<span class="header-title">LPG智慧运营平台</span>
 </div>
-<a class="header-exit" href="/logout" target="_top">
-	<img src="../img/sysexit.png" alt="Exit"/>
+<a class="header-exit" href="/logout" target="_top" aria-label="Logout">
+	<svg class="header-exit-icon" viewBox="0 0 24 24" aria-hidden="true">
+		<path d="M14 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3"></path>
+		<path d="M10 17l5-5-5-5"></path>
+		<path d="M15 12H4"></path>
+	</svg>
 	<span>退出登录</span>
 </a>
 </body>

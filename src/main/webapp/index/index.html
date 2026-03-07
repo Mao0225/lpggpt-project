@@ -14,6 +14,11 @@
 	<link href="../css/index.css" rel="stylesheet">
 
 	<style>
+		:root {
+			--header-height: 64px;
+			--sidebar-width: 260px;
+		}
+
 		html, body {
 			height: 100%;
 			overflow: hidden;
@@ -22,17 +27,74 @@
 		#container {
 			height: 100vh;
 			overflow: hidden;
+			position: relative;
 		}
 
 		#main {
 			min-height: 0;
 			overflow: hidden;
+			position: relative;
 		}
 
 		#left {
 			overflow-y: auto;
 			overflow-x: hidden;
 			overscroll-behavior: contain;
+			position: relative;
+			z-index: 1040;
+			transition: transform 0.25s ease, box-shadow 0.25s ease;
+			-webkit-overflow-scrolling: touch;
+		}
+
+		#sidebarBackdrop {
+			position: fixed;
+			top: var(--header-height);
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background: rgba(17, 24, 39, 0.55);
+			opacity: 0;
+			visibility: hidden;
+			transition: opacity 0.25s ease, visibility 0.25s ease;
+			z-index: 1030;
+		}
+
+		body.sidebar-open #sidebarBackdrop {
+			opacity: 1;
+			visibility: visible;
+		}
+
+		.mobile-sidebar-head {
+			display: none;
+			align-items: center;
+			justify-content: space-between;
+			padding: 12px 16px;
+			background-color: #111827;
+			border-bottom: 1px solid #374151;
+		}
+
+		.mobile-sidebar-title {
+			font-size: 14px;
+			font-weight: 600;
+			letter-spacing: 0.04em;
+			color: #F9FAFB;
+		}
+
+		.sidebar-close-btn {
+			width: 34px;
+			height: 34px;
+			padding: 0;
+			border: 0;
+			border-radius: 6px;
+			background: transparent;
+			color: #F9FAFB;
+			font-size: 22px;
+			line-height: 1;
+			cursor: pointer;
+		}
+
+		.sidebar-close-btn:hover {
+			background-color: #374151;
 		}
 
 		.menu-search-wrap {
@@ -168,10 +230,116 @@
 			font-weight: 600;
 			border-left: 3px solid #3B82F6; /* 左侧激活指示条 */
 		}
+
+		@media (max-width: 991.98px) {
+			#left {
+				position: fixed;
+				top: var(--header-height);
+				left: 0;
+				bottom: 0;
+				width: min(82vw, 320px);
+				max-width: 320px;
+				height: calc(100vh - var(--header-height));
+				transform: translateX(-100%);
+				box-shadow: none;
+			}
+
+			body.sidebar-open #left {
+				transform: translateX(0);
+				box-shadow: 0 18px 48px rgba(0, 0, 0, 0.35);
+			}
+
+			.mobile-sidebar-head {
+				display: flex;
+			}
+
+			#content {
+				width: 100%;
+			}
+
+			#tabHeader {
+				padding: 0 10px;
+			}
+
+			.tab {
+				padding: 10px 14px;
+				max-width: 160px;
+				font-size: 13px;
+			}
+
+			#menuSearchInput {
+				font-size: 16px;
+			}
+		}
+
+		@media (min-width: 992px) {
+			#sidebarBackdrop {
+				display: none !important;
+			}
+
+			body.sidebar-open #left {
+				transform: none;
+				box-shadow: none;
+			}
+		}
 	</style>
 
 	<script>
 		$(document).ready(function () {
+			var mobileViewport = window.matchMedia('(max-width: 991.98px)');
+
+			function isMobileSidebarMode() {
+				return mobileViewport.matches;
+			}
+
+			function applySidebarState(isOpen) {
+				if (!isMobileSidebarMode()) {
+					$('body').removeClass('sidebar-open');
+					$('#left').attr('aria-hidden', 'false');
+					$('#sidebarBackdrop').attr('aria-hidden', 'true');
+					return;
+				}
+
+				$('body').toggleClass('sidebar-open', isOpen);
+				$('#left').attr('aria-hidden', isOpen ? 'false' : 'true');
+				$('#sidebarBackdrop').attr('aria-hidden', isOpen ? 'false' : 'true');
+			}
+
+			window.openSidebar = function () {
+				if (isMobileSidebarMode()) {
+					applySidebarState(true);
+				}
+			};
+
+			window.closeSidebar = function () {
+				applySidebarState(false);
+			};
+
+			window.toggleSidebar = function () {
+				if (!isMobileSidebarMode()) {
+					return;
+				}
+
+				applySidebarState(!$('body').hasClass('sidebar-open'));
+			};
+
+			$('#sidebarBackdrop, #sidebarCloseBtn').on('click', function () {
+				window.closeSidebar();
+			});
+
+			$(window).on('resize', function () {
+				if (!isMobileSidebarMode()) {
+					window.closeSidebar();
+				}
+			});
+
+			$(document).on('keyup', function (event) {
+				if (event.key === 'Escape') {
+					window.closeSidebar();
+				}
+			});
+
+			applySidebarState(false);
 			// 隔离左侧菜单滚动，避免滚动链传递到右侧内容
 			var leftPanel = document.getElementById('left');
 			if (leftPanel) {
@@ -218,6 +386,7 @@
 				var contentFrame = document.getElementById('contentFrame');
 				if (contentFrame) {
 					contentFrame.src = url;
+					window.closeSidebar();
 				} else {
 					console.error('Content frame not found');
 				}
@@ -322,8 +491,13 @@
 <div id="container">
 	<!-- 顶部导航栏（含退出登录） -->
 	<iframe id="headerFrame" src="head.html" frameborder="0" scrolling="no" style="width:100%; height:64px; display:block; border:none;"></iframe>
+	<div id="sidebarBackdrop" aria-hidden="true"></div>
 	<div id="main">
 		<div id="left" class="menu-container">
+			<div class="mobile-sidebar-head">
+				<span class="mobile-sidebar-title">Menu</span>
+				<button id="sidebarCloseBtn" class="sidebar-close-btn" type="button" aria-label="Close menu">&times;</button>
+			</div>
 			<div class="menu-search-wrap">
 				<div class="menu-search-box">
 					<i class="fa fa-search menu-search-icon" aria-hidden="true"></i>
@@ -374,6 +548,9 @@
 		var contentFrame = document.getElementById('contentFrame');
 		if (contentFrame) {
 			contentFrame.src = url;
+			if (typeof window.closeSidebar === 'function') {
+				window.closeSidebar();
+			}
 		} else {
 			console.error('Content frame not found');
 		}
